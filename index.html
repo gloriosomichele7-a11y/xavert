@@ -1,24 +1,199 @@
+
 <!DOCTYPE html>
 <html lang="it">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT</title>
+<title>XAVERT | Digital Utility Ecosystem</title>
+
+<style>
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+  background: #070707;
+  color: #ffffff;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px 20px;
+  background:
+    radial-gradient(circle at top, rgba(80, 120, 255, 0.22), transparent 35%),
+    linear-gradient(180deg, #0b0b0f 0%, #050505 100%);
+}
+
+.container {
+  max-width: 1000px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 8px 16px;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 999px;
+  color: #bfc7ff;
+  font-size: 14px;
+  margin-bottom: 28px;
+}
+
+h1 {
+  font-size: clamp(52px, 10vw, 110px);
+  letter-spacing: 6px;
+  margin-bottom: 18px;
+}
+
+.subtitle {
+  font-size: clamp(24px, 4vw, 42px);
+  font-weight: 700;
+  margin-bottom: 24px;
+}
+
+.description {
+  max-width: 720px;
+  margin: 0 auto 38px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #cfcfcf;
+}
+
+.actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-bottom: 60px;
+}
+
+.btn {
+  padding: 15px 28px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background: #ffffff;
+  color: #050505;
+}
+
+.btn-secondary {
+  border: 1px solid rgba(255,255,255,0.22);
+  color: #ffffff;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 18px;
+}
+
+.card {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 22px;
+  padding: 28px;
+  text-align: left;
+}
+
+.card h3 {
+  font-size: 22px;
+  margin-bottom: 12px;
+}
+
+.card p {
+  color: #bdbdbd;
+  line-height: 1.6;
+}
+
+footer {
+  text-align: center;
+  padding: 28px 20px;
+  color: #777;
+  background: #050505;
+}
+
+@media (max-width: 600px) {
+  .hero {
+    padding: 30px 18px;
+  }
+
+  h1 {
+    letter-spacing: 3px;
+  }
+
+  .card {
+    text-align: center;
+  }
+}
+</style>
 </head>
 
-<body style="font-family: Arial; text-align:center; padding:50px;">
+<body>
 
-<h1>XAVERT</h1>
+<section class="hero">
+  <div class="container">
 
-<h2>Digital Utility Ecosystem</h2>
+    <div class="badge">Launching Soon</div>
 
-<p>
-Costruiamo strumenti digitali semplici, utili e intelligenti.
-</p>
+    <h1>XAVERT</h1>
 
-<p>
-Primo progetto in sviluppo.
-</p>
+    <div class="subtitle">
+      Digital Utility Ecosystem
+    </div>
+
+    <p class="description">
+      Xavert is building a fast, clean and mobile-first ecosystem of digital utilities:
+      tools, reminders, smart workflows, finders and future AI-powered services.
+    </p>
+
+    <div class="actions">
+      <a href="#" class="btn btn-primary">Coming Soon</a>
+      <a href="#" class="btn btn-secondary">Explore Vision</a>
+    </div>
+
+    <div class="cards">
+
+      <div class="card">
+        <h3>Utility Tools</h3>
+        <p>
+          Simple and useful tools for everyday digital tasks:
+          files, images, calculators, converters and generators.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Smart Reminders</h3>
+        <p>
+          A future personal workspace for deadlines, documents,
+          renewals and useful notifications.
+        </p>
+      </div>
+
+      <div class="card">
+        <h3>Future Platform</h3>
+        <p>
+          Built to evolve into premium services, B2B workflows,
+          APIs and white-label integrations.
+        </p>
+      </div>
+
+    </div>
+
+  </div>
+</section>
+
+<footer>
+  © 2026 XAVERT — Digital Utility Ecosystem
+</footer>
 
 </body>
 </html>
