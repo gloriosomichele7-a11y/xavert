@@ -342,11 +342,18 @@ if(score >= 85) {
 
 
 
+
+
+
+
 document.getElementById("result").innerHTML =
 "Domain: " + domain +
 "<br><br>Score: " + score + "/100" +
 "<br><br>Estimated value: " + value +
-(score >= 90 ? "<br><br>⭐ Premium Domain" : "");
+(score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
+(score >= 90 ? "<br>✔ Short domain" : "") +
+(score >= 90 ? "<br>✔ Strong commercial keyword" : "") +
+(score >= 90 ? "<br>✔ High resale potential" : "");
 
 
 
