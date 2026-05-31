@@ -338,10 +338,13 @@ if (premiumDomains.includes(domain)) {
 ];
 
 premiumKeywords.forEach(keyword => {
-    if (domain.includes(keyword)) {
+    if (domain.includes(keyword) && score < 100) {
         score += 20;
     }
 });
+   
+    
+
 
 
 
