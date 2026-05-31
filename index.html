@@ -342,7 +342,16 @@ premiumKeywords.forEach(keyword => {
         score += 20;
     }
 });
-   
+ if (
+    domain.includes("pizza") ||
+    domain.includes("casino") ||
+    domain.includes("bet") ||
+    domain.includes("game") ||
+    domain.includes("shop") ||
+    domain.includes("market")
+) {
+    score += 15;
+}  
     
 
 
