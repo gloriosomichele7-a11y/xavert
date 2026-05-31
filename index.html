@@ -300,7 +300,17 @@ if(domain.length > 15) {
 if(domain.endsWith(".com")) {
   score += 15;
 }
+if(domain === "car.com") {
+    score = 100;
+}
 
+if(domain === "insurance.com") {
+    score = 100;
+}
+
+if(domain === "hotel.com") {
+    score = 100;
+}
 if(domain.includes("-")) {
   score -= 15;
 }
