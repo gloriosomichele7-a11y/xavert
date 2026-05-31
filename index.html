@@ -331,18 +331,22 @@ if(score >= 85) {
   value = "$100";
 }
 
+
+  
+
+ 
+
+
+
+
+
+
+
 document.getElementById("result").innerHTML =
-  "Domain: " + domain +
-  "<br><br>Score: " + score + "/100" +
-  "<br><br>Estimated value: " + value;
-
-
-
-
-
-
-
-
+"Domain: " + domain +
+"<br><br>Score: " + score + "/100" +
+"<br><br>Estimated value: " + value +
+(score >= 90 ? "<br><br>⭐ Premium Domain" : "");
 
 
 
