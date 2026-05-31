@@ -1,273 +1,306 @@
-
 <!DOCTYPE html>
-<html lang="it">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>XAVERT | Digital Utility Ecosystem</title>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
 }
 
-body {
-  background: #070707;
-  color: #ffffff;
+body{
+background:#070707;
+color:white;
 }
 
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  padding: 40px 20px;
-  background:
-    radial-gradient(circle at top, rgba(80, 120, 255, 0.22), transparent 35%),
-    linear-gradient(180deg, #0b0b0f 0%, #050505 100%);
+.hero{
+min-height:100vh;
+display:flex;
+align-items:center;
+justify-content:center;
+text-align:center;
+padding:40px 20px;
+background:
+radial-gradient(circle at top, rgba(80,120,255,.22), transparent 35%),
+linear-gradient(180deg,#0b0b0f 0%,#050505 100%);
 }
 
-.container {
-  max-width: 1000px;
+.container{
+max-width:1000px;
+width:100%;
 }
 
-.badge {
-  display: inline-block;
-  padding: 8px 16px;
-  border: 1px solid rgba(255,255,255,0.18);
-  border-radius: 999px;
-  color: #bfc7ff;
-  font-size: 14px;
-  margin-bottom: 28px;
+.badge{
+display:inline-block;
+padding:8px 16px;
+border:1px solid rgba(255,255,255,.18);
+border-radius:999px;
+color:#bfc7ff;
+font-size:14px;
+margin-bottom:28px;
 }
 
-h1 {
-  font-size: clamp(52px, 10vw, 110px);
-  letter-spacing: 6px;
-  margin-bottom: 18px;
+h1{
+font-size:clamp(52px,10vw,110px);
+letter-spacing:6px;
+margin-bottom:18px;
 }
 
-.subtitle {
-  font-size: clamp(24px, 4vw, 42px);
-  font-weight: 700;
-  margin-bottom: 24px;
+.subtitle{
+font-size:clamp(24px,4vw,42px);
+font-weight:700;
+margin-bottom:24px;
 }
 
-.description {
-  max-width: 720px;
-  margin: 0 auto 38px;
-  font-size: 18px;
-  line-height: 1.7;
-  color: #cfcfcf;
+.description{
+max-width:720px;
+margin:0 auto 38px;
+font-size:18px;
+line-height:1.7;
+color:#cfcfcf;
 }
 
-.actions {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-bottom: 60px;
+.actions{
+display:flex;
+justify-content:center;
+gap:14px;
+flex-wrap:wrap;
+margin-bottom:60px;
 }
 
-.btn {
-  padding: 15px 28px;
-  border-radius: 12px;
-  text-decoration: none;
-  font-weight: 700;
+.btn{
+padding:15px 28px;
+border-radius:12px;
+text-decoration:none;
+font-weight:700;
 }
 
-.btn-primary {
-  background: #ffffff;
-  color: #050505;
+.btn-primary{
+background:white;
+color:black;
 }
 
-.btn-secondary {
-  border: 1px solid rgba(255,255,255,0.22);
-  color: #ffffff;
+.btn-secondary{
+border:1px solid rgba(255,255,255,.22);
+color:white;
 }
 
-.cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-  gap: 18px;
+.cards{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+gap:18px;
+margin-top:20px;
 }
 
-.card {
-  background: rgba(255,255,255,0.06);
-  border: 1px solid rgba(255,255,255,0.10);
-  border-radius: 22px;
-  padding: 28px;
-  text-align: left;
+.card{
+background:rgba(255,255,255,.06);
+border:1px solid rgba(255,255,255,.10);
+border-radius:22px;
+padding:28px;
+text-align:left;
 }
 
-.card h3 {
-  font-size: 22px;
-  margin-bottom: 12px;
+.card h3{
+margin-bottom:12px;
 }
 
-.card p {
-  color: #bdbdbd;
-  line-height: 1.6;
+.card p{
+color:#bdbdbd;
+line-height:1.6;
 }
 
-footer {
-  text-align: center;
-  padding: 28px 20px;
-  color: #777;
-  background: #050505;
+.section{
+padding:80px 20px;
+text-align:center;
 }
 
-@media (max-width: 600px) {
-  .hero {
-    padding: 30px 18px;
-  }
-
-  h1 {
-    letter-spacing: 3px;
-  }
-
-  .card {
-    text-align: center;
-  }
+.section h2{
+font-size:48px;
+margin-bottom:20px;
 }
+
+.roadmap p{
+margin:8px 0;
+font-size:20px;
+}
+
+.domain-input{
+padding:12px;
+width:300px;
+border:none;
+border-radius:8px;
+margin-top:15px;
+}
+
+.domain-button{
+padding:12px 24px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+font-weight:bold;
+margin-top:15px;
+}
+
+#result{
+margin-top:25px;
+font-size:22px;
+font-weight:bold;
+line-height:1.8;
+}
+
+footer{
+text-align:center;
+padding:30px;
+color:#777;
+}
+
 </style>
 </head>
 
 <body>
 
 <section class="hero">
-  <div class="container">
+<div class="container">
 
-    <div class="badge">Launching Soon</div>
+<div class="badge">
+Launching Soon
+</div>
 
-    <h1>XAVERT</h1>
+<h1>XAVERT</h1>
 
-    <div class="subtitle">
-      Digital Utility Ecosystem
-    </div>
+<div class="subtitle">
+Digital Utility Ecosystem
+</div>
 
-    <p class="description">
-      Xavert is building a fast, clean and mobile-first ecosystem of digital utilities:
-      tools, reminders, smart workflows, finders and future AI-powered services.
-    </p>
+<p class="description">
+Xavert is building a fast, clean and mobile-first ecosystem of digital utilities:
+tools, reminders, smart workflows, finders and future AI-powered services.
+</p>
 
-    <div class="actions">
-      <a href="#" class="btn btn-primary">Coming Soon</a>
-      <a href="#" class="btn btn-secondary">Explore Vision</a>
-    </div>
+<div class="actions">
+<a href="#" class="btn btn-primary">Coming Soon</a>
+<a href="#" class="btn btn-secondary">Explore Vision</a>
+</div>
 
-    <div class="cards">
+<div class="cards">
 
-      <div class="card">
-        <h3>Utility Tools</h3>
-        <p>
-          Simple and useful tools for everyday digital tasks:
-          files, images, calculators, converters and generators.
-        </p>
-      </div>
+<div class="card">
+<h3>Utility Tools</h3>
+<p>
+Simple and useful tools for everyday digital tasks:
+files, images, calculators, converters and generators.
+</p>
+</div>
 
-      <div class="card">
-        <h3>Smart Reminders</h3>
-        <p>
-          A future personal workspace for deadlines, documents,
-          renewals and useful notifications.
-        </p>
-      </div>
+<div class="card">
+<h3>Smart Reminders</h3>
+<p>
+A future personal workspace for deadlines,
+documents, renewals and useful notifications.
+</p>
+</div>
 
-      <div class="card">
-        <h3>Future Platform</h3>
-        <p>
-          Built to evolve into premium services, B2B workflows,
-          APIs and white-label integrations.
-        </p>
-      </div>
+<div class="card">
+<h3>Future Platform</h3>
+<p>
+Built to evolve into premium services,
+B2B workflows, APIs and white-label integrations.
+</p>
+</div>
 
-    </div>
+</div>
 
-  </div>
+</div>
 </section>
 
-<footer>
-  © 2026 XAVERT — Digital Utility Ecosystem
-</footer>
-<section class="hero">
-  <div class="container">
+<section class="section roadmap">
 
-    <h2>Roadmap</h2>
+<h2>Roadmap</h2>
 
-    <p>✅ Website Online</p>
-    <p>✅ GitHub Repository</p>
-    <p>✅ Vercel Deployment</p>
-    <p>🔄 First Utility In Development</p>
-    <p>⏳ Custom Domain</p>
-    <p>⏳ Premium Features</p>
+<p>✅ Website Online</p>
+<p>✅ GitHub Repository</p>
+<p>✅ Vercel Deployment</p>
+<p>🔄 First Utility In Development</p>
+<p>⏳ Custom Domain</p>
+<p>⏳ Premium Features</p>
 
-    <br><br>
+</section>
 
-    <h2>Vision</h2>
+<section class="section">
 
-    <p>
-      XAVERT is building a collection of practical digital tools
-      designed to save time, simplify workflows and improve productivity.
-    </p>
+<h2>Vision</h2>
 
+<p>
+XAVERT is building a collection of practical digital tools designed
+to save time, simplify workflows and improve productivity.
+</p>
 
-
-
-<h2 style="margin-top:60px;">First Utility Preview</h2>
+<h2 style="margin-top:70px;">
+First Utility Preview
+</h2>
 
 <p>Domain Evaluator (Beta)</p>
 
 <input
+id="domainInput"
+class="domain-input"
 type="text"
 placeholder="Enter a domain name..."
-style="padding:12px;width:300px;border-radius:8px;border:none;margin-top:15px;"
 >
 
-<br><br>
+<br>
 
 <button
+class="domain-button"
 onclick="analyzeDomain()"
-style="padding:12px 24px;border:none;border-radius:8px;cursor:pointer;font-weight:bold;"
 >
 Analyze Domain
 </button>
-<div id="result" style="margin-top:20px;font-size:20px;font-weight:bold;"></div>
-</div>
+
+<div id="result"></div>
+
 </section>
+
+<footer>
+© 2026 XAVERT — Digital Utility Ecosystem
+</footer>
+
 <script>
+
 function analyzeDomain() {
 
-  const domain =
-    document.querySelector("input").value;
+const domain =
+document.getElementById("domainInput").value;
 
-  if(domain === "") {
-    alert("Please enter a domain name");
-    return;
-  }
+if(domain === "") {
+alert("Please enter a domain name");
+return;
+}
 
-  let value = "$100";
+let value = "$100";
 
 if(domain.length > 8) {
-  value = "$500";
+value = "$500";
 }
 
 if(domain.length > 12) {
-  value = "$1000";
+value = "$1000";
 }
 
 document.getElementById("result").innerHTML =
-  "Domain: " + domain +
-  "<br><br>Estimated value: " + value;
+"Domain: " + domain +
+"<br><br>Estimated value: " + value;
 
 }
-</script>
 
-  
+</script>
 
 </body>
 </html>
