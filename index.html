@@ -239,7 +239,24 @@ Analyze Domain
 
 </div>
 </section>
+<script>
+function analyzeDomain() {
 
+  const domain =
+    document.querySelector("input").value;
+
+  if(domain === "") {
+    alert("Please enter a domain name");
+    return;
+  }
+
+  alert(
+    "Domain: " +
+    domain +
+    "\n\nEstimated value: Coming Soon"
+  );
+}
+</script>
 
 
   
