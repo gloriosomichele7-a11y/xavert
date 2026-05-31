@@ -302,13 +302,27 @@ score -= 20;
 if(domain.endsWith(".com")) {
 score += 15;
 }
+if(domain.endsWith(".ai")) {
+    score += 15;
+}
 
+if(domain.endsWith(".io")) {
+    score += 10;
+}
+
+if(domain.endsWith(".net")) {
+    score += 5;
+}
+
+if(domain.endsWith(".org")) {
+    score += 5;
+}
 if(domain.includes("-")) {
 score -= 15;
 }
 
 if(/\d/.test(domain)) {
-score -= 15;
+score -= 10;
 }
 
 const premiumDomains = [
