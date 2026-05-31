@@ -304,14 +304,13 @@ if(domain === "car.com") {
     score = 100;
 }
 
-if(domain === "insurance.com") {
-    score = 100;
-}
 
-if(domain === "hotel.com") {
-    score = 100;
-}
-const premiumDomains = [
+  
+
+
+  
+
+
     "car.com",
     "insurance.com",
     "hotel.com",
@@ -324,7 +323,25 @@ const premiumDomains = [
 if (premiumDomains.includes(domain)) {
     score = 100;
 }
-  
+  const premiumKeywords = [
+    "car",
+    "hotel",
+    "insurance",
+    "loan",
+    "finance",
+    "crypto",
+    "ai",
+    "health",
+    "travel",
+    "money",
+    "business"
+];
+
+premiumKeywords.forEach(keyword => {
+    if (domain.includes(keyword)) {
+        score += 20;
+    }
+});
 
 
 
