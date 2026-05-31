@@ -277,7 +277,7 @@ Analyze Domain
 function analyzeDomain() {
 
 const domain =
-document.getElementById("domainInput").value;
+document.getElementById("domainInput").value.toLowerCase().trim();
 
 if(domain === "") {
 alert("Please enter a domain name");
@@ -288,105 +288,93 @@ let score = 40;
 let value = "$100";
 
 if(domain.length <= 8) {
-  score += 25;
+score += 25;
 }
+
 if(domain.length <= 4) {
-  score += 10;
+score += 10;
 }
 
 if(domain.length > 15) {
-  score -= 20;
+score -= 20;
 }
+
 if(domain.endsWith(".com")) {
-  score += 15;
-}
-if(domain === "car.com") {
-    score = 100;
+score += 15;
 }
 
+if(domain.includes("-")) {
+score -= 15;
+}
 
-  
-
-
-  
+if(/\d/.test(domain)) {
+score -= 15;
+}
 
 const premiumDomains = [
-    "car.com",
-    "insurance.com",
-    "hotel.com",
-    "loans.com",
-    "crypto.com",
-    "ai.com",
-    "business.com"
+"car.com",
+"insurance.com",
+"hotel.com",
+"loans.com",
+"crypto.com",
+"ai.com",
+"business.com"
 ];
 
-if (premiumDomains.includes(domain)) {
-    score = 100;
+if(premiumDomains.includes(domain)) {
+score = 100;
 }
-  const premiumKeywords = [
-    "car",
-    "hotel",
-    "insurance",
-    "loan",
-    "finance",
-    "crypto",
-    "ai",
-    "health",
-    "travel",
-    "money",
-    "business",
-    "pizza"
+
+const premiumKeywords = [
+"car",
+"hotel",
+"insurance",
+"loan",
+"finance",
+"crypto",
+"ai",
+"health",
+"travel",
+"money",
+"business",
+"pizza",
+"casino",
+"bet",
+"game",
+"shop",
+"market"
 ];
 
 premiumKeywords.forEach(keyword => {
-    if (domain.includes(keyword) && score < 100) {
-        score += 20;
-    }
+if(domain.includes(keyword) && score < 100) {
+score += 20;
+}
 });
- if (
-    domain.includes("pizza") ||
-    domain.includes("casino") ||
-    domain.includes("bet") ||
-    domain.includes("game") ||
-    domain.includes("shop") ||
-    domain.includes("market")
-) {
-    score += 15;
-}  
-    
 
-
-
-
-  
-
-
-
-
-
-
-if(score >= 85) {
-  value = "$1000+";
-} else if(score >= 70) {
-  value = "$500";
-} else {
-  value = "$100";
+if(domain.includes("pizza") ||
+domain.includes("casino") ||
+domain.includes("bet") ||
+domain.includes("game") ||
+domain.includes("shop") ||
+domain.includes("market")) {
+score += 15;
 }
 
+if(score > 100) {
+score = 100;
+}
 
-  
+if(score < 0) {
+score = 0;
+}
 
- 
-
-
-
-
-
-
-
-
-
-
+if(score >= 85) {
+value = "$1000+";
+} else if(score >= 70) {
+value = "$500";
+} else {
+value = "$100";
+}
 
 document.getElementById("result").innerHTML =
 "Domain: " + domain +
@@ -396,10 +384,6 @@ document.getElementById("result").innerHTML =
 (score >= 90 ? "<br>✔ Short domain" : "") +
 (score >= 90 ? "<br>✔ Strong commercial keyword" : "") +
 (score >= 90 ? "<br>✔ High resale potential" : "");
-
-
-
-
 
 }
 
