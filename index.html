@@ -290,7 +290,13 @@ let value = "$100";
 if(domain.length <= 8) {
   score += 25;
 }
+if(domain.length <= 4) {
+  score += 10;
+}
 
+if(domain.length > 15) {
+  score -= 20;
+}
 if(domain.endsWith(".com")) {
   score += 15;
 }
