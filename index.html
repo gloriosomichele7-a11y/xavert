@@ -250,9 +250,19 @@ function analyzeDomain() {
     return;
   }
 
-  document.getElementById("result").innerHTML =
+  let value = "$100";
+
+if(domain.length > 8) {
+  value = "$500";
+}
+
+if(domain.length > 12) {
+  value = "$1000";
+}
+
+document.getElementById("result").innerHTML =
   "Domain: " + domain +
-  "<br><br>Estimated value: Coming Soon";
+  "<br><br>Estimated value: " + value;
 
 }
 </script>
