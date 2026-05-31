@@ -311,17 +311,29 @@ if(domain === "insurance.com") {
 if(domain === "hotel.com") {
     score = 100;
 }
-if(domain.includes("-")) {
-  score -= 15;
-}
+const premiumDomains = [
+    "car.com",
+    "insurance.com",
+    "hotel.com",
+    "loans.com",
+    "crypto.com",
+    "ai.com",
+    "business.com"
+];
 
-if(/\d/.test(domain)) {
-  score -= 15;
+if (premiumDomains.includes(domain)) {
+    score = 100;
 }
+  
 
-if(score > 100) {
-  score = 100;
-}
+
+
+  
+
+
+
+
+
 
 if(score >= 85) {
   value = "$1000+";
