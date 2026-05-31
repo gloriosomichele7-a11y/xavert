@@ -381,7 +381,23 @@ score = 100;
 if(score < 0) {
 score = 0;
 }
+let level = "Basic";
 
+if(score >= 100) {
+    level = "Legendary";
+}
+else if(score >= 95) {
+    level = "Elite";
+}
+else if(score >= 90) {
+    level = "Premium";
+}
+else if(score >= 80) {
+    level = "Strong";
+}
+else if(score >= 70) {
+    level = "Good";
+}
 if(score >= 100) {
   value = "$1M+";
 }
@@ -414,6 +430,7 @@ document.getElementById("result").innerHTML =
 "Domain: " + domain +
 "<br><br>Score: " + score + "/100" +
 "<br><br>Estimated value: " + value +
+"<br><br>Level: " + level +
 (score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
 (score >= 90 ? "<br>✔ Short domain" : "") +
 (score >= 90 ? "<br>✔ Strong commercial keyword" : "") +
