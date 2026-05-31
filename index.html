@@ -368,13 +368,33 @@ if(score < 0) {
 score = 0;
 }
 
-if(score >= 85) {
-value = "$1000+";
-} else if(score >= 70) {
-value = "$500";
-} else {
-value = "$100";
+if(score >= 100) {
+  value = "$1M+";
 }
+else if(score >= 95) {
+  value = "$100K+";
+}
+else if(score >= 90) {
+  value = "$10K+";
+}
+else if(score >= 80) {
+  value = "$5K+";
+}
+else if(score >= 70) {
+  value = "$1K+";
+}
+else if(score >= 60) {
+  value = "$500+";
+}
+else {
+  value = "$100+";
+}
+
+
+
+
+
+
 
 document.getElementById("result").innerHTML =
 "Domain: " + domain +
