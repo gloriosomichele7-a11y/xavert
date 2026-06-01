@@ -1,15 +1,32 @@
 export default async function handler(req, res) {
-  const domain = req.query.domain;
+  const domain = String(req.query.domain || "").toLowerCase().trim();
 
-  if (!domain) {
+  if (!domain || !domain.includes(".")) {
     return res.status(400).json({
       status: "Unknown",
-      message: "Missing domain"
+      message: "Invalid domain"
     });
   }
 
+  const extension = domain.split(".").pop();
+
+  let rdapUrl = `https://rdap.org/domain/${domain}`;
+
+  if (extension === "com") {
+    rdapUrl = `https://rdap.verisign.com/com/v1/domain/${domain.toUpperCase()}`;
+  }
+
+  if (extension === "net") {
+    rdapUrl = `https://rdap.verisign.com/net/v1/domain/${domain.toUpperCase()}`;
+  }
+
   try {
-    const response = await fetch(`https://rdap.org/domain/${domain}`);
+    const response = await fetch(rdapUrl, {
+      headers: {
+        "Accept": "application/rdap+json, application/json",
+        "User-Agent": "XAVERT-Domain-Evaluator/1.0"
+      }
+    });
 
     if (response.status === 404) {
       return res.status(200).json({
