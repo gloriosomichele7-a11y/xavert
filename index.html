@@ -7,7 +7,6 @@
 <title>XAVERT | Digital Utility Ecosystem</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -160,7 +159,6 @@ text-align:center;
 padding:30px;
 color:#777;
 }
-
 </style>
 </head>
 
@@ -169,15 +167,11 @@ color:#777;
 <section class="hero">
 <div class="container">
 
-<div class="badge">
-Launching Soon
-</div>
+<div class="badge">Launching Soon</div>
 
 <h1>XAVERT</h1>
 
-<div class="subtitle">
-Digital Utility Ecosystem
-</div>
+<div class="subtitle">Digital Utility Ecosystem</div>
 
 <p class="description">
 Xavert is building a fast, clean and mobile-first ecosystem of digital utilities:
@@ -193,48 +187,34 @@ tools, reminders, smart workflows, finders and future AI-powered services.
 
 <div class="card">
 <h3>Utility Tools</h3>
-<p>
-Simple and useful tools for everyday digital tasks:
-files, images, calculators, converters and generators.
-</p>
+<p>Simple and useful tools for everyday digital tasks: files, images, calculators, converters and generators.</p>
 </div>
 
 <div class="card">
 <h3>Smart Reminders</h3>
-<p>
-A future personal workspace for deadlines,
-documents, renewals and useful notifications.
-</p>
+<p>A future personal workspace for deadlines, documents, renewals and useful notifications.</p>
 </div>
 
 <div class="card">
 <h3>Future Platform</h3>
-<p>
-Built to evolve into premium services,
-B2B workflows, APIs and white-label integrations.
-</p>
+<p>Built to evolve into premium services, B2B workflows, APIs and white-label integrations.</p>
 </div>
 
 </div>
-
 </div>
 </section>
 
 <section class="section roadmap">
-
 <h2>Roadmap</h2>
-
 <p>✅ Website Online</p>
 <p>✅ GitHub Repository</p>
 <p>✅ Vercel Deployment</p>
 <p>🔄 First Utility In Development</p>
 <p>⏳ Custom Domain</p>
 <p>⏳ Premium Features</p>
-
 </section>
 
 <section class="section">
-
 <h2>Vision</h2>
 
 <p>
@@ -242,9 +222,7 @@ XAVERT is building a collection of practical digital tools designed
 to save time, simplify workflows and improve productivity.
 </p>
 
-<h2 style="margin-top:70px;">
-First Utility Preview
-</h2>
+<h2 style="margin-top:70px;">First Utility Preview</h2>
 
 <p>Domain Evaluator (Beta)</p>
 
@@ -265,7 +243,6 @@ Analyze Domain
 </button>
 
 <div id="result"></div>
-
 </section>
 
 <footer>
@@ -274,131 +251,162 @@ Analyze Domain
 
 <script>
 function analyzeDomain() {
-  const input = document.getElementById("domainInput").value.toLowerCase().trim();
+  const rawInput = document.getElementById("domainInput").value.toLowerCase().trim();
 
-  if (input === "") {
+  if(rawInput === "") {
     alert("Please enter a domain name");
     return;
   }
 
-  const domain = input.replace("https://", "").replace("http://", "").replace("www.", "");
+  const domain = rawInput
+    .replace("https://", "")
+    .replace("http://", "")
+    .replace("www.", "")
+    .split("/")[0]
+    .trim();
+
+  if(!domain.includes(".")) {
+    document.getElementById("result").innerHTML =
+      "Please enter a valid domain, for example: seterax.com";
+    return;
+  }
+
   const parts = domain.split(".");
   const name = parts[0];
-  const extension = parts.length > 1 ? "." + parts[parts.length - 1] : "";
+  const extension = "." + parts[parts.length - 1];
 
-  let score = 35;
+  let score = 30;
   let reasons = [];
   let type = "Brandable Domain";
+
+  const ultraPremiumDomains = [
+    "car.com","cars.com","house.com","home.com","hotel.com","travel.com",
+    "game.com","casino.com","insurance.com","loans.com","bank.com",
+    "credit.com","business.com","money.com","ai.com","crypto.com",
+    "pizza.com","shop.com","market.com","cloud.com","health.com"
+  ];
 
   const premiumKeywords = [
     "car","cars","auto","house","home","hotel","travel","game","gaming",
     "casino","bet","loan","loans","finance","bank","credit","mortgage",
     "insurance","health","doctor","lawyer","legal","crypto","bitcoin",
-    "ai","cloud","hosting","vpn","shop","store","market","business",
-    "money","invest","realestate","pizza","media","news","pay"
+    "cloud","hosting","vpn","shop","store","market","business",
+    "money","invest","realestate","pizza","media","news","pay","tech"
   ];
 
-  const ultraPremiumDomains = [
-    "car.com","cars.com","house.com","home.com","hotel.com","travel.com",
-    "game.com","casino.com","insurance.com","loans.com","bank.com",
-    "credit.com","business.com","money.com","ai.com","crypto.com"
-  ];
+  const isUltraPremium = ultraPremiumDomains.includes(domain);
 
-  if (ultraPremiumDomains.includes(domain)) {
+  if(isUltraPremium) {
     score = 100;
     type = "Ultra Premium Domain";
     reasons.push("Exact ultra-premium domain");
-  }
-
-  if (extension === ".com") {
-    score += 18;
-    reasons.push(".com extension");
-  } else if (extension === ".ai") {
-    score += 16;
-    reasons.push(".ai extension");
-  } else if (extension === ".io") {
-    score += 12;
-    reasons.push(".io extension");
-  } else if (extension === ".net" || extension === ".org") {
-    score += 6;
-    reasons.push("Recognized extension");
   } else {
-    score -= 5;
-    reasons.push("Less common extension");
-  }
-
-  if (name.length <= 4) {
-    score += 25;
-    reasons.push("Very short name");
-  } else if (name.length <= 6) {
-    score += 20;
-    reasons.push("Short and memorable name");
-  } else if (name.length <= 10) {
-    score += 10;
-    reasons.push("Good length");
-  } else if (name.length > 15) {
-    score -= 18;
-    reasons.push("Long name");
-  }
-
-  if (!name.includes("-") && !/\d/.test(name)) {
-    score += 12;
-    reasons.push("Clean name: no numbers or hyphens");
-  }
-
-  if (name.includes("-")) {
-    score -= 18;
-    reasons.push("Contains hyphen");
-  }
-
-  if (/\d/.test(name)) {
-    score -= 12;
-    reasons.push("Contains numbers");
-  }
-
-  const matchedKeywords = premiumKeywords.filter(keyword => name.includes(keyword));
-
-  if (matchedKeywords.length > 0) {
-    score += matchedKeywords.length * 18;
-    type = "Commercial Keyword Domain";
-    reasons.push("Premium keyword detected: " + matchedKeywords.join(", "));
-  }
-
-  const vowels = name.match(/[aeiou]/g) || [];
-  const vowelRatio = vowels.length / name.length;
-
-  if (name.length >= 5 && name.length <= 9 && vowelRatio >= 0.25 && vowelRatio <= 0.6 && !name.includes("-") && !/\d/.test(name)) {
-    score += 15;
-    if (matchedKeywords.length === 0) {
-      type = "Brandable Domain";
+    if(extension === ".com") {
+      score += 18;
+      reasons.push(".com extension");
+    } else if(extension === ".ai") {
+      score += 16;
+      reasons.push(".ai extension");
+    } else if(extension === ".io") {
+      score += 12;
+      reasons.push(".io extension");
+    } else if(extension === ".net" || extension === ".org") {
+      score += 6;
+      reasons.push("Recognized extension");
+    } else {
+      score -= 5;
+      reasons.push("Less common extension");
     }
-    reasons.push("Brandable structure");
+
+    if(name.length <= 4) {
+      score += 25;
+      reasons.push("Very short name");
+    } else if(name.length <= 6) {
+      score += 20;
+      reasons.push("Short and memorable name");
+    } else if(name.length <= 10) {
+      score += 10;
+      reasons.push("Good length");
+    } else if(name.length > 15) {
+      score -= 18;
+      reasons.push("Long name");
+    }
+
+    if(!name.includes("-") && !/\d/.test(name)) {
+      score += 12;
+      reasons.push("Clean name: no numbers or hyphens");
+    }
+
+    if(name.includes("-")) {
+      score -= 18;
+      reasons.push("Contains hyphen");
+    }
+
+    if(/\d/.test(name)) {
+      score -= 12;
+      reasons.push("Contains numbers");
+    }
+
+    const matchedKeywords = premiumKeywords.filter(keyword => {
+      if(keyword === "ai") {
+        return name === "ai" || name.startsWith("ai") || name.endsWith("ai");
+      }
+      return name.includes(keyword);
+    });
+
+    if(matchedKeywords.length > 0) {
+      score += Math.min(35, matchedKeywords.length * 18);
+      type = "Commercial Keyword Domain";
+      reasons.push("Premium keyword detected: " + matchedKeywords.join(", "));
+    }
+
+    const vowels = name.match(/[aeiou]/g) || [];
+    const vowelRatio = vowels.length / name.length;
+
+    if(
+      name.length >= 5 &&
+      name.length <= 9 &&
+      vowelRatio >= 0.25 &&
+      vowelRatio <= 0.6 &&
+      !name.includes("-") &&
+      !/\d/.test(name)
+    ) {
+      score += 15;
+      if(matchedKeywords.length === 0) {
+        type = "Brandable Domain";
+      }
+      reasons.push("Brandable structure");
+    }
   }
 
-  if (score > 100) score = 100;
-  if (score < 0) score = 0;
+  if(score > 100) score = 100;
+  if(score < 0) score = 0;
 
   let value = "$100+";
   let level = "Basic";
 
-  if (score >= 100) {
+  if(score >= 100) {
     value = "$1M+";
     level = "Legendary";
-  } else if (score >= 95) {
+  } else if(score >= 95) {
     value = "$100K+";
     level = "Elite";
-  } else if (score >= 90) {
+  } else if(score >= 90) {
     value = "$10K+";
     level = "Premium";
-  } else if (score >= 80) {
+  } else if(score >= 80) {
     value = "$5K+";
     level = "Strong";
-  } else if (score >= 70) {
+  } else if(score >= 70) {
     value = "$1K+";
     level = "Good";
-  } else if (score >= 60) {
+  } else if(score >= 60) {
     value = "$500+";
     level = "Average";
+  }
+
+  if(reasons.length === 0) {
+    reasons.push("Basic domain quality detected");
   }
 
   document.getElementById("result").innerHTML =
