@@ -32,7 +32,7 @@ linear-gradient(180deg,#0b0b0f 0%,#050505 100%);
 }
 
 .container{
-max-width:1000px;
+max-width:1050px;
 width:100%;
 }
 
@@ -59,7 +59,7 @@ margin-bottom:24px;
 }
 
 .description{
-max-width:720px;
+max-width:760px;
 margin:0 auto 38px;
 font-size:18px;
 line-height:1.7;
@@ -91,11 +91,30 @@ border:1px solid rgba(255,255,255,.22);
 color:white;
 }
 
+.section{
+padding:80px 20px;
+text-align:center;
+}
+
+.section h2{
+font-size:48px;
+margin-bottom:20px;
+}
+
+.section-description{
+max-width:720px;
+margin:0 auto 45px;
+color:#cfcfcf;
+font-size:18px;
+line-height:1.7;
+}
+
 .cards{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 gap:18px;
-margin-top:20px;
+max-width:1100px;
+margin:0 auto;
 }
 
 .card{
@@ -115,49 +134,35 @@ color:#bdbdbd;
 line-height:1.6;
 }
 
-.section{
-padding:80px 20px;
-text-align:center;
-}
-
-.section h2{
-font-size:48px;
-margin-bottom:20px;
-}
-
-.roadmap p{
-margin:8px 0;
-font-size:20px;
-}
-
 .domain-input{
-padding:12px;
-width:300px;
+padding:14px;
+width:min(340px,90%);
 border:none;
-border-radius:8px;
-margin-top:15px;
+border-radius:10px;
+margin-top:18px;
+font-size:16px;
 }
 
 .domain-button{
-padding:12px 24px;
+padding:14px 28px;
 border:none;
-border-radius:8px;
+border-radius:10px;
 cursor:pointer;
 font-weight:bold;
-margin-top:15px;
+margin-top:16px;
+font-size:16px;
 }
 
 #result{
 margin-top:30px;
-font-size:22px;
-font-weight:bold;
+font-size:20px;
 line-height:1.8;
 }
 
 .result-box{
-max-width:620px;
+max-width:680px;
 margin:30px auto 0;
-padding:28px;
+padding:30px;
 border-radius:22px;
 background:rgba(255,255,255,.07);
 border:1px solid rgba(255,255,255,.12);
@@ -176,10 +181,12 @@ color:#e8e8e8;
 
 .result-box .label{
 color:#bfc7ff;
+font-weight:bold;
 }
 
 .result-box .reasons{
 margin-top:20px;
+color:#e8e8e8;
 }
 
 footer{
@@ -195,64 +202,100 @@ color:#777;
 <section class="hero">
 <div class="container">
 
-<div class="badge">Launching Soon</div>
+<div class="badge">Digital Utility Ecosystem</div>
 
 <h1>XAVERT</h1>
 
-<div class="subtitle">Digital Utility Ecosystem</div>
+<div class="subtitle">
+Smart tools for productivity, business and digital assets
+</div>
 
 <p class="description">
-Xavert is building a fast, clean and mobile-first ecosystem of digital utilities:
-tools, reminders, smart workflows, finders and future AI-powered services.
+XAVERT brings together practical digital utilities designed to simplify workflows,
+support smarter online decisions and help users manage digital tasks in one place.
 </p>
 
 <div class="actions">
-<a href="#" class="btn btn-primary">Coming Soon</a>
-<a href="#" class="btn btn-secondary">Explore Vision</a>
+<a href="#utilities" class="btn btn-primary">Explore Utilities</a>
+<a href="#domain-tool" class="btn btn-secondary">Featured Tool</a>
 </div>
 
 <div class="cards">
 
 <div class="card">
-<h3>Utility Tools</h3>
-<p>Simple and useful tools for everyday digital tasks: files, images, calculators, converters and generators.</p>
+<h3>Fast Utilities</h3>
+<p>Simple tools for documents, images, conversions, calculations and everyday digital tasks.</p>
 </div>
 
 <div class="card">
-<h3>Smart Reminders</h3>
-<p>A future personal workspace for deadlines, documents, renewals and useful notifications.</p>
+<h3>Smart Workflows</h3>
+<p>Utilities designed to save time, organize information and improve productivity.</p>
 </div>
 
 <div class="card">
-<h3>Future Platform</h3>
-<p>Built to evolve into premium services, B2B workflows, APIs and white-label integrations.</p>
+<h3>Digital Asset Tools</h3>
+<p>Domain, brand and online asset utilities for creators, professionals and businesses.</p>
 </div>
 
 </div>
+
 </div>
 </section>
 
-<section class="section roadmap">
-<h2>Roadmap</h2>
-<p>✅ Website Online</p>
-<p>✅ GitHub Repository</p>
-<p>✅ Vercel Deployment</p>
-<p>✅ Custom Domain</p>
-<p>🔄 First Utility In Development</p>
-<p>⏳ Premium Features</p>
-</section>
+<section class="section" id="utilities">
 
-<section class="section">
-<h2>Vision</h2>
+<h2>XAVERT Utilities</h2>
 
-<p>
-XAVERT is building a collection of practical digital tools designed
-to save time, simplify workflows and improve productivity.
+<p class="section-description">
+A growing ecosystem of tools for productivity, digital assets, content, documents,
+automation and business support.
 </p>
 
-<h2 style="margin-top:70px;">First Utility Preview</h2>
+<div class="cards">
 
-<p>Domain Evaluator (Beta)</p>
+<div class="card">
+<h3>Domain Intelligence</h3>
+<p>Evaluate domains, analyze branding potential and estimate market value.</p>
+</div>
+
+<div class="card">
+<h3>Document Tools</h3>
+<p>Work with PDFs, documents, file conversions and productivity assets.</p>
+</div>
+
+<div class="card">
+<h3>Image Utilities</h3>
+<p>Optimize, edit and transform images for personal and professional use.</p>
+</div>
+
+<div class="card">
+<h3>Productivity Tools</h3>
+<p>Calculators, converters and everyday utilities designed to save time.</p>
+</div>
+
+<div class="card">
+<h3>AI Utilities</h3>
+<p>Smart assistants for writing, analysis, organization and decision support.</p>
+</div>
+
+<div class="card">
+<h3>Business Solutions</h3>
+<p>Digital services created for entrepreneurs, creators and professionals.</p>
+</div>
+
+</div>
+
+</section>
+
+<section class="section" id="domain-tool">
+
+<h2>Featured Tool</h2>
+
+<p class="section-description">
+Analyze domain quality, branding strength and estimated market potential.
+</p>
+
+<p>Domain Evaluator</p>
 
 <input
 id="domainInput"
@@ -270,10 +313,11 @@ Analyze Domain
 </button>
 
 <div id="result"></div>
+
 </section>
 
 <footer>
-©️ 2026 XAVERT — Digital Utility Ecosystem
+© 2026 XAVERT — Digital Utility Ecosystem
 </footer>
 
 <script>
