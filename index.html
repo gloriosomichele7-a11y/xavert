@@ -250,7 +250,7 @@ Analyze Domain
 </footer>
 
 <script>
-function analyzeDomain() {
+async function analyzeDomain() {
   const rawInput = document.getElementById("domainInput").value.toLowerCase().trim();
 
   if(rawInput === "") {
@@ -409,14 +409,25 @@ function analyzeDomain() {
     reasons.push("Basic domain quality detected");
   }
 
-  document.getElementById("result").innerHTML =
-    "Domain: " + domain +
-    "<br><br>Score: " + score + "/100" +
-    "<br><br>Level: " + level +
-    "<br><br>Type: " + type +
-    "<br><br>Estimated value: " + value +
-    (score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
-    "<br><br>Reasons:<br>✔ " + reasons.join("<br>✔ ");
+  let availability = "Checking...";
+
+try {
+  const response = await fetch(`/api/check-domain?domain=${domain}`);
+  const data = await response.json();
+  availability = data.status;
+} catch {
+  availability = "Unknown";
+}
+
+document.getElementById("result").innerHTML =
+  "Domain: " + domain +
+  "<br><br>Score: " + score + "/100" +
+  "<br><br>Level: " + level +
+  "<br><br>Type: " + type +
+  "<br><br>Availability: " + availability +
+  "<br><br>Estimated value: " + value +
+  (score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
+  "<br><br>Reasons:<br>✔ " + reasons.join("<br>✔ ");
 }
 </script>
 
