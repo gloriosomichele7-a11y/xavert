@@ -273,171 +273,143 @@ Analyze Domain
 </footer>
 
 <script>
-
 function analyzeDomain() {
+  const input = document.getElementById("domainInput").value.toLowerCase().trim();
 
-const domain =
-document.getElementById("domainInput").value.toLowerCase().trim();
+  if (input === "") {
+    alert("Please enter a domain name");
+    return;
+  }
 
-if(domain === "") {
-alert("Please enter a domain name");
-return;
-}
+  const domain = input.replace("https://", "").replace("http://", "").replace("www.", "");
+  const parts = domain.split(".");
+  const name = parts[0];
+  const extension = parts.length > 1 ? "." + parts[parts.length - 1] : "";
 
-let score = 40;
-let value = "$100";
+  let score = 35;
+  let reasons = [];
+  let type = "Brandable Domain";
 
-if(domain.length <= 8) {
-score += 25;
-}
+  const premiumKeywords = [
+    "car","cars","auto","house","home","hotel","travel","game","gaming",
+    "casino","bet","loan","loans","finance","bank","credit","mortgage",
+    "insurance","health","doctor","lawyer","legal","crypto","bitcoin",
+    "ai","cloud","hosting","vpn","shop","store","market","business",
+    "money","invest","realestate","pizza","media","news","pay"
+  ];
 
-if(domain.length <= 4) {
-score += 10;
-}
+  const ultraPremiumDomains = [
+    "car.com","cars.com","house.com","home.com","hotel.com","travel.com",
+    "game.com","casino.com","insurance.com","loans.com","bank.com",
+    "credit.com","business.com","money.com","ai.com","crypto.com"
+  ];
 
-if(domain.length > 15) {
-score -= 20;
-}
+  if (ultraPremiumDomains.includes(domain)) {
+    score = 100;
+    type = "Ultra Premium Domain";
+    reasons.push("Exact ultra-premium domain");
+  }
 
-if(domain.endsWith(".com")) {
-score += 15;
-}
-if(domain.endsWith(".ai")) {
-    score += 15;
-}
+  if (extension === ".com") {
+    score += 18;
+    reasons.push(".com extension");
+  } else if (extension === ".ai") {
+    score += 16;
+    reasons.push(".ai extension");
+  } else if (extension === ".io") {
+    score += 12;
+    reasons.push(".io extension");
+  } else if (extension === ".net" || extension === ".org") {
+    score += 6;
+    reasons.push("Recognized extension");
+  } else {
+    score -= 5;
+    reasons.push("Less common extension");
+  }
 
-if(domain.endsWith(".io")) {
+  if (name.length <= 4) {
+    score += 25;
+    reasons.push("Very short name");
+  } else if (name.length <= 6) {
+    score += 20;
+    reasons.push("Short and memorable name");
+  } else if (name.length <= 10) {
     score += 10;
-}
+    reasons.push("Good length");
+  } else if (name.length > 15) {
+    score -= 18;
+    reasons.push("Long name");
+  }
 
-if(domain.endsWith(".net")) {
-    score += 5;
-}
+  if (!name.includes("-") && !/\d/.test(name)) {
+    score += 12;
+    reasons.push("Clean name: no numbers or hyphens");
+  }
 
-if(domain.endsWith(".org")) {
-    score += 5;
-}
-if(domain.includes("-")) {
-score -= 15;
-}
+  if (name.includes("-")) {
+    score -= 18;
+    reasons.push("Contains hyphen");
+  }
 
-if(/\d/.test(domain)) {
-score -= 10;
-}
+  if (/\d/.test(name)) {
+    score -= 12;
+    reasons.push("Contains numbers");
+  }
 
-const premiumDomains = [
-"car.com",
-"insurance.com",
-"hotel.com",
-"loans.com",
-"crypto.com",
-"ai.com",
-"business.com"
-];
+  const matchedKeywords = premiumKeywords.filter(keyword => name.includes(keyword));
 
-if(premiumDomains.includes(domain)) {
-score = 100;
-}
+  if (matchedKeywords.length > 0) {
+    score += matchedKeywords.length * 18;
+    type = "Commercial Keyword Domain";
+    reasons.push("Premium keyword detected: " + matchedKeywords.join(", "));
+  }
 
-const premiumKeywords = [
-"car",
-"hotel",
-"insurance",
-"loan",
-"finance",
-"crypto",
-"ai",
-"health",
-"travel",
-"money",
-"business",
-"pizza",
-"casino",
-"bet",
-"game",
-"shop",
-"market"
-];
+  const vowels = name.match(/[aeiou]/g) || [];
+  const vowelRatio = vowels.length / name.length;
 
-premiumKeywords.forEach(keyword => {
-if(domain.includes(keyword) && score < 100) {
-score += 20;
-}
-});
+  if (name.length >= 5 && name.length <= 9 && vowelRatio >= 0.25 && vowelRatio <= 0.6 && !name.includes("-") && !/\d/.test(name)) {
+    score += 15;
+    if (matchedKeywords.length === 0) {
+      type = "Brandable Domain";
+    }
+    reasons.push("Brandable structure");
+  }
 
-if(domain.includes("pizza") ||
-domain.includes("casino") ||
-domain.includes("bet") ||
-domain.includes("game") ||
-domain.includes("shop") ||
-domain.includes("market")) {
-score += 15;
-}
+  if (score > 100) score = 100;
+  if (score < 0) score = 0;
 
-if(score > 100) {
-score = 100;
-}
+  let value = "$100+";
+  let level = "Basic";
 
-if(score < 0) {
-score = 0;
-}
-let level = "Basic";
-
-if(score >= 100) {
+  if (score >= 100) {
+    value = "$1M+";
     level = "Legendary";
-}
-else if(score >= 95) {
+  } else if (score >= 95) {
+    value = "$100K+";
     level = "Elite";
-}
-else if(score >= 90) {
+  } else if (score >= 90) {
+    value = "$10K+";
     level = "Premium";
-}
-else if(score >= 80) {
+  } else if (score >= 80) {
+    value = "$5K+";
     level = "Strong";
-}
-else if(score >= 70) {
+  } else if (score >= 70) {
+    value = "$1K+";
     level = "Good";
-}
-if(score >= 100) {
-  value = "$1M+";
-}
-else if(score >= 95) {
-  value = "$100K+";
-}
-else if(score >= 90) {
-  value = "$10K+";
-}
-else if(score >= 80) {
-  value = "$5K+";
-}
-else if(score >= 70) {
-  value = "$1K+";
-}
-else if(score >= 60) {
-  value = "$500+";
-}
-else {
-  value = "$100+";
-}
+  } else if (score >= 60) {
+    value = "$500+";
+    level = "Average";
+  }
 
-
-
-
-
-
-
-document.getElementById("result").innerHTML =
-"Domain: " + domain +
-"<br><br>Score: " + score + "/100" +
-"<br><br>Estimated value: " + value +
-"<br><br>Level: " + level +
-(score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
-(score >= 90 ? "<br>✔ Short domain" : "") +
-(score >= 90 ? "<br>✔ Strong commercial keyword" : "") +
-(score >= 90 ? "<br>✔ High resale potential" : "");
-
+  document.getElementById("result").innerHTML =
+    "Domain: " + domain +
+    "<br><br>Score: " + score + "/100" +
+    "<br><br>Level: " + level +
+    "<br><br>Type: " + type +
+    "<br><br>Estimated value: " + value +
+    (score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
+    "<br><br>Reasons:<br>✔ " + reasons.join("<br>✔ ");
 }
-
 </script>
 
 </body>
