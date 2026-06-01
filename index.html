@@ -382,8 +382,19 @@ async function analyzeDomain() {
   if(score > 100) score = 100;
   if(score < 0) score = 0;
 
-  let value = "$100+";
-  let level = "Basic";
+
+
+if(!isUltraPremium && score > 95) {
+  score = 95;
+}
+
+if(/\d/.test(name) || name.includes("-")) {
+  type = "Standard Domain";
+}
+
+let value = "$100+";
+let level = "Basic";
+ 
 
   if(score >= 100) {
     value = "$1M+";
@@ -408,7 +419,15 @@ async function analyzeDomain() {
   if(reasons.length === 0) {
     reasons.push("Basic domain quality detected");
   }
+if(score >= 90 && !isUltraPremium) {
+  value = "$5K+";
+  level = "Strong";
+}
 
+if(score >= 95 && !isUltraPremium) {
+  value = "$10K+";
+  level = "Premium";
+}
   let availability = "Checking...";
 
 try {
