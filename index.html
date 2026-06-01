@@ -148,10 +148,38 @@ margin-top:15px;
 }
 
 #result{
-margin-top:25px;
+margin-top:30px;
 font-size:22px;
 font-weight:bold;
 line-height:1.8;
+}
+
+.result-box{
+max-width:620px;
+margin:30px auto 0;
+padding:28px;
+border-radius:22px;
+background:rgba(255,255,255,.07);
+border:1px solid rgba(255,255,255,.12);
+text-align:left;
+}
+
+.result-box h3{
+font-size:28px;
+margin-bottom:18px;
+}
+
+.result-box p{
+margin:12px 0;
+color:#e8e8e8;
+}
+
+.result-box .label{
+color:#bfc7ff;
+}
+
+.result-box .reasons{
+margin-top:20px;
 }
 
 footer{
@@ -209,8 +237,8 @@ tools, reminders, smart workflows, finders and future AI-powered services.
 <p>✅ Website Online</p>
 <p>✅ GitHub Repository</p>
 <p>✅ Vercel Deployment</p>
+<p>✅ Custom Domain</p>
 <p>🔄 First Utility In Development</p>
-<p>⏳ Custom Domain</p>
 <p>⏳ Premium Features</p>
 </section>
 
@@ -237,8 +265,7 @@ placeholder="Enter a domain name..."
 
 <button
 class="domain-button"
-onclick="analyzeDomain()"
->
+onclick="analyzeDomain()">
 Analyze Domain
 </button>
 
@@ -246,11 +273,11 @@ Analyze Domain
 </section>
 
 <footer>
-© 2026 XAVERT — Digital Utility Ecosystem
+©️ 2026 XAVERT — Digital Utility Ecosystem
 </footer>
 
 <script>
-async function analyzeDomain() {
+function analyzeDomain() {
   const rawInput = document.getElementById("domainInput").value.toLowerCase().trim();
 
   if(rawInput === "") {
@@ -277,13 +304,15 @@ async function analyzeDomain() {
 
   let score = 30;
   let reasons = [];
-  let type = "Brandable Domain";
+  let category = "Brandable Domain";
+  let value = "$100+";
 
   const ultraPremiumDomains = [
     "car.com","cars.com","house.com","home.com","hotel.com","travel.com",
     "game.com","casino.com","insurance.com","loans.com","bank.com",
     "credit.com","business.com","money.com","ai.com","crypto.com",
-    "pizza.com","shop.com","market.com","cloud.com","health.com"
+    "pizza.com","shop.com","market.com","cloud.com","health.com",
+    "world.com","music.com","food.com","law.com","pay.com","news.com"
   ];
 
   const premiumKeywords = [
@@ -291,15 +320,16 @@ async function analyzeDomain() {
     "casino","bet","loan","loans","finance","bank","credit","mortgage",
     "insurance","health","doctor","lawyer","legal","crypto","bitcoin",
     "cloud","hosting","vpn","shop","store","market","business",
-    "money","invest","realestate","pizza","media","news","pay","tech"
+    "money","invest","realestate","pizza","media","news","pay","tech",
+    "app","world","music","food","law","energy","solar","digital"
   ];
 
   const isUltraPremium = ultraPremiumDomains.includes(domain);
 
   if(isUltraPremium) {
-    score = 100;
-    type = "Ultra Premium Domain";
-    reasons.push("Exact ultra-premium domain");
+    category = "Ultra Premium Domain";
+    value = "Premium market value";
+    reasons.push("Exact premium domain");
   } else {
     if(extension === ".com") {
       score += 18;
@@ -339,11 +369,13 @@ async function analyzeDomain() {
 
     if(name.includes("-")) {
       score -= 18;
+      category = "Standard Domain";
       reasons.push("Contains hyphen");
     }
 
     if(/\d/.test(name)) {
       score -= 12;
+      category = "Standard Domain";
       reasons.push("Contains numbers");
     }
 
@@ -356,8 +388,8 @@ async function analyzeDomain() {
 
     if(matchedKeywords.length > 0) {
       score += Math.min(35, matchedKeywords.length * 18);
-      type = "Commercial Keyword Domain";
-      reasons.push("Premium keyword detected: " + matchedKeywords.join(", "));
+      category = "Commercial Keyword Domain";
+      reasons.push("Commercial keyword detected: " + matchedKeywords.join(", "));
     }
 
     const vowels = name.match(/[aeiou]/g) || [];
@@ -373,80 +405,42 @@ async function analyzeDomain() {
     ) {
       score += 15;
       if(matchedKeywords.length === 0) {
-        type = "Brandable Domain";
+        category = "Brandable Domain";
       }
       reasons.push("Brandable structure");
     }
-  }
 
-  if(score > 100) score = 100;
-  if(score < 0) score = 0;
+    if(score > 95) score = 95;
+    if(score < 0) score = 0;
 
-
-
-if(!isUltraPremium && score > 95) {
-  score = 95;
-}
-
-if(/\d/.test(name) || name.includes("-")) {
-  type = "Standard Domain";
-}
-
-let value = "$100+";
-let level = "Basic";
- 
-
-  if(score >= 100) {
-    value = "$1M+";
-    level = "Legendary";
-  } else if(score >= 95) {
-    value = "$100K+";
-    level = "Elite";
-  } else if(score >= 90) {
-    value = "$10K+";
-    level = "Premium";
-  } else if(score >= 80) {
-    value = "$5K+";
-    level = "Strong";
-  } else if(score >= 70) {
-    value = "$1K+";
-    level = "Good";
-  } else if(score >= 60) {
-    value = "$500+";
-    level = "Average";
+    if(score >= 95) {
+      value = "$10K+";
+    } else if(score >= 85) {
+      value = "$5K+";
+    } else if(score >= 75) {
+      value = "$1K+";
+    } else if(score >= 60) {
+      value = "$500+";
+    } else if(score >= 40) {
+      value = "$100+";
+    } else {
+      value = "Low value";
+    }
   }
 
   if(reasons.length === 0) {
     reasons.push("Basic domain quality detected");
   }
-if(score >= 90 && !isUltraPremium) {
-  value = "$5K+";
-  level = "Strong";
-}
 
-if(score >= 95 && !isUltraPremium) {
-  value = "$10K+";
-  level = "Premium";
-}
-  let availability = "Checking...";
-
-try {
-  const response = await fetch(`/api/check-domain?domain=${domain}`);
-  const data = await response.json();
-  availability = data.status;
-} catch {
-  availability = "Unknown";
-}
-
-document.getElementById("result").innerHTML =
-  "Domain: " + domain +
-  "<br><br>Score: " + score + "/100" +
-  "<br><br>Level: " + level +
-  "<br><br>Type: " + type +
-  "<br><br>Availability: " + availability +
-  "<br><br>Estimated value: " + value +
-  (score >= 90 ? "<br><br>⭐ Premium Domain" : "") +
-  "<br><br>Reasons:<br>✔ " + reasons.join("<br>✔ ");
+  document.getElementById("result").innerHTML =
+    '<div class="result-box">' +
+    '<h3>Domain: ' + domain + '</h3>' +
+    '<p><span class="label">Category:</span> ' + category + '</p>' +
+    '<p><span class="label">Estimated Value:</span> ' + value + '</p>' +
+    '<div class="reasons"><span class="label">Highlights:</span><br>✔ ' +
+    reasons.join("<br>✔ ") +
+    '</div>' +
+    '</div>';
 }
 </script>
 
