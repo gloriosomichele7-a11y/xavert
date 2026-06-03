@@ -7,7 +7,6 @@
 <title>XAVERT | Digital Services Ecosystem</title>
 
 <style>
-
 *{
 margin:0;
 padding:0;
@@ -30,44 +29,60 @@ position:fixed;
 top:0;
 left:0;
 width:100%;
-padding:20px 7%;
+padding:16px 7%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:rgba(7,11,20,.92);
-backdrop-filter:blur(12px);
+background:rgba(7,11,20,.94);
+backdrop-filter:blur(14px);
 border-bottom:1px solid rgba(255,255,255,.08);
 z-index:1000;
 }
 
-.brand{
+.brand img{
+width:52px;
+height:52px;
+object-fit:contain;
+background:white;
+padding:5px;
+border-radius:12px;
+box-shadow:0 0 20px rgba(255,0,0,.35);
+}
+
+.nav-actions{
 display:flex;
 align-items:center;
 gap:12px;
-}
-
-.brand img{
-width:42px;
-height:42px;
-object-fit:contain;
-filter:drop-shadow(0 0 12px rgba(255,0,0,.7));
-}
-
-.brand span{
-font-size:22px;
-font-weight:800;
-letter-spacing:3px;
 }
 
 .contact{
 color:white;
 text-decoration:none;
 padding:10px 18px;
-border:1px solid rgba(255,255,255,.15);
-border-radius:10px;
+border:1px solid rgba(255,255,255,.18);
+border-radius:12px;
+font-size:14px;
 }
 
 .contact:hover{
+border-color:#ff2d2d;
+color:#fca5a5;
+}
+
+.login-icon{
+width:42px;
+height:42px;
+display:flex;
+align-items:center;
+justify-content:center;
+border:1px solid rgba(255,255,255,.18);
+border-radius:12px;
+text-decoration:none;
+font-size:19px;
+background:rgba(255,255,255,.04);
+}
+
+.login-icon:hover{
 border-color:#ff2d2d;
 }
 
@@ -77,41 +92,53 @@ display:flex;
 align-items:center;
 justify-content:center;
 text-align:center;
-padding:140px 20px 80px;
+padding:130px 20px 80px;
 background:
-radial-gradient(circle at top, rgba(255,0,0,.15), transparent 40%),
-linear-gradient(180deg,#101726 0%,#070b14 100%);
+radial-gradient(circle at top, rgba(255,0,0,.16), transparent 38%),
+linear-gradient(180deg,#111827 0%,#070b14 100%);
 }
 
 .hero-content{
 max-width:900px;
 }
 
+.badge{
+display:inline-block;
+padding:8px 18px;
+border:1px solid rgba(255,45,45,.4);
+border-radius:999px;
+color:#fca5a5;
+font-size:14px;
+margin-bottom:24px;
+}
+
 .hero h1{
-font-size:clamp(50px,8vw,90px);
-margin-bottom:20px;
+font-size:clamp(44px,8vw,86px);
+line-height:1.05;
+margin-bottom:24px;
 }
 
 .hero p{
-max-width:750px;
-margin:auto;
+max-width:760px;
+margin:0 auto 34px;
 font-size:20px;
 color:#cbd5e1;
-margin-bottom:35px;
 }
 
 .hero-btn{
 display:inline-block;
-padding:16px 34px;
+padding:15px 32px;
 background:#d60000;
 color:white;
 text-decoration:none;
 border-radius:12px;
 font-weight:bold;
+transition:.25s;
 }
 
 .hero-btn:hover{
 background:#ff2d2d;
+transform:translateY(-2px);
 }
 
 .section{
@@ -126,33 +153,37 @@ margin-bottom:15px;
 
 .section-subtitle{
 text-align:center;
-max-width:750px;
-margin:auto;
+max-width:760px;
+margin:0 auto 50px;
 color:#cbd5e1;
-margin-bottom:50px;
+font-size:18px;
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
 gap:24px;
+max-width:1180px;
+margin:0 auto;
 }
 
 .card{
-background:#141b2c;
-border:1px solid rgba(255,255,255,.08);
-border-radius:22px;
+background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
+border:1px solid rgba(255,255,255,.09);
+border-radius:24px;
 padding:30px;
 cursor:pointer;
-transition:.3s;
+transition:.25s;
 }
 
 .card:hover{
 transform:translateY(-6px);
-border-color:#ff2d2d;
+border-color:rgba(255,45,45,.7);
+box-shadow:0 20px 50px rgba(214,0,0,.12);
 }
 
 .card h3{
+font-size:22px;
 margin-bottom:12px;
 }
 
@@ -163,8 +194,8 @@ color:#cbd5e1;
 .tools{
 display:none;
 margin-top:20px;
-padding-top:15px;
-border-top:1px solid rgba(255,255,255,.08);
+padding-top:16px;
+border-top:1px solid rgba(255,255,255,.09);
 }
 
 .tools ul{
@@ -176,45 +207,63 @@ margin:8px 0;
 color:#cbd5e1;
 }
 
-.why{
-background:#0f1523;
-}
-
 .footer{
-padding:70px 20px;
+padding:60px 20px;
 text-align:center;
 border-top:1px solid rgba(255,255,255,.08);
+background:#070b14;
 }
 
 .footer img{
-width:90px;
-margin-bottom:15px;
-filter:drop-shadow(0 0 18px rgba(255,0,0,.8));
-}
-
-.footer h3{
-letter-spacing:4px;
-margin-bottom:8px;
+width:120px;
+object-fit:contain;
+background:white;
+padding:10px;
+border-radius:22px;
+box-shadow:0 0 28px rgba(255,0,0,.28);
+margin-bottom:18px;
 }
 
 .footer p{
-color:#94a3b8;
+color:#cbd5e1;
+font-size:16px;
+}
+
+.footer .copyright{
+color:#7f8ca3;
+font-size:14px;
+margin-top:16px;
 }
 
 @media(max-width:768px){
+.navbar{
+padding:14px 20px;
+}
 
-.brand span{
-display:none;
+.brand img{
+width:46px;
+height:46px;
+}
+
+.contact{
+padding:9px 14px;
 }
 
 .hero h1{
-font-size:52px;
+font-size:42px;
+}
+
+.hero p{
+font-size:18px;
+}
+
+.section{
+padding:70px 20px;
 }
 
 .section-title{
 font-size:34px;
 }
-
 }
 </style>
 </head>
@@ -222,97 +271,87 @@ font-size:34px;
 <body>
 
 <nav class="navbar">
-
 <div class="brand">
-<img src="logo.png" alt="XAVERT">
-<span>XAVERT</span>
+<img src="logo.png" alt="XAVERT Logo">
 </div>
 
+<div class="nav-actions">
 <a href="#footer" class="contact">Contact</a>
-
+<a href="#" class="login-icon" title="Login">👤</a>
+</div>
 </nav>
 
 <section class="hero">
-
 <div class="hero-content">
 
-<h1>Digital Services Ecosystem</h1>
+<div class="badge">Digital Services Ecosystem</div>
+
+<h1>Professional Digital Tools for Everyday Work</h1>
 
 <p>
-Professional online tools for files, documents, images,
-QR codes and identity services.
+A modern platform for file conversion, QR codes, identity tools,
+PDF utilities and image services.
 </p>
 
-<a href="#services" class="hero-btn">
-Explore Services
-</a>
+<a href="#services" class="hero-btn">Explore Services</a>
 
 </div>
-
 </section>
 
 <section class="section" id="services">
 
-<h2 class="section-title">
-Services
-</h2>
+<h2 class="section-title">Services</h2>
 
 <p class="section-subtitle">
 Carefully designed digital services that make everyday tasks faster, easier and more efficient.
 </p>
 
-
-
 <div class="grid">
 
 <div class="card" onclick="toggleTools('qr')">
 <h3>QR Code Generator</h3>
-<p>Create QR codes for multiple use cases.</p>
-
+<p>Create QR codes for links, Wi-Fi networks, emails, phone numbers and text.</p>
 <div class="tools" id="qr">
 <ul>
 <li>URL QR Codes</li>
+<li>Wi-Fi QR Codes</li>
 <li>Email QR Codes</li>
 <li>Phone QR Codes</li>
 <li>SMS QR Codes</li>
-<li>Wi-Fi QR Codes</li>
 <li>Text QR Codes</li>
 </ul>
 </div>
 </div>
 
-<div class="card" onclick="toggleTools('tax')">
+<div class="card" onclick="toggleTools('identity')">
 <h3>Identity & Tax ID Tools</h3>
-<p>Generate and validate supported formats.</p>
-
-<div class="tools" id="tax">
+<p>Generate, validate and verify supported national identity and tax formats.</p>
+<div class="tools" id="identity">
 <ul>
 <li>Tax ID Validation</li>
 <li>Identity Format Check</li>
-<li>Country Support</li>
-<li>Verification Tools</li>
+<li>Country-Based Rules</li>
+<li>Check Digit Verification</li>
 </ul>
 </div>
 </div>
 
 <div class="card" onclick="toggleTools('files')">
 <h3>Universal File Converter</h3>
-<p>Convert documents, images and data formats.</p>
-
+<p>Convert documents, images, spreadsheets and common file formats.</p>
 <div class="tools" id="files">
 <ul>
-<li>PDF Conversion</li>
-<li>DOCX Conversion</li>
+<li>Document Conversion</li>
 <li>Image Conversion</li>
 <li>Spreadsheet Conversion</li>
+<li>Structured Data Conversion</li>
 </ul>
 </div>
 </div>
 
 <div class="card" onclick="toggleTools('pdf')">
 <h3>PDF Toolkit</h3>
-<p>Professional PDF processing tools.</p>
-
+<p>Merge, split, compress and convert PDF files with practical tools.</p>
 <div class="tools" id="pdf">
 <ul>
 <li>Merge PDF</li>
@@ -326,41 +365,28 @@ Carefully designed digital services that make everyday tasks faster, easier and 
 
 <div class="card" onclick="toggleTools('image')">
 <h3>Image Toolkit</h3>
-<p>Image optimization and conversion tools.</p>
-
+<p>Resize, compress, crop and convert images for web and professional use.</p>
 <div class="tools" id="image">
 <ul>
 <li>Resize Images</li>
 <li>Compress Images</li>
 <li>Crop Images</li>
-<li>Convert Formats</li>
+<li>Convert Image Formats</li>
 </ul>
 </div>
 </div>
 
 </div>
-
 </section>
 
-
 <footer class="footer" id="footer">
-
-<img src="logo.png" alt="XAVERT">
-
-<h3>XAVERT</h3>
-
+<img src="logo.png" alt="XAVERT Logo">
 <p>Digital Services Ecosystem</p>
-
-<br>
-
-<p>© 2026 XAVERT. All rights reserved.</p>
-
+<p class="copyright">© 2026 XAVERT. All rights reserved.</p>
 </footer>
 
 <script>
-
 function toggleTools(id){
-
 const section = document.getElementById(id);
 
 if(section.style.display === "block"){
@@ -368,9 +394,7 @@ section.style.display = "none";
 }else{
 section.style.display = "block";
 }
-
 }
-
 </script>
 
 </body>
