@@ -3,7 +3,6 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>XAVERT | Digital Services Ecosystem</title>
 
 <style>
@@ -19,8 +18,8 @@ scroll-behavior:smooth;
 }
 
 body{
-background:#070b14;
-color:white;
+background:#f7f8fb;
+color:#111827;
 line-height:1.6;
 }
 
@@ -31,22 +30,19 @@ left:0;
 width:100%;
 padding:16px 7%;
 display:flex;
-justify-content:space-between;
 align-items:center;
-background:rgba(7,11,20,.94);
+justify-content:space-between;
+background:rgba(255,255,255,.94);
 backdrop-filter:blur(14px);
-border-bottom:1px solid rgba(255,255,255,.08);
+border-bottom:1px solid rgba(17,24,39,.08);
 z-index:1000;
 }
 
 .brand img{
-width:52px;
-height:52px;
-object-fit:contain;
-background:white;
-padding:5px;
-border-radius:12px;
-box-shadow:0 0 20px rgba(255,0,0,.35);
+width:145px;
+height:auto;
+display:block;
+border-radius:10px;
 }
 
 .nav-actions{
@@ -56,17 +52,18 @@ gap:12px;
 }
 
 .contact{
-color:white;
 text-decoration:none;
+color:#111827;
+font-weight:700;
 padding:10px 18px;
-border:1px solid rgba(255,255,255,.18);
+border:1px solid rgba(17,24,39,.14);
 border-radius:12px;
-font-size:14px;
+background:white;
 }
 
 .contact:hover{
-border-color:#ff2d2d;
-color:#fca5a5;
+color:#d60000;
+border-color:#d60000;
 }
 
 .login-icon{
@@ -75,15 +72,14 @@ height:42px;
 display:flex;
 align-items:center;
 justify-content:center;
-border:1px solid rgba(255,255,255,.18);
+border:1px solid rgba(17,24,39,.14);
 border-radius:12px;
+background:white;
 text-decoration:none;
-font-size:19px;
-background:rgba(255,255,255,.04);
 }
 
 .login-icon:hover{
-border-color:#ff2d2d;
+border-color:#d60000;
 }
 
 .hero{
@@ -93,36 +89,26 @@ align-items:center;
 justify-content:center;
 text-align:center;
 padding:130px 20px 80px;
-background:
-radial-gradient(circle at top, rgba(255,0,0,.16), transparent 38%),
-linear-gradient(180deg,#111827 0%,#070b14 100%);
+background:linear-gradient(180deg,#ffffff 0%,#f7f8fb 100%);
 }
 
 .hero-content{
 max-width:900px;
 }
 
-.badge{
-display:inline-block;
-padding:8px 18px;
-border:1px solid rgba(255,45,45,.4);
-border-radius:999px;
-color:#fca5a5;
-font-size:14px;
-margin-bottom:24px;
-}
-
-.hero h1{
-font-size:clamp(44px,8vw,86px);
-line-height:1.05;
-margin-bottom:24px;
+.hero-logo{
+width:min(520px,88%);
+height:auto;
+border-radius:20px;
+box-shadow:0 22px 70px rgba(17,24,39,.18);
+margin-bottom:32px;
 }
 
 .hero p{
-max-width:760px;
+max-width:720px;
 margin:0 auto 34px;
 font-size:20px;
-color:#cbd5e1;
+color:#4b5563;
 }
 
 .hero-btn{
@@ -132,7 +118,7 @@ background:#d60000;
 color:white;
 text-decoration:none;
 border-radius:12px;
-font-weight:bold;
+font-weight:800;
 transition:.25s;
 }
 
@@ -155,7 +141,7 @@ margin-bottom:15px;
 text-align:center;
 max-width:760px;
 margin:0 auto 50px;
-color:#cbd5e1;
+color:#4b5563;
 font-size:18px;
 }
 
@@ -168,18 +154,19 @@ margin:0 auto;
 }
 
 .card{
-background:linear-gradient(180deg,rgba(255,255,255,.08),rgba(255,255,255,.04));
-border:1px solid rgba(255,255,255,.09);
+background:white;
+border:1px solid rgba(17,24,39,.08);
 border-radius:24px;
 padding:30px;
 cursor:pointer;
 transition:.25s;
+box-shadow:0 12px 35px rgba(17,24,39,.06);
 }
 
 .card:hover{
 transform:translateY(-6px);
-border-color:rgba(255,45,45,.7);
-box-shadow:0 20px 50px rgba(214,0,0,.12);
+border-color:rgba(214,0,0,.45);
+box-shadow:0 20px 55px rgba(214,0,0,.10);
 }
 
 .card h3{
@@ -188,14 +175,14 @@ margin-bottom:12px;
 }
 
 .card p{
-color:#cbd5e1;
+color:#4b5563;
 }
 
 .tools{
 display:none;
 margin-top:20px;
 padding-top:16px;
-border-top:1px solid rgba(255,255,255,.09);
+border-top:1px solid rgba(17,24,39,.08);
 }
 
 .tools ul{
@@ -204,35 +191,26 @@ padding-left:18px;
 
 .tools li{
 margin:8px 0;
-color:#cbd5e1;
+color:#4b5563;
 }
 
 .footer{
 padding:60px 20px;
 text-align:center;
-border-top:1px solid rgba(255,255,255,.08);
-background:#070b14;
+background:white;
+border-top:1px solid rgba(17,24,39,.08);
 }
 
 .footer img{
-width:120px;
-object-fit:contain;
-background:white;
-padding:10px;
-border-radius:22px;
-box-shadow:0 0 28px rgba(255,0,0,.28);
+width:180px;
+height:auto;
+border-radius:16px;
 margin-bottom:18px;
 }
 
 .footer p{
-color:#cbd5e1;
-font-size:16px;
-}
-
-.footer .copyright{
-color:#7f8ca3;
+color:#6b7280;
 font-size:14px;
-margin-top:16px;
 }
 
 @media(max-width:768px){
@@ -241,16 +219,11 @@ padding:14px 20px;
 }
 
 .brand img{
-width:46px;
-height:46px;
+width:115px;
 }
 
-.contact{
-padding:9px 14px;
-}
-
-.hero h1{
-font-size:42px;
+.hero-logo{
+width:min(400px,92%);
 }
 
 .hero p{
@@ -263,6 +236,10 @@ padding:70px 20px;
 
 .section-title{
 font-size:34px;
+}
+
+.footer img{
+width:150px;
 }
 }
 </style>
@@ -277,20 +254,23 @@ font-size:34px;
 
 <div class="nav-actions">
 <a href="#footer" class="contact">Contact</a>
-<a href="#" class="login-icon" title="Login">👤</a>
+
+<a href="#" class="login-icon" title="Login">
+<svg viewBox="0 0 24 24" width="22" height="22" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M12 12C14.7614 12 17 9.76142 17 7C17 4.23858 14.7614 2 12 2C9.23858 2 7 4.23858 7 7C7 9.76142 9.23858 12 12 12Z" stroke="#111827" stroke-width="2"/>
+<path d="M4 22C4 17.5817 7.58172 14 12 14C16.4183 14 20 17.5817 20 22" stroke="#111827" stroke-width="2" stroke-linecap="round"/>
+</svg>
+</a>
 </div>
 </nav>
 
 <section class="hero">
 <div class="hero-content">
 
-<div class="badge">Digital Services Ecosystem</div>
-
-<h1>Professional Digital Tools for Everyday Work</h1>
+<img src="logo.png" class="hero-logo" alt="XAVERT Logo">
 
 <p>
-A modern platform for file conversion, QR codes, identity tools,
-PDF utilities and image services.
+Professional tools for files, documents, QR codes, images and identity services.
 </p>
 
 <a href="#services" class="hero-btn">Explore Services</a>
@@ -381,19 +361,13 @@ Carefully designed digital services that make everyday tasks faster, easier and 
 
 <footer class="footer" id="footer">
 <img src="logo.png" alt="XAVERT Logo">
-<p>Digital Services Ecosystem</p>
-<p class="copyright">© 2026 XAVERT. All rights reserved.</p>
+<p>© 2026 XAVERT. All rights reserved.</p>
 </footer>
 
 <script>
 function toggleTools(id){
 const section = document.getElementById(id);
-
-if(section.style.display === "block"){
-section.style.display = "none";
-}else{
-section.style.display = "block";
-}
+section.style.display = section.style.display === "block" ? "none" : "block";
 }
 </script>
 
