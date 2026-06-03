@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>XAVERT | Digital Utility Ecosystem</title>
+<title>XAVERT | Digital Services Ecosystem</title>
 
 <style>
 
@@ -20,7 +20,7 @@ scroll-behavior:smooth;
 }
 
 body{
-background:#0b0f19;
+background:#070b14;
 color:white;
 line-height:1.6;
 }
@@ -34,105 +34,84 @@ padding:20px 7%;
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:rgba(11,15,25,.9);
-backdrop-filter:blur(10px);
+background:rgba(7,11,20,.92);
+backdrop-filter:blur(12px);
 border-bottom:1px solid rgba(255,255,255,.08);
 z-index:1000;
 }
 
-.logo{
+.brand{
 display:flex;
 align-items:center;
 gap:12px;
 }
 
-.logo img{
+.brand img{
 width:42px;
 height:42px;
+object-fit:contain;
+filter:drop-shadow(0 0 12px rgba(255,0,0,.7));
 }
 
-.logo span{
+.brand span{
 font-size:22px;
 font-weight:800;
 letter-spacing:3px;
 }
 
-.nav-links{
-display:flex;
-gap:25px;
-}
-
-.nav-links a{
-color:#cbd5e1;
+.contact{
+color:white;
 text-decoration:none;
+padding:10px 18px;
+border:1px solid rgba(255,255,255,.15);
+border-radius:10px;
 }
 
-.nav-links a:hover{
-color:#dc2626;
+.contact:hover{
+border-color:#ff2d2d;
 }
 
 .hero{
 min-height:100vh;
 display:flex;
-justify-content:center;
 align-items:center;
+justify-content:center;
 text-align:center;
 padding:140px 20px 80px;
 background:
-radial-gradient(circle at top, rgba(220,38,38,.25), transparent 35%),
-linear-gradient(180deg,#111827,#0b0f19);
+radial-gradient(circle at top, rgba(255,0,0,.15), transparent 40%),
+linear-gradient(180deg,#101726 0%,#070b14 100%);
 }
 
 .hero-content{
-max-width:850px;
-}
-
-.hero-logo{
-width:140px;
-margin-bottom:25px;
-}
-
-.badge{
-display:inline-block;
-padding:8px 18px;
-border:1px solid rgba(220,38,38,.4);
-border-radius:999px;
-color:#fca5a5;
-margin-bottom:25px;
+max-width:900px;
 }
 
 .hero h1{
-font-size:clamp(60px,10vw,110px);
-letter-spacing:8px;
-margin-bottom:15px;
-}
-
-.subtitle{
-font-size:clamp(24px,4vw,40px);
-font-weight:bold;
+font-size:clamp(50px,8vw,90px);
 margin-bottom:20px;
 }
 
-.description{
-max-width:700px;
+.hero p{
+max-width:750px;
 margin:auto;
-font-size:18px;
+font-size:20px;
 color:#cbd5e1;
 margin-bottom:35px;
 }
 
-.button{
+.hero-btn{
 display:inline-block;
-padding:15px 30px;
-background:#dc2626;
+padding:16px 34px;
+background:#d60000;
 color:white;
 text-decoration:none;
 border-radius:12px;
 font-weight:bold;
 }
 
-.button:hover{
-background:#ef4444;
+.hero-btn:hover{
+background:#ff2d2d;
 }
 
 .section{
@@ -141,13 +120,13 @@ padding:90px 7%;
 
 .section-title{
 text-align:center;
-font-size:48px;
+font-size:46px;
 margin-bottom:15px;
 }
 
-.section-text{
+.section-subtitle{
 text-align:center;
-max-width:700px;
+max-width:750px;
 margin:auto;
 color:#cbd5e1;
 margin-bottom:50px;
@@ -155,21 +134,22 @@ margin-bottom:50px;
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:20px;
+grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
+gap:24px;
 }
 
 .card{
-background:#161c2d;
+background:#141b2c;
 border:1px solid rgba(255,255,255,.08);
-padding:28px;
-border-radius:20px;
+border-radius:22px;
+padding:30px;
+cursor:pointer;
 transition:.3s;
 }
 
 .card:hover{
-transform:translateY(-5px);
-border-color:#dc2626;
+transform:translateY(-6px);
+border-color:#ff2d2d;
 }
 
 .card h3{
@@ -180,46 +160,62 @@ margin-bottom:12px;
 color:#cbd5e1;
 }
 
-.why{
-background:#111827;
+.tools{
+display:none;
+margin-top:20px;
+padding-top:15px;
+border-top:1px solid rgba(255,255,255,.08);
 }
 
-footer{
-padding:50px 20px;
+.tools ul{
+padding-left:18px;
+}
+
+.tools li{
+margin:8px 0;
+color:#cbd5e1;
+}
+
+.why{
+background:#0f1523;
+}
+
+.footer{
+padding:70px 20px;
 text-align:center;
 border-top:1px solid rgba(255,255,255,.08);
 }
 
-footer img{
-width:50px;
-margin-bottom:10px;
+.footer img{
+width:90px;
+margin-bottom:15px;
+filter:drop-shadow(0 0 18px rgba(255,0,0,.8));
 }
 
-footer h3{
-letter-spacing:3px;
-margin-bottom:5px;
+.footer h3{
+letter-spacing:4px;
+margin-bottom:8px;
 }
 
-@media(max-width:700px){
+.footer p{
+color:#94a3b8;
+}
 
-.nav-links{
+@media(max-width:768px){
+
+.brand span{
 display:none;
 }
 
-.hero-logo{
-width:100px;
-}
-
 .hero h1{
-font-size:58px;
+font-size:52px;
 }
 
 .section-title{
-font-size:36px;
+font-size:34px;
 }
 
 }
-
 </style>
 </head>
 
@@ -227,15 +223,12 @@ font-size:36px;
 
 <nav class="navbar">
 
-<div class="logo">
+<div class="brand">
 <img src="logo.png" alt="XAVERT">
 <span>XAVERT</span>
 </div>
 
-<div class="nav-links">
-<a href="#utilities">Utilities</a>
-<a href="#why">Why XAVERT</a>
-</div>
+<a href="#footer" class="contact">Contact</a>
 
 </nav>
 
@@ -243,131 +236,170 @@ font-size:36px;
 
 <div class="hero-content">
 
-<img src="logo.png" class="hero-logo" alt="XAVERT">
+<h1>Digital Services Ecosystem</h1>
 
-<div class="badge">
-Digital Utility Ecosystem
-</div>
-
-<h1>XAVERT</h1>
-
-<div class="subtitle">
-Modern Digital Utilities
-</div>
-
-<p class="description">
-A growing ecosystem of practical tools for files, documents, QR codes, identity utilities and digital workflows.
+<p>
+Professional online tools for files, documents, images,
+QR codes and identity services.
 </p>
 
-<a href="#utilities" class="button">
-Explore Utilities
+<a href="#services" class="hero-btn">
+Explore Services
 </a>
 
 </div>
 
 </section>
 
-<section class="section" id="utilities">
+<section class="section" id="services">
 
 <h2 class="section-title">
-Utilities Ecosystem
+Services
 </h2>
 
-<p class="section-text">
-A focused collection of digital tools designed to simplify everyday online tasks.
+<p class="section-subtitle">
+A growing ecosystem of practical digital tools designed for modern workflows.
 </p>
 
 <div class="grid">
 
-<div class="card">
+<div class="card" onclick="toggleTools('qr')">
 <h3>QR Code Generator</h3>
-<p>
-Generate QR codes for URLs, Wi-Fi networks, emails, phone numbers and text.
-</p>
+<p>Create QR codes for multiple use cases.</p>
+
+<div class="tools" id="qr">
+<ul>
+<li>URL QR Codes</li>
+<li>Email QR Codes</li>
+<li>Phone QR Codes</li>
+<li>SMS QR Codes</li>
+<li>Wi-Fi QR Codes</li>
+<li>Text QR Codes</li>
+</ul>
+</div>
 </div>
 
-<div class="card">
+<div class="card" onclick="toggleTools('tax')">
 <h3>Identity & Tax ID Tools</h3>
-<p>
-Generate and validate supported identification and tax number formats.
-</p>
+<p>Generate and validate supported formats.</p>
+
+<div class="tools" id="tax">
+<ul>
+<li>Tax ID Validation</li>
+<li>Identity Format Check</li>
+<li>Country Support</li>
+<li>Verification Tools</li>
+</ul>
+</div>
 </div>
 
-<div class="card">
+<div class="card" onclick="toggleTools('files')">
 <h3>Universal File Converter</h3>
-<p>
-Convert documents, images and common file formats quickly and efficiently.
-</p>
+<p>Convert documents, images and data formats.</p>
+
+<div class="tools" id="files">
+<ul>
+<li>PDF Conversion</li>
+<li>DOCX Conversion</li>
+<li>Image Conversion</li>
+<li>Spreadsheet Conversion</li>
+</ul>
+</div>
 </div>
 
-<div class="card">
+<div class="card" onclick="toggleTools('pdf')">
 <h3>PDF Toolkit</h3>
-<p>
-Merge, split, compress and convert PDF files.
-</p>
+<p>Professional PDF processing tools.</p>
+
+<div class="tools" id="pdf">
+<ul>
+<li>Merge PDF</li>
+<li>Split PDF</li>
+<li>Compress PDF</li>
+<li>PDF to JPG</li>
+<li>JPG to PDF</li>
+</ul>
+</div>
 </div>
 
-<div class="card">
+<div class="card" onclick="toggleTools('image')">
 <h3>Image Toolkit</h3>
-<p>
-Resize, compress, crop and convert images for web and professional use.
-</p>
+<p>Image optimization and conversion tools.</p>
+
+<div class="tools" id="image">
+<ul>
+<li>Resize Images</li>
+<li>Compress Images</li>
+<li>Crop Images</li>
+<li>Convert Formats</li>
+</ul>
+</div>
 </div>
 
 </div>
 
 </section>
 
-<section class="section why" id="why">
+<section class="section why">
 
 <h2 class="section-title">
 Why XAVERT
 </h2>
 
-<p class="section-text">
-Built around simplicity, speed and practical value.
+<p class="section-subtitle">
+Built around simplicity, speed and long-term scalability.
 </p>
 
 <div class="grid">
 
 <div class="card">
 <h3>Fast</h3>
-<p>
-Quick access to tools without unnecessary complexity.
-</p>
+<p>Quick access to practical digital services.</p>
 </div>
 
 <div class="card">
-<h3>Simple</h3>
-<p>
-Clean interfaces focused on getting things done.
-</p>
+<h3>Modern</h3>
+<p>Clean interface with a professional experience.</p>
 </div>
 
 <div class="card">
 <h3>Scalable</h3>
-<p>
-A growing ecosystem ready to expand with new utilities.
-</p>
+<p>Ready to expand with new services and utilities.</p>
 </div>
 
 </div>
 
 </section>
 
-<footer>
+<footer class="footer" id="footer">
 
 <img src="logo.png" alt="XAVERT">
 
 <h3>XAVERT</h3>
 
-<p>Digital Utility Ecosystem</p>
+<p>Digital Services Ecosystem</p>
 
 <br>
 
 <p>© 2026 XAVERT. All rights reserved.</p>
 
 </footer>
+
+<script>
+
+function toggleTools(id){
+
+const section = document.getElementById(id);
+
+if(section.style.display === "block"){
+section.style.display = "none";
+}else{
+section.style.display = "block";
+}
+
+}
+
+</script>
 
 </body>
 </html>
