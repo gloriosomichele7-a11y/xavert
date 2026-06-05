@@ -108,14 +108,17 @@ grid-template-columns:repeat(5,1fr);
 gap:14px;
 }
 
-.card{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-padding:18px;
-box-shadow:0 6px 16px rgba(0,0,0,.04);
+.card-link{
+text-decoration:none;
+color:inherit;
+display:block;
 }
 
+.card-link:hover .card{
+border-color:#dc2626;
+transform:translateY(-3px);
+transition:0.2s;
+}
 .card h3{
 font-size:18px;
 margin-bottom:8px;
@@ -225,6 +228,7 @@ Carefully designed digital services that make everyday tasks faster, easier and 
 
 <div class="grid">
 
+<a href="tools/qr-generator.html" class="card-link">
 <div class="card">
 <h3>QR Code Generator</h3>
 <p>Create QR codes for multiple use cases.</p>
@@ -237,7 +241,7 @@ Carefully designed digital services that make everyday tasks faster, easier and 
 <li>Text QR Codes</li>
 </ul>
 </div>
-
+</a>
 <div class="card">
 <h3>Identity & Tax ID Tools</h3>
 <p>Validation and generation tools.</p>
