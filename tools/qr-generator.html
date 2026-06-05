@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | QR Code Generator</title>
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:800px;
+margin:auto;
+}
+
+.logo{
+text-align:center;
+margin-bottom:30px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:30px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:16px;
+padding:25px;
+box-shadow:0 6px 16px rgba(0,0,0,.04);
+}
+
+label{
+display:block;
+margin-bottom:10px;
+font-weight:600;
+}
+
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:16px;
+margin-bottom:15px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:16px;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+#qrcode{
+margin-top:30px;
+text-align:center;
+}
+
+#downloadBtn{
+display:none;
+margin:20px auto 0;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+canvas{
+margin:auto;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">
+← Back to Home
+</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>QR Code Generator</h1>
+
+<p class="subtitle">
+Generate QR codes instantly for links, text, email addresses and more.
+</p>
+
+<div class="card">
+
+<label>Enter text or URL</label>
+
+<input
+type="text"
+id="qrInput"
+placeholder="https://example.com">
+
+<button onclick="generateQR()">
+Generate QR Code
+</button>
+
+<div id="qrcode"></div>
+
+<button id="downloadBtn" onclick="downloadQR()">
+Download PNG
+</button>
+
+</div>
+
+</div>
+
+<script>
+
+function generateQR(){
+
+const input = document.getElementById("qrInput").value;
+
+if(!input){
+alert("Please enter a value.");
+return;
+}
+
+const qrDiv = document.getElementById("qrcode");
+
+qrDiv.innerHTML = "";
+
+QRCode.toCanvas(input,{
+width:300
+},function(error,canvas){
+
+if(error){
+console.error(error);
+return;
+}
+
+qrDiv.appendChild(canvas);
+
+document.getElementById("downloadBtn").style.display="block";
+
+});
+
+}
+
+function downloadQR(){
+
+const canvas=document.querySelector("#qrcode canvas");
+
+if(!canvas) return;
+
+const link=document.createElement("a");
+
+link.download="xavert-qrcode.png";
+
+link.href=canvas.toDataURL();
+
+link.click();
+
+}
+
+</script>
+
+</body>
+</html>
