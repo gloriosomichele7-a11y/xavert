@@ -215,7 +215,20 @@ if(!canvas) return;
 
 const link=document.createElement("a");
 
-link.download="XAVERT-QR-Code.png";
+let fileName = document.getElementById("qrInput").value
+.toLowerCase()
+.replace("https://","")
+.replace("http://","")
+.replace("www.","")
+.replace(/[^a-z0-9]/g,"-")
+.replace(/-+/g,"-")
+.replace(/^-|-$/g,"");
+
+if(!fileName){
+fileName="xavert-qr-code";
+}
+
+link.download="QR-" + fileName + ".png";
 
 link.href=canvas.toDataURL();
 
