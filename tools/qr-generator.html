@@ -170,7 +170,13 @@ const input = document.getElementById("qrInput").value;
 
 const errorMessage=document.getElementById("error-message");
 const qrInput=document.getElementById("qrInput");
+qrInput.addEventListener("input",function(){
 
+errorMessage.textContent="";
+
+qrInput.classList.remove("input-error");
+
+});
 if(!input.trim()){
 errorMessage.textContent="Please enter a URL, text, email or phone number.";
 qrInput.classList.add("input-error");
