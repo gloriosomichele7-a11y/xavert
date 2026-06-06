@@ -77,27 +77,28 @@ height:auto;
 display:block;
 margin:0 auto 8px;
 }
+
 .intro p{
 font-size:15px;
 color:#4b5563;
-max-width:650px;
+max-width:700px;
 margin:0 auto;
 }
 
 .services{
-padding:10px 6% 40px;
+padding:12px 6% 45px;
 }
 
 .services h2{
 text-align:center;
-font-size:30px;
-margin-bottom:4px;
+font-size:32px;
+margin-bottom:6px;
 }
 
 .services-subtitle{
 text-align:center;
-max-width:780px;
-margin:0 auto 16px;
+max-width:820px;
+margin:0 auto 22px;
 color:#6b7280;
 font-size:15px;
 }
@@ -106,19 +107,33 @@ font-size:15px;
 display:grid;
 grid-template-columns:repeat(5,1fr);
 gap:14px;
+align-items:stretch;
 }
 
 .card-link{
 text-decoration:none;
 color:inherit;
 display:block;
+height:100%;
 }
 
-.card-link:hover .card{
-border-color:#dc2626;
-transform:translateY(-3px);
+.card{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:18px;
+height:100%;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
 transition:0.2s;
 }
+
+.card-link:hover .card,
+.card:hover{
+border-color:#dc2626;
+transform:translateY(-3px);
+box-shadow:0 10px 24px rgba(220,38,38,.08);
+}
+
 .card h3{
 font-size:18px;
 margin-bottom:8px;
@@ -129,17 +144,25 @@ line-height:1.25;
 font-size:13.5px;
 color:#4b5563;
 margin-bottom:12px;
-line-height:1.4;
+line-height:1.45;
+}
+
+.card h4{
+font-size:13px;
+margin:14px 0 6px;
+color:#111827;
 }
 
 .card ul{
 padding-left:18px;
+margin-bottom:8px;
 }
 
 .card li{
 margin:5px 0;
-font-size:13.5px;
+font-size:13px;
 color:#374151;
+line-height:1.35;
 }
 
 .footer{
@@ -160,7 +183,7 @@ font-size:13px;
 color:#6b7280;
 }
 
-@media(max-width:1200px){
+@media(max-width:1300px){
 .grid{
 grid-template-columns:repeat(3,1fr);
 }
@@ -176,11 +199,11 @@ width:85px;
 }
 
 .intro img{
-width:160px;
+width:180px;
 }
 
 .services{
-padding:12px 20px 36px;
+padding:14px 20px 38px;
 }
 
 .grid{
@@ -214,7 +237,7 @@ width:145px;
 <section class="intro">
 <img src="logo.png" alt="XAVERT">
 <p>
-Professional tools for files, documents, QR codes, images and identity services.
+Professional digital tools for files, documents, QR codes, images, PDF workflows and identity validation.
 </p>
 </section>
 
@@ -231,59 +254,135 @@ Carefully designed digital services that make everyday tasks faster, easier and 
 <a href="tools/qr-generator.html" class="card-link">
 <div class="card">
 <h3>QR Code Generator</h3>
-<p>Create QR codes for multiple use cases.</p>
+<p>Create QR codes for websites, Wi-Fi networks, contacts, events and more.</p>
+
+<h4>Supported QR Types</h4>
 <ul>
-<li>URL QR Codes</li>
+<li>URL & Website QR Codes</li>
 <li>Wi-Fi QR Codes</li>
 <li>Email QR Codes</li>
-<li>Phone QR Codes</li>
-<li>SMS QR Codes</li>
+<li>Phone & SMS QR Codes</li>
+<li>Contact vCard QR Codes</li>
+<li>Event QR Codes</li>
 <li>Text QR Codes</li>
+</ul>
+
+<h4>Export Options</h4>
+<ul>
+<li>PNG</li>
+<li>PNG HD</li>
+<li>SVG Vector</li>
+<li>PDF</li>
+<li>PDF HD</li>
+<li>Copy QR Image</li>
 </ul>
 </div>
 </a>
-<div class="card">
-<h3>Identity & Tax ID Tools</h3>
-<p>Validation and generation tools.</p>
-<ul>
-<li>Tax ID Validation</li>
-<li>Identity Format Check</li>
-<li>Country Rules</li>
-<li>Verification Tools</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>Universal File Converter</h3>
-<p>Convert common digital formats.</p>
-<ul>
-<li>Document Conversion</li>
-<li>Image Conversion</li>
-<li>Spreadsheet Conversion</li>
-<li>Data Conversion</li>
-</ul>
-</div>
 
 <div class="card">
 <h3>PDF Toolkit</h3>
-<p>Essential PDF utilities.</p>
+<p>Edit, organize, secure and convert PDF documents directly in your browser.</p>
+
+<h4>PDF Tools</h4>
 <ul>
 <li>Merge PDF</li>
 <li>Split PDF</li>
 <li>Compress PDF</li>
+<li>Rotate PDF</li>
+<li>Extract, Delete & Reorder Pages</li>
+<li>Protect & Unlock PDF</li>
+<li>Add Watermark</li>
+<li>Add Page Numbers</li>
+<li>Sign PDF</li>
+<li>OCR PDF</li>
+</ul>
+
+<h4>Conversions</h4>
+<ul>
+<li>PDF to Word</li>
+<li>Word to PDF</li>
 <li>PDF to JPG</li>
 <li>JPG to PDF</li>
 </ul>
 </div>
 
 <div class="card">
+<h3>Universal File Converter</h3>
+<p>Convert documents, spreadsheets, images and structured data between popular formats.</p>
+
+<h4>Document Formats</h4>
+<ul>
+<li>PDF ↔ DOCX</li>
+<li>PDF ↔ TXT</li>
+<li>DOCX ↔ TXT</li>
+</ul>
+
+<h4>Spreadsheet & Data</h4>
+<ul>
+<li>XLSX ↔ CSV</li>
+<li>JSON ↔ CSV</li>
+<li>XML ↔ JSON</li>
+</ul>
+
+<h4>Office Formats</h4>
+<ul>
+<li>PowerPoint ↔ PDF</li>
+<li>Excel ↔ PDF</li>
+<li>Batch Conversion</li>
+<li>Multiple File Support</li>
+</ul>
+</div>
+
+<div class="card">
 <h3>Image Toolkit</h3>
-<p>Image optimization tools.</p>
+<p>Optimize and edit images for web, social media and professional use.</p>
+
+<h4>Image Tools</h4>
 <ul>
 <li>Resize Images</li>
 <li>Compress Images</li>
 <li>Crop Images</li>
 <li>Convert Formats</li>
+<li>Remove Background</li>
+<li>Add Watermark</li>
+<li>Remove Metadata EXIF</li>
+</ul>
+
+<h4>Conversions</h4>
+<ul>
+<li>PNG ↔ JPG</li>
+<li>PNG ↔ WEBP</li>
+<li>JPG ↔ WEBP</li>
+<li>Batch Resize</li>
+<li>Batch Compression</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>Identity & Validation Tools</h3>
+<p>Validate and verify personal, financial and business identifiers for supported countries.</p>
+
+<h4>Identity</h4>
+<ul>
+<li>Fiscal Code Calculator</li>
+<li>Fiscal Code Validation</li>
+<li>Tax ID Validation</li>
+<li>VAT Number Validation</li>
+</ul>
+
+<h4>Financial</h4>
+<ul>
+<li>IBAN Validation</li>
+<li>Credit Card Validation</li>
+<li>Luhn Check</li>
+</ul>
+
+<h4>Business & Logistics</h4>
+<ul>
+<li>VIN Validation</li>
+<li>Barcode Check Digit</li>
+<li>Country-Specific Rules</li>
+<li>Error Detection</li>
 </ul>
 </div>
 
