@@ -92,7 +92,9 @@ margin-top:30px;
 text-align:center;
 }
 
-#downloadBtn{
+#downloadPngBtn,
+#downloadSvgBtn,
+#downloadPdfBtn{
 display:none;
 margin:20px auto 0;
 }
@@ -154,12 +156,17 @@ Generate QR Code
 
 <div id="qrcode"></div>
 
-<button id="downloadBtn" onclick="downloadQR()">
+<button id="downloadPngBtn" onclick="downloadPNG()">
 Download PNG
 </button>
+<button id="downloadSvgBtn" onclick="downloadSVG()">
+Download SVG
+</button>
 
+<button id="downloadPdfBtn" onclick="downloadPDF()">
+Download PDF
+</button>
 </div>
-
 </div>
 
 <script>
@@ -201,13 +208,15 @@ return;
 
 qrDiv.appendChild(canvas);
 
-document.getElementById("downloadBtn").style.display="block";
+document.getElementById("downloadPngBtn").style.display="block";
+document.getElementById("downloadSvgBtn").style.display="block";
+document.getElementById("downloadPdfBtn").style.display="block";
 
 });
 
 }
 
-function downloadQR(){
+function downloadPNG(){
 
 const canvas=document.querySelector("#qrcode canvas");
 
