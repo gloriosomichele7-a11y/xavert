@@ -284,7 +284,34 @@ URL.revokeObjectURL(link.href);
 });
 
 }
+function downloadPDF(){
 
+const canvas=document.querySelector("#qrcode canvas");
+
+if(!canvas) return;
+
+const link=document.createElement("a");
+
+let fileName=document.getElementById("qrInput").value
+.toLowerCase()
+.replace("https://","")
+.replace("http://","")
+.replace("www.","")
+.replace(/[^a-z0-9]/g,"-")
+.replace(/-+/g,"-")
+.replace(/^-|-$/g,"");
+
+if(!fileName){
+fileName="xavert-qr-code";
+}
+
+link.download="QR-" + fileName + ".pdf";
+
+link.href=canvas.toDataURL();
+
+link.click();
+
+}
 </script>
 
 
