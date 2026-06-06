@@ -396,7 +396,7 @@ if(!input) return "";
 
 if(input.startsWith("WIFI:")) return "Detected type: Wi-Fi Network";
 if(input.startsWith("BEGIN:VCARD")) return "Detected type: Contact vCard";
-if(input.startsWith("BEGIN:VEVENT")) return "Detected type: Calendar Event";
+if(input.startsWith("BEGIN:VCALENDAR") || input.startsWith("BEGIN:VEVENT")) return "Detected type: Calendar Event";
 if(input.startsWith("mailto:")) return "Detected type: Email Address";
 if(input.startsWith("tel:")) return "Detected type: Phone Number";
 if(input.startsWith("sms:")) return "Detected type: SMS";
