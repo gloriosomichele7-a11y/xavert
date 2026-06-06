@@ -336,13 +336,22 @@ resetOutput();
 });
 
 document.addEventListener("keydown",function(e){
+
 if(e.key==="Enter" && !e.shiftKey){
+
 const activeElement=document.activeElement;
-if(activeElement.tagName==="INPUT" || activeElement.tagName==="SELECT"){
+
+if(
+activeElement.tagName==="INPUT" ||
+activeElement.tagName==="SELECT" ||
+activeElement.tagName==="TEXTAREA"
+){
 e.preventDefault();
 generateQR();
 }
+
 }
+
 });
 
 document.querySelectorAll("input, textarea, select").forEach(element=>{
