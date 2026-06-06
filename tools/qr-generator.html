@@ -7,7 +7,7 @@
 <title>XAVERT | QR Code Generator</title>
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
-
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <style>
 
 *{
@@ -290,7 +290,11 @@ const canvas=document.querySelector("#qrcode canvas");
 
 if(!canvas) return;
 
-const link=document.createElement("a");
+const { jsPDF } = window.jspdf;
+
+const pdf=new jsPDF();
+
+const imgData=canvas.toDataURL("image/png");
 
 let fileName=document.getElementById("qrInput").value
 .toLowerCase()
@@ -305,11 +309,12 @@ if(!fileName){
 fileName="xavert-qr-code";
 }
 
-link.download="QR-" + fileName + ".pdf";
+pdf.setFontSize(18);
+pdf.text("XAVERT QR Code",105,25,{align:"center"});
 
-link.href=canvas.toDataURL();
+pdf.addImage(imgData,"PNG",55,40,100,100);
 
-link.click();
+pdf.save("QR-" + fileName + ".pdf");
 
 }
 </script>
