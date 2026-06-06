@@ -8,8 +8,8 @@
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-<style>
 
+<style>
 *{
 margin:0;
 padding:0;
@@ -69,7 +69,7 @@ padding:14px;
 border:1px solid #d1d5db;
 border-radius:10px;
 font-size:16px;
-margin-bottom:15px;
+margin-bottom:10px;
 }
 
 button{
@@ -81,6 +81,7 @@ border-radius:10px;
 cursor:pointer;
 font-size:16px;
 font-weight:700;
+margin-top:12px;
 }
 
 button:hover{
@@ -92,11 +93,14 @@ margin-top:30px;
 text-align:center;
 }
 
-#downloadPngBtn,
-#downloadSvgBtn,
-#downloadPdfBtn{
+.download-buttons{
 display:none;
-margin:20px auto 0;
+text-align:center;
+margin-top:20px;
+}
+
+.download-buttons button{
+margin:6px;
 }
 
 .back{
@@ -110,11 +114,19 @@ font-weight:700;
 canvas{
 margin:auto;
 }
+
 #error-message{
 color:#dc2626;
 font-size:14px;
 margin-top:8px;
 font-weight:500;
+}
+
+#detected-type{
+color:#4b5563;
+font-size:14px;
+margin-top:8px;
+font-weight:600;
 }
 
 .input-error{
@@ -127,9 +139,7 @@ border:2px solid #dc2626 !important;
 
 <div class="container">
 
-<a href="../index.html" class="back">
-← Back to Home
-</a>
+<a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
 <img src="../logo.png" alt="XAVERT">
@@ -149,176 +159,187 @@ Generate QR codes instantly for links, text, email addresses and more.
 type="text"
 id="qrInput"
 placeholder="Enter URL, text, email, phone number...">
+
 <div id="error-message"></div>
-<button onclick="generateQR()">
-Generate QR Code
-</button>
+<div id="detected-type"></div>
+
+<button onclick="generateQR()">Generate QR Code</button>
 
 <div id="qrcode"></div>
 
-<button id="downloadPngBtn" onclick="downloadPNG()">
-Download PNG
-</button>
-<button id="downloadSvgBtn" onclick="downloadSVG()">
-Download SVG
-</button>
-
-<button id="downloadPdfBtn" onclick="downloadPDF()">
-Download PDF
-</button>
+<div class="download-buttons" id="downloadButtons">
+<button onclick="downloadPNG()">Download PNG</button>
+<button onclick="downloadPNGHD()">Download PNG HD</button>
+<button onclick="downloadSVG()">Download SVG</button>
+<button onclick="downloadPDF()">Download PDF</button>
+<button onclick="copyQR()">Copy QR Image</button>
 </div>
+
+</div>
+
 </div>
 
 <script>
+const qrInput=document.getElementById("qrInput");
+const errorMessage=document.getElementById("error-message");
+const detectedType=document.getElementById("detected-type");
+
+qrInput.addEventListener("input",function(){
+errorMessage.textContent="";
+qrInput.classList.remove("input-error");
+detectedType.textContent=detectType(qrInput.value);
+});
+
+function detectType(value){
+const input=value.trim();
+
+if(!input){
+return "";
+}
+
+if(input.startsWith("http://") || input.startsWith("https://")){
+return "Detected type: Website URL";
+}
+
+if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)){
+return "Detected type: Email Address";
+}
+
+if(/^\+?[0-9\s\-()]{7,}$/.test(input)){
+return "Detected type: Phone Number";
+}
+
+return "Detected type: Text";
+}
+
+function getFileName(){
+let fileName=qrInput.value
+.toLowerCase()
+.replace("https://","")
+.replace("http://","")
+.replace("www.","")
+.replace(/[^a-z0-9]/g,"-")
+.replace(/-+/g,"-")
+.replace(/^-|-$/g,"");
+
+return fileName || "xavert-qr-code";
+}
 
 function generateQR(){
+const input=qrInput.value;
 
-const input = document.getElementById("qrInput").value;
-
-const errorMessage=document.getElementById("error-message");
-const qrInput=document.getElementById("qrInput");
-qrInput.addEventListener("input",function(){
-
-errorMessage.textContent="";
-
-qrInput.classList.remove("input-error");
-
-});
 if(!input.trim()){
 errorMessage.textContent="Please enter a URL, text, email or phone number.";
 qrInput.classList.add("input-error");
+detectedType.textContent="";
 return;
 }
 
 errorMessage.textContent="";
 qrInput.classList.remove("input-error");
+detectedType.textContent=detectType(input);
 
-const qrDiv = document.getElementById("qrcode");
+const qrDiv=document.getElementById("qrcode");
+qrDiv.innerHTML="";
 
-qrDiv.innerHTML = "";
-
-QRCode.toCanvas(input,{
-width:350
-},function(error,canvas){
-
+QRCode.toCanvas(input,{width:350},function(error,canvas){
 if(error){
 console.error(error);
 return;
 }
 
 qrDiv.appendChild(canvas);
-
-document.getElementById("downloadPngBtn").style.display="block";
-document.getElementById("downloadSvgBtn").style.display="block";
-document.getElementById("downloadPdfBtn").style.display="block";
-
+document.getElementById("downloadButtons").style.display="block";
 });
-
 }
 
 function downloadPNG(){
-
 const canvas=document.querySelector("#qrcode canvas");
-
 if(!canvas) return;
 
 const link=document.createElement("a");
-
-let fileName = document.getElementById("qrInput").value
-.toLowerCase()
-.replace("https://","")
-.replace("http://","")
-.replace("www.","")
-.replace(/[^a-z0-9]/g,"-")
-.replace(/-+/g,"-")
-.replace(/^-|-$/g,"");
-
-if(!fileName){
-fileName="xavert-qr-code";
-}
-
-link.download="QR-" + fileName + ".png";
-
-link.href=canvas.toDataURL();
-
+link.download="QR-" + getFileName() + ".png";
+link.href=canvas.toDataURL("image/png");
 link.click();
 }
 
-
-
-function downloadSVG(){
-
-const input=document.getElementById("qrInput").value;
-
+function downloadPNGHD(){
+const input=qrInput.value;
 if(!input.trim()) return;
 
-QRCode.toString(input,{type:"svg",width:350},function(error,svg){
-
+QRCode.toCanvas(input,{width:2000},function(error,canvas){
 if(error){
 console.error(error);
 return;
 }
 
-let fileName=input
-.toLowerCase()
-.replace("https://","")
-.replace("http://","")
-.replace("www.","")
-.replace(/[^a-z0-9]/g,"-")
-.replace(/-+/g,"-")
-.replace(/^-|-$/g,"");
+const link=document.createElement("a");
+link.download="QR-" + getFileName() + "-HD.png";
+link.href=canvas.toDataURL("image/png");
+link.click();
+});
+}
 
-if(!fileName){
-fileName="xavert-qr-code";
+function downloadSVG(){
+const input=qrInput.value;
+if(!input.trim()) return;
+
+QRCode.toString(input,{type:"svg",width:350},function(error,svg){
+if(error){
+console.error(error);
+return;
 }
 
 const blob=new Blob([svg],{type:"image/svg+xml"});
 const link=document.createElement("a");
 
-link.download="QR-" + fileName + ".svg";
+link.download="QR-" + getFileName() + ".svg";
 link.href=URL.createObjectURL(blob);
 link.click();
 
 URL.revokeObjectURL(link.href);
-
 });
-
 }
+
 function downloadPDF(){
+const input=qrInput.value;
+if(!input.trim()) return;
 
-const canvas=document.querySelector("#qrcode canvas");
-
-if(!canvas) return;
+QRCode.toCanvas(input,{width:2000},function(error,canvas){
+if(error){
+console.error(error);
+return;
+}
 
 const { jsPDF } = window.jspdf;
-
 const pdf=new jsPDF();
 
 const imgData=canvas.toDataURL("image/png");
 
-let fileName=document.getElementById("qrInput").value
-.toLowerCase()
-.replace("https://","")
-.replace("http://","")
-.replace("www.","")
-.replace(/[^a-z0-9]/g,"-")
-.replace(/-+/g,"-")
-.replace(/^-|-$/g,"");
-
-if(!fileName){
-fileName="xavert-qr-code";
-}
-
 pdf.setFontSize(18);
 pdf.text("XAVERT QR Code",105,25,{align:"center"});
+pdf.addImage(imgData,"PNG",45,40,120,120);
 
-pdf.addImage(imgData,"PNG",55,40,100,100);
+pdf.save("QR-" + getFileName() + ".pdf");
+});
+}
 
-pdf.save("QR-" + fileName + ".pdf");
+async function copyQR(){
+const canvas=document.querySelector("#qrcode canvas");
+if(!canvas) return;
 
+canvas.toBlob(async function(blob){
+try{
+await navigator.clipboard.write([
+new ClipboardItem({"image/png":blob})
+]);
+alert("QR image copied to clipboard.");
+}catch(error){
+alert("Copy is not supported by this browser.");
+}
+});
 }
 </script>
-
 
 </body>
 </html>
