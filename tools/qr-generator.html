@@ -517,12 +517,17 @@ return null;
 }
 
 return [
+"BEGIN:VCALENDAR",
+"VERSION:2.0",
+"PRODID:-//XAVERT//QR Event//EN",
+"UID:" + Date.now() + "@xavert.app",
 "BEGIN:VEVENT",
 "SUMMARY:" + title.value.trim(),
 "DTSTART:" + formatDateForCalendar(start.value),
 "DTEND:" + formatDateForCalendar(end.value),
 location ? "LOCATION:" + location : "",
-"END:VEVENT"
+"END:VEVENT",
+"END:VCALENDAR"
 ].filter(Boolean).join("\n");
 }
 
