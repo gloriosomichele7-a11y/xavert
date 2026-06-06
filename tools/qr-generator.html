@@ -24,13 +24,21 @@ padding:40px 20px;
 }
 
 .container{
-max-width:800px;
+max-width:850px;
 margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
 }
 
 .logo{
 text-align:center;
-margin-bottom:30px;
+margin-bottom:25px;
 }
 
 .logo img{
@@ -46,30 +54,45 @@ margin-bottom:10px;
 .subtitle{
 text-align:center;
 color:#6b7280;
-margin-bottom:30px;
+margin-bottom:28px;
 }
 
 .card{
-background:white;
+background:#ffffff;
 border:1px solid #e5e7eb;
-border-radius:16px;
-padding:25px;
-box-shadow:0 6px 16px rgba(0,0,0,.04);
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
 label{
 display:block;
-margin-bottom:10px;
-font-weight:600;
+margin:14px 0 8px;
+font-weight:700;
 }
 
-input{
+select,
+input,
+textarea{
 width:100%;
 padding:14px;
 border:1px solid #d1d5db;
 border-radius:10px;
-font-size:16px;
-margin-bottom:10px;
+font-size:15px;
+background:#ffffff;
+}
+
+textarea{
+min-height:110px;
+resize:vertical;
+}
+
+.form-section{
+display:none;
+}
+
+.form-section.active{
+display:block;
 }
 
 button{
@@ -79,13 +102,31 @@ border:none;
 padding:14px 22px;
 border-radius:10px;
 cursor:pointer;
-font-size:16px;
+font-size:15px;
 font-weight:700;
-margin-top:12px;
+margin-top:14px;
 }
 
 button:hover{
 background:#b91c1c;
+}
+
+#error-message{
+color:#dc2626;
+font-size:14px;
+margin-top:10px;
+font-weight:600;
+}
+
+#detected-type{
+color:#4b5563;
+font-size:14px;
+margin-top:10px;
+font-weight:700;
+}
+
+.input-error{
+border:2px solid #dc2626 !important;
 }
 
 #qrcode{
@@ -93,49 +134,23 @@ margin-top:30px;
 text-align:center;
 }
 
+canvas{
+margin:auto;
+}
+
 .download-buttons{
 display:none;
 text-align:center;
-margin-top:20px;
+margin-top:22px;
 }
 
 .download-buttons button{
 margin:6px;
 }
 
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-canvas{
-margin:auto;
-}
-
-#error-message{
-color:#dc2626;
-font-size:14px;
-margin-top:8px;
-font-weight:500;
-}
-
-#detected-type{
-color:#4b5563;
-font-size:14px;
-margin-top:8px;
-font-weight:600;
-}
-
-.input-error{
-border:2px solid #dc2626 !important;
-}
-
 #toast{
 position:fixed;
-bottom:20px;
+bottom:22px;
 left:50%;
 transform:translateX(-50%);
 background:#111827;
@@ -146,6 +161,29 @@ font-size:14px;
 display:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+@media(max-width:768px){
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+.download-buttons button{
+width:100%;
+margin:6px 0;
+}
 }
 </style>
 </head>
@@ -163,17 +201,93 @@ box-shadow:0 4px 12px rgba(0,0,0,.2);
 <h1>QR Code Generator</h1>
 
 <p class="subtitle">
-Generate QR codes instantly for links, text, email addresses and more.
+Create QR codes for websites, text, email, phone numbers, SMS, Wi-Fi networks, contacts and events.
 </p>
 
 <div class="card">
 
-<label>Enter text or URL</label>
+<label for="qrType">QR Type</label>
+<select id="qrType">
+<option value="text">Text / URL</option>
+<option value="email">Email</option>
+<option value="phone">Phone</option>
+<option value="sms">SMS</option>
+<option value="wifi">Wi-Fi</option>
+<option value="contact">Contact / vCard</option>
+<option value="event">Event</option>
+</select>
 
-<input
-type="text"
-id="qrInput"
-placeholder="Enter URL, text, email, phone number...">
+<div id="section-text" class="form-section active">
+<label for="textInput">Text or URL</label>
+<textarea id="textInput" placeholder="Enter URL, text, or any content..."></textarea>
+</div>
+
+<div id="section-email" class="form-section">
+<label for="emailInput">Email Address</label>
+<input id="emailInput" type="email" placeholder="name@example.com">
+
+<label for="emailSubject">Subject</label>
+<input id="emailSubject" type="text" placeholder="Optional subject">
+
+<label for="emailBody">Message</label>
+<textarea id="emailBody" placeholder="Optional message"></textarea>
+</div>
+
+<div id="section-phone" class="form-section">
+<label for="phoneInput">Phone Number</label>
+<input id="phoneInput" type="text" placeholder="+393331234567">
+</div>
+
+<div id="section-sms" class="form-section">
+<label for="smsPhone">Phone Number</label>
+<input id="smsPhone" type="text" placeholder="+393331234567">
+
+<label for="smsMessage">SMS Message</label>
+<textarea id="smsMessage" placeholder="Optional SMS message"></textarea>
+</div>
+
+<div id="section-wifi" class="form-section">
+<label for="wifiSsid">Network Name / SSID</label>
+<input id="wifiSsid" type="text" placeholder="Wi-Fi network name">
+
+<label for="wifiPassword">Password</label>
+<input id="wifiPassword" type="text" placeholder="Wi-Fi password">
+
+<label for="wifiSecurity">Security Type</label>
+<select id="wifiSecurity">
+<option value="WPA">WPA/WPA2</option>
+<option value="WEP">WEP</option>
+<option value="nopass">No Password</option>
+</select>
+</div>
+
+<div id="section-contact" class="form-section">
+<label for="contactName">Full Name</label>
+<input id="contactName" type="text" placeholder="John Doe">
+
+<label for="contactPhone">Phone</label>
+<input id="contactPhone" type="text" placeholder="+393331234567">
+
+<label for="contactEmail">Email</label>
+<input id="contactEmail" type="email" placeholder="name@example.com">
+
+<label for="contactWebsite">Website</label>
+<input id="contactWebsite" type="text" placeholder="https://example.com">
+</div>
+
+<div id="section-event" class="form-section">
+<label for="eventTitle">Event Title</label>
+<input id="eventTitle" type="text" placeholder="Meeting, appointment, conference...">
+
+<label for="eventStart">Start Date & Time</label>
+<input id="eventStart" type="datetime-local">
+
+<label for="eventEnd">End Date & Time</label>
+<input id="eventEnd" type="datetime-local">
+
+<label for="eventLocation">Location</label>
+<input id="eventLocation" type="text" placeholder="Event location">
+</div>
 
 <div id="error-message"></div>
 <div id="detected-type"></div>
@@ -187,59 +301,266 @@ placeholder="Enter URL, text, email, phone number...">
 <button onclick="downloadPNGHD()">Download PNG HD</button>
 <button onclick="downloadSVG()">Download SVG</button>
 <button onclick="downloadPDF()">Download PDF</button>
+<button onclick="downloadPDFHD()">Download PDF HD</button>
 <button onclick="copyQR()">Copy QR Image</button>
 </div>
 
 </div>
-
 </div>
 
-<div id="toast">
-QR image copied to clipboard.
-</div>
+<div id="toast">QR image copied to clipboard.</div>
 
 <script>
-const qrInput=document.getElementById("qrInput");
+const qrType=document.getElementById("qrType");
 const errorMessage=document.getElementById("error-message");
 const detectedType=document.getElementById("detected-type");
+const downloadButtons=document.getElementById("downloadButtons");
 const toast=document.getElementById("toast");
 
-qrInput.addEventListener("input",function(){
-errorMessage.textContent="";
-qrInput.classList.remove("input-error");
-detectedType.textContent=detectType(qrInput.value);
+let currentQRData="";
+
+const sections={
+text:document.getElementById("section-text"),
+email:document.getElementById("section-email"),
+phone:document.getElementById("section-phone"),
+sms:document.getElementById("section-sms"),
+wifi:document.getElementById("section-wifi"),
+contact:document.getElementById("section-contact"),
+event:document.getElementById("section-event")
+};
+
+qrType.addEventListener("change",function(){
+Object.values(sections).forEach(section=>section.classList.remove("active"));
+sections[qrType.value].classList.add("active");
+resetOutput();
 });
 
-qrInput.addEventListener("keydown",function(e){
-if(e.key==="Enter"){
+document.addEventListener("keydown",function(e){
+if(e.key==="Enter" && !e.shiftKey){
+const activeElement=document.activeElement;
+if(activeElement.tagName==="INPUT" || activeElement.tagName==="SELECT"){
+e.preventDefault();
 generateQR();
 }
+}
 });
+
+document.querySelectorAll("input, textarea, select").forEach(element=>{
+element.addEventListener("input",function(){
+clearError();
+});
+});
+
+function clearError(){
+errorMessage.textContent="";
+document.querySelectorAll(".input-error").forEach(el=>el.classList.remove("input-error"));
+}
+
+function resetOutput(){
+clearError();
+detectedType.textContent="";
+document.getElementById("qrcode").innerHTML="";
+downloadButtons.style.display="none";
+currentQRData="";
+}
+
+function showToast(message){
+toast.textContent=message;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+}
+
+function setError(message,element){
+errorMessage.textContent=message;
+if(element){
+element.classList.add("input-error");
+}
+}
+
+function escapeWifi(value){
+return value.replace(/\\/g,"\\\\").replace(/;/g,"\\;").replace(/,/g,"\\,").replace(/:/g,"\\:");
+}
+
+function formatDateForCalendar(value){
+if(!value) return "";
+return value.replace(/[-:]/g,"").replace("T","") + "00";
+}
 
 function detectType(value){
 const input=value.trim();
 
-if(!input){
-return "";
-}
+if(!input) return "";
 
-if(input.startsWith("http://") || input.startsWith("https://")){
-return "Detected type: Website URL";
-}
-
-if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)){
-return "Detected type: Email Address";
-}
-
-if(/^\+?[0-9\s\-()]{7,}$/.test(input)){
-return "Detected type: Phone Number";
-}
+if(input.startsWith("WIFI:")) return "Detected type: Wi-Fi Network";
+if(input.startsWith("BEGIN:VCARD")) return "Detected type: Contact vCard";
+if(input.startsWith("BEGIN:VEVENT")) return "Detected type: Calendar Event";
+if(input.startsWith("mailto:")) return "Detected type: Email Address";
+if(input.startsWith("tel:")) return "Detected type: Phone Number";
+if(input.startsWith("sms:")) return "Detected type: SMS";
+if(input.startsWith("http://") || input.startsWith("https://")) return "Detected type: Website URL";
+if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)) return "Detected type: Email Address";
+if(/^\+?[0-9\s\-()]{7,}$/.test(input)) return "Detected type: Phone Number";
 
 return "Detected type: Text";
 }
 
+function buildQRData(){
+const type=qrType.value;
+
+if(type==="text"){
+const input=document.getElementById("textInput");
+const value=input.value.trim();
+
+if(!value){
+setError("Please enter a URL, text or content.",input);
+return null;
+}
+
+return value;
+}
+
+if(type==="email"){
+const email=document.getElementById("emailInput");
+const subject=document.getElementById("emailSubject").value.trim();
+const body=document.getElementById("emailBody").value.trim();
+
+if(!email.value.trim()){
+setError("Please enter an email address.",email);
+return null;
+}
+
+return "mailto:" + email.value.trim()
++ "?subject=" + encodeURIComponent(subject)
++ "&body=" + encodeURIComponent(body);
+}
+
+if(type==="phone"){
+const phone=document.getElementById("phoneInput");
+
+if(!phone.value.trim()){
+setError("Please enter a phone number.",phone);
+return null;
+}
+
+return "tel:" + phone.value.trim();
+}
+
+if(type==="sms"){
+const phone=document.getElementById("smsPhone");
+const message=document.getElementById("smsMessage").value.trim();
+
+if(!phone.value.trim()){
+setError("Please enter a phone number.",phone);
+return null;
+}
+
+return "sms:" + phone.value.trim() + "?body=" + encodeURIComponent(message);
+}
+
+if(type==="wifi"){
+const ssid=document.getElementById("wifiSsid");
+const password=document.getElementById("wifiPassword").value.trim();
+const security=document.getElementById("wifiSecurity").value;
+
+if(!ssid.value.trim()){
+setError("Please enter the Wi-Fi network name.",ssid);
+return null;
+}
+
+return "WIFI:T:" + security + ";S:" + escapeWifi(ssid.value.trim()) + ";P:" + escapeWifi(password) + ";;";
+}
+
+if(type==="contact"){
+const name=document.getElementById("contactName");
+const phone=document.getElementById("contactPhone").value.trim();
+const email=document.getElementById("contactEmail").value.trim();
+const website=document.getElementById("contactWebsite").value.trim();
+
+if(!name.value.trim()){
+setError("Please enter the contact name.",name);
+return null;
+}
+
+return [
+"BEGIN:VCARD",
+"VERSION:3.0",
+"FN:" + name.value.trim(),
+phone ? "TEL:" + phone : "",
+email ? "EMAIL:" + email : "",
+website ? "URL:" + website : "",
+"END:VCARD"
+].filter(Boolean).join("\n");
+}
+
+if(type==="event"){
+const title=document.getElementById("eventTitle");
+const start=document.getElementById("eventStart");
+const end=document.getElementById("eventEnd");
+const location=document.getElementById("eventLocation").value.trim();
+
+if(!title.value.trim()){
+setError("Please enter the event title.",title);
+return null;
+}
+
+if(!start.value){
+setError("Please enter the event start date and time.",start);
+return null;
+}
+
+if(!end.value){
+setError("Please enter the event end date and time.",end);
+return null;
+}
+
+return [
+"BEGIN:VEVENT",
+"SUMMARY:" + title.value.trim(),
+"DTSTART:" + formatDateForCalendar(start.value),
+"DTEND:" + formatDateForCalendar(end.value),
+location ? "LOCATION:" + location : "",
+"END:VEVENT"
+].filter(Boolean).join("\n");
+}
+
+return null;
+}
+
 function getFileName(){
-let fileName=qrInput.value
+let base="xavert-qr-code";
+
+if(qrType.value==="text"){
+base=document.getElementById("textInput").value;
+}
+
+if(qrType.value==="email"){
+base=document.getElementById("emailInput").value;
+}
+
+if(qrType.value==="phone"){
+base=document.getElementById("phoneInput").value;
+}
+
+if(qrType.value==="sms"){
+base=document.getElementById("smsPhone").value;
+}
+
+if(qrType.value==="wifi"){
+base=document.getElementById("wifiSsid").value;
+}
+
+if(qrType.value==="contact"){
+base=document.getElementById("contactName").value;
+}
+
+if(qrType.value==="event"){
+base=document.getElementById("eventTitle").value;
+}
+
+let fileName=base
 .toLowerCase()
 .replace("https://","")
 .replace("http://","")
@@ -252,30 +573,27 @@ return fileName || "xavert-qr-code";
 }
 
 function generateQR(){
-const input=qrInput.value;
+clearError();
 
-if(!input.trim()){
-errorMessage.textContent="Please enter a URL, text, email or phone number.";
-qrInput.classList.add("input-error");
-detectedType.textContent="";
-return;
-}
+const data=buildQRData();
 
-errorMessage.textContent="";
-qrInput.classList.remove("input-error");
-detectedType.textContent=detectType(input);
+if(!data) return;
+
+currentQRData=data;
 
 const qrDiv=document.getElementById("qrcode");
 qrDiv.innerHTML="";
 
-QRCode.toCanvas(input,{width:350},function(error,canvas){
+QRCode.toCanvas(data,{width:350,errorCorrectionLevel:"H"},function(error,canvas){
 if(error){
 console.error(error);
+setError("Unable to generate QR code. Please try again.");
 return;
 }
 
 qrDiv.appendChild(canvas);
-document.getElementById("downloadButtons").style.display="block";
+detectedType.textContent=detectType(data);
+downloadButtons.style.display="block";
 });
 }
 
@@ -290,10 +608,9 @@ link.click();
 }
 
 function downloadPNGHD(){
-const input=qrInput.value;
-if(!input.trim()) return;
+if(!currentQRData) return;
 
-QRCode.toCanvas(input,{width:2000},function(error,canvas){
+QRCode.toCanvas(currentQRData,{width:2000,errorCorrectionLevel:"H"},function(error,canvas){
 if(error){
 console.error(error);
 return;
@@ -307,10 +624,9 @@ link.click();
 }
 
 function downloadSVG(){
-const input=qrInput.value;
-if(!input.trim()) return;
+if(!currentQRData) return;
 
-QRCode.toString(input,{type:"svg",width:350},function(error,svg){
+QRCode.toString(currentQRData,{type:"svg",width:350,errorCorrectionLevel:"H"},function(error,svg){
 if(error){
 console.error(error);
 return;
@@ -327,11 +643,13 @@ URL.revokeObjectURL(link.href);
 });
 }
 
-function downloadPDF(){
-const input=qrInput.value;
-if(!input.trim()) return;
+function createPDF(size){
+if(!currentQRData) return;
 
-QRCode.toCanvas(input,{width:2000},function(error,canvas){
+const qrSize=size==="hd" ? 3000 : 1600;
+const fileSuffix=size==="hd" ? "-HD" : "";
+
+QRCode.toCanvas(currentQRData,{width:qrSize,errorCorrectionLevel:"H"},function(error,canvas){
 if(error){
 console.error(error);
 return;
@@ -343,11 +661,23 @@ const pdf=new jsPDF();
 const imgData=canvas.toDataURL("image/png");
 
 pdf.setFontSize(18);
-pdf.text("XAVERT QR Code",105,25,{align:"center"});
-pdf.addImage(imgData,"PNG",45,40,120,120);
+pdf.text("XAVERT QR Code",105,24,{align:"center"});
 
-pdf.save("QR-" + getFileName() + ".pdf");
+pdf.addImage(imgData,"PNG",45,38,120,120);
+
+pdf.setFontSize(10);
+pdf.text("Generated by XAVERT",105,172,{align:"center"});
+
+pdf.save("QR-" + getFileName() + fileSuffix + ".pdf");
 });
+}
+
+function downloadPDF(){
+createPDF("standard");
+}
+
+function downloadPDFHD(){
+createPDF("hd");
 }
 
 async function copyQR(){
@@ -360,14 +690,9 @@ await navigator.clipboard.write([
 new ClipboardItem({"image/png":blob})
 ]);
 
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-},2000);
-
+showToast("QR image copied to clipboard.");
 }catch(error){
-alert("Copy is not supported by this browser.");
+showToast("Copy is not supported by this browser.");
 }
 });
 }
