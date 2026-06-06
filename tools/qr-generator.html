@@ -132,6 +132,21 @@ font-weight:600;
 .input-error{
 border:2px solid #dc2626 !important;
 }
+
+#toast{
+position:fixed;
+bottom:20px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
 </style>
 </head>
 
@@ -179,15 +194,26 @@ placeholder="Enter URL, text, email, phone number...">
 
 </div>
 
+<div id="toast">
+QR image copied to clipboard.
+</div>
+
 <script>
 const qrInput=document.getElementById("qrInput");
 const errorMessage=document.getElementById("error-message");
 const detectedType=document.getElementById("detected-type");
+const toast=document.getElementById("toast");
 
 qrInput.addEventListener("input",function(){
 errorMessage.textContent="";
 qrInput.classList.remove("input-error");
 detectedType.textContent=detectType(qrInput.value);
+});
+
+qrInput.addEventListener("keydown",function(e){
+if(e.key==="Enter"){
+generateQR();
+}
 });
 
 function detectType(value){
@@ -333,7 +359,13 @@ try{
 await navigator.clipboard.write([
 new ClipboardItem({"image/png":blob})
 ]);
-alert("QR image copied to clipboard.");
+
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2000);
+
 }catch(error){
 alert("Copy is not supported by this browser.");
 }
