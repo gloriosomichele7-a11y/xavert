@@ -244,7 +244,50 @@ link.href=canvas.toDataURL();
 link.click();
 
 }
+link.click();
 
+}
+
+function downloadSVG(){
+
+const input=document.getElementById("qrInput").value;
+
+if(!input.trim()) return;
+
+QRCode.toString(input,{type:"svg",width:350},function(error,svg){
+
+if(error){
+console.error(error);
+return;
+}
+
+let fileName=input
+.toLowerCase()
+.replace("https://","")
+.replace("http://","")
+.replace("www.","")
+.replace(/[^a-z0-9]/g,"-")
+.replace(/-+/g,"-")
+.replace(/^-|-$/g,"");
+
+if(!fileName){
+fileName="xavert-qr-code";
+}
+
+const blob=new Blob([svg],{type:"image/svg+xml"});
+const link=document.createElement("a");
+
+link.download="QR-" + fileName + ".svg";
+link.href=URL.createObjectURL(blob);
+link.click();
+
+URL.revokeObjectURL(link.href);
+
+});
+
+}
+
+</script>
 </script>
 
 </body>
