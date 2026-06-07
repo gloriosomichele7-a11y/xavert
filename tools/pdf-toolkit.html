@@ -288,7 +288,7 @@ Click or drag one PDF file here
 <script>
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
-
+pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 toolSelector.addEventListener("change",function(){
 document.querySelectorAll(".tool-section").forEach(section=>{
 section.classList.remove("active");
@@ -340,7 +340,9 @@ if(inputId==="imageFiles"){
 document.getElementById("imageCount").textContent=files.length ? files.length + " image files selected" : "No files selected";
 }
 }
-
+if(inputId==="pdfJpgFile"){
+document.getElementById("pdfJpgCount").textContent=files.length ? files[0].name : "No file selected";
+}
 function showToast(message){
 toast.textContent=message;
 toast.style.display="block";
@@ -546,7 +548,54 @@ img.onerror=reject;
 img.src=src;
 });
 }
-</script>
+async function pdfToJPG(){
+const file=document.getElementById("pdfJpgFile").files[0];
 
+if(!file){
+setMessage("pdfJpgMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("pdfJpgMessage","Converting PDF pages to JPG...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
+const zip=new JSZip();
+
+for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+const page=await pdf.getPage(pageNumber);
+const viewport=page.getViewport({scale:2});
+
+const canvas=document.createElement("canvas");
+const context=canvas.getContext("2d");
+
+canvas.width=viewport.width;
+canvas.height=viewport.height;
+
+await page.render({
+canvasContext:context,
+viewport:viewport
+}).promise;
+
+const blob=await new Promise(resolve=>{
+canvas.toBlob(resolve,"image/jpeg",0.95);
+});
+
+zip.file("page-" + pageNumber + ".jpg",blob);
+}
+
+const zipBlob=await zip.generateAsync({type:"blob"});
+downloadBlob(zipBlob,"XAVERT-PDF-to-JPG.zip");
+
+setMessage("pdfJpgMessage","PDF converted to JPG successfully.","success");
+showToast("PDF converted to JPG.");
+
+}catch(error){
+console.error(error);
+setMessage("pdfJpgMessage","Unable to convert PDF to JPG.","error");
+}
+}
+</script>
 </body>
 </html>
