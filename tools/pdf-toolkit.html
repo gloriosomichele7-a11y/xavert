@@ -211,6 +211,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="split">Split PDF</option>
 <option value="images">Images to PDF</option>
 <option value="pdfjpg">PDF to JPG</option>
+<option value="rotate">Rotate PDF</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -281,6 +282,27 @@ Click or drag one PDF file here
 <button onclick="pdfToJPG()">Convert to JPG</button>
 <div id="pdfJpgMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="rotateTool">
+<h2>Rotate PDF</h2>
+<p class="info">Rotate all pages of a PDF file by 90, 180 or 270 degrees.</p>
+
+<div class="drop-zone" data-input="rotateFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="rotateFile" accept="application/pdf" hidden>
+<div id="rotateCount" class="file-count">No file selected</div>
+
+<label for="rotateAngle">Rotation Angle</label>
+<select id="rotateAngle">
+<option value="90">90°</option>
+<option value="180">180°</option>
+<option value="270">270°</option>
+</select>
+
+<button onclick="rotatePDF()">Rotate PDF</button>
+<div id="rotateMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -342,6 +364,10 @@ document.getElementById("imageCount").textContent=files.length ? files.length + 
 
 if(inputId==="pdfJpgFile"){
 document.getElementById("pdfJpgCount").textContent=files.length ? files[0].name : "No file selected";
+}
+if(inputId==="rotateFile"){
+document.getElementById("rotateCount").textContent=
+files.length ? files[0].name : "No file selected";
 }
 }
 
