@@ -328,6 +328,22 @@ Click or drag one PDF file here
 <script>
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
+document.addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+
+const selectedTool=toolSelector.value;
+
+if(selectedTool==="merge") mergePDF();
+if(selectedTool==="split") splitPDF();
+if(selectedTool==="images") imagesToPDF();
+if(selectedTool==="pdfjpg") pdfToJPG();
+if(selectedTool==="rotate") rotatePDF();
+if(selectedTool==="extract") extractPages();
+
+}
+
+});
 pdfjsLib.GlobalWorkerOptions.workerSrc="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 toolSelector.addEventListener("change",function(){
 document.querySelectorAll(".tool-section").forEach(section=>{
