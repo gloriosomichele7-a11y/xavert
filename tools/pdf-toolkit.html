@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | PDF Toolkit</title>
+
+<script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:#ffffff;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{
+color:#dc2626;
+}
+
+.success{
+color:#047857;
+}
+
+.info{
+color:#4b5563;
+}
+
+@media(max-width:768px){
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>PDF Toolkit</h1>
+
+<p class="subtitle">
+Merge PDFs, split pages and convert images to PDF directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="toolSelector">Select Tool</label>
+<select id="toolSelector">
+<option value="merge">Merge PDF</option>
+<option value="split">Split PDF</option>
+<option value="images">Images to PDF</option>
+</select>
+
+</div>
+
+<div class="card tool-section active" id="mergeTool">
+<h2>Merge PDF</h2>
+<p class="info">Upload multiple PDF files and combine them into one document.</p>
+
+<label>Select PDF files</label>
+<input type="file" id="mergeFiles" accept="application/pdf" multiple>
+
+<button onclick="mergePDF()">Merge PDF</button>
+
+<div id="mergeMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="splitTool">
+<h2>Split PDF</h2>
+<p class="info">Upload one PDF and download each page as a separate PDF inside a ZIP file.</p>
+
+<label>Select one PDF file</label>
+<input type="file" id="splitFile" accept="application/pdf">
+
+<button onclick="splitPDF()">Split PDF</button>
+
+<div id="splitMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="imagesTool">
+<h2>Images to PDF</h2>
+<p class="info">Convert JPG or PNG images into a single PDF document.</p>
+
+<label>Select image files</label>
+<input type="file" id="imageFiles" accept="image/jpeg,image/png" multiple>
+
+<button onclick="imagesToPDF()">Convert to PDF</button>
+
+<div id="imageMessage" class="message"></div>
+</div>
+
+</div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+
+toolSelector.addEventListener("change",function(){
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+});
+
+function downloadBlob(blob,fileName){
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download=fileName;
+link.click();
+URL.revokeObjectURL(link.href);
+}
+
+function setMessage(id,text,type){
+const element=document.getElementById(id);
+element.textContent=text;
+element.className="message " + type;
+}
+
+async function mergePDF(){
+const files=document.getElementById("mergeFiles").files;
+
+if(files.length < 2){
+setMessage("mergeMessage","Please select at least two PDF files.","error");
+return;
+}
+
+try{
+setMessage("mergeMessage","Merging PDF files...","info");
+
+const mergedPdf=await PDFLib.PDFDocument.create();
+
+for(const file of files){
+const arrayBuffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(arrayBuffer);
+const pages=await mergedPdf.copyPages(pdf,pdf.getPageIndices());
+
+pages.forEach(page=>mergedPdf.addPage(page));
+}
+
+const mergedBytes=await mergedPdf.save();
+const blob=new Blob([mergedBytes],{type:"application/pdf"});
+
+downloadBlob(blob,"XAVERT-Merged-PDF.pdf");
+setMessage("mergeMessage","PDF files merged successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("mergeMessage","Unable to merge PDF files.","error");
+}
+}
+
+async function splitPDF(){
+const file=document.getElementById("splitFile").files[0];
+
+if(!file){
+setMessage("splitMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("splitMessage","Splitting PDF pages...","info");
+
+const arrayBuffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(arrayBuffer);
+const pageCount=pdf.getPageCount();
+const zip=new JSZip();
+
+for(let i=0;i<pageCount;i++){
+const newPdf=await PDFLib.PDFDocument.create();
+const [page]=await newPdf.copyPages(pdf,[i]);
+newPdf.addPage(page);
+
+const pdfBytes=await newPdf.save();
+zip.file("page-" + (i+1) + ".pdf",pdfBytes);
+}
+
+const zipBlob=await zip.generateAsync({type:"blob"});
+downloadBlob(zipBlob,"XAVERT-Split-PDF.zip");
+
+setMessage("splitMessage","PDF split completed successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("splitMessage","Unable to split PDF file.","error");
+}
+}
+
+async function imagesToPDF(){
+const files=document.getElementById("imageFiles").files;
+
+if(!files.length){
+setMessage("imageMessage","Please select at least one image file.","error");
+return;
+}
+
+try{
+setMessage("imageMessage","Converting images to PDF...","info");
+
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
+
+for(let i=0;i<files.length;i++){
+const file=files[i];
+const dataUrl=await fileToDataUrl(file);
+
+const img=new Image();
+img.src=dataUrl;
+
+await new Promise(resolve=>{
+img.onload=resolve;
+});
+
+const pageWidth=210;
+const pageHeight=297;
+
+let imgWidth=pageWidth;
+let imgHeight=(img.height * imgWidth) / img.width;
+
+if(imgHeight > pageHeight){
+imgHeight=pageHeight;
+imgWidth=(img.width * imgHeight) / img.height;
+}
+
+const x=(pageWidth-imgWidth)/2;
+const y=(pageHeight-imgHeight)/2;
+
+if(i>0){
+pdf.addPage();
+}
+
+pdf.addImage(dataUrl,file.type==="image/png" ? "PNG" : "JPEG",x,y,imgWidth,imgHeight);
+}
+
+pdf.save("XAVERT-Images-to-PDF.pdf");
+setMessage("imageMessage","Images converted to PDF successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("imageMessage","Unable to convert images to PDF.","error");
+}
+}
+
+function fileToDataUrl(file){
+return new Promise((resolve,reject)=>{
+const reader=new FileReader();
+reader.onload=()=>resolve(reader.result);
+reader.onerror=reject;
+reader.readAsDataURL(file);
+});
+}
+</script>
+
+</body>
+</html>
