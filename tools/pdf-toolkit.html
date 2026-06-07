@@ -700,12 +700,32 @@ const buffer=await file.arrayBuffer();
 const pdf=await PDFLib.PDFDocument.load(buffer);
 const pageCount=pdf.getPageCount();
 
-const selectedPages=pagesInput
+let selectedPages=[];
+
+if(pagesInput.includes("-")){
+const [startRaw,endRaw]=pagesInput.split("-");
+const start=parseInt(startRaw,10);
+const end=parseInt(endRaw,10);
+
+if(isNaN(start)||isNaN(end)||start<1||end>pageCount||start>end){
+setMessage("extractMessage","Invalid page range.","error");
+return;
+}
+
+for(let i=start;i<=end;i++){
+selectedPages.push(i-1);
+}
+
+}else{
+
+selectedPages=pagesInput
 .split(",")
 .map(p=>parseInt(p.trim(),10))
 .filter(p=>!isNaN(p)&&p>=1&&p<=pageCount)
 .map(p=>p-1);
 
+selectedPages=[...new Set(selectedPages)];
+}
 if(!selectedPages.length){
 setMessage("extractMessage","Invalid page numbers.","error");
 return;
