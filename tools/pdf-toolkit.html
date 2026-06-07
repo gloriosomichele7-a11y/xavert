@@ -339,9 +339,11 @@ document.getElementById("splitCount").textContent=files.length ? files[0].name :
 if(inputId==="imageFiles"){
 document.getElementById("imageCount").textContent=files.length ? files.length + " image files selected" : "No files selected";
 }
-}
+
 if(inputId==="pdfJpgFile"){
 document.getElementById("pdfJpgCount").textContent=files.length ? files[0].name : "No file selected";
+}
+}
 }
 function showToast(message){
 toast.textContent=message;
