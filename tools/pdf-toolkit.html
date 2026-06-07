@@ -846,6 +846,161 @@ console.error(error);
 setMessage("extractMessage","Unable to extract pages.","error");
 }
 }
+ async function deletePages(){
+const file=document.getElementById("deleteFile").files[0];
+const pagesInput=document.getElementById("deletePagesInput").value.trim();
+
+if(!file){
+setMessage("deleteMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("deleteMessage","Deleting pages...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+
+let pagesToDelete=[];
+
+if(pagesInput.includes("-")){
+const [start,end]=pagesInput.split("-").map(n=>parseInt(n.trim(),10));
+
+for(let i=start;i<=end;i++){
+pagesToDelete.push(i-1);
+}
+}else{
+pagesToDelete=pagesInput
+.split(",")
+.map(n=>parseInt(n.trim(),10)-1)
+.filter(n=>n>=0);
+}
+
+pagesToDelete=[...new Set(pagesToDelete)].sort((a,b)=>b-a);
+
+for(const pageIndex of pagesToDelete){
+if(pageIndex>=0 && pageIndex<pdf.getPageCount()){
+pdf.removePage(pageIndex);
+}
+}
+
+const bytes=await pdf.save();
+downloadBlob(
+new Blob([bytes],{type:"application/pdf"}),
+"XAVERT-Pages-Deleted.pdf"
+);
+
+setMessage("deleteMessage","Pages deleted successfully.","success");
+showToast("Pages deleted successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("deleteMessage","Unable to delete pages.","error");
+}
+}
+
+async function pdfToPNG(){
+const file=document.getElementById("pngFile").files[0];
+
+if(!file){
+setMessage("pngMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("pngMessage","Converting PDF pages to PNG...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
+const zip=new JSZip();
+
+for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+
+const page=await pdf.getPage(pageNumber);
+const viewport=page.getViewport({scale:2});
+
+const canvas=document.createElement("canvas");
+const context=canvas.getContext("2d");
+
+canvas.width=viewport.width;
+canvas.height=viewport.height;
+
+await page.render({
+canvasContext:context,
+viewport:viewport
+}).promise;
+
+const blob=await new Promise(resolve=>{
+canvas.toBlob(resolve,"image/png");
+});
+
+zip.file("page-" + pageNumber + ".png",blob);
+}
+
+const zipBlob=await zip.generateAsync({type:"blob"});
+
+downloadBlob(zipBlob,"XAVERT-PDF-to-PNG.zip");
+
+setMessage("pngMessage","PDF converted successfully.","success");
+showToast("PDF converted to PNG.");
+
+}catch(error){
+console.error(error);
+setMessage("pngMessage","Unable to convert PDF.","error");
+}
+}
+
+async function watermarkPDF(){
+const file=document.getElementById("watermarkFile").files[0];
+const watermarkText=document.getElementById("watermarkText").value.trim();
+
+if(!file){
+setMessage("watermarkMessage","Please select one PDF file.","error");
+return;
+}
+
+if(!watermarkText){
+setMessage("watermarkMessage","Please enter watermark text.","error");
+return;
+}
+
+try{
+setMessage("watermarkMessage","Applying watermark...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+
+const pages=pdf.getPages();
+
+pages.forEach(page=>{
+
+const {width,height}=page.getSize();
+
+page.drawText(watermarkText,{
+x:width/4,
+y:height/2,
+size:40,
+opacity:0.3,
+rotate:PDFLib.degrees(45)
+});
+
+});
+
+const bytes=await pdf.save();
+
+downloadBlob(
+new Blob([bytes],{type:"application/pdf"}),
+"XAVERT-Watermarked.pdf"
+);
+
+setMessage("watermarkMessage","Watermark added successfully.","success");
+showToast("Watermark added.");
+
+}catch(error){
+console.error(error);
+setMessage("watermarkMessage","Unable to add watermark.","error");
+}
+}
 </script>
 </body>
 </html>
