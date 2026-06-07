@@ -212,6 +212,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="images">Images to PDF</option>
 <option value="pdfjpg">PDF to JPG</option>
 <option value="rotate">Rotate PDF</option>
+<option value="extract">Extract Pages</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -303,6 +304,23 @@ Click or drag one PDF file here
 <button onclick="rotatePDF()">Rotate PDF</button>
 <div id="rotateMessage" class="message"></div>
 </div>
+ <div class="card tool-section" id="extractTool">
+<h2>Extract Pages</h2>
+<p class="info">Extract selected pages from a PDF and download them as a new PDF file.</p>
+
+<div class="drop-zone" data-input="extractFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="extractFile" accept="application/pdf" hidden>
+<div id="extractCount" class="file-count">No file selected</div>
+
+<label for="extractPages">Pages to Extract</label>
+<input type="text" id="extractPages" placeholder="Example: 1-3 or 1,3,5">
+
+<button onclick="extractPages()">Extract Pages</button>
+<div id="extractMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -367,6 +385,10 @@ document.getElementById("pdfJpgCount").textContent=files.length ? files[0].name 
 }
 if(inputId==="rotateFile"){
 document.getElementById("rotateCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+if(inputId==="extractFile"){  
+document.getElementById("extractCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
 }
