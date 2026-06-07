@@ -319,7 +319,11 @@ Click or drag one PDF file here
 <div id="extractCount" class="file-count">No file selected</div>
 
 <label for="extractPages">Pages to Extract</label>
-<input type="text" id="extractPages" placeholder="Example: 1-3 or 1,3,5">
+<input type="text" id="extractPages" placeholder="Actual PDF pages, example: 1-3 or 1,3,5">
+
+<p class="info">
+Pages are counted from the actual PDF structure, not from page numbers printed inside the document.
+</p>
 
 <button onclick="extractPages()">Extract Pages</button>
 <div id="extractMessage" class="message"></div>
@@ -336,7 +340,11 @@ Click or drag one PDF file here
 <div id="deleteCount" class="file-count">No file selected</div>
 
 <label for="deletePages">Pages to Delete</label>
-<input type="text" id="deletePages" placeholder="Example: 1-3 or 1,3,5">
+<input type="text" id="deletePages" placeholder="Actual PDF pages, example: 1-3 or 1,3,5">
+
+<p class="info">
+Pages are counted from the actual PDF structure, not from page numbers printed inside the document.
+</p>
 
 <button onclick="deletePages()">Delete Pages</button>
 <div id="deleteMessage" class="message"></div>
@@ -435,7 +443,11 @@ input.addEventListener("change",function(){
 updateFileCount(input.id);
 });
 });
-
+async function getPDFPageCount(file){
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+return pdf.getPageCount();
+}
 function updateFileCount(inputId){
 const files=document.getElementById(inputId).files;
 
