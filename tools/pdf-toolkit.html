@@ -487,7 +487,7 @@ return;
 
 const zip=new JSZip();
 
- for(const index of selectedPages){
+for(const index of selectedPages){
 const newPdf=await PDFLib.PDFDocument.create();
 const [page]=await newPdf.copyPages(pdf,[index]);
 newPdf.addPage(page);
@@ -507,7 +507,6 @@ console.error(error);
 setMessage("splitMessage","Unable to split PDF file.","error");
 }
 }
-
 async function imagesToPDF(){
 const files=document.getElementById("imageFiles").files;
 
