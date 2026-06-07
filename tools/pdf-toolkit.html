@@ -213,6 +213,9 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="pdfjpg">PDF to JPG</option>
 <option value="rotate">Rotate PDF</option>
 <option value="extract">Extract Pages</option>
+<option value="delete">Delete Pages</option>
+<option value="png">PDF to PNG</option>
+<option value="watermark">Watermark PDF</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -321,6 +324,56 @@ Click or drag one PDF file here
 <button onclick="extractPages()">Extract Pages</button>
 <div id="extractMessage" class="message"></div>
 </div>
+ <div class="card tool-section" id="deleteTool">
+<h2>Delete Pages</h2>
+<p class="info">Remove selected pages from a PDF and download a cleaned version.</p>
+
+<div class="drop-zone" data-input="deleteFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="deleteFile" accept="application/pdf" hidden>
+<div id="deleteCount" class="file-count">No file selected</div>
+
+<label for="deletePages">Pages to Delete</label>
+<input type="text" id="deletePages" placeholder="Example: 1-3 or 1,3,5">
+
+<button onclick="deletePages()">Delete Pages</button>
+<div id="deleteMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="pngTool">
+<h2>PDF to PNG</h2>
+<p class="info">Convert every PDF page into high-quality PNG images.</p>
+
+<div class="drop-zone" data-input="pngFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="pngFile" accept="application/pdf" hidden>
+<div id="pngCount" class="file-count">No file selected</div>
+
+<button onclick="pdfToPNG()">Convert to PNG</button>
+<div id="pngMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="watermarkTool">
+<h2>Watermark PDF</h2>
+<p class="info">Add a text watermark to every page of your PDF.</p>
+
+<div class="drop-zone" data-input="watermarkFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="watermarkFile" accept="application/pdf" hidden>
+<div id="watermarkCount" class="file-count">No file selected</div>
+
+<label for="watermarkText">Watermark Text</label>
+<input type="text" id="watermarkText" placeholder="Example: CONFIDENTIAL">
+
+<button onclick="watermarkPDF()">Add Watermark</button>
+<div id="watermarkMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -340,7 +393,9 @@ if(selectedTool==="images") imagesToPDF();
 if(selectedTool==="pdfjpg") pdfToJPG();
 if(selectedTool==="rotate") rotatePDF();
 if(selectedTool==="extract") extractPages();
-
+if(selectedTool==="delete") deletePages();
+if(selectedTool==="png") pdfToPNG();
+if(selectedTool==="watermark") watermarkPDF();
 }
 
 });
@@ -405,6 +460,20 @@ files.length ? files[0].name : "No file selected";
 }
 if(inputId==="extractFile"){  
 document.getElementById("extractCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+ if(inputId==="deleteFile"){
+document.getElementById("deleteCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+
+if(inputId==="pngFile"){
+document.getElementById("pngCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+
+if(inputId==="watermarkFile"){
+document.getElementById("watermarkCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
 }
