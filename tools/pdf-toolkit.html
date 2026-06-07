@@ -537,7 +537,7 @@ setMessage("mergeMessage","Unable to merge PDF files.","error");
 async function splitPDF(){
 const file=document.getElementById("splitFile").files[0];
 const mode=document.getElementById("splitMode").value;
-const pagesInput=document.getElementById("deletePages").value.trim();
+const pagesInput=document.getElementById("splitPages").value.trim();
 
 if(!file){
 setMessage("splitMessage","Please select one PDF file.","error");
@@ -848,7 +848,7 @@ setMessage("extractMessage","Unable to extract pages.","error");
 }
  async function deletePages(){
 const file=document.getElementById("deleteFile").files[0];
-const pagesInput=document.getElementById("deletePagesInput").value.trim();
+const pagesInput=document.getElementById("deletePages").value.trim();
 
 if(!file){
 setMessage("deleteMessage","Please select one PDF file.","error");
