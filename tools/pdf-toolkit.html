@@ -624,6 +624,40 @@ console.error(error);
 setMessage("pdfJpgMessage","Unable to convert PDF to JPG.","error");
 }
 }
+ async function rotatePDF(){
+const file=document.getElementById("rotateFile").files[0];
+const angle=parseInt(document.getElementById("rotateAngle").value,10);
+
+if(!file){
+setMessage("rotateMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("rotateMessage","Rotating PDF...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pages=pdf.getPages();
+
+pages.forEach(page=>{
+const currentRotation=page.getRotation().angle;
+page.setRotation(PDFLib.degrees(currentRotation + angle));
+});
+
+const bytes=await pdf.save();
+const blob=new Blob([bytes],{type:"application/pdf"});
+
+downloadBlob(blob,"XAVERT-Rotated-PDF.pdf");
+
+setMessage("rotateMessage","PDF rotated successfully.","success");
+showToast("PDF rotated successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("rotateMessage","Unable to rotate PDF.","error");
+}
+}
 </script>
 </body>
 </html>
