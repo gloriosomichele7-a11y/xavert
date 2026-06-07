@@ -327,9 +327,6 @@ Pages are counted from the actual PDF structure, not from page numbers printed i
 <p class="info">
 Tip: If you are working with invoices, contracts or utility bills, use Split PDF first to identify the actual page numbers.
 </p>
-<p class="info">
-Pages are counted from the actual PDF structure, not from page numbers printed inside the document.
-</p>
 
 <button onclick="extractPages()">Extract Pages</button>
 <div id="extractMessage" class="message"></div>
@@ -486,7 +483,7 @@ if(inputId==="extractFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
 document.getElementById("extractCount").textContent=
-files[0].name + " - " + count + " pages detected";
+files[0].name + " • Actual PDF pages: " + count;
 });
 }else{
 document.getElementById("extractCount").textContent="No file selected";
@@ -496,7 +493,7 @@ if(inputId==="deleteFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
 document.getElementById("deleteCount").textContent=
-files[0].name + " - " + count + " pages detected";
+files[0].name + " • Actual PDF pages: " + count;
 });
 }else{
 document.getElementById("deleteCount").textContent="No file selected";
