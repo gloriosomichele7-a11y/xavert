@@ -470,13 +470,25 @@ if(inputId==="rotateFile"){
 document.getElementById("rotateCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
-if(inputId==="extractFile"){  
+if(inputId==="extractFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("extractCount").textContent=
-files.length ? files[0].name : "No file selected";
+files[0].name + " - " + count + " pages detected";
+});
+}else{
+document.getElementById("extractCount").textContent="No file selected";
 }
- if(inputId==="deleteFile"){
+}
+if(inputId==="deleteFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("deleteCount").textContent=
-files.length ? files[0].name : "No file selected";
+files[0].name + " - " + count + " pages detected";
+});
+}else{
+document.getElementById("deleteCount").textContent="No file selected";
+}
 }
 
 if(inputId==="pngFile"){
