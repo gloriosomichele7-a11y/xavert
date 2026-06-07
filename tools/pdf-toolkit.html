@@ -58,7 +58,7 @@ margin-bottom:28px;
 }
 
 .card{
-background:#ffffff;
+background:white;
 border:1px solid #e5e7eb;
 border-radius:18px;
 padding:26px;
@@ -79,7 +79,7 @@ padding:14px;
 border:1px solid #d1d5db;
 border-radius:10px;
 font-size:15px;
-background:#ffffff;
+background:white;
 }
 
 button{
@@ -106,6 +106,35 @@ display:none;
 display:block;
 }
 
+.info{
+color:#4b5563;
+font-size:14px;
+margin:8px 0 16px;
+}
+
+.drop-zone{
+border:2px dashed #d1d5db;
+border-radius:16px;
+padding:28px;
+text-align:center;
+background:#f9fafb;
+cursor:pointer;
+margin-top:12px;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover{
+border-color:#dc2626;
+background:#fff5f5;
+}
+
+.file-count{
+margin-top:10px;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
 .message{
 margin-top:14px;
 font-size:14px;
@@ -120,8 +149,23 @@ color:#dc2626;
 color:#047857;
 }
 
-.info{
+.loading{
 color:#4b5563;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
 
 @media(max-width:768px){
@@ -161,96 +205,39 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 </p>
 
 <div class="card">
-
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
 <option value="merge">Merge PDF</option>
 <option value="split">Split PDF</option>
 <option value="images">Images to PDF</option>
 </select>
-
 </div>
 
+<div class="card tool-section active" id="mergeTool">
+<h2>Merge PDF</h2>
+<p class="info">Upload multiple PDF files and combine them into one document.</p>
 
-
-<div class="card tool-section" id="imagesTool">
-<h2>Images to PDF</h2>
-<p class="info">Convert JPG or PNG images into a single PDF document.</p>
-
-<label>Select image files</label>
-<input type="file" id="imageFiles" accept="image/jpeg,image/png" multiple>
-
-<button onclick="imagesToPDF()">Convert to PDF</button>
-
-<div id="imageMessage" class="message"></div>
+<div class="drop-zone" data-input="mergeFiles">
+Click or drag PDF files here
 </div>
 
+<input type="file" id="mergeFiles" accept="application/pdf" multiple hidden>
+<div id="mergeCount" class="file-count">No files selected</div>
+
+<button onclick="mergePDF()">Merge PDF</button>
+<div id="mergeMessage" class="message"></div>
 </div>
-
-<script>
-const toolSelector=document.getElementById("toolSelector");
-
-toolSelector.addEventListener("change",function(){
-document.querySelectorAll(".tool-section").forEach(section=>{
-section.classList.remove("active");
-});
-
-document.getElementById(toolSelector.value + "Tool").classList.add("active");
-});
-
-function downloadBlob(blob,fileName){
-const link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
-link.download=fileName;
-link.click();
-URL.revokeObjectURL(link.href);
-}
-
-function setMessage(id,text,type){
-const element=document.getElementById(id);
-element.textContent=text;
-element.className="message " + type;
-}
-
-async function mergePDF(){
-const files=document.getElementById("mergeFiles").files;
-
-if(files.length < 2){
-setMessage("mergeMessage","Please select at least two PDF files.","error");
-return;
-}
-
-try{
-setMessage("mergeMessage","Merging PDF files...","info");
-
-const mergedPdf=await PDFLib.PDFDocument.create();
-
-for(const file of files){
-const arrayBuffer=await file.arrayBuffer();
-const pdf=await PDFLib.PDFDocument.load(arrayBuffer);
-const pages=await mergedPdf.copyPages(pdf,pdf.getPageIndices());
-
-pages.forEach(page=>mergedPdf.addPage(page));
-}
-
-const mergedBytes=await mergedPdf.save();
-const blob=new Blob([mergedBytes],{type:"application/pdf"});
-
-downloadBlob(blob,"XAVERT-Merged-PDF.pdf");
-setMessage("mergeMessage","PDF files merged successfully.","success");
-
-}catch(error){
-console.error(error);
-setMessage("mergeMessage","Unable to merge PDF files.","error");
-}
-}
 
 <div class="card tool-section" id="splitTool">
 <h2>Split PDF</h2>
-<p class="info">Upload one PDF and extract all pages, a page range or specific pages.</p>
+<p class="info">Extract all pages, a page range or specific pages into separate PDF files.</p>
 
-<label>Select one PDF file</label>
-<input type="file" id="splitFile" accept="application/pdf">
+<div class="drop-zone" data-input="splitFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="splitFile" accept="application/pdf" hidden>
+<div id="splitCount" class="file-count">No file selected</div>
 
 <label for="splitMode">Split Mode</label>
 <select id="splitMode">
@@ -263,9 +250,271 @@ setMessage("mergeMessage","Unable to merge PDF files.","error");
 <input type="text" id="splitPages" placeholder="Example: 1-3 or 1,3,5">
 
 <button onclick="splitPDF()">Split PDF</button>
-
 <div id="splitMessage" class="message"></div>
 </div>
+
+<div class="card tool-section" id="imagesTool">
+<h2>Images to PDF</h2>
+<p class="info">Convert JPG and PNG images into one PDF document.</p>
+
+<div class="drop-zone" data-input="imageFiles">
+Click or drag image files here
+</div>
+
+<input type="file" id="imageFiles" accept="image/jpeg,image/png" multiple hidden>
+<div id="imageCount" class="file-count">No files selected</div>
+
+<button onclick="imagesToPDF()">Convert to PDF</button>
+<div id="imageMessage" class="message"></div>
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+const toast=document.getElementById("toast");
+
+toolSelector.addEventListener("change",function(){
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+});
+
+document.querySelectorAll(".drop-zone").forEach(zone=>{
+const input=document.getElementById(zone.dataset.input);
+
+zone.addEventListener("click",function(){
+input.click();
+});
+
+zone.addEventListener("dragover",function(e){
+e.preventDefault();
+zone.classList.add("dragover");
+});
+
+zone.addEventListener("dragleave",function(){
+zone.classList.remove("dragover");
+});
+
+zone.addEventListener("drop",function(e){
+e.preventDefault();
+zone.classList.remove("dragover");
+input.files=e.dataTransfer.files;
+updateFileCount(input.id);
+});
+
+input.addEventListener("change",function(){
+updateFileCount(input.id);
+});
+});
+
+function updateFileCount(inputId){
+const files=document.getElementById(inputId).files;
+
+if(inputId==="mergeFiles"){
+document.getElementById("mergeCount").textContent=files.length ? files.length + " PDF files selected" : "No files selected";
+}
+
+if(inputId==="splitFile"){
+document.getElementById("splitCount").textContent=files.length ? files[0].name : "No file selected";
+}
+
+if(inputId==="imageFiles"){
+document.getElementById("imageCount").textContent=files.length ? files.length + " image files selected" : "No files selected";
+}
+}
+
+function showToast(message){
+toast.textContent=message;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+}
+
+function setMessage(id,text,type){
+const element=document.getElementById(id);
+element.textContent=text;
+element.className="message " + type;
+}
+
+function downloadBlob(blob,fileName){
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download=fileName;
+link.click();
+URL.revokeObjectURL(link.href);
+}
+
+async function mergePDF(){
+const files=document.getElementById("mergeFiles").files;
+
+if(files.length<2){
+setMessage("mergeMessage","Please select at least two PDF files.","error");
+return;
+}
+
+try{
+setMessage("mergeMessage","Merging PDF files...","loading");
+
+const mergedPdf=await PDFLib.PDFDocument.create();
+
+for(const file of files){
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pages=await mergedPdf.copyPages(pdf,pdf.getPageIndices());
+pages.forEach(page=>mergedPdf.addPage(page));
+}
+
+const bytes=await mergedPdf.save();
+const blob=new Blob([bytes],{type:"application/pdf"});
+
+downloadBlob(blob,"XAVERT-Merged-PDF.pdf");
+setMessage("mergeMessage","PDF files merged successfully.","success");
+showToast("PDF merged successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("mergeMessage","Unable to merge PDF files.","error");
+}
+}
+
+async function splitPDF(){
+const file=document.getElementById("splitFile").files[0];
+const mode=document.getElementById("splitMode").value;
+const pagesInput=document.getElementById("splitPages").value.trim();
+
+if(!file){
+setMessage("splitMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("splitMessage","Processing PDF pages...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pageCount=pdf.getPageCount();
+
+let selectedPages=[];
+
+if(mode==="all"){
+selectedPages=[...Array(pageCount).keys()];
+}
+
+if(mode==="range"){
+if(!pagesInput.includes("-")){
+setMessage("splitMessage","Please enter a valid range, for example 1-3.","error");
+return;
+}
+
+const [startRaw,endRaw]=pagesInput.split("-");
+const start=parseInt(startRaw,10);
+const end=parseInt(endRaw,10);
+
+if(isNaN(start)||isNaN(end)||start<1||end>pageCount||start>end){
+setMessage("splitMessage","Invalid page range.","error");
+return;
+}
+
+for(let i=start;i<=end;i++){
+selectedPages.push(i-1);
+}
+}
+
+if(mode==="specific"){
+selectedPages=pagesInput
+.split(",")
+.map(p=>parseInt(p.trim(),10))
+.filter(p=>!isNaN(p)&&p>=1&&p<=pageCount)
+.map(p=>p-1);
+
+selectedPages=[...new Set(selectedPages)];
+
+if(!selectedPages.length){
+setMessage("splitMessage","Please enter valid pages, for example 1,3,5.","error");
+return;
+}
+}
+
+const zip=new JSZip();
+
+ for(const index of selectedPages){
+const newPdf=await PDFLib.PDFDocument.create();
+const [page]=await newPdf.copyPages(pdf,[index]);
+newPdf.addPage(page);
+
+const bytes=await newPdf.save();
+zip.file("page-" + (index+1) + ".pdf",bytes);
+}
+
+const zipBlob=await zip.generateAsync({type:"blob"});
+downloadBlob(zipBlob,"XAVERT-Split-PDF.zip");
+
+setMessage("splitMessage","PDF pages extracted successfully.","success");
+showToast("PDF split completed.");
+
+}catch(error){
+console.error(error);
+setMessage("splitMessage","Unable to split PDF file.","error");
+}
+}
+
+async function imagesToPDF(){
+const files=document.getElementById("imageFiles").files;
+
+if(!files.length){
+setMessage("imageMessage","Please select at least one image file.","error");
+return;
+}
+
+try{
+setMessage("imageMessage","Converting images to PDF...","loading");
+
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
+
+for(let i=0;i<files.length;i++){
+const file=files[i];
+const dataUrl=await fileToDataUrl(file);
+const img=await loadImage(dataUrl);
+
+const pageWidth=210;
+const pageHeight=297;
+
+let imgWidth=pageWidth;
+let imgHeight=(img.height*imgWidth)/img.width;
+
+if(imgHeight>pageHeight){
+imgHeight=pageHeight;
+imgWidth=(img.width*imgHeight)/img.height;
+}
+
+const x=(pageWidth-imgWidth)/2;
+const y=(pageHeight-imgHeight)/2;
+
+if(i>0){
+pdf.addPage();
+}
+
+pdf.addImage(dataUrl,file.type==="image/png" ? "PNG" : "JPEG",x,y,imgWidth,imgHeight);
+}
+
+pdf.save("XAVERT-Images-to-PDF.pdf");
+
+setMessage("imageMessage","Images converted to PDF successfully.","success");
+showToast("Images converted to PDF.");
+
+}catch(error){
+console.error(error);
+setMessage("imageMessage","Unable to convert images to PDF.","error");
+}
+}
 
 function fileToDataUrl(file){
 return new Promise((resolve,reject)=>{
@@ -273,6 +522,15 @@ const reader=new FileReader();
 reader.onload=()=>resolve(reader.result);
 reader.onerror=reject;
 reader.readAsDataURL(file);
+});
+}
+
+function loadImage(src){
+return new Promise((resolve,reject)=>{
+const img=new Image();
+img.onload=()=>resolve(img);
+img.onerror=reject;
+img.src=src;
 });
 }
 </script>
