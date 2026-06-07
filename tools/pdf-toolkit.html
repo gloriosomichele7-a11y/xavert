@@ -537,7 +537,7 @@ setMessage("mergeMessage","Unable to merge PDF files.","error");
 async function splitPDF(){
 const file=document.getElementById("splitFile").files[0];
 const mode=document.getElementById("splitMode").value;
-const pagesInput=document.getElementById("splitPages").value.trim();
+const pagesInput=document.getElementById("deletePages").value.trim();
 
 if(!file){
 setMessage("splitMessage","Please select one PDF file.","error");
