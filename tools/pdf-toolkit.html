@@ -846,7 +846,7 @@ console.error(error);
 setMessage("extractMessage","Unable to extract pages.","error");
 }
 }
- async function deletePages(){
+async function deletePages(){
 const file=document.getElementById("deleteFile").files[0];
 const pagesInput=document.getElementById("deletePages").value.trim();
 
@@ -855,36 +855,69 @@ setMessage("deleteMessage","Please select one PDF file.","error");
 return;
 }
 
+if(!pagesInput){
+setMessage("deleteMessage","Please enter pages to delete.","error");
+return;
+}
+
 try{
 setMessage("deleteMessage","Deleting pages...","loading");
 
 const buffer=await file.arrayBuffer();
-const pdf=await PDFLib.PDFDocument.load(buffer);
+const sourcePdf=await PDFLib.PDFDocument.load(buffer);
+const pageCount=sourcePdf.getPageCount();
 
 let pagesToDelete=[];
 
 if(pagesInput.includes("-")){
-const [start,end]=pagesInput.split("-").map(n=>parseInt(n.trim(),10));
+const [startRaw,endRaw]=pagesInput.split("-");
+const start=parseInt(startRaw,10);
+const end=parseInt(endRaw,10);
+
+if(isNaN(start)||isNaN(end)||start<1||end>pageCount||start>end){
+setMessage("deleteMessage","Invalid page range.","error");
+return;
+}
 
 for(let i=start;i<=end;i++){
 pagesToDelete.push(i-1);
 }
+
 }else{
 pagesToDelete=pagesInput
 .split(",")
-.map(n=>parseInt(n.trim(),10)-1)
-.filter(n=>n>=0);
+.map(n=>parseInt(n.trim(),10))
+.filter(n=>!isNaN(n)&&n>=1&&n<=pageCount)
+.map(n=>n-1);
 }
 
-pagesToDelete=[...new Set(pagesToDelete)].sort((a,b)=>b-a);
+pagesToDelete=[...new Set(pagesToDelete)];
 
-for(const pageIndex of pagesToDelete){
-if(pageIndex>=0 && pageIndex<pdf.getPageCount()){
-pdf.removePage(pageIndex);
+if(!pagesToDelete.length){
+setMessage("deleteMessage","Invalid page numbers.","error");
+return;
+}
+
+const pagesToKeep=[];
+
+for(let i=0;i<pageCount;i++){
+if(!pagesToDelete.includes(i)){
+pagesToKeep.push(i);
 }
 }
 
-const bytes=await pdf.save();
+if(!pagesToKeep.length){
+setMessage("deleteMessage","You cannot delete all pages.","error");
+return;
+}
+
+const newPdf=await PDFLib.PDFDocument.create();
+const copiedPages=await newPdf.copyPages(sourcePdf,pagesToKeep);
+
+copiedPages.forEach(page=>newPdf.addPage(page));
+
+const bytes=await newPdf.save();
+
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
 "XAVERT-Pages-Deleted.pdf"
