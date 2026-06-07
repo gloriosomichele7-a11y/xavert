@@ -267,7 +267,20 @@ Click or drag image files here
 <button onclick="imagesToPDF()">Convert to PDF</button>
 <div id="imageMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="pdfjpgTool">
+<h2>PDF to JPG</h2>
+<p class="info">Convert each PDF page into a high-quality JPG image.</p>
 
+<div class="drop-zone" data-input="pdfJpgFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="pdfJpgFile" accept="application/pdf" hidden>
+<div id="pdfJpgCount" class="file-count">No file selected</div>
+
+<button onclick="pdfToJPG()">Convert to JPG</button>
+<div id="pdfJpgMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
