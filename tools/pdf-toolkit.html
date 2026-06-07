@@ -679,6 +679,68 @@ console.error(error);
 setMessage("rotateMessage","Unable to rotate PDF.","error");
 }
 }
+ async function extractPages(){
+const file=document.getElementById("extractFile").files[0];
+const pagesInput=document.getElementById("extractPages").value.trim();
+
+if(!file){
+setMessage("extractMessage","Please select one PDF file.","error");
+return;
+}
+
+if(!pagesInput){
+setMessage("extractMessage","Please enter page numbers.","error");
+return;
+}
+
+try{
+setMessage("extractMessage","Extracting pages...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pageCount=pdf.getPageCount();
+
+const selectedPages=pagesInput
+.split(",")
+.map(p=>parseInt(p.trim(),10))
+.filter(p=>!isNaN(p)&&p>=1&&p<=pageCount)
+.map(p=>p-1);
+
+if(!selectedPages.length){
+setMessage("extractMessage","Invalid page numbers.","error");
+return;
+}
+
+const zip=new JSZip();
+
+for(const index of selectedPages){
+
+const newPdf=await PDFLib.PDFDocument.create();
+
+const [page]=await newPdf.copyPages(pdf,[index]);
+
+newPdf.addPage(page);
+
+const bytes=await newPdf.save();
+
+zip.file("page-" + (index+1) + ".pdf",bytes);
+}
+
+const zipBlob=await zip.generateAsync({type:"blob"});
+
+downloadBlob(zipBlob,"XAVERT-Extracted-Pages.zip");
+
+setMessage("extractMessage","Pages extracted successfully.","success");
+
+showToast("Pages extracted successfully.");
+
+}catch(error){
+
+console.error(error);
+
+setMessage("extractMessage","Unable to extract pages.","error");
+}
+}
 </script>
 </body>
 </html>
