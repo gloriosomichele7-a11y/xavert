@@ -1462,6 +1462,147 @@ console.error(error);
 setMessage("numbersMessage","Unable to add page numbers.","error");
 }
 }
+function clearSignature(){
+const canvas=document.getElementById("signatureCanvas");
+const ctx=canvas.getContext("2d");
+ctx.clearRect(0,0,canvas.width,canvas.height);
+}
+
+function setupSignatureCanvas(){
+const canvas=document.getElementById("signatureCanvas");
+if(!canvas) return;
+
+const ctx=canvas.getContext("2d");
+let drawing=false;
+
+function getPosition(e){
+const rect=canvas.getBoundingClientRect();
+const clientX=e.touches ? e.touches[0].clientX : e.clientX;
+const clientY=e.touches ? e.touches[0].clientY : e.clientY;
+
+return {
+x:(clientX-rect.left)*(canvas.width/rect.width),
+y:(clientY-rect.top)*(canvas.height/rect.height)
+};
+}
+
+function startDrawing(e){
+e.preventDefault();
+drawing=true;
+const pos=getPosition(e);
+ctx.beginPath();
+ctx.moveTo(pos.x,pos.y);
+}
+
+function draw(e){
+if(!drawing) return;
+e.preventDefault();
+const pos=getPosition(e);
+ctx.lineWidth=3;
+ctx.lineCap="round";
+ctx.strokeStyle="#111827";
+ctx.lineTo(pos.x,pos.y);
+ctx.stroke();
+}
+
+function stopDrawing(){
+drawing=false;
+}
+
+canvas.addEventListener("mousedown",startDrawing);
+canvas.addEventListener("mousemove",draw);
+canvas.addEventListener("mouseup",stopDrawing);
+canvas.addEventListener("mouseleave",stopDrawing);
+
+canvas.addEventListener("touchstart",startDrawing);
+canvas.addEventListener("touchmove",draw);
+canvas.addEventListener("touchend",stopDrawing);
+}
+
+setupSignatureCanvas();
+
+async function signPDF(){
+const pdfFile=document.getElementById("signPdfFile").files[0];
+const method=document.getElementById("signMethod").value;
+const pageNumber=parseInt(document.getElementById("signaturePage").value,10);
+
+if(!pdfFile){
+setMessage("signMessage","Please select one PDF file.","error");
+return;
+}
+
+if(isNaN(pageNumber) || pageNumber<1){
+setMessage("signMessage","Please enter a valid page number.","error");
+return;
+}
+
+try{
+setMessage("signMessage","Signing PDF...","loading");
+
+const buffer=await pdfFile.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pageCount=pdf.getPageCount();
+
+if(pageNumber>pageCount){
+setMessage("signMessage","Page number is higher than the PDF page count.","error");
+return;
+}
+
+let signatureBytes;
+let signatureImage;
+
+if(method==="draw"){
+const canvas=document.getElementById("signatureCanvas");
+const dataUrl=canvas.toDataURL("image/png");
+signatureBytes=await fetch(dataUrl).then(res=>res.arrayBuffer());
+signatureImage=await pdf.embedPng(signatureBytes);
+}
+
+if(method==="upload"){
+const imageFile=document.getElementById("signatureImageFile").files[0];
+
+if(!imageFile){
+setMessage("signMessage","Please select a signature image.","error");
+return;
+}
+
+signatureBytes=await imageFile.arrayBuffer();
+
+if(imageFile.type==="image/png"){
+signatureImage=await pdf.embedPng(signatureBytes);
+}else{
+signatureImage=await pdf.embedJpg(signatureBytes);
+}
+}
+
+const page=pdf.getPages()[pageNumber-1];
+const {width}=page.getSize();
+
+const signatureWidth=180;
+const signatureHeight=70;
+
+page.drawImage(signatureImage,{
+x:width-signatureWidth-50,
+y:50,
+width:signatureWidth,
+height:signatureHeight
+});
+
+const bytes=await pdf.save();
+
+downloadBlob(
+new Blob([bytes],{type:"application/pdf"}),
+"XAVERT-Signed-PDF.pdf"
+);
+
+setMessage("signMessage","PDF signed successfully.","success");
+showToast("PDF signed successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("signMessage","Unable to sign PDF.","error");
+}
+}
 </script>
 </body>
 </html>
