@@ -222,7 +222,11 @@ document.getElementById(toolSelector.value + "Tool").classList.add("active");
 });
 
 document.querySelectorAll(".drop-zone").forEach(zone=>{
-const input=document.getElementById(zone.dataset.input);
+const input=document.getElementById(zone.getAttribute("data-input"));
+
+if(!input){
+return;
+}
 
 zone.addEventListener("click",function(){
 input.click();
