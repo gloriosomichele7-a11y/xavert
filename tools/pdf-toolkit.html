@@ -216,6 +216,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="delete">Delete Pages</option>
 <option value="png">PDF to PNG</option>
 <option value="watermark">Watermark PDF</option>
+<option value="compress">Compress PDF</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -388,6 +389,27 @@ Click or drag one PDF file here
 <button onclick="watermarkPDF()">Add Watermark</button>
 <div id="watermarkMessage" class="message"></div>
 </div>
+ <div class="card tool-section" id="compressTool">
+<h2>Compress PDF</h2>
+<p class="info">Reduce PDF file size by optimizing pages and images.</p>
+
+<div class="drop-zone" data-input="compressFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="compressFile" accept="application/pdf" hidden>
+<div id="compressCount" class="file-count">No file selected</div>
+
+<label for="compressLevel">Compression Level</label>
+<select id="compressLevel">
+<option value="low">Low Compression</option>
+<option value="medium">Medium Compression</option>
+<option value="high">High Compression</option>
+</select>
+
+<button onclick="compressPDF()">Compress PDF</button>
+<div id="compressMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -410,6 +432,7 @@ if(selectedTool==="extract") extractPages();
 if(selectedTool==="delete") deletePages();
 if(selectedTool==="png") pdfToPNG();
 if(selectedTool==="watermark") watermarkPDF();
+if(selectedTool==="compress") compressPDF();
 }
 
 });
@@ -504,6 +527,10 @@ files.length ? files[0].name : "No file selected";
 
 if(inputId==="watermarkFile"){
 document.getElementById("watermarkCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+ if(inputId==="compressFile"){
+document.getElementById("compressCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
 }
@@ -1062,6 +1089,87 @@ showToast("Watermark added.");
 }catch(error){
 console.error(error);
 setMessage("watermarkMessage","Unable to add watermark.","error");
+}
+}
+async function compressPDF(){
+const file=document.getElementById("compressFile").files[0];
+const level=document.getElementById("compressLevel").value;
+
+if(!file){
+setMessage("compressMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("compressMessage","Compressing PDF...","loading");
+
+let scale=1.5;
+let quality=0.8;
+
+if(level==="medium"){
+scale=1.2;
+quality=0.65;
+}
+
+if(level==="high"){
+scale=0.9;
+quality=0.45;
+}
+
+const buffer=await file.arrayBuffer();
+const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
+
+const { jsPDF } = window.jspdf;
+let compressedPdf=null;
+
+for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
+
+const page=await pdf.getPage(pageNumber);
+const viewport=page.getViewport({scale:scale});
+
+const canvas=document.createElement("canvas");
+const context=canvas.getContext("2d");
+
+canvas.width=viewport.width;
+canvas.height=viewport.height;
+
+await page.render({
+canvasContext:context,
+viewport:viewport
+}).promise;
+
+const imgData=canvas.toDataURL("image/jpeg",quality);
+
+const orientation=viewport.width>viewport.height ? "landscape" : "portrait";
+
+if(pageNumber===1){
+compressedPdf=new jsPDF({
+orientation:orientation,
+unit:"pt",
+format:[viewport.width,viewport.height]
+});
+}else{
+compressedPdf.addPage([viewport.width,viewport.height],orientation);
+}
+
+compressedPdf.addImage(
+imgData,
+"JPEG",
+0,
+0,
+viewport.width,
+viewport.height
+);
+}
+
+compressedPdf.save("XAVERT-Compressed-PDF.pdf");
+
+setMessage("compressMessage","PDF compressed successfully.","success");
+showToast("PDF compressed successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("compressMessage","Unable to compress PDF.","error");
 }
 }
 </script>
