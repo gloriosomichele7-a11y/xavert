@@ -537,16 +537,16 @@ Click or drag signature image here
 <script>
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
-const signatureType=document.getElementById("signatureType");
+const signatureType=document.getElementById("signMethod");
 
 if(signatureType){
 
 signatureType.addEventListener("change",function(){
 
-document.getElementById("drawSignatureBox").style.display=
+document.getElementById("drawSignatureArea").style.display=
 this.value==="draw" ? "block" : "none";
 
-document.getElementById("uploadSignatureBox").style.display=
+document.getElementById("uploadSignatureArea").style.display=
 this.value==="upload" ? "block" : "none";
 
 });
