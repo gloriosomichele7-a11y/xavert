@@ -415,26 +415,7 @@ This tool rebuilds the PDF using optimized images. Results are best with scanned
 <button onclick="compressPDF()">Compress PDF</button>
 <div id="compressMessage" class="message"></div>
 </div>
- <div class="card tool-section" id="protectTool">
-<h2>Protect PDF</h2>
 
-<p class="info">
-Add a password to protect access to your PDF document.
-</p>
-
-<div class="drop-zone" data-input="protectFile">
-Click or drag one PDF file here
-</div>
-
-<input type="file" id="protectFile" accept="application/pdf" hidden>
-<div id="protectCount" class="file-count">No file selected</div>
-
-<label for="protectPassword">Password</label>
-<input type="password" id="protectPassword" placeholder="Enter password">
-
-<button onclick="protectPDF()">Protect PDF</button>
-<div id="protectMessage" class="message"></div>
-</div>
 <div class="card tool-section" id="reorderTool">
 <h2>Reorder Pages</h2>
 
@@ -567,7 +548,6 @@ if(selectedTool==="delete") deletePages();
 if(selectedTool==="png") pdfToPNG();
 if(selectedTool==="watermark") watermarkPDF();
 if(selectedTool==="compress") compressPDF();
-if(selectedTool==="protect") protectPDF();
 if(selectedTool==="reorder") reorderPages();
 if(selectedTool==="numbers") addPageNumbers();
 if(selectedTool==="sign") signPDF();
