@@ -219,6 +219,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="compress">Compress PDF</option>
 <option value="protect">Protect PDF</option>
 <option value="reorder">Reorder Pages</option>
+<option value="numbers">Add Page Numbers</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -458,6 +459,36 @@ Use actual PDF page numbers. Example: 3,1,2 creates a PDF with page 3 first, the
 <button onclick="reorderPages()">Reorder Pages</button>
 <div id="reorderMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="numbersTool">
+<h2>Add Page Numbers</h2>
+
+<p class="info">
+Add page numbers to your PDF document.
+</p>
+
+<div class="drop-zone" data-input="numbersFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="numbersFile" accept="application/pdf" hidden>
+<div id="numbersCount" class="file-count">No file selected</div>
+
+<label for="numbersPosition">Position</label>
+<select id="numbersPosition">
+<option value="bottom-center">Bottom Center</option>
+<option value="bottom-right">Bottom Right</option>
+<option value="bottom-left">Bottom Left</option>
+<option value="top-center">Top Center</option>
+<option value="top-right">Top Right</option>
+<option value="top-left">Top Left</option>
+</select>
+
+<label for="numbersStart">Start Number</label>
+<input type="number" id="numbersStart" value="1" min="1">
+
+<button onclick="addPageNumbers()">Add Page Numbers</button>
+<div id="numbersMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -483,6 +514,7 @@ if(selectedTool==="watermark") watermarkPDF();
 if(selectedTool==="compress") compressPDF();
 if(selectedTool==="protect") protectPDF();
 if(selectedTool==="reorder") reorderPages();
+if(selectedTool==="numbers") addPageNumbers();
 }
 
 });
@@ -591,8 +623,11 @@ if(inputId==="reorderFile"){
 document.getElementById("reorderCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
+if(inputId==="numbersFile"){
+document.getElementById("numbersCount").textContent=
+files.length ? files[0].name : "No file selected";
 }
-
+}
 function showToast(message){
 toast.textContent=message;
 toast.style.display="block";
@@ -1290,6 +1325,84 @@ showToast("Pages reordered successfully.");
 }catch(error){
 console.error(error);
 setMessage("reorderMessage","Unable to reorder pages.","error");
+}
+}
+async function addPageNumbers(){
+const file=document.getElementById("numbersFile").files[0];
+const position=document.getElementById("numbersPosition").value;
+const startNumber=parseInt(document.getElementById("numbersStart").value,10) || 1;
+
+if(!file){
+setMessage("numbersMessage","Please select one PDF file.","error");
+return;
+}
+
+try{
+setMessage("numbersMessage","Adding page numbers...","loading");
+
+const buffer=await file.arrayBuffer();
+const pdf=await PDFLib.PDFDocument.load(buffer);
+const pages=pdf.getPages();
+
+pages.forEach((page,index)=>{
+const {width,height}=page.getSize();
+const text=String(startNumber + index);
+const fontSize=12;
+
+let x=width/2;
+let y=24;
+
+if(position==="bottom-left"){
+x=36;
+y=24;
+}
+
+if(position==="bottom-right"){
+x=width-50;
+y=24;
+}
+
+if(position==="bottom-center"){
+x=width/2;
+y=24;
+}
+
+if(position==="top-left"){
+x=36;
+y=height-36;
+}
+
+if(position==="top-right"){
+x=width-50;
+y=height-36;
+}
+
+if(position==="top-center"){
+x=width/2;
+y=height-36;
+}
+
+page.drawText(text,{
+x:x,
+y:y,
+size:fontSize,
+color:PDFLib.rgb(0,0,0)
+});
+});
+
+const bytes=await pdf.save();
+
+downloadBlob(
+new Blob([bytes],{type:"application/pdf"}),
+"XAVERT-Page-Numbers.pdf"
+);
+
+setMessage("numbersMessage","Page numbers added successfully.","success");
+showToast("Page numbers added successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("numbersMessage","Unable to add page numbers.","error");
 }
 }
 </script>
