@@ -218,6 +218,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="watermark">Watermark PDF</option>
 <option value="compress">Compress PDF</option>
 <option value="protect">Protect PDF</option>
+<option value="reorder">Reorder Pages</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -433,6 +434,30 @@ Click or drag one PDF file here
 <button onclick="protectPDF()">Protect PDF</button>
 <div id="protectMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="reorderTool">
+<h2>Reorder Pages</h2>
+
+<p class="info">
+Create a new PDF by entering the page order you want.
+</p>
+
+<div class="drop-zone" data-input="reorderFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="reorderFile" accept="application/pdf" hidden>
+<div id="reorderCount" class="file-count">No file selected</div>
+
+<label for="reorderPages">New Page Order</label>
+<input type="text" id="reorderPages" placeholder="Example: 3,1,2,4">
+
+<p class="info">
+Use actual PDF page numbers. Example: 3,1,2 creates a PDF with page 3 first, then page 1, then page 2.
+</p>
+
+<button onclick="reorderPages()">Reorder Pages</button>
+<div id="reorderMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -457,6 +482,7 @@ if(selectedTool==="png") pdfToPNG();
 if(selectedTool==="watermark") watermarkPDF();
 if(selectedTool==="compress") compressPDF();
 if(selectedTool==="protect") protectPDF();
+if(selectedTool==="reorder") reorderPages();
 }
 
 });
@@ -560,6 +586,10 @@ files.length ? files[0].name : "No file selected";
 if(inputId==="protectFile"){
 document.getElementById("protectCount").textContent=
 files.length ? files[0].name : "No file selected";
+if(inputId==="reorderFile"){
+document.getElementById("reorderCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
 }
 }
 
