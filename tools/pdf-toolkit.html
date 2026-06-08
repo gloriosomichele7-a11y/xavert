@@ -1230,6 +1230,68 @@ console.error(error);
 setMessage("compressMessage","Unable to compress PDF.","error");
 }
 }
+async function reorderPages(){
+const file=document.getElementById("reorderFile").files[0];
+const pagesInput=document.getElementById("reorderPages").value.trim();
+
+if(!file){
+setMessage("reorderMessage","Please select one PDF file.","error");
+return;
+}
+
+if(!pagesInput){
+setMessage("reorderMessage","Please enter page order.","error");
+return;
+}
+
+try{
+setMessage("reorderMessage","Reordering pages...","loading");
+
+const buffer=await file.arrayBuffer();
+const sourcePdf=await PDFLib.PDFDocument.load(buffer);
+const pageCount=sourcePdf.getPageCount();
+
+const pageOrder=pagesInput
+.split(",")
+.map(n=>parseInt(n.trim(),10))
+.filter(n=>!isNaN(n));
+
+if(!pageOrder.length){
+setMessage("reorderMessage","Invalid page order.","error");
+return;
+}
+
+for(const page of pageOrder){
+if(page<1 || page>pageCount){
+setMessage("reorderMessage","One or more page numbers are invalid.","error");
+return;
+}
+}
+
+const newPdf=await PDFLib.PDFDocument.create();
+
+const copiedPages=await newPdf.copyPages(
+sourcePdf,
+pageOrder.map(n=>n-1)
+);
+
+copiedPages.forEach(page=>newPdf.addPage(page));
+
+const bytes=await newPdf.save();
+
+downloadBlob(
+new Blob([bytes],{type:"application/pdf"}),
+"XAVERT-Reordered-PDF.pdf"
+);
+
+setMessage("reorderMessage","Pages reordered successfully.","success");
+showToast("Pages reordered successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("reorderMessage","Unable to reorder pages.","error");
+}
+}
 </script>
 </body>
 </html>
