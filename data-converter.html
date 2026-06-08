@@ -4,10 +4,292 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Data Converter</title>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+textarea,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:180px;
+resize:vertical;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.info{
+color:#4b5563;
+font-size:14px;
+margin:8px 0 16px;
+}
+
+.drop-zone{
+border:2px dashed #d1d5db;
+border-radius:16px;
+padding:28px;
+text-align:center;
+background:#f9fafb;
+cursor:pointer;
+margin-top:12px;
+}
+
+.file-count{
+margin-top:10px;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+.loading{color:#4b5563;}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
 </head>
+
 <body>
 
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
 <h1>Data Converter</h1>
+
+<p class="subtitle">
+Convert spreadsheets and structured data directly in your browser.
+</p>
+
+<div class="card">
+<label for="toolSelector">Select Tool</label>
+<select id="toolSelector">
+<option value="csvxlsx">CSV to XLSX</option>
+<option value="xlsxcsv">XLSX to CSV</option>
+<option value="xlsxjson">XLSX to JSON</option>
+<option value="jsonxlsx">JSON to XLSX</option>
+<option value="jsoncsv">JSON to CSV</option>
+<option value="csvjson">CSV to JSON</option>
+<option value="xmljson">XML to JSON</option>
+<option value="jsonxml">JSON to XML</option>
+<option value="jsonformat">JSON Formatter</option>
+<option value="jsonvalidate">JSON Validator</option>
+<option value="xmlformat">XML Formatter</option>
+<option value="xmlvalidate">XML Validator</option>
+</select>
+</div>
+
+<div class="card tool-section active" id="csvxlsxTool">
+<h2>CSV to XLSX</h2>
+<p class="info">Convert a CSV file into an Excel XLSX spreadsheet.</p>
+
+<div class="drop-zone" data-input="csvXlsxFile">Click or drag CSV file here</div>
+<input type="file" id="csvXlsxFile" accept=".csv,text/csv" hidden>
+<div id="csvXlsxCount" class="file-count">No file selected</div>
+
+<button onclick="csvToXlsx()">Convert to XLSX</button>
+<div id="csvXlsxMessage" class="message"></div>
+</div>
+
+</div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+
+toolSelector.addEventListener("change",function(){
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+});
+
+document.querySelectorAll(".drop-zone").forEach(zone=>{
+const input=document.getElementById(zone.dataset.input);
+
+zone.addEventListener("click",function(){
+input.click();
+});
+
+zone.addEventListener("dragover",function(e){
+e.preventDefault();
+zone.classList.add("dragover");
+});
+
+zone.addEventListener("dragleave",function(){
+zone.classList.remove("dragover");
+});
+
+zone.addEventListener("drop",function(e){
+e.preventDefault();
+zone.classList.remove("dragover");
+input.files=e.dataTransfer.files;
+updateFileCount(input.id);
+});
+
+input.addEventListener("change",function(){
+updateFileCount(input.id);
+});
+});
+
+function updateFileCount(inputId){
+const files=document.getElementById(inputId).files;
+
+if(inputId==="csvXlsxFile"){
+document.getElementById("csvXlsxCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+}
+
+function setMessage(id,text,type){
+const element=document.getElementById(id);
+element.textContent=text;
+element.className="message " + type;
+}
+
+function downloadBlob(blob,fileName){
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download=fileName;
+link.click();
+URL.revokeObjectURL(link.href);
+}
+
+async function csvToXlsx(){
+const file=document.getElementById("csvXlsxFile").files[0];
+
+if(!file){
+setMessage("csvXlsxMessage","Please select one CSV file.","error");
+return;
+}
+
+try{
+setMessage("csvXlsxMessage","Converting CSV to XLSX...","loading");
+
+const text=await file.text();
+const workbook=XLSX.read(text,{type:"string"});
+const bytes=XLSX.write(workbook,{bookType:"xlsx",type:"array"});
+
+downloadBlob(
+new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),
+"XAVERT-CSV-to-XLSX.xlsx"
+);
+
+setMessage("csvXlsxMessage","CSV converted successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("csvXlsxMessage","Unable to convert CSV.","error");
+}
+}
+</script>
 
 </body>
 </html>
