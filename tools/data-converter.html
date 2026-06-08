@@ -275,7 +275,7 @@ link.download=fileName;
 link.click();
 URL.revokeObjectURL(link.href);
 }
-
+}
 async function csvToXlsx(){
 const file=document.getElementById("csvXlsxFile").files[0];
 
@@ -288,8 +288,21 @@ try{
 setMessage("csvXlsxMessage","Converting CSV to XLSX...","loading");
 
 const text=await file.text();
-const workbook=XLSX.read(text,{type:"string"});
-const bytes=XLSX.write(workbook,{bookType:"xlsx",type:"array"});
+
+const rows=text
+.trim()
+.split(/\r?\n/)
+.map(row=>row.split(","));
+
+const worksheet=XLSX.utils.aoa_to_sheet(rows);
+const workbook=XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");
+
+const bytes=XLSX.write(workbook,{
+bookType:"xlsx",
+type:"array"
+});
 
 downloadBlob(
 new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),
@@ -301,35 +314,6 @@ setMessage("csvXlsxMessage","CSV converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("csvXlsxMessage","Unable to convert CSV.","error");
-}
-}
-async function xlsxToCsv(){
-const file=document.getElementById("xlsxCsvFile").files[0];
-
-if(!file){
-setMessage("xlsxCsvMessage","Please select one XLSX file.","error");
-return;
-}
-
-try{
-setMessage("xlsxCsvMessage","Converting XLSX to CSV...","loading");
-
-const buffer=await file.arrayBuffer();
-const workbook=XLSX.read(buffer,{type:"array"});
-const sheetName=workbook.SheetNames[0];
-const worksheet=workbook.Sheets[sheetName];
-const csv=XLSX.utils.sheet_to_csv(worksheet);
-
-downloadBlob(
-new Blob([csv],{type:"text/csv;charset=utf-8"}),
-"XAVERT-XLSX-to-CSV.csv"
-);
-
-setMessage("xlsxCsvMessage","XLSX converted successfully.","success");
-
-}catch(error){
-console.error(error);
-setMessage("xlsxCsvMessage","Unable to convert XLSX.","error");
 }
 }
 </script>
