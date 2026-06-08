@@ -185,7 +185,17 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="xmlvalidate">XML Validator</option>
 </select>
 </div>
+<div class="card tool-section active" id="csvxlsxTool">
+<h2>CSV to XLSX</h2>
+<p class="info">Convert a CSV file into an Excel XLSX spreadsheet.</p>
 
+<div class="drop-zone" data-input="csvXlsxFile">Click or drag CSV file here</div>
+<input type="file" id="csvXlsxFile" accept=".csv,text/csv" hidden>
+<div id="csvXlsxCount" class="file-count">No file selected</div>
+
+<button onclick="csvToXlsx()">Convert to XLSX</button>
+<div id="csvXlsxMessage" class="message"></div>
+</div>
 <div class="card tool-section" id="xlsxcsvTool">
 <h2>XLSX to CSV</h2>
 <p class="info">Convert an Excel XLSX spreadsheet into a CSV file.</p>
