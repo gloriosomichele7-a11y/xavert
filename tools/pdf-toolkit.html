@@ -220,6 +220,7 @@ Merge PDFs, split pages and convert images to PDF directly in your browser.
 <option value="protect">Protect PDF</option>
 <option value="reorder">Reorder Pages</option>
 <option value="numbers">Add Page Numbers</option>
+<option value="sign">Sign PDF</option>
 </select>
 </div>
 <div class="card tool-section active" id="mergeTool">
@@ -489,6 +490,46 @@ Click or drag one PDF file here
 <button onclick="addPageNumbers()">Add Page Numbers</button>
 <div id="numbersMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="signTool">
+<h2>Sign PDF</h2>
+
+<p class="info">
+Add a handwritten signature to your PDF using a drawn signature or an uploaded PNG/JPG image.
+</p>
+
+<div class="drop-zone" data-input="signPdfFile">
+Click or drag one PDF file here
+</div>
+
+<input type="file" id="signPdfFile" accept="application/pdf" hidden>
+<div id="signPdfCount" class="file-count">No PDF selected</div>
+
+<label for="signMethod">Signature Method</label>
+<select id="signMethod">
+<option value="draw">Draw Signature</option>
+<option value="upload">Upload Signature Image</option>
+</select>
+
+<label for="signaturePage">Page Number</label>
+<input type="number" id="signaturePage" value="1" min="1">
+
+<div id="drawSignatureArea">
+<label>Draw Signature</label>
+<canvas id="signatureCanvas" width="500" height="180" style="width:100%;border:1px solid #d1d5db;border-radius:10px;background:white;"></canvas>
+<button type="button" onclick="clearSignature()">Clear Signature</button>
+</div>
+
+<div id="uploadSignatureArea" style="display:none;">
+<div class="drop-zone" data-input="signatureImageFile">
+Click or drag signature image here
+</div>
+<input type="file" id="signatureImageFile" accept="image/png,image/jpeg" hidden>
+<div id="signatureImageCount" class="file-count">No signature image selected</div>
+</div>
+
+<button onclick="signPDF()">Sign PDF</button>
+<div id="signMessage" class="message"></div>
+</div>
 </div>
 
 <div id="toast"></div>
@@ -496,6 +537,21 @@ Click or drag one PDF file here
 <script>
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
+const signatureType=document.getElementById("signatureType");
+
+if(signatureType){
+
+signatureType.addEventListener("change",function(){
+
+document.getElementById("drawSignatureBox").style.display=
+this.value==="draw" ? "block" : "none";
+
+document.getElementById("uploadSignatureBox").style.display=
+this.value==="upload" ? "block" : "none";
+
+});
+
+}
 document.addEventListener("keydown",function(e){
 
 if(e.key==="Enter"){
@@ -515,6 +571,7 @@ if(selectedTool==="compress") compressPDF();
 if(selectedTool==="protect") protectPDF();
 if(selectedTool==="reorder") reorderPages();
 if(selectedTool==="numbers") addPageNumbers();
+if(selectedTool==="sign") signPDF();
 }
 
 });
@@ -626,7 +683,7 @@ files.length ? files[0].name : "No file selected";
 if(inputId==="numbersFile"){
 document.getElementById("numbersCount").textContent=
 files.length ? files[0].name : "No file selected";
-}
+} 
 }
 function showToast(message){
 toast.textContent=message;
