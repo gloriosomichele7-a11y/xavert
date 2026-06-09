@@ -272,12 +272,24 @@ element.textContent=text;
 element.className="message " + type;
 }
 
-function downloadBlob(blob,fileName){
-const link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
-link.download=fileName;
-link.click();
-URL.revokeObjectURL(link.href);
+function detectCsvSeparator(text){
+const firstLine=text.split(/\r?\n/)[0] || "";
+
+const separators=[",",";","\t"];
+
+let bestSeparator=",";
+let bestCount=0;
+
+separators.forEach(separator=>{
+const count=firstLine.split(separator).length;
+
+if(count>bestCount){
+bestCount=count;
+bestSeparator=separator;
+}
+});
+
+return bestSeparator;
 }
 async function csvToXlsx(){
 const file=document.getElementById("csvXlsxFile").files[0];
@@ -292,10 +304,12 @@ setMessage("csvXlsxMessage","Converting CSV to XLSX...","loading");
 
 const text=await file.text();
 
+const separator=detectCsvSeparator(text);
+
 const rows=text
 .trim()
 .split(/\r?\n/)
-.map(row=>row.split(","));
+.map(row=>row.split(separator));
 
 const worksheet=XLSX.utils.aoa_to_sheet(rows);
 const workbook=XLSX.utils.book_new();
