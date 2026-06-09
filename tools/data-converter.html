@@ -689,6 +689,36 @@ setMessage(
 
 }
 }
+function validateJson(){
+
+const text=document.getElementById("jsonValidateInput").value.trim();
+
+if(!text){
+setMessage("jsonValidateMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+
+JSON.parse(text);
+
+setMessage(
+"jsonValidateMessage",
+"Valid JSON",
+"success"
+);
+
+}catch(error){
+
+setMessage(
+"jsonValidateMessage",
+"Invalid JSON",
+"error"
+);
+
+}
+
+}  
 </script>
 
 </body>
