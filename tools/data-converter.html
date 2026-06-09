@@ -335,7 +335,19 @@ const buffer=await file.arrayBuffer();
 const workbook=XLSX.read(buffer,{type:"array"});
 const sheetName=workbook.SheetNames[0];
 const worksheet=workbook.Sheets[sheetName];
-const csv=XLSX.utils.sheet_to_csv(worksheet);
+const userLocale=navigator.language || navigator.userLanguage || "en-US";
+
+const semicolonLocales=[
+"it","fr","de","es","pt","nl","pl","tr","ru"
+];
+
+const localePrefix=userLocale.split("-")[0].toLowerCase();
+
+const csvSeparator=semicolonLocales.includes(localePrefix) ? ";" : ",";
+
+const csv=XLSX.utils.sheet_to_csv(worksheet,{
+FS:csvSeparator
+});
 
 downloadBlob(
 new Blob([csv],{type:"text/csv;charset=utf-8"}),
