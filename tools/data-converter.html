@@ -183,6 +183,7 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="jsonvalidate">JSON Validator</option>
 <option value="xmlformat">XML Formatter</option>
 <option value="xmlvalidate">XML Validator</option>
+<option value="jsonxlsx">JSON to XLSX</option>
 </select>
 </div>
 <div class="card tool-section active" id="csvxlsxTool">
@@ -217,6 +218,16 @@ Convert spreadsheets and structured data directly in your browser.
 
 <button onclick="xlsxToJson()">Convert to JSON</button>
 <div id="xlsxJsonMessage" class="message"></div>
+</div>
+<div class="card tool-section" id="jsonxlsxTool">
+<h2>JSON to XLSX</h2>
+<p class="info">Convert JSON data into an Excel XLSX spreadsheet.</p>
+
+<label for="jsonXlsxInput">JSON Input</label>
+<textarea id="jsonXlsxInput" placeholder='[{"NOME":"MARIO","ETA":30,"CITTA":"MILANO"}]'></textarea>
+
+<button onclick="jsonToXlsx()">Convert to XLSX</button>
+<div id="jsonXlsxMessage" class="message"></div>
 </div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
@@ -428,6 +439,47 @@ setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
+}
+function jsonToXlsx(){
+const text=document.getElementById("jsonXlsxInput").value.trim();
+
+if(!text){
+setMessage("jsonXlsxMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+setMessage("jsonXlsxMessage","Converting JSON to XLSX...","loading");
+
+const json=JSON.parse(text);
+
+if(!Array.isArray(json)){
+setMessage("jsonXlsxMessage","JSON must be an array of objects.","error");
+return;
+}
+
+const worksheet=XLSX.utils.json_to_sheet(json);
+const workbook=XLSX.utils.book_new();
+
+XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");
+
+const bytes=XLSX.write(workbook,{
+bookType:"xlsx",
+type:"array"
+});
+
+downloadBlob(
+new Blob([bytes],{
+type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+}),
+"XAVERT-JSON-to-XLSX.xlsx"
+);
+
+setMessage("jsonXlsxMessage","JSON converted successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("jsonXlsxMessage","Invalid JSON or unable to convert.","error");
 }
 }
 
