@@ -183,7 +183,6 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="jsonvalidate">JSON Validator</option>
 <option value="xmlformat">XML Formatter</option>
 <option value="xmlvalidate">XML Validator</option>
-<option value="jsonxlsx">JSON to XLSX</option>
 </select>
 </div>
 <div class="card tool-section active" id="csvxlsxTool">
@@ -440,6 +439,7 @@ setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
 console.error(error);
 setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
 }
+}  
 function jsonToXlsx(){
 const text=document.getElementById("jsonXlsxInput").value.trim();
 
