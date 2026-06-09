@@ -217,6 +217,24 @@ Convert spreadsheets and structured data directly in your browser.
 
 <button onclick="xlsxToJson()">Convert to JSON</button>
 <div id="xlsxJsonMessage" class="message"></div>
+<div class="card tool-section" id="xlsxjsonTool">
+<h2>XLSX to JSON</h2>
+<p class="info">Convert an Excel XLSX spreadsheet into a JSON file.</p>
+
+<div class="drop-zone" data-input="xlsxJsonFile">
+Click or drag XLSX file here
+</div>
+
+<input type="file" id="xlsxJsonFile" accept=".xlsx,.xls" hidden>
+
+<div id="xlsxJsonCount" class="file-count">
+No file selected
+</div>
+
+<button onclick="xlsxToJson()">Convert to JSON</button>
+
+<div id="xlsxJsonMessage" class="message"></div>
+</div>
 </div>
 </div>
 
@@ -275,6 +293,10 @@ document.getElementById("xlsxCsvCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
 if(inputId==="xlsxJsonFile"){
+document.getElementById("xlsxJsonCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+  if(inputId==="xlsxJsonFile"){
 document.getElementById("xlsxJsonCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
@@ -430,6 +452,73 @@ setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
 console.error(error);
 setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
 }
+}
+async function xlsxToJson(){
+
+const file=document.getElementById("xlsxJsonFile").files[0];
+
+if(!file){
+setMessage(
+"xlsxJsonMessage",
+"Please select one XLSX file.",
+"error"
+);
+return;
+}
+
+try{
+
+setMessage(
+"xlsxJsonMessage",
+"Converting XLSX to JSON...",
+"loading"
+);
+
+const buffer=await file.arrayBuffer();
+
+const workbook=XLSX.read(buffer,{
+type:"array"
+});
+
+const sheetName=workbook.SheetNames[0];
+
+const worksheet=workbook.Sheets[sheetName];
+
+const json=XLSX.utils.sheet_to_json(
+worksheet,
+{defval:""}
+);
+
+downloadBlob(
+new Blob(
+[
+JSON.stringify(json,null,2)
+],
+{
+type:"application/json"
+}
+),
+"XAVERT-XLSX-to-JSON.json"
+);
+
+setMessage(
+"xlsxJsonMessage",
+"XLSX converted successfully.",
+"success"
+);
+
+}catch(error){
+
+console.error(error);
+
+setMessage(
+"xlsxJsonMessage",
+"Unable to convert XLSX.",
+"error"
+);
+
+}
+
 }
 </script>
 
