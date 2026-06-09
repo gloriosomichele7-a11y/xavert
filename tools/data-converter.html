@@ -228,6 +228,23 @@ Convert spreadsheets and structured data directly in your browser.
 <button onclick="jsonToXlsx()">Convert to XLSX</button>
 <div id="jsonXlsxMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="jsoncsvTool">
+
+<h2>JSON to CSV</h2>
+
+<p class="info">
+Convert JSON data into a CSV file.
+</p>
+
+<label for="jsonCsvInput">JSON Input</label>
+
+<textarea id="jsonCsvInput"></textarea>
+
+<button onclick="jsonToCsv()">Convert to CSV</button>
+
+<div id="jsonCsvMessage" class="message"></div>
+
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -482,7 +499,48 @@ console.error(error);
 setMessage("jsonXlsxMessage","Invalid JSON or unable to convert.","error");
 }
 }
+function jsonToCsv(){
 
+const text=document.getElementById("jsonCsvInput").value.trim();
+
+if(!text){
+setMessage("jsonCsvMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+
+const json=JSON.parse(text);
+
+if(!Array.isArray(json)){
+setMessage("jsonCsvMessage","JSON must be an array of objects.","error");
+return;
+}
+
+const worksheet=XLSX.utils.json_to_sheet(json);
+
+const csv=XLSX.utils.sheet_to_csv(worksheet);
+
+downloadBlob(
+new Blob([csv],{type:"text/csv;charset=utf-8"}),
+"XAVERT-JSON-to-CSV.csv"
+);
+
+setMessage("jsonCsvMessage","JSON converted successfully.","success");
+
+}catch(error){
+
+console.error(error);
+
+setMessage(
+"jsonCsvMessage",
+"Invalid JSON or unable to convert.",
+"error"
+);
+
+}
+
+}
 </script>
 
 </body>
