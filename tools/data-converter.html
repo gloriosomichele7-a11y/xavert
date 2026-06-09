@@ -266,6 +266,23 @@ No file selected
 
 <div id="csvJsonMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="jsonformatTool">
+<h2>JSON Formatter</h2>
+
+<p class="info">
+Format and beautify JSON data.
+</p>
+
+<label for="jsonFormatInput">JSON Input</label>
+<textarea id="jsonFormatInput" placeholder="Paste JSON data here"></textarea>
+
+<button onclick="formatJson()">Format JSON</button>
+
+<label for="jsonFormatOutput">Formatted JSON</label>
+<textarea id="jsonFormatOutput" readonly></textarea>
+
+<div id="jsonFormatMessage" class="message"></div>
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -577,6 +594,27 @@ setMessage(
 
 }
 
+}
+function formatJson(){
+const input=document.getElementById("jsonFormatInput").value.trim();
+
+if(!input){
+setMessage("jsonFormatMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+const json=JSON.parse(input);
+
+document.getElementById("jsonFormatOutput").value=
+JSON.stringify(json,null,2);
+
+setMessage("jsonFormatMessage","JSON formatted successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("jsonFormatMessage","Invalid JSON.","error");
+}
 }
 async function csvToJson(){
 
