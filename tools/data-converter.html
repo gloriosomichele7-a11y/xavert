@@ -245,6 +245,27 @@ Convert JSON data into a CSV file.
 <div id="jsonCsvMessage" class="message"></div>
 
 </div>
+<div class="card tool-section" id="csvjsonTool">
+<h2>CSV to JSON</h2>
+
+<p class="info">
+Convert a CSV file into a JSON file.
+</p>
+
+<div class="drop-zone" data-input="csvJsonFile">
+Click or drag CSV file here
+</div>
+
+<input type="file" id="csvJsonFile" accept=".csv,text/csv" hidden>
+
+<div id="csvJsonCount" class="file-count">
+No file selected
+</div>
+
+<button onclick="csvToJson()">Convert to JSON</button>
+
+<div id="csvJsonMessage" class="message"></div>
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -302,6 +323,10 @@ files.length ? files[0].name : "No file selected";
 
 if(inputId==="xlsxJsonFile"){
 document.getElementById("xlsxJsonCount").textContent=
+files.length ? files[0].name : "No file selected";
+}
+  if(inputId==="csvJsonFile"){
+document.getElementById("csvJsonCount").textContent=
 files.length ? files[0].name : "No file selected";
 }
 }
@@ -552,6 +577,62 @@ setMessage(
 
 }
 
+}
+async function csvToJson(){
+
+const file=document.getElementById("csvJsonFile").files[0];
+
+if(!file){
+setMessage("csvJsonMessage","Please select one CSV file.","error");
+return;
+}
+
+try{
+
+setMessage("csvJsonMessage","Converting CSV to JSON...","loading");
+
+const text=await file.text();
+
+const separator=detectCsvSeparator(text);
+
+const rows=text
+.trim()
+.split(/\r?\n/)
+.map(row=>row.split(separator));
+
+const headers=rows[0];
+
+const json=rows.slice(1).map(row=>{
+const obj={};
+
+headers.forEach((header,index)=>{
+obj[header.trim()]=row[index] ? row[index].trim() : "";
+});
+
+return obj;
+});
+
+downloadBlob(
+new Blob(
+[JSON.stringify(json,null,2)],
+{type:"application/json;charset=utf-8"}
+),
+"XAVERT-CSV-to-JSON.json"
+);
+
+setMessage("csvJsonMessage","CSV converted successfully.","success");
+
+}catch(error){
+
+console.error(error);
+
+setMessage(
+"csvJsonMessage",
+"Unable to convert CSV.",
+"error"
+);
+
+}
 }
 </script>
 
