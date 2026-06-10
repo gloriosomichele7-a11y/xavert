@@ -300,6 +300,23 @@ Validate JSON syntax.
 <div id="jsonValidateMessage" class="message"></div>
 
 </div>
+  <div class="card tool-section" id="xmljsonTool">
+<h2>XML to JSON</h2>
+
+<p class="info">
+Convert XML data into JSON.
+</p>
+
+<label for="xmlJsonInput">XML Input</label>
+<textarea id="xmlJsonInput" placeholder="Paste XML data here"></textarea>
+
+<button onclick="xmlToJson()">Convert to JSON</button>
+
+<label for="xmlJsonOutput">JSON Output</label>
+<textarea id="xmlJsonOutput" readonly></textarea>
+
+<div id="xmlJsonMessage" class="message"></div>
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -718,7 +735,64 @@ setMessage(
 
 }
 
-}  
+}
+function xmlNodeToJson(node){
+const obj={};
+
+if(node.children.length===0){
+return node.textContent.trim();
+}
+
+Array.from(node.children).forEach(child=>{
+const childName=child.nodeName;
+const childValue=xmlNodeToJson(child);
+
+if(obj[childName]){
+if(!Array.isArray(obj[childName])){
+obj[childName]=[obj[childName]];
+}
+
+obj[childName].push(childValue);
+}else{
+obj[childName]=childValue;
+}
+});
+
+return obj;
+}
+
+function xmlToJson(){
+const text=document.getElementById("xmlJsonInput").value.trim();
+
+if(!text){
+setMessage("xmlJsonMessage","Please enter XML data.","error");
+return;
+}
+
+try{
+const parser=new DOMParser();
+const xmlDoc=parser.parseFromString(text,"application/xml");
+
+if(xmlDoc.getElementsByTagName("parsererror").length){
+setMessage("xmlJsonMessage","Invalid XML.","error");
+return;
+}
+
+const root=xmlDoc.documentElement;
+
+const json={};
+json[root.nodeName]=xmlNodeToJson(root);
+
+document.getElementById("xmlJsonOutput").value=
+JSON.stringify(json,null,2);
+
+setMessage("xmlJsonMessage","XML converted successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("xmlJsonMessage","Unable to convert XML.","error");
+}
+}
 </script>
 
 </body>
