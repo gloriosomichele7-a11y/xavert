@@ -317,6 +317,27 @@ Convert XML data into JSON.
 
 <div id="xmlJsonMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="jsonxmlTool">
+
+<h2>JSON to XML</h2>
+
+<p class="info">
+Convert JSON data into XML.
+</p>
+
+<label for="jsonXmlInput">JSON Input</label>
+
+<textarea id="jsonXmlInput"></textarea>
+
+<button onclick="jsonToXml()">Convert to XML</button>
+
+<label for="jsonXmlOutput">XML Output</label>
+
+<textarea id="jsonXmlOutput" readonly></textarea>
+
+<div id="jsonXmlMessage" class="message"></div>
+
+</div>  
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -792,6 +813,62 @@ setMessage("xmlJsonMessage","XML converted successfully.","success");
 console.error(error);
 setMessage("xmlJsonMessage","Unable to convert XML.","error");
 }
+}
+  function jsonToXmlNode(name,value){
+
+if(typeof value!=="object" || value===null){
+return `<${name}>${value}</${name}>`;
+}
+
+let xml=`<${name}>`;
+
+for(const key in value){
+xml+=jsonToXmlNode(key,value[key]);
+}
+
+xml+=`</${name}>`;
+
+return xml;
+}
+function jsonToXml(){
+
+const text=document.getElementById("jsonXmlInput").value.trim();
+
+if(!text){
+setMessage("jsonXmlMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+
+const json=JSON.parse(text);
+
+let xml="";
+
+for(const key in json){
+xml+=jsonToXmlNode(key,json[key]);
+}
+
+document.getElementById("jsonXmlOutput").value=xml;
+
+setMessage(
+"jsonXmlMessage",
+"JSON converted successfully.",
+"success"
+);
+
+}catch(error){
+
+console.error(error);
+
+setMessage(
+"jsonXmlMessage",
+"Invalid JSON.",
+"error"
+);
+
+}
+
 }
 </script>
 
