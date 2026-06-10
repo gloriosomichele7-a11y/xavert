@@ -803,8 +803,23 @@ setMessage(
 function xmlNodeToJson(node){
 const obj={};
 
+if(node.attributes && node.attributes.length>0){
+obj["@attributes"]={};
+
+Array.from(node.attributes).forEach(attribute=>{
+obj["@attributes"][attribute.name]=attribute.value;
+});
+}
+
 if(node.children.length===0){
-return node.textContent.trim();
+const text=node.textContent.trim();
+
+if(Object.keys(obj).length>0){
+obj["#text"]=text;
+return obj;
+}
+
+return text;
 }
 
 Array.from(node.children).forEach(child=>{
@@ -824,7 +839,6 @@ obj[childName]=childValue;
 
 return obj;
 }
-
 function xmlToJson(){
 const text=document.getElementById("xmlJsonInput").value.trim();
 
