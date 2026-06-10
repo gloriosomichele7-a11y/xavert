@@ -917,6 +917,22 @@ xml+=`${indent}</${name}>`;
 
 return xml;
 }
+function jsonToXml(){
+const text=document.getElementById("jsonXmlInput").value.trim();
+
+if(!text){
+setMessage("jsonXmlMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+const json=JSON.parse(text);
+
+let xml="";
+
+for(const key in json){
+xml+=jsonToXmlNode(key,json[key],0);
+}
 
 document.getElementById("jsonXmlOutput").value=xml;
 
@@ -927,6 +943,8 @@ console.error(error);
 setMessage("jsonXmlMessage","Invalid JSON.","error");
 }
 }
+
+
 function clearFields(inputId,outputId,messageId){
 const input=document.getElementById(inputId);
 const output=document.getElementById(outputId);
