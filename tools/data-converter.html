@@ -882,38 +882,40 @@ return String(value)
 
 function jsonToXmlNode(name,value,level=0){
 const indent="  ".repeat(level);
-const childIndent="  ".repeat(level+1);
+
+if(Array.isArray(value)){
+return value.map(item=>jsonToXmlNode(name,item,level)).join("\n");
+}
 
 if(typeof value!=="object" || value===null){
 return `${indent}<${name}>${escapeXml(value)}</${name}>`;
 }
 
-let xml=`${indent}<${name}>\n`;
+let attributes="";
 
-for(const key in value){
-xml+=jsonToXmlNode(key,value[key],level+1) + "\n";
+if(value["@attributes"]){
+Object.keys(value["@attributes"]).forEach(attributeName=>{
+attributes+=` ${attributeName}="${escapeXml(value["@attributes"][attributeName])}"`;
+});
 }
+
+if(value["#text"] && Object.keys(value).length<=2){
+return `${indent}<${name}${attributes}>${escapeXml(value["#text"])}</${name}>`;
+}
+
+let xml=`${indent}<${name}${attributes}>\n`;
+
+Object.keys(value).forEach(key=>{
+if(key==="@attributes" || key==="#text"){
+return;
+}
+
+xml+=jsonToXmlNode(key,value[key],level+1) + "\n";
+});
 
 xml+=`${indent}</${name}>`;
 
 return xml;
-}
-
-function jsonToXml(){
-const text=document.getElementById("jsonXmlInput").value.trim();
-
-if(!text){
-setMessage("jsonXmlMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-const json=JSON.parse(text);
-
-let xml="";
-
-for(const key in json){
-xml+=jsonToXmlNode(key,json[key],0);
 }
 
 document.getElementById("jsonXmlOutput").value=xml;
