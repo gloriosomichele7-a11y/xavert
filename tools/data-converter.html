@@ -363,6 +363,24 @@ Format and beautify XML data.
 <div id="xmlFormatMessage" class="message"></div>
 
 </div>
+<div class="card tool-section" id="xmlvalidateTool">
+
+<h2>XML Validator</h2>
+
+<p class="info">
+Validate XML syntax.
+</p>
+
+<label for="xmlValidateInput">XML Input</label>
+
+<textarea id="xmlValidateInput" placeholder="Paste XML data here"></textarea>
+
+<button onclick="validateXml()">Validate XML</button>
+<button onclick="clearFields('xmlValidateInput',null,'xmlValidateMessage')">Clear</button>
+
+<div id="xmlValidateMessage" class="message"></div>
+
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -952,6 +970,7 @@ enableCtrlEnter("jsonValidateInput",validateJson);
 enableCtrlEnter("xmlJsonInput",xmlToJson);
 enableCtrlEnter("jsonXmlInput",jsonToXml);
 enableCtrlEnter("xmlFormatInput",formatXml);
+enableCtrlEnter("xmlValidateInput",validateXml);
 function formatXml(){
 const text=document.getElementById("xmlFormatInput").value.trim();
 
@@ -997,6 +1016,30 @@ setMessage("xmlFormatMessage","XML formatted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("xmlFormatMessage","Unable to format XML.","error");
+}
+}
+function validateXml(){
+const text=document.getElementById("xmlValidateInput").value.trim();
+
+if(!text){
+setMessage("xmlValidateMessage","Please enter XML data.","error");
+return;
+}
+
+try{
+const parser=new DOMParser();
+const xmlDoc=parser.parseFromString(text,"application/xml");
+
+if(xmlDoc.getElementsByTagName("parsererror").length){
+setMessage("xmlValidateMessage","Invalid XML","error");
+return;
+}
+
+setMessage("xmlValidateMessage","Valid XML","success");
+
+}catch(error){
+console.error(error);
+setMessage("xmlValidateMessage","Invalid XML","error");
 }
 }
 </script>
