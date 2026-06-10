@@ -341,6 +341,28 @@ Convert JSON data into XML.
 
 <div id="jsonXmlMessage" class="message"></div>
 </div>
+<div class="card tool-section" id="xmlformatTool">
+
+<h2>XML Formatter</h2>
+
+<p class="info">
+Format and beautify XML data.
+</p>
+
+<label for="xmlFormatInput">XML Input</label>
+
+<textarea id="xmlFormatInput" placeholder="Paste XML data here"></textarea>
+
+<button onclick="formatXml()">Format XML</button>
+<button onclick="clearFields('xmlFormatInput','xmlFormatOutput','xmlFormatMessage')">Clear</button>
+
+<label for="xmlFormatOutput">Formatted XML</label>
+
+<textarea id="xmlFormatOutput" readonly></textarea>
+
+<div id="xmlFormatMessage" class="message"></div>
+
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -929,6 +951,54 @@ enableCtrlEnter("jsonFormatInput",formatJson);
 enableCtrlEnter("jsonValidateInput",validateJson);
 enableCtrlEnter("xmlJsonInput",xmlToJson);
 enableCtrlEnter("jsonXmlInput",jsonToXml);
+enableCtrlEnter("xmlFormatInput",formatXml);
+function formatXml(){
+const text=document.getElementById("xmlFormatInput").value.trim();
+
+if(!text){
+setMessage("xmlFormatMessage","Please enter XML data.","error");
+return;
+}
+
+try{
+const parser=new DOMParser();
+const xmlDoc=parser.parseFromString(text,"application/xml");
+
+if(xmlDoc.getElementsByTagName("parsererror").length){
+setMessage("xmlFormatMessage","Invalid XML.","error");
+return;
+}
+
+const serializer=new XMLSerializer();
+let xml=serializer.serializeToString(xmlDoc);
+
+xml=xml.replace(/>\s*</g,"><");
+xml=xml.replace(/></g,">\n<");
+
+let formatted="";
+let indent=0;
+
+xml.split("\n").forEach(line=>{
+if(line.match(/^<\/\w/)){
+indent--;
+}
+
+formatted+="  ".repeat(Math.max(indent,0)) + line + "\n";
+
+if(line.match(/^<[^!?/][^>]*[^/]>/) && !line.match(/<\/[^>]+>$/)){
+indent++;
+}
+});
+
+document.getElementById("xmlFormatOutput").value=formatted.trim();
+
+setMessage("xmlFormatMessage","XML formatted successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("xmlFormatMessage","Unable to format XML.","error");
+}
+}
 </script>
 
 </body>
