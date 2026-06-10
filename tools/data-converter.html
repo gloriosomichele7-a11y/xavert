@@ -229,6 +229,7 @@ Convert spreadsheets and structured data directly in your browser.
 <textarea id="jsonXlsxInput" placeholder="Paste JSON data here"></textarea>
 
 <button onclick="jsonToXlsx()">Convert to XLSX</button>
+<button onclick="clearFields('jsonXlsxInput',null,'jsonXlsxMessage')">Clear</button>
 <div id="jsonXlsxMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsoncsvTool">
@@ -244,7 +245,7 @@ Convert JSON data into a CSV file.
 <textarea id="jsonCsvInput"></textarea>
 
 <button onclick="jsonToCsv()">Convert to CSV</button>
-<button onclick="clearFields('jsonXlsxInput',null,'jsonXlsxMessage')">Clear</button>
+<button onclick="clearFields('jsonCsvInput',null,'jsonCsvMessage')">Clear</button>
 <div id="jsonCsvMessage" class="message"></div>
 
 </div>
@@ -314,7 +315,7 @@ Convert XML data into JSON.
 <textarea id="xmlJsonInput" placeholder="Paste XML data here"></textarea>
 
 <button onclick="xmlToJson()">Convert to JSON</button>
-<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">Clear</button>
+<button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">Clear</button>
 <label for="xmlJsonOutput">JSON Output</label>
 <textarea id="xmlJsonOutput" readonly></textarea>
 
@@ -333,7 +334,7 @@ Convert JSON data into XML.
 <textarea id="jsonXmlInput"></textarea>
 
 <button onclick="jsonToXml()">Convert to XML</button>
-
+<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">Clear</button>
 <label for="jsonXmlOutput">XML Output</label>
 
 <textarea id="jsonXmlOutput" readonly></textarea>
