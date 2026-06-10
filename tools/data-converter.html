@@ -814,24 +814,35 @@ console.error(error);
 setMessage("xmlJsonMessage","Unable to convert XML.","error");
 }
 }
-  function jsonToXmlNode(name,value){
+function escapeXml(value){
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&apos;");
+}
+
+function jsonToXmlNode(name,value,level=0){
+const indent="  ".repeat(level);
+const childIndent="  ".repeat(level+1);
 
 if(typeof value!=="object" || value===null){
-return `<${name}>${value}</${name}>`;
+return `${indent}<${name}>${escapeXml(value)}</${name}>`;
 }
 
-let xml=`<${name}>`;
+let xml=`${indent}<${name}>\n`;
 
 for(const key in value){
-xml+=jsonToXmlNode(key,value[key]);
+xml+=jsonToXmlNode(key,value[key],level+1) + "\n";
 }
 
-xml+=`</${name}>`;
+xml+=`${indent}</${name}>`;
 
 return xml;
 }
-function jsonToXml(){
 
+function jsonToXml(){
 const text=document.getElementById("jsonXmlInput").value.trim();
 
 if(!text){
@@ -840,35 +851,22 @@ return;
 }
 
 try{
-
 const json=JSON.parse(text);
 
 let xml="";
 
 for(const key in json){
-xml+=jsonToXmlNode(key,json[key]);
+xml+=jsonToXmlNode(key,json[key],0);
 }
 
 document.getElementById("jsonXmlOutput").value=xml;
 
-setMessage(
-"jsonXmlMessage",
-"JSON converted successfully.",
-"success"
-);
+setMessage("jsonXmlMessage","JSON converted successfully.","success");
 
 }catch(error){
-
 console.error(error);
-
-setMessage(
-"jsonXmlMessage",
-"Invalid JSON.",
-"error"
-);
-
+setMessage("jsonXmlMessage","Invalid JSON.","error");
 }
-
 }
 </script>
 
