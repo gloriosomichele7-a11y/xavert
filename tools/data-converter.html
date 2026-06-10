@@ -963,14 +963,7 @@ callback();
 }
 });
 }
-enableCtrlEnter("jsonXlsxInput",jsonToXlsx);
-enableCtrlEnter("jsonCsvInput",jsonToCsv);
-enableCtrlEnter("jsonFormatInput",formatJson);
-enableCtrlEnter("jsonValidateInput",validateJson);
-enableCtrlEnter("xmlJsonInput",xmlToJson);
-enableCtrlEnter("jsonXmlInput",jsonToXml);
-enableCtrlEnter("xmlFormatInput",formatXml);
-enableCtrlEnter("xmlValidateInput",validateXml);
+
 function formatXml(){
 const text=document.getElementById("xmlFormatInput").value.trim();
 
@@ -1042,6 +1035,14 @@ console.error(error);
 setMessage("xmlValidateMessage","Invalid XML","error");
 }
 }
+enableCtrlEnter("jsonXlsxInput",jsonToXlsx);
+enableCtrlEnter("jsonCsvInput",jsonToCsv);
+enableCtrlEnter("jsonFormatInput",formatJson);
+enableCtrlEnter("jsonValidateInput",validateJson);
+enableCtrlEnter("xmlJsonInput",xmlToJson);
+enableCtrlEnter("jsonXmlInput",jsonToXml);
+enableCtrlEnter("xmlFormatInput",formatXml);
+enableCtrlEnter("xmlValidateInput",validateXml);
 </script>
 
 </body>
