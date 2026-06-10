@@ -194,6 +194,7 @@ Convert spreadsheets and structured data directly in your browser.
 <div id="csvXlsxCount" class="file-count">No file selected</div>
 
 <button onclick="csvToXlsx()">Convert to XLSX</button>
+<button onclick="clearFileTool('csvXlsxFile','csvXlsxCount','csvXlsxMessage')">Clear</button>
 <div id="csvXlsxMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="xlsxcsvTool">
@@ -205,6 +206,7 @@ Convert spreadsheets and structured data directly in your browser.
 <div id="xlsxCsvCount" class="file-count">No file selected</div>
 
 <button onclick="xlsxToCsv()">Convert to CSV</button>
+<button onclick="clearFileTool('xlsxCsvFile','xlsxCsvCount','xlsxCsvMessage')">Clear</button>
 <div id="xlsxCsvMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="xlsxjsonTool">
@@ -216,6 +218,7 @@ Convert spreadsheets and structured data directly in your browser.
 <div id="xlsxJsonCount" class="file-count">No file selected</div>
 
 <button onclick="xlsxToJson()">Convert to JSON</button>
+<button onclick="clearFileTool('xlsxJsonFile','xlsxJsonCount','xlsxJsonMessage')">Clear</button>
 <div id="xlsxJsonMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonxlsxTool">
@@ -241,7 +244,7 @@ Convert JSON data into a CSV file.
 <textarea id="jsonCsvInput"></textarea>
 
 <button onclick="jsonToCsv()">Convert to CSV</button>
-
+<button onclick="clearFields('jsonXlsxInput',null,'jsonXlsxMessage')">Clear</button>
 <div id="jsonCsvMessage" class="message"></div>
 
 </div>
@@ -263,7 +266,7 @@ No file selected
 </div>
 
 <button onclick="csvToJson()">Convert to JSON</button>
-
+<button onclick="clearFileTool('csvJsonFile','csvJsonCount','csvJsonMessage')">Clear</button>
 <div id="csvJsonMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonformatTool">
@@ -277,7 +280,7 @@ Format and beautify JSON data.
 <textarea id="jsonFormatInput" placeholder="Paste JSON data here"></textarea>
 
 <button onclick="formatJson()">Format JSON</button>
-
+<button onclick="clearFields('jsonFormatInput','jsonFormatOutput','jsonFormatMessage')">Clear</button>
 <label for="jsonFormatOutput">Formatted JSON</label>
 <textarea id="jsonFormatOutput" readonly></textarea>
 
@@ -296,7 +299,7 @@ Validate JSON syntax.
 <textarea id="jsonValidateInput"></textarea>
 
 <button onclick="validateJson()">Validate JSON</button>
-
+<button onclick="clearFields('jsonValidateInput',null,'jsonValidateMessage')">Clear</button>
 <div id="jsonValidateMessage" class="message"></div>
 
 </div>
@@ -311,7 +314,7 @@ Convert XML data into JSON.
 <textarea id="xmlJsonInput" placeholder="Paste XML data here"></textarea>
 
 <button onclick="xmlToJson()">Convert to JSON</button>
-
+<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">Clear</button>
 <label for="xmlJsonOutput">JSON Output</label>
 <textarea id="xmlJsonOutput" readonly></textarea>
 
@@ -336,8 +339,7 @@ Convert JSON data into XML.
 <textarea id="jsonXmlOutput" readonly></textarea>
 
 <div id="jsonXmlMessage" class="message"></div>
-
-</div>  
+</div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -868,6 +870,64 @@ console.error(error);
 setMessage("jsonXmlMessage","Invalid JSON.","error");
 }
 }
+function clearFields(inputId,outputId,messageId){
+const input=document.getElementById(inputId);
+const output=document.getElementById(outputId);
+const message=document.getElementById(messageId);
+
+if(input){
+input.value="";
+}
+
+if(output){
+output.value="";
+}
+
+if(message){
+message.textContent="";
+message.className="message";
+}
+}
+
+function clearFileTool(fileInputId,countId,messageId){
+const fileInput=document.getElementById(fileInputId);
+const count=document.getElementById(countId);
+const message=document.getElementById(messageId);
+
+if(fileInput){
+fileInput.value="";
+}
+
+if(count){
+count.textContent="No file selected";
+}
+
+if(message){
+message.textContent="";
+message.className="message";
+}
+}
+
+function enableCtrlEnter(textareaId,callback){
+const textarea=document.getElementById(textareaId);
+
+if(!textarea){
+return;
+}
+
+textarea.addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+e.preventDefault();
+callback();
+}
+});
+}
+enableCtrlEnter("jsonXlsxInput",jsonToXlsx);
+enableCtrlEnter("jsonCsvInput",jsonToCsv);
+enableCtrlEnter("jsonFormatInput",formatJson);
+enableCtrlEnter("jsonValidateInput",validateJson);
+enableCtrlEnter("xmlJsonInput",xmlToJson);
+enableCtrlEnter("jsonXmlInput",jsonToXml);
 </script>
 
 </body>
