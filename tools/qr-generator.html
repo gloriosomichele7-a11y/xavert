@@ -293,7 +293,7 @@ Create QR codes for websites, text, email, phone numbers, SMS, Wi-Fi networks, c
 <div id="detected-type"></div>
 
 <button onclick="generateQR()">Generate QR Code</button>
-
+<button onclick="clearQRTool()">Clear</button>
 <div id="qrcode"></div>
 
 <div class="download-buttons" id="downloadButtons">
@@ -372,7 +372,21 @@ document.getElementById("qrcode").innerHTML="";
 downloadButtons.style.display="none";
 currentQRData="";
 }
+function clearQRTool(){
+document.querySelectorAll("input, textarea").forEach(element=>{
+element.value="";
+});
 
+qrType.value="text";
+
+Object.values(sections).forEach(section=>{
+section.classList.remove("active");
+});
+
+sections.text.classList.add("active");
+
+resetOutput();
+}
 function showToast(message){
 toast.textContent=message;
 toast.style.display="block";
