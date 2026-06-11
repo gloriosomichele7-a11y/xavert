@@ -484,7 +484,13 @@ if(type==="wifi"){
 const ssid=document.getElementById("wifiSsid");
 const password=document.getElementById("wifiPassword").value.trim();
 const security=document.getElementById("wifiSecurity").value;
-
+if(security!=="nopass" && !password){
+setError(
+"Please enter the Wi-Fi password.",
+document.getElementById("wifiPassword")
+);
+return null;
+}
 if(!ssid.value.trim()){
 setError("Please enter the Wi-Fi network name.",ssid);
 return null;
@@ -525,7 +531,13 @@ if(!title.value.trim()){
 setError("Please enter the event title.",title);
 return null;
 }
-
+if(new Date(end.value) <= new Date(start.value)){
+setError(
+"End date and time must be later than the start date and time.",
+end
+);
+return null;
+}
 if(!start.value){
 setError("Please enter the event start date and time.",start);
 return null;
