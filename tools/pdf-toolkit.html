@@ -1395,6 +1395,7 @@ viewport.height
 const compressedBlob=compressedPdf.output("blob");
 const compressedSize=compressedBlob.size;
 const reduction=Math.round((1-(compressedSize/originalSize))*100);
+const reductionText=reduction>0 ? "Reduction: " + reduction + "%" : "No size reduction";
 
 downloadBlob(compressedBlob,"XAVERT-Compressed-PDF.pdf");
 
@@ -1402,7 +1403,7 @@ setMessage(
 "compressMessage",
 "PDF compressed successfully. Original: " + formatFileSize(originalSize) +
 " • Compressed: " + formatFileSize(compressedSize) +
-" • Reduction: " + reduction + "%",
+" • " + reductionText,
 "success"
 );
 
