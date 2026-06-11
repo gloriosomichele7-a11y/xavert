@@ -1382,7 +1382,14 @@ const pageOrder=pagesInput
 .split(",")
 .map(n=>parseInt(n.trim(),10))
 .filter(n=>!isNaN(n));
-
+if(new Set(pageOrder).size!==pageOrder.length){
+setMessage(
+"reorderMessage",
+"Duplicate page numbers are not allowed.",
+"error"
+);
+return;
+}
 if(!pageOrder.length){
 setMessage("reorderMessage","Invalid page order.","error");
 return;
@@ -1440,7 +1447,7 @@ pages.forEach((page,index)=>{
 const {width,height}=page.getSize();
 const text=String(startNumber + index);
 const fontSize=12;
-
+const textWidth=text.length*fontSize*0.55;
 let x=width/2;
 let y=24;
 
@@ -1455,7 +1462,7 @@ y=24;
 }
 
 if(position==="bottom-center"){
-x=width/2;
+x=(width-textWidth)/2;
 y=24;
 }
 
@@ -1470,7 +1477,7 @@ y=height-36;
 }
 
 if(position==="top-center"){
-x=width/2;
+x=(width-textWidth)/2;
 y=height-36;
 }
 
