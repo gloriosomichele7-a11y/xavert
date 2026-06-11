@@ -260,6 +260,7 @@ Click or drag one PDF file here
 <input type="text" id="splitPages" placeholder="Example: 1-3 or 1,3,5">
 
 <button onclick="splitPDF()">Split PDF</button>
+<button onclick="clearFileTextTool('splitFile','splitCount','splitPages','splitMessage','No file selected')">Clear</button>
 <div id="splitMessage" class="message"></div>
 </div>
 
@@ -275,6 +276,7 @@ Click or drag image files here
 <div id="imageCount" class="file-count">No files selected</div>
 
 <button onclick="imagesToPDF()">Convert to PDF</button>
+<button onclick="clearFileTool('imageFiles','imageCount','imageMessage','No files selected')">Clear</button>
 <div id="imageMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="pdfjpgTool">
@@ -289,6 +291,7 @@ Click or drag one PDF file here
 <div id="pdfJpgCount" class="file-count">No file selected</div>
 
 <button onclick="pdfToJPG()">Convert to JPG</button>
+<button onclick="clearFileTool('pdfJpgFile','pdfJpgCount','pdfJpgMessage','No file selected')">Clear</button>
 <div id="pdfJpgMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="rotateTool">
@@ -310,6 +313,7 @@ Click or drag one PDF file here
 </select>
 
 <button onclick="rotatePDF()">Rotate PDF</button>
+<button onclick="clearFileTool('rotateFile','rotateCount','rotateMessage','No file selected')">Clear</button>
 <div id="rotateMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="extractTool">
@@ -334,6 +338,7 @@ Tip: If you are working with invoices, contracts or utility bills, use Split PDF
 </p>
 
 <button onclick="extractPages()">Extract Pages</button>
+<button onclick="clearFileTextTool('extractFile','extractCount','extractPages','extractMessage','No file selected')">Clear</button>
 <div id="extractMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="deleteTool">
@@ -358,6 +363,7 @@ Tip: If you are working with invoices, contracts or utility bills, use Split PDF
 </p>
 
 <button onclick="deletePages()">Delete Pages</button>
+<button onclick="clearFileTextTool('deleteFile','deleteCount','deletePages','deleteMessage','No file selected')">Clear</button>
 <div id="deleteMessage" class="message"></div>
 </div>
 
@@ -391,6 +397,7 @@ Click or drag one PDF file here
 <input type="text" id="watermarkText" placeholder="Example: CONFIDENTIAL">
 
 <button onclick="watermarkPDF()">Add Watermark</button>
+<button onclick="clearFileTextTool('watermarkFile','watermarkCount','watermarkText','watermarkMessage','No file selected')">Clear</button>
 <div id="watermarkMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="compressTool">
@@ -414,6 +421,7 @@ Click or drag one PDF file here
 This tool rebuilds the PDF using optimized images. Results are best with scanned documents, invoices and image-based PDFs. Text-only PDFs may not compress significantly.
 </p>
 <button onclick="compressPDF()">Compress PDF</button>
+<button onclick="clearFileTool('compressFile','compressCount','compressMessage','No file selected')">Clear</button>
 <div id="compressMessage" class="message"></div>
 </div>
 
@@ -439,6 +447,7 @@ Use actual PDF page numbers. Example: 3,1,2 creates a PDF with page 3 first, the
 </p>
 
 <button onclick="reorderPages()">Reorder Pages</button>
+<button onclick="clearFileTextTool('reorderFile','reorderCount','reorderPages','reorderMessage','No file selected')">Clear</button>
 <div id="reorderMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="numbersTool">
@@ -469,6 +478,7 @@ Click or drag one PDF file here
 <input type="number" id="numbersStart" value="1" min="1">
 
 <button onclick="addPageNumbers()">Add Page Numbers</button>
+<button onclick="clearFileTool('numbersFile','numbersCount','numbersMessage','No file selected')">Clear</button>
 <div id="numbersMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="signTool">
@@ -509,6 +519,7 @@ Click or drag signature image here
 </div>
 
 <button onclick="signPDF()">Sign PDF</button>
+<button onclick="clearSignTool()">Clear</button>
 <div id="signMessage" class="message"></div>
 </div>
 </div>
