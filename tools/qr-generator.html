@@ -425,11 +425,18 @@ const type=qrType.value;
 
 if(type==="text"){
 const input=document.getElementById("textInput");
-const value=input.value.trim();
+let value=input.value.trim();
 
 if(!value){
 setError("Please enter a URL, text or content.",input);
 return null;
+}
+
+const looksLikeDomain=
+/^[a-z0-9-]+(\.[a-z0-9-]+)+([\/?#].*)?$/i.test(value);
+
+if(looksLikeDomain && !value.startsWith("http://") && !value.startsWith("https://")){
+value="https://" + value;
 }
 
 return value;
