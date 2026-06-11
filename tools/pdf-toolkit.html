@@ -979,7 +979,6 @@ setMessage("pdfJpgMessage","Converting PDF pages to JPG...","loading");
 
 const buffer=await file.arrayBuffer();
 const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
-const originalSize=file.size;
 const zip=new JSZip();
 
 for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
@@ -1347,6 +1346,7 @@ quality=0.45;
 }
 
 const buffer=await file.arrayBuffer();
+const originalSize=file.size;
 const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
 
 const { jsPDF } = window.jspdf;
