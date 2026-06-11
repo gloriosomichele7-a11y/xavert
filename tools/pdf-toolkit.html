@@ -1588,6 +1588,23 @@ let signatureImage;
 
 if(method==="draw"){
 const canvas=document.getElementById("signatureCanvas");
+const ctx=canvas.getContext("2d");
+const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data;
+
+let hasSignature=false;
+
+for(let i=3;i<pixels.length;i+=4){
+if(pixels[i]!==0){
+hasSignature=true;
+break;
+}
+}
+
+if(!hasSignature){
+setMessage("signMessage","Please draw a signature first.","error");
+return;
+}
+
 const dataUrl=canvas.toDataURL("image/png");
 signatureBytes=await fetch(dataUrl).then(res=>res.arrayBuffer());
 signatureImage=await pdf.embedPng(signatureBytes);
