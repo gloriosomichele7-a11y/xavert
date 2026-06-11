@@ -313,7 +313,7 @@ Click or drag one PDF file here
 </select>
 
 <button onclick="rotatePDF()">Rotate PDF</button>
-<button onclick="clearFileTool('rotateFile','rotateCount','rotateMessage','No file selected')">Clear</button>
+<button onclick="clearRotateTool()">Clear</button>
 <div id="rotateMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="extractTool">
@@ -423,7 +423,7 @@ Click or drag one PDF file here
 This tool rebuilds the PDF using optimized images. Results are best with scanned documents, invoices and image-based PDFs. Text-only PDFs may not compress significantly.
 </p>
 <button onclick="compressPDF()">Compress PDF</button>
-<button onclick="clearFileTool('compressFile','compressCount','compressMessage','No file selected')">Clear</button>
+<button onclick="clearCompressTool()">Clear</button>
 <div id="compressMessage" class="message"></div>
 </div>
 
@@ -480,7 +480,7 @@ Click or drag one PDF file here
 <input type="number" id="numbersStart" value="1" min="1">
 
 <button onclick="addPageNumbers()">Add Page Numbers</button>
-<button onclick="clearFileTool('numbersFile','numbersCount','numbersMessage','No file selected')">Clear</button>
+<button onclick="clearNumbersTool()">Clear</button>
 <div id="numbersMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="signTool">
@@ -741,11 +741,8 @@ function clearSignTool(){
 clearFileTool("signPdfFile","signPdfCount","signMessage","No PDF selected");
 clearFileTool("signatureImageFile","signatureImageCount","signMessage","No signature image selected");
 
-const pageInput=document.getElementById("signaturePage");
-
-if(pageInput){
-pageInput.value="1";
-}
+document.getElementById("signaturePage").value="1";
+document.getElementById("signaturePosition").value="bottom-right";
 
 clearSignature();
 }
@@ -761,6 +758,21 @@ clearFileTool(
 document.getElementById("watermarkText").value="";
 document.getElementById("watermarkSize").value="40";
 
+}
+function clearRotateTool(){
+clearFileTool("rotateFile","rotateCount","rotateMessage","No file selected");
+document.getElementById("rotateAngle").value="90";
+}
+
+function clearCompressTool(){
+clearFileTool("compressFile","compressCount","compressMessage","No file selected");
+document.getElementById("compressLevel").value="low";
+}
+
+function clearNumbersTool(){
+clearFileTool("numbersFile","numbersCount","numbersMessage","No file selected");
+document.getElementById("numbersPosition").value="bottom-center";
+document.getElementById("numbersStart").value="1";
 }
 function downloadBlob(blob,fileName){
 const link=document.createElement("a");
