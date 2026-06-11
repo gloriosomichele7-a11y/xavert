@@ -337,23 +337,13 @@ resetOutput();
 
 document.addEventListener("keydown",function(e){
 
-if(e.key==="Enter" && !e.shiftKey){
+if(e.ctrlKey && e.key==="Enter"){
 
-const activeElement=document.activeElement;
-
-if(
-activeElement.tagName==="INPUT" ||
-activeElement.tagName==="SELECT" ||
-activeElement.tagName==="TEXTAREA"
-){
-e.preventDefault();
 generateQR();
-}
 
 }
 
 });
-
 document.querySelectorAll("input, textarea, select").forEach(element=>{
 element.addEventListener("input",function(){
 clearError();
