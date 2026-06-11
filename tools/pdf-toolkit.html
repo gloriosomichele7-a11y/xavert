@@ -503,7 +503,13 @@ Click or drag one PDF file here
 
 <label for="signaturePage">Page Number</label>
 <input type="number" id="signaturePage" value="1" min="1">
-
+<label for="signaturePosition">Signature Position</label>
+<select id="signaturePosition">
+<option value="bottom-right">Bottom Right</option>
+<option value="bottom-left">Bottom Left</option>
+<option value="top-right">Top Right</option>
+<option value="top-left">Top Left</option>
+</select>
 <div id="drawSignatureArea">
 <label>Draw Signature</label>
 <canvas id="signatureCanvas" width="500" height="180" style="width:100%;border:1px solid #d1d5db;border-radius:10px;background:white;"></canvas>
@@ -1638,18 +1644,42 @@ signatureImage=await pdf.embedJpg(signatureBytes);
 }
 
 const page=pdf.getPages()[pageNumber-1];
-const {width}=page.getSize();
+const {width,height}=page.getSize();
 
 const signatureWidth=180;
 const signatureHeight=70;
 
+const position=document.getElementById("signaturePosition").value;
+
+let x=50;
+let y=50;
+
+if(position==="bottom-right"){
+x=width-signatureWidth-50;
+y=50;
+}
+
+if(position==="bottom-left"){
+x=50;
+y=50;
+}
+
+if(position==="top-right"){
+x=width-signatureWidth-50;
+y=height-signatureHeight-50;
+}
+
+if(position==="top-left"){
+x=50;
+y=height-signatureHeight-50;
+}
+
 page.drawImage(signatureImage,{
-x:width-signatureWidth-50,
-y:50,
+x:x,
+y:y,
 width:signatureWidth,
 height:signatureHeight
 });
-
 const bytes=await pdf.save();
 
 downloadBlob(
