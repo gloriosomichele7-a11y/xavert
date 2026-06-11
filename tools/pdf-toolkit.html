@@ -769,7 +769,10 @@ link.download=fileName;
 link.click();
 URL.revokeObjectURL(link.href);
 }
-
+function formatFileSize(bytes){
+const mb=bytes/(1024*1024);
+return mb.toFixed(2) + " MB";
+}
 async function mergePDF(){
 const files=document.getElementById("mergeFiles").files;
 
@@ -964,6 +967,7 @@ setMessage("pdfJpgMessage","Converting PDF pages to JPG...","loading");
 
 const buffer=await file.arrayBuffer();
 const pdf=await pdfjsLib.getDocument({data:buffer}).promise;
+const originalSize=file.size;
 const zip=new JSZip();
 
 for(let pageNumber=1;pageNumber<=pdf.numPages;pageNumber++){
@@ -1376,9 +1380,20 @@ viewport.height
 );
 }
 
-compressedPdf.save("XAVERT-Compressed-PDF.pdf");
+const compressedBlob=compressedPdf.output("blob");
+const compressedSize=compressedBlob.size;
+const reduction=Math.round((1-(compressedSize/originalSize))*100);
 
-setMessage("compressMessage","PDF compressed successfully.","success");
+downloadBlob(compressedBlob,"XAVERT-Compressed-PDF.pdf");
+
+setMessage(
+"compressMessage",
+"PDF compressed successfully. Original: " + formatFileSize(originalSize) +
+" • Compressed: " + formatFileSize(compressedSize) +
+" • Reduction: " + reduction + "%",
+"success"
+);
+
 showToast("PDF compressed successfully.");
 
 }catch(error){
