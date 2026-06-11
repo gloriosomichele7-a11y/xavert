@@ -1390,6 +1390,9 @@ setMessage(
 );
 return;
 }
+if(pageOrder.length!==pageCount){
+showToast("Warning: not all pages are included.");
+} 
 if(!pageOrder.length){
 setMessage("reorderMessage","Invalid page order.","error");
 return;
