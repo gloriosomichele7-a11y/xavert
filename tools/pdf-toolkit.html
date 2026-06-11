@@ -671,6 +671,14 @@ if(inputId==="numbersFile"){
 document.getElementById("numbersCount").textContent=
 files.length ? files[0].name : "No file selected";
 } 
+if(inputId==="signPdfFile"){
+document.getElementById("signPdfCount").textContent=
+files.length ? files[0].name : "No PDF selected";
+}
+if(inputId==="signatureImageFile"){
+document.getElementById("signatureImageCount").textContent=
+files.length ? files[0].name : "No signature image selected";
+}
 }
 function showToast(message){
 toast.textContent=message;
