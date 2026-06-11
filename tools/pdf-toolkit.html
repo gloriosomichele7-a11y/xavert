@@ -1278,8 +1278,11 @@ pages.forEach(page=>{
 
 const {width,height}=page.getSize();
 
+const textWidth=watermarkText.length*watermarkSize*0.55;
+const x=(width-textWidth)/2;
+
 page.drawText(watermarkText,{
-x:width/4,
+x:x,
 y:height/2,
 size:watermarkSize,
 opacity:0.3,
@@ -1287,7 +1290,6 @@ rotate:PDFLib.degrees(45)
 });
 
 });
-
 const bytes=await pdf.save();
 
 downloadBlob(
