@@ -234,6 +234,7 @@ Click or drag PDF files here
 <div id="mergeCount" class="file-count">No files selected</div>
 
 <button onclick="mergePDF()">Merge PDF</button>
+<button onclick="clearFileTool('mergeFiles','mergeCount','mergeMessage','No files selected')">Clear</button>
 <div id="mergeMessage" class="message"></div>
 </div>
 
@@ -534,7 +535,7 @@ this.value==="upload" ? "block" : "none";
 }
 document.addEventListener("keydown",function(e){
 
-if(e.key==="Enter"){
+if(e.ctrlKey && e.key==="Enter"){
 
 const selectedTool=toolSelector.value;
 
@@ -674,7 +675,47 @@ const element=document.getElementById(id);
 element.textContent=text;
 element.className="message " + type;
 }
+function clearFileTool(fileInputId,countId,messageId,defaultText){
+const fileInput=document.getElementById(fileInputId);
+const count=document.getElementById(countId);
+const message=document.getElementById(messageId);
 
+if(fileInput){
+fileInput.value="";
+}
+
+if(count){
+count.textContent=defaultText || "No file selected";
+}
+
+if(message){
+message.textContent="";
+message.className="message";
+}
+}
+
+function clearFileTextTool(fileInputId,countId,textInputId,messageId,defaultText){
+clearFileTool(fileInputId,countId,messageId,defaultText);
+
+const textInput=document.getElementById(textInputId);
+
+if(textInput){
+textInput.value="";
+}
+}
+
+function clearSignTool(){
+clearFileTool("signPdfFile","signPdfCount","signMessage","No PDF selected");
+clearFileTool("signatureImageFile","signatureImageCount","signMessage","No signature image selected");
+
+const pageInput=document.getElementById("signaturePage");
+
+if(pageInput){
+pageInput.value="1";
+}
+
+clearSignature();
+}
 function downloadBlob(blob,fileName){
 const link=document.createElement("a");
 link.href=URL.createObjectURL(blob);
