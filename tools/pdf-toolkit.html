@@ -379,6 +379,7 @@ Click or drag one PDF file here
 <div id="pngCount" class="file-count">No file selected</div>
 
 <button onclick="pdfToPNG()">Convert to PNG</button>
+<button onclick="clearFileTool('pngFile','pngCount','pngMessage','No file selected')">Clear</button>
 <div id="pngMessage" class="message"></div>
 </div>
 
@@ -395,9 +396,10 @@ Click or drag one PDF file here
 
 <label for="watermarkText">Watermark Text</label>
 <input type="text" id="watermarkText" placeholder="Example: CONFIDENTIAL">
-
+<label for="watermarkSize">Watermark Size</label>
+<input type="number" id="watermarkSize" value="40" min="10" max="120">
 <button onclick="watermarkPDF()">Add Watermark</button>
-<button onclick="clearFileTextTool('watermarkFile','watermarkCount','watermarkText','watermarkMessage','No file selected')">Clear</button>
+<button onclick="clearWatermarkTool()">Clear</button>
 <div id="watermarkMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="compressTool">
@@ -678,8 +680,14 @@ document.getElementById("numbersCount").textContent=
 files.length ? files[0].name : "No file selected";
 } 
 if(inputId==="signPdfFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("signPdfCount").textContent=
-files.length ? files[0].name : "No PDF selected";
+files[0].name + " • Actual PDF pages: " + count;
+});
+}else{
+document.getElementById("signPdfCount").textContent="No PDF selected";
+}
 }
 if(inputId==="signatureImageFile"){
 document.getElementById("signatureImageCount").textContent=
@@ -740,6 +748,19 @@ pageInput.value="1";
 }
 
 clearSignature();
+}
+function clearWatermarkTool(){
+
+clearFileTool(
+"watermarkFile",
+"watermarkCount",
+"watermarkMessage",
+"No file selected"
+);
+
+document.getElementById("watermarkText").value="";
+document.getElementById("watermarkSize").value="40";
+
 }
 function downloadBlob(blob,fileName){
 const link=document.createElement("a");
@@ -1234,7 +1255,7 @@ setMessage("pngMessage","Unable to convert PDF.","error");
 async function watermarkPDF(){
 const file=document.getElementById("watermarkFile").files[0];
 const watermarkText=document.getElementById("watermarkText").value.trim();
-
+const watermarkSize=parseInt(document.getElementById("watermarkSize").value,10) || 40;
 if(!file){
 setMessage("watermarkMessage","Please select one PDF file.","error");
 return;
@@ -1260,7 +1281,7 @@ const {width,height}=page.getSize();
 page.drawText(watermarkText,{
 x:width/4,
 y:height/2,
-size:40,
+size:watermarkSize,
 opacity:0.3,
 rotate:PDFLib.degrees(45)
 });
@@ -1655,7 +1676,7 @@ let x=50;
 let y=50;
 
 if(position==="bottom-right"){
-x=width-signatureWidth-50;
+x=width-signatureWidth-30;
 y=30;
 }
 
