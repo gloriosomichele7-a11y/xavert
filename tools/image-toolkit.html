@@ -1,1 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Image Toolkit</title>
 
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.drop-zone{
+border:2px dashed #d1d5db;
+border-radius:16px;
+padding:28px;
+text-align:center;
+background:#f9fafb;
+cursor:pointer;
+margin-top:12px;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover{
+border-color:#dc2626;
+background:#fff5f5;
+}
+
+.file-count{
+margin-top:10px;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+.loading{color:#4b5563;}
+
+.option-section{
+display:none;
+}
+
+.option-section.active{
+display:block;
+}
+
+.preview{
+margin-top:24px;
+text-align:center;
+}
+
+.preview img{
+max-width:100%;
+border-radius:12px;
+border:1px solid #e5e7eb;
+}
+
+.download-area{
+display:none;
+text-align:center;
+margin-top:18px;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>Image Toolkit</h1>
+
+<p class="subtitle">
+Resize, compress, convert, rotate and export images directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="toolSelector">Select Tool</label>
+<select id="toolSelector">
+<option value="resize">Resize Image</option>
+<option value="compress">Compress Image</option>
+<option value="convert">Convert Image</option>
+<option value="rotate">Rotate Image</option>
+<option value="flip">Flip Image</option>
+<option value="pdf">Image to PDF</option>
+</select>
+
+<div class="drop-zone" id="dropZone">
+Click or drag one image here
+</div>
+
+<input type="file" id="imageFile" accept="image/png,image/jpeg,image/webp" hidden>
+<div id="fileCount" class="file-count">No image selected</div>
+
+<div class="option-section active" id="resizeOptions">
+<label for="resizeWidth">New Width</label>
+<input type="number" id="resizeWidth" placeholder="Example: 1200">
+
+<label for="resizeHeight">New Height</label>
+<input type="number" id="resizeHeight" placeholder="Leave empty to keep ratio">
+</div>
+
+<div class="option-section" id="compressOptions">
+<label for="compressQuality">Quality</label>
+<input type="number" id="compressQuality" value="70" min="10" max="100">
+</div>
+
+<div class="option-section" id="convertOptions">
+<label for="outputFormat">Output Format</label>
+<select id="outputFormat">
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+</select>
+</div>
+
+<div class="option-section" id="rotateOptions">
+<label for="rotateAngle">Rotation Angle</label>
+<select id="rotateAngle">
+<option value="90">90°</option>
+<option value="180">180°</option>
+<option value="270">270°</option>
+</select>
+</div>
+
+<div class="option-section" id="flipOptions">
+<label for="flipDirection">Flip Direction</label>
+<select id="flipDirection">
+<option value="horizontal">Horizontal</option>
+<option value="vertical">Vertical</option>
+</select>
+</div>
+
+<button onclick="processImage()">Process Image</button>
+<button onclick="clearImageTool()">Clear</button>
+
+<div id="message" class="message"></div>
+
+<div class="preview" id="preview"></div>
+
+<div class="download-area" id="downloadArea">
+<button onclick="downloadProcessed()">Download Result</button>
+</div>
+
+</div>
+</div>
+
+<div id="toast"></div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+const imageFile=document.getElementById("imageFile");
+const dropZone=document.getElementById("dropZone");
+const fileCount=document.getElementById("fileCount");
+const message=document.getElementById("message");
+const preview=document.getElementById("preview");
+const downloadArea=document.getElementById("downloadArea");
+const toast=document.getElementById("toast");
+
+let processedBlob=null;
+let processedFileName="";
+
+toolSelector.addEventListener("change",function(){
+document.querySelectorAll(".option-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+const active=document.getElementById(toolSelector.value + "Options");
+
+if(active){
+active.classList.add("active");
+}
+
+resetOutput();
+});
+
+dropZone.addEventListener("click",function(){
+imageFile.click();
+});
+
+dropZone.addEventListener("dragover",function(e){
+e.preventDefault();
+dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave",function(){
+dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop",function(e){
+e.preventDefault();
+dropZone.classList.remove("dragover");
+imageFile.files=e.dataTransfer.files;
+updateFileCount();
+});
+
+imageFile.addEventListener("change",updateFileCount);
+
+document.addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+processImage();
+}
+});
+
+function updateFileCount(){
+const file=imageFile.files[0];
+fileCount.textContent=file ? file.name : "No image selected";
+resetOutput();
+}
+
+function setMessage(text,type){
+message.textContent=text;
+message.className="message " + type;
+}
+
+function showToast(text){
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+}
+
+function resetOutput(){
+message.textContent="";
+message.className="message";
+preview.innerHTML="";
+downloadArea.style.display="none";
+processedBlob=null;
+processedFileName="";
+}
+
+function clearImageTool(){
+imageFile.value="";
+fileCount.textContent="No image selected";
+
+document.getElementById("resizeWidth").value="";
+document.getElementById("resizeHeight").value="";
+document.getElementById("compressQuality").value="70";
+document.getElementById("outputFormat").value="image/jpeg";
+document.getElementById("rotateAngle").value="90";
+document.getElementById("flipDirection").value="horizontal";
+
+resetOutput();
+}
+
+function loadImage(file){
+return new Promise((resolve,reject)=>{
+const reader=new FileReader();
+
+reader.onload=function(){
+const img=new Image();
+
+img.onload=function(){
+resolve(img);
+};
+
+img.onerror=reject;
+img.src=reader.result;
+};
+
+reader.onerror=reject;
+reader.readAsDataURL(file);
+});
+}
+
+function getExtension(mimeType){
+if(mimeType==="image/png") return "png";
+if(mimeType==="image/webp") return "webp";
+return "jpg";
+}
+
+function getCleanName(fileName){
+return fileName
+.replace(/\.[^/.]+$/,"")
+.toLowerCase()
+.replace(/[^a-z0-9]/g,"-")
+.replace(/-+/g,"-")
+.replace(/^-|-$/g,"") || "image";
+}
+
+function canvasToBlob(canvas,mimeType,quality){
+return new Promise(resolve=>{
+canvas.toBlob(resolve,mimeType,quality);
+});
+}
+
+async function processImage(){
+const file=imageFile.files[0];
+
+if(!file){
+setMessage("Please select one image.","error");
+return;
+}
+
+try{
+setMessage("Processing image...","loading");
+
+const img=await loadImage(file);
+const tool=toolSelector.value;
+
+let canvas=document.createElement("canvas");
+let ctx=canvas.getContext("2d");
+
+let outputType="image/jpeg";
+let quality=0.9;
+
+if(tool==="resize"){
+let width=parseInt(document.getElementById("resizeWidth").value,10);
+let height=parseInt(document.getElementById("resizeHeight").value,10);
+
+if(!width && !height){
+setMessage("Please enter at least width or height.","error");
+return;
+}
+
+if(width && !height){
+height=Math.round((img.height*width)/img.width);
+}
+
+if(height && !width){
+width=Math.round((img.width*height)/img.height);
+}
+
+canvas.width=width;
+canvas.height=height;
+ctx.drawImage(img,0,0,width,height);
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Resized-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+
+if(tool==="compress"){
+canvas.width=img.width;
+canvas.height=img.height;
+ctx.drawImage(img,0,0);
+
+const q=parseInt(document.getElementById("compressQuality").value,10);
+
+if(isNaN(q) || q<10 || q>100){
+setMessage("Quality must be between 10 and 100.","error");
+return;
+}
+
+quality=q/100;
+outputType="image/jpeg";
+processedFileName="XAVERT-Compressed-" + getCleanName(file.name) + ".jpg";
+}
+
+if(tool==="convert"){
+canvas.width=img.width;
+canvas.height=img.height;
+ctx.drawImage(img,0,0);
+
+outputType=document.getElementById("outputFormat").value;
+processedFileName="XAVERT-Converted-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+
+if(tool==="rotate"){
+const angle=parseInt(document.getElementById("rotateAngle").value,10);
+
+if(angle===90 || angle===270){
+canvas.width=img.height;
+canvas.height=img.width;
+}else{
+canvas.width=img.width;
+canvas.height=img.height;
+}
+
+ctx.translate(canvas.width/2,canvas.height/2);
+ctx.rotate(angle*Math.PI/180);
+ctx.drawImage(img,-img.width/2,-img.height/2);
+
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Rotated-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+
+if(tool==="flip"){
+canvas.width=img.width;
+canvas.height=img.height;
+
+const direction=document.getElementById("flipDirection").value;
+
+if(direction==="horizontal"){
+ctx.translate(canvas.width,0);
+ctx.scale(-1,1);
+}else{
+ctx.translate(0,canvas.height);
+ctx.scale(1,-1);
+}
+
+ctx.drawImage(img,0,0);
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Flipped-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+
+if(tool==="pdf"){
+const { jsPDF } = window.jspdf;
+const pdf=new jsPDF();
+
+const dataUrl=await new Promise(resolve=>{
+const tempCanvas=document.createElement("canvas");
+const tempCtx=tempCanvas.getContext("2d");
+
+tempCanvas.width=img.width;
+tempCanvas.height=img.height;
+
+tempCtx.drawImage(img,0,0);
+
+resolve(tempCanvas.toDataURL("image/jpeg",0.95));
+});
+
+const pageWidth=210;
+const pageHeight=297;
+
+let imgWidth=pageWidth;
+let imgHeight=(img.height*imgWidth)/img.width;
+
+if(imgHeight>pageHeight){
+imgHeight=pageHeight;
+imgWidth=(img.width*imgHeight)/img.height;
+}
+
+const x=(pageWidth-imgWidth)/2;
+const y=(pageHeight-imgHeight)/2;
+
+pdf.addImage(dataUrl,"JPEG",x,y,imgWidth,imgHeight);
+pdf.save("XAVERT-Image-to-PDF.pdf");
+
+setMessage("Image converted to PDF successfully.","success");
+showToast("PDF downloaded.");
+return;
+}
+
+processedBlob=await canvasToBlob(canvas,outputType,quality);
+
+const imageUrl=URL.createObjectURL(processedBlob);
+
+preview.innerHTML='<img src="' + imageUrl + '" alt="Processed image">';
+downloadArea.style.display="block";
+
+setMessage("Image processed successfully.","success");
+showToast("Image processed successfully.");
+
+}catch(error){
+console.error(error);
+setMessage("Unable to process image.","error");
+}
+}
+
+function downloadProcessed(){
+if(!processedBlob) return;
+
+const link=document.createElement("a");
+link.href=URL.createObjectURL(processedBlob);
+link.download=processedFileName;
+link.click();
+
+URL.revokeObjectURL(link.href);
+}
+</script>
+
+</body>
+</html>
