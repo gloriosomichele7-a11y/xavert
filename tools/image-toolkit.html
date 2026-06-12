@@ -199,6 +199,7 @@ Resize, compress, convert, rotate and export images directly in your browser.
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
 <option value="resize">Resize Image</option>
+<option value="crop">Crop Image</option>
 <option value="compress">Compress Image</option>
 <option value="convert">Convert Image</option>
 <option value="rotate">Rotate Image</option>
@@ -251,7 +252,13 @@ Click or drag one image here
 <option value="vertical">Vertical</option>
 </select>
 </div>
+<div class="option-section" id="cropOptions">
+<label for="cropWidth">Crop Width</label>
+<input type="number" id="cropWidth" placeholder="Example: 800">
 
+<label for="cropHeight">Crop Height</label>
+<input type="number" id="cropHeight" placeholder="Example: 600">
+</div>
 <button onclick="processImage()">Process Image</button>
 <button onclick="clearImageTool()">Clear</button>
 
@@ -362,7 +369,8 @@ document.getElementById("compressQuality").value="70";
 document.getElementById("outputFormat").value="image/jpeg";
 document.getElementById("rotateAngle").value="90";
 document.getElementById("flipDirection").value="horizontal";
-
+document.getElementById("cropWidth").value="";
+document.getElementById("cropHeight").value="";
 resetOutput();
 }
 
@@ -514,7 +522,41 @@ ctx.drawImage(img,0,0);
 outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
 processedFileName="XAVERT-Flipped-" + getCleanName(file.name) + "." + getExtension(outputType);
 }
+if(tool==="crop"){
+const cropWidth=parseInt(document.getElementById("cropWidth").value,10);
+const cropHeight=parseInt(document.getElementById("cropHeight").value,10);
 
+if(!cropWidth || !cropHeight){
+setMessage("Please enter crop width and height.","error");
+return;
+}
+
+if(cropWidth>img.width || cropHeight>img.height){
+setMessage("Crop size cannot be larger than original image.","error");
+return;
+}
+
+canvas.width=cropWidth;
+canvas.height=cropHeight;
+
+const startX=Math.floor((img.width-cropWidth)/2);
+const startY=Math.floor((img.height-cropHeight)/2);
+
+ctx.drawImage(
+img,
+startX,
+startY,
+cropWidth,
+cropHeight,
+0,
+0,
+cropWidth,
+cropHeight
+);
+
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Cropped-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
 if(tool==="pdf"){
 const { jsPDF } = window.jspdf;
 const pdf=new jsPDF();
