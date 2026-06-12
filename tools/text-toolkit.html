@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Text Toolkit</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20
+<div class="card tool-section" id="slugTool">
+<h2>Text to Slug</h2>
+<p class="info">Convert text into a clean URL-friendly slug.</p>
+
+<label for="slugInput">Text</label>
+<textarea id="slugInput" placeholder="Example: My New Blog Post"></textarea>
+
+<button onclick="textToSlug()">Generate Slug</button>
+<button onclick="clearFields('slugInput','slugOutput','slugMessage',null)">Clear</button>
+
+<div class="output-area">
+<label for="slugOutput">Slug</label>
+<textarea id="slugOutput" readonly></textarea>
+</div>
+
+<div id="slugMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="urlTool">
+<h2>URL Encode / Decode</h2>
+<p class="info">Encode or decode URL-safe text.</p>
+
+<label for="urlInput">Text</label>
+<textarea id="urlInput" placeholder="Paste text or encoded URL here..."></textarea>
+
+<label for="urlMode">Mode</label>
+<select id="urlMode">
+<option value="encode">Encode</option>
+<option value="decode">Decode</option>
+</select>
+
+<button onclick="processUrl()">Process</button>
+<button onclick="clearFields('urlInput','urlOutput','urlMessage',null)">Clear</button>
+
+<div class="output-area">
+<label for="urlOutput">Output</label>
+<textarea id="urlOutput" readonly></textarea>
+</div>
+
+<div id="urlMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="base64Tool">
+<h2>Base64 Encode / Decode</h2>
+<p class="info">Encode or decode text using Base64.</p>
+
+<label for="base64Input">Text</label>
+<textarea id="base64Input" placeholder="Paste text or Base64 here..."></textarea>
+
+<label for="base64Mode">Mode</label>
+<select id="base64Mode">
+<option value="encode">Encode</option>
+<option value="decode">Decode</option>
+</select>
+
+<button onclick="processBase64()">Process</button>
+<button onclick="clearFields('base64Input','base64Output','base64Message',null)">Clear</button>
+
+<div class="output-area">
+<label for="base64Output">Output</label>
+<textarea id="base64Output" readonly></textarea>
+</div>
+
+<div id="base64Message" class="message"></div>
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+const toast=document.getElementById("toast");
+
+toolSelector.addEventListener("change",function(){
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+});
+
+document.addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+runActiveTool();
+}
+});
+
+function runActiveTool(){
+const tool=toolSelector.value;
+
+if(tool==="counter") countText();
+if(tool==="case") convertCase();
+if(tool==="spaces") removeExtraSpaces();
+if(tool==="duplicates") removeDuplicateLines();
+if(tool==="sort") sortLines();
+if(tool==="findreplace") findAndReplace();
+if(tool==="slug") textToSlug();
+if(tool==="url") processUrl();
+if(tool==="base64") processBase64();
+}
+
+function setMessage(id,text,type){
+const element=document.getElementById(id);
+
+if(!element){
+return;
+}
+
+element.textContent=text;
+element.className="message " + type;
+}
+
+function setResult(id,html){
+const element=document.getElementById(id);
+
+if(!element){
+return;
+}
+
+element.innerHTML=html;
+element.style.display="block";
+}
+
+function clearFields(inputId,outputId,messageId,resultId){
+const input=document.getElementById(inputId);
+const output=document.getElementById(outputId);
+const message=document.getElementById(messageId);
+const result=document.getElementById(resultId);
+
+if(input){
+input.value="";
+}
+
+if(output){
+output.value="";
+}
+
+if(message){
+message.textContent="";
+message.className="message";
+}
+
+if(result){
+result.innerHTML="";
+result.style.display="none";
+}
+}
+
+function showToast(text){
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+}
+
+function getValue(id){
+return document.getElementById(id).value;
+}
+
+function countText(){
+const text=getValue("counterInput");
+
+const characters=text.length;
+const charactersNoSpaces=text.replace(/\s/g,"").length;
+const words=text.trim() ? text.trim().split(/\s+/).length : 0;
+const lines=text ? text.split(/\r?\n/).length : 0;
+const paragraphs=text.trim() ? text.trim().split(/\n\s*\n/).length : 0;
+const sentences=text.trim() ? text.split(/[.!?]+/).filter(s=>s.trim()).length : 0;
+
+setMessage("counterMessage","Text counted successfully.","success");
+
+setResult(
+"counterResult",
+"Characters: <strong>" + characters + "</strong><br>" +
+"Characters without spaces: <strong>" + charactersNoSpaces + "</strong><br>" +
+"Words: <strong>" + words + "</strong><br>" +
+"Sentences: <strong>" + sentences + "</strong><br>" +
+"Paragraphs: <strong>" + paragraphs + "</strong><br>" +
+"Lines: <strong>" + lines + "</strong>"
+);
+}
+
+function convertCase(){
+const text=getValue("caseInput");
+
+if(!text){
+setMessage("caseMessage","Please enter text.","error");
+return;
+}
+
+const mode=document.getElementById("caseMode").value;
+let output="";
+
+if(mode==="upper"){
+output=text.toUpperCase();
+}
+
+if(mode==="lower"){
+output=text.toLowerCase();
+}
+
+if(mode==="title"){
+output=text.toLowerCase().replace(/\b\w/g,char=>char.toUpperCase());
+}
+
+if(mode==="sentence"){
+output=text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,char=>char.toUpperCase());
+}
+
+if(mode==="alternating"){
+output=text
+.split("")
+.map((char,index)=>index%2===0 ? char.toLowerCase() : char.toUpperCase())
+.join("");
+}
+
+document.getElementById("caseOutput").value=output;
+setMessage("caseMessage","Text converted successfully.","success");
+}
+
+function removeExtraSpaces(){
+const text=getValue("spacesInput");
+
+if(!text){
+setMessage("spacesMessage","Please enter text.","error");
+return;
+}
+
+const output=text
+.replace(/[ \t]+/g," ")
+.replace(/\n{3,}/g,"\n\n")
+.trim();
+
+document.getElementById("spacesOutput").value=output;
+setMessage("spacesMessage","Extra spaces removed successfully.","success");
+}
+
+function removeDuplicateLines(){
+const text=getValue("duplicatesInput");
+
+if(!text){
+setMessage("duplicatesMessage","Please enter text.","error");
+return;
+}
+
+const seen=new Set();
+const lines=text.split(/\r?\n/);
+const output=[];
+
+lines.forEach(line=>{
+const key=line.trim();
+
+if(!seen.has(key)){
+seen.add(key);
+output.push(line);
+}
+});
+
+document.getElementById("duplicatesOutput").value=output.join("\n");
+setMessage("duplicatesMessage","Duplicate lines removed successfully.","success");
+}
+
+function sortLines(){
+const text=getValue("sortInput");
+
+if(!text){
+setMessage("sortMessage","Please enter text.","error");
+return;
+}
+
+const mode=document.getElementById("sortMode").value;
+
+const lines=text
+.split(/\r?\n/)
+.filter(line=>line.trim());
+
+lines.sort((a,b)=>a.localeCompare(b));
+
+if(mode==="za"){
+lines.reverse();
+}
+
+document.getElementById("sortOutput").value=lines.join("\n");
+setMessage("sortMessage","Lines sorted successfully.","success");
+}
+
+function findAndReplace(){
+const text=getValue("findReplaceInput");
+const find=document.getElementById("findText").value;
+
+if(!text){
+setMessage("findReplaceMessage","Please enter text.","error");
+return;
+}
+
+if(!find){
+setMessage("findReplaceMessage","Please enter text to find.","error");
+return;
+}
+
+const replace=document.getElementById("replaceText").value;
+const output=text.split(find).join(replace);
+
+document.getElementById("findReplaceOutput").value=output;
+setMessage("findReplaceMessage","Text replaced successfully.","success");
+}
+
+function clearFindReplace(){
+document.getElementById("findReplaceInput").value="";
+document.getElementById("findText").value="";
+document.getElementById("replaceText").value="";
+document.getElementById("findReplaceOutput").value="";
+
+const message=document.getElementById("findReplaceMessage");
+message.textContent="";
+message.className="message";
+}
+
+function textToSlug(){
+const text=getValue("slugInput");
+
+if(!text){
+setMessage("slugMessage","Please enter text.","error");
+return;
+}
+
+const slug=text
+.toLowerCase()
+.normalize("NFD")
+.replace(/[\u0300-\u036f]/g,"")
+.replace(/[^a-z0-9]+/g,"-")
+.replace(/^-+|-+$/g,"");
+
+document.getElementById("slugOutput").value=slug;
+setMessage("slugMessage","Slug generated successfully.","success");
+}
+
+function processUrl(){
+const text=getValue("urlInput");
+const mode=document.getElementById("urlMode").value;
+
+if(!text){
+setMessage("urlMessage","Please enter text.","error");
+return;
+}
+
+try{
+const output=mode==="encode" ? encodeURIComponent(text) : decodeURIComponent(text);
+
+document.getElementById("urlOutput").value=output;
+setMessage("urlMessage","URL processed successfully.","success");
+
+}catch(error){
+setMessage("urlMessage","Unable to decode URL text.","error");
+}
+}
+
+function processBase64(){
+const text=getValue("base64Input");
+const mode=document.getElementById("base64Mode").value;
+
+if(!text){
+setMessage("base64Message","Please enter text.","error");
+return;
+}
+
+try{
+let output="";
+
+if(mode==="encode"){
+output=btoa(unescape(encodeURIComponent(text)));
+}else{
+output=decodeURIComponent(escape(atob(text)));
+}
+
+document.getElementById("base64Output").value=output;
+setMessage("base64Message","Base64 processed successfully.","success");
+
+}catch(error){
+setMessage("base64Message","Invalid Base64 input.","error");
+}
+}
+</script>
+
+</body>
+</html>
