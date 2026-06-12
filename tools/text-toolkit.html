@@ -26,19 +26,308 @@ margin:auto;
 
 .back{
 display:inline-block;
-margin-bottom:20
-<div class="card tool-section" id="slugTool">
-<h2>Text to Slug</h2>
-<p class="info">Convert text into a clean URL-friendly slug.</p>
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
 
-<label for="slugInput">Text</label>
-<textarea id="slugInput" placeholder="Example: My New Blog Post"></textarea>
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
 
-<button onclick="textToSlug()">Generate Slug</button>
-<button onclick="clearFields('slugInput','slugOutput','slugMessage',null)">Clear</button>
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:180px;
+resize:vertical;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.info{
+color:#4b5563;
+font-size:14px;
+margin:8px 0 16px;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+.loading{color:#4b5563;}
+
+.result-box{
+display:none;
+margin-top:16px;
+padding:14px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+font-size:14px;
+color:#374151;
+line-height:1.6;
+}
+
+.output-area{
+margin-top:16px;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>Text Toolkit</h1>
+
+<p class="subtitle">
+Count, clean, convert, sort, encode and transform text directly in your browser.
+</p>
+
+<div class="card">
+<label for="toolSelector">Select Tool</label>
+<select id="toolSelector">
+<option value="counter">Word & Character Counter</option>
+<option value="case">Case Converter</option>
+<option value="spaces">Remove Extra Spaces</option>
+<option value="duplicates">Remove Duplicate Lines</option>
+<option value="sort">Sort Lines</option>
+<option value="findreplace">Find & Replace</option>
+<option value="slug">Text to Slug</option>
+<option value="url">URL Encode / Decode</option>
+<option value="base64">Base64 Encode / Decode</option>
+</select>
+</div>
+
+<div class="card tool-section active" id="counterTool">
+<h2>Word & Character Counter</h2>
+<p class="info">Count words, characters, sentences, paragraphs and lines.</p>
+
+<label for="counterInput">Text</label>
+<textarea id="counterInput" placeholder="Paste or type your text here..."></textarea>
+
+<button onclick="countText()">Count Text</button>
+<button onclick="clearFields('counterInput',null,'counterMessage','counterResult')">Clear</button>
+
+<div id="counterMessage" class="message"></div>
+<div id="counterResult" class="result-box"></div>
+</div>
+
+<div class="card tool-section" id="caseTool">
+<h2>Case Converter</h2>
+<p class="info">Convert text to uppercase, lowercase, title case, sentence case or alternating case.</p>
+
+<label for="caseInput">Text</label>
+<textarea id="caseInput" placeholder="Paste text here..."></textarea>
+
+<label for="caseMode">Case Mode</label>
+<select id="caseMode">
+<option value="upper">UPPERCASE</option>
+<option value="lower">lowercase</option>
+<option value="title">Title Case</option>
+<option value="sentence">Sentence case</option>
+<option value="alternating">aLtErNaTiNg CaSe</option>
+</select>
+
+<button onclick="convertCase()">Convert Case</button>
+<button onclick="clearFields('caseInput','caseOutput','caseMessage',null)">Clear</button>
 
 <div class="output-area">
-<label for="slugOutput">Slug</label>
+<label for="caseOutput">Output</label>
+<textarea id="caseOutput" readonly></textarea>
+</div>
+
+<div id="caseMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="spacesTool">
+<h2>Remove Extra Spaces</h2>
+<p class="info">Clean text by removing duplicated spaces and excessive blank lines.</p>
+
+<label for="spacesInput">Text</label>
+<textarea id="spacesInput" placeholder="Paste messy text here..."></textarea>
+
+<button onclick="removeExtraSpaces()">Clean Text</button>
+<button onclick="clearFields('spacesInput','spacesOutput','spacesMessage',null)">Clear</button>
+
+<div class="output-area">
+<label for="spacesOutput">Output</label>
+<textarea id="spacesOutput" readonly></textarea>
+</div>
+
+<div id="spacesMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="duplicatesTool">
+<h2>Remove Duplicate Lines</h2>
+<p class="info">Remove repeated lines while keeping the first occurrence.</p>
+
+<label for="duplicatesInput">Text</label>
+<textarea id="duplicatesInput" placeholder="Paste lines here..."></textarea>
+
+<button onclick="removeDuplicateLines()">Remove Duplicates</button>
+<button onclick="clearFields('duplicatesInput','duplicatesOutput','duplicatesMessage',null)">Clear</button>
+
+<div class="output-area">
+<label for="duplicatesOutput">Output</label>
+<textarea id="duplicatesOutput" readonly></textarea>
+</div>
+
+<div id="duplicatesMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="sortTool">
+<h2>Sort Lines</h2>
+<p class="info">Sort lines alphabetically from A to Z or Z to A.</p>
+
+<label for="sortInput">Text</label>
+<textarea id="sortInput" placeholder="Paste lines here..."></textarea>
+
+<label for="sortMode">Sort Mode</label>
+<select id="sortMode">
+<option value="az">A to Z</option>
+<option value="za">Z to A</option>
+</select>
+
+<button onclick="sortLines()">Sort Lines</button>
+<button onclick="clearFields('sortInput','sortOutput','sortMessage',null)">Clear</button>
+
+<div class="output-area">
+<label for="sortOutput">Output</label>
+<textarea id="sortOutput" readonly></textarea>
+</div>
+
+<div id="sortMessage" class="message"></div>
+</div>
+<div class="card tool-section" id="findreplaceTool">
+<h2>Find & Replace</h2>
+<p class="info">Find text and replace it with another value.</p>
+
+<label for="findReplaceInput">Text</label>
+<textarea id="findReplaceInput" placeholder="Paste text here..."></textarea>
+
+<label for="findText">Find</label>
+<input type="text" id="findText" placeholder="Text to find">
+
+<label for="replaceText">Replace With</label>
+<input type="text" id="replaceText" placeholder="Replacement text">
+
+<button onclick="findAndReplace()">Replace</button>
+<button onclick="clearFindReplace()">Clear</button>
+
+<div class="output-area">
+<label for="findReplaceOutput">Output</label>
+<textarea id="findReplaceOutput" readonly></textarea>
+</div>
+
+<div id="findReplaceMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="slugTool">
+<h2>Text to Slug</h2>
+
+<label for="slugInput">Text</label>
+<textarea id="slugInput"></textarea>
+
+<button onclick="textToSlug()">Generate Slug</button>
+
+<div class="output-area">
+<label for="slugOutput">Output</label>
 <textarea id="slugOutput" readonly></textarea>
 </div>
 
@@ -47,10 +336,9 @@ margin-bottom:20
 
 <div class="card tool-section" id="urlTool">
 <h2>URL Encode / Decode</h2>
-<p class="info">Encode or decode URL-safe text.</p>
 
 <label for="urlInput">Text</label>
-<textarea id="urlInput" placeholder="Paste text or encoded URL here..."></textarea>
+<textarea id="urlInput"></textarea>
 
 <label for="urlMode">Mode</label>
 <select id="urlMode">
@@ -59,7 +347,6 @@ margin-bottom:20
 </select>
 
 <button onclick="processUrl()">Process</button>
-<button onclick="clearFields('urlInput','urlOutput','urlMessage',null)">Clear</button>
 
 <div class="output-area">
 <label for="urlOutput">Output</label>
@@ -71,10 +358,9 @@ margin-bottom:20
 
 <div class="card tool-section" id="base64Tool">
 <h2>Base64 Encode / Decode</h2>
-<p class="info">Encode or decode text using Base64.</p>
 
 <label for="base64Input">Text</label>
-<textarea id="base64Input" placeholder="Paste text or Base64 here..."></textarea>
+<textarea id="base64Input"></textarea>
 
 <label for="base64Mode">Mode</label>
 <select id="base64Mode">
@@ -83,7 +369,6 @@ margin-bottom:20
 </select>
 
 <button onclick="processBase64()">Process</button>
-<button onclick="clearFields('base64Input','base64Output','base64Message',null)">Clear</button>
 
 <div class="output-area">
 <label for="base64Output">Output</label>
@@ -95,11 +380,8 @@ margin-bottom:20
 
 </div>
 
-<div id="toast"></div>
-
 <script>
 const toolSelector=document.getElementById("toolSelector");
-const toast=document.getElementById("toast");
 
 toolSelector.addEventListener("change",function(){
 document.querySelectorAll(".tool-section").forEach(section=>{
@@ -109,232 +391,107 @@ section.classList.remove("active");
 document.getElementById(toolSelector.value + "Tool").classList.add("active");
 });
 
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-runActiveTool();
-}
-});
-
-function runActiveTool(){
-const tool=toolSelector.value;
-
-if(tool==="counter") countText();
-if(tool==="case") convertCase();
-if(tool==="spaces") removeExtraSpaces();
-if(tool==="duplicates") removeDuplicateLines();
-if(tool==="sort") sortLines();
-if(tool==="findreplace") findAndReplace();
-if(tool==="slug") textToSlug();
-if(tool==="url") processUrl();
-if(tool==="base64") processBase64();
-}
-
 function setMessage(id,text,type){
-const element=document.getElementById(id);
-
-if(!element){
-return;
-}
-
-element.textContent=text;
-element.className="message " + type;
+const el=document.getElementById(id);
+if(!el) return;
+el.textContent=text;
+el.className="message " + type;
 }
 
 function setResult(id,html){
-const element=document.getElementById(id);
-
-if(!element){
-return;
-}
-
-element.innerHTML=html;
-element.style.display="block";
+const el=document.getElementById(id);
+if(!el) return;
+el.innerHTML=html;
+el.style.display="block";
 }
 
 function clearFields(inputId,outputId,messageId,resultId){
-const input=document.getElementById(inputId);
-const output=document.getElementById(outputId);
-const message=document.getElementById(messageId);
-const result=document.getElementById(resultId);
+if(document.getElementById(inputId))
+document.getElementById(inputId).value="";
 
-if(input){
-input.value="";
+if(outputId && document.getElementById(outputId))
+document.getElementById(outputId).value="";
+
+if(messageId){
+const m=document.getElementById(messageId);
+m.textContent="";
+m.className="message";
 }
 
-if(output){
-output.value="";
+if(resultId){
+const r=document.getElementById(resultId);
+r.innerHTML="";
+r.style.display="none";
 }
-
-if(message){
-message.textContent="";
-message.className="message";
-}
-
-if(result){
-result.innerHTML="";
-result.style.display="none";
-}
-}
-
-function showToast(text){
-toast.textContent=text;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-},2200);
-}
-
-function getValue(id){
-return document.getElementById(id).value;
 }
 
 function countText(){
-const text=getValue("counterInput");
+const text=document.getElementById("counterInput").value;
 
-const characters=text.length;
-const charactersNoSpaces=text.replace(/\s/g,"").length;
 const words=text.trim() ? text.trim().split(/\s+/).length : 0;
-const lines=text ? text.split(/\r?\n/).length : 0;
-const paragraphs=text.trim() ? text.trim().split(/\n\s*\n/).length : 0;
-const sentences=text.trim() ? text.split(/[.!?]+/).filter(s=>s.trim()).length : 0;
 
-setMessage("counterMessage","Text counted successfully.","success");
+setMessage("counterMessage","Completed","success");
 
 setResult(
 "counterResult",
-"Characters: <strong>" + characters + "</strong><br>" +
-"Characters without spaces: <strong>" + charactersNoSpaces + "</strong><br>" +
-"Words: <strong>" + words + "</strong><br>" +
-"Sentences: <strong>" + sentences + "</strong><br>" +
-"Paragraphs: <strong>" + paragraphs + "</strong><br>" +
-"Lines: <strong>" + lines + "</strong>"
+"Words: <strong>"+words+"</strong><br>" +
+"Characters: <strong>"+text.length+"</strong>"
 );
 }
 
 function convertCase(){
-const text=getValue("caseInput");
-
-if(!text){
-setMessage("caseMessage","Please enter text.","error");
-return;
-}
-
+const text=document.getElementById("caseInput").value;
 const mode=document.getElementById("caseMode").value;
-let output="";
 
-if(mode==="upper"){
-output=text.toUpperCase();
-}
+let output=text;
 
-if(mode==="lower"){
-output=text.toLowerCase();
-}
-
+if(mode==="upper") output=text.toUpperCase();
+if(mode==="lower") output=text.toLowerCase();
 if(mode==="title"){
-output=text.toLowerCase().replace(/\b\w/g,char=>char.toUpperCase());
+output=text.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
 }
-
 if(mode==="sentence"){
-output=text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,char=>char.toUpperCase());
+output=text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,c=>c.toUpperCase());
 }
-
 if(mode==="alternating"){
-output=text
-.split("")
-.map((char,index)=>index%2===0 ? char.toLowerCase() : char.toUpperCase())
-.join("");
+output=text.split("").map((c,i)=>i%2?c.toUpperCase():c.toLowerCase()).join("");
 }
 
 document.getElementById("caseOutput").value=output;
-setMessage("caseMessage","Text converted successfully.","success");
 }
 
 function removeExtraSpaces(){
-const text=getValue("spacesInput");
-
-if(!text){
-setMessage("spacesMessage","Please enter text.","error");
-return;
-}
-
-const output=text
-.replace(/[ \t]+/g," ")
-.replace(/\n{3,}/g,"\n\n")
-.trim();
-
-document.getElementById("spacesOutput").value=output;
-setMessage("spacesMessage","Extra spaces removed successfully.","success");
+const text=document.getElementById("spacesInput").value;
+document.getElementById("spacesOutput").value=
+text.replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
 }
 
 function removeDuplicateLines(){
-const text=getValue("duplicatesInput");
-
-if(!text){
-setMessage("duplicatesMessage","Please enter text.","error");
-return;
-}
-
-const seen=new Set();
-const lines=text.split(/\r?\n/);
-const output=[];
-
-lines.forEach(line=>{
-const key=line.trim();
-
-if(!seen.has(key)){
-seen.add(key);
-output.push(line);
-}
-});
-
-document.getElementById("duplicatesOutput").value=output.join("\n");
-setMessage("duplicatesMessage","Duplicate lines removed successfully.","success");
+const text=document.getElementById("duplicatesInput").value;
+const unique=[...new Set(text.split(/\r?\n/))];
+document.getElementById("duplicatesOutput").value=unique.join("\n");
 }
 
 function sortLines(){
-const text=getValue("sortInput");
-
-if(!text){
-setMessage("sortMessage","Please enter text.","error");
-return;
-}
-
+const text=document.getElementById("sortInput").value;
 const mode=document.getElementById("sortMode").value;
 
-const lines=text
-.split(/\r?\n/)
-.filter(line=>line.trim());
-
-lines.sort((a,b)=>a.localeCompare(b));
+const lines=text.split(/\r?\n/).sort();
 
 if(mode==="za"){
 lines.reverse();
 }
 
 document.getElementById("sortOutput").value=lines.join("\n");
-setMessage("sortMessage","Lines sorted successfully.","success");
 }
 
 function findAndReplace(){
-const text=getValue("findReplaceInput");
+const text=document.getElementById("findReplaceInput").value;
 const find=document.getElementById("findText").value;
-
-if(!text){
-setMessage("findReplaceMessage","Please enter text.","error");
-return;
-}
-
-if(!find){
-setMessage("findReplaceMessage","Please enter text to find.","error");
-return;
-}
-
 const replace=document.getElementById("replaceText").value;
-const output=text.split(find).join(replace);
 
-document.getElementById("findReplaceOutput").value=output;
-setMessage("findReplaceMessage","Text replaced successfully.","success");
+document.getElementById("findReplaceOutput").value=
+text.split(find).join(replace);
 }
 
 function clearFindReplace(){
@@ -342,75 +499,37 @@ document.getElementById("findReplaceInput").value="";
 document.getElementById("findText").value="";
 document.getElementById("replaceText").value="";
 document.getElementById("findReplaceOutput").value="";
-
-const message=document.getElementById("findReplaceMessage");
-message.textContent="";
-message.className="message";
 }
 
 function textToSlug(){
-const text=getValue("slugInput");
+const text=document.getElementById("slugInput").value;
 
-if(!text){
-setMessage("slugMessage","Please enter text.","error");
-return;
-}
-
-const slug=text
+document.getElementById("slugOutput").value=text
 .toLowerCase()
 .normalize("NFD")
 .replace(/[\u0300-\u036f]/g,"")
 .replace(/[^a-z0-9]+/g,"-")
 .replace(/^-+|-+$/g,"");
-
-document.getElementById("slugOutput").value=slug;
-setMessage("slugMessage","Slug generated successfully.","success");
 }
 
 function processUrl(){
-const text=getValue("urlInput");
+const text=document.getElementById("urlInput").value;
 const mode=document.getElementById("urlMode").value;
 
-if(!text){
-setMessage("urlMessage","Please enter text.","error");
-return;
-}
-
-try{
-const output=mode==="encode" ? encodeURIComponent(text) : decodeURIComponent(text);
-
-document.getElementById("urlOutput").value=output;
-setMessage("urlMessage","URL processed successfully.","success");
-
-}catch(error){
-setMessage("urlMessage","Unable to decode URL text.","error");
-}
+document.getElementById("urlOutput").value=
+mode==="encode"
+? encodeURIComponent(text)
+: decodeURIComponent(text);
 }
 
 function processBase64(){
-const text=getValue("base64Input");
+const text=document.getElementById("base64Input").value;
 const mode=document.getElementById("base64Mode").value;
 
-if(!text){
-setMessage("base64Message","Please enter text.","error");
-return;
-}
-
-try{
-let output="";
-
-if(mode==="encode"){
-output=btoa(unescape(encodeURIComponent(text)));
-}else{
-output=decodeURIComponent(escape(atob(text)));
-}
-
-document.getElementById("base64Output").value=output;
-setMessage("base64Message","Base64 processed successfully.","success");
-
-}catch(error){
-setMessage("base64Message","Invalid Base64 input.","error");
-}
+document.getElementById("base64Output").value=
+mode==="encode"
+? btoa(text)
+: atob(text);
 }
 </script>
 
