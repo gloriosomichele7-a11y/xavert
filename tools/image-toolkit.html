@@ -204,6 +204,7 @@ Resize, compress, convert, rotate and export images directly in your browser.
 <option value="convert">Convert Image</option>
 <option value="rotate">Rotate Image</option>
 <option value="flip">Flip Image</option>
+<option value="watermark">Watermark Image</option>
 <option value="pdf">Image to PDF</option>
 </select>
 
@@ -258,6 +259,13 @@ Click or drag one image here
 
 <label for="cropHeight">Crop Height</label>
 <input type="number" id="cropHeight" placeholder="Example: 600">
+</div>
+<div class="option-section" id="watermarkOptions">
+<label for="watermarkText">Watermark Text</label>
+<input type="text" id="watermarkText" placeholder="Example: XAVERT">
+
+<label for="watermarkSize">Watermark Size</label>
+<input type="number" id="watermarkSize" value="40" min="10" max="120">
 </div>
 <button onclick="processImage()">Process Image</button>
 <button onclick="clearImageTool()">Clear</button>
@@ -371,6 +379,8 @@ document.getElementById("rotateAngle").value="90";
 document.getElementById("flipDirection").value="horizontal";
 document.getElementById("cropWidth").value="";
 document.getElementById("cropHeight").value="";
+document.getElementById("watermarkText").value="";
+document.getElementById("watermarkSize").value="40";
 resetOutput();
 }
 
@@ -556,6 +566,36 @@ cropHeight
 
 outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
 processedFileName="XAVERT-Cropped-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+if(tool==="watermark"){
+const watermarkText=document.getElementById("watermarkText").value.trim();
+const watermarkSize=parseInt(document.getElementById("watermarkSize").value,10) || 40;
+
+if(!watermarkText){
+setMessage("Please enter watermark text.","error");
+return;
+}
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+ctx.font=watermarkSize + "px Arial";
+ctx.fillStyle="rgba(255,255,255,0.65)";
+ctx.strokeStyle="rgba(0,0,0,0.35)";
+ctx.lineWidth=2;
+
+const textWidth=ctx.measureText(watermarkText).width;
+
+const x=canvas.width-textWidth-30;
+const y=canvas.height-30;
+
+ctx.strokeText(watermarkText,x,y);
+ctx.fillText(watermarkText,x,y);
+
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Watermarked-" + getCleanName(file.name) + "." + getExtension(outputType);
 }
 if(tool==="pdf"){
 const { jsPDF } = window.jspdf;
