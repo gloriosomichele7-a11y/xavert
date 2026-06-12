@@ -168,7 +168,47 @@ Validate fiscal codes, VAT numbers, IBANs, payment card numbers and barcode chec
 </select>
 </div>
 
-<div class="card tool-section active" id="fiscalTool">
+<div class="card tool-section active" id="fiscalCalcTool">
+<h2>Italian Fiscal Code Calculator</h2>
+<p class="info">Calculate an Italian fiscal code from personal data.</p>
+
+<label for="calcLastName">Last Name</label>
+<input type="text" id="calcLastName" placeholder="Example: Rossi">
+
+<label for="calcFirstName">First Name</label>
+<input type="text" id="calcFirstName" placeholder="Example: Mario">
+
+<label for="calcGender">Gender</label>
+<select id="calcGender">
+<option value="M">Male</option>
+<option value="F">Female</option>
+</select>
+
+<label for="calcBirthDate">Date of Birth</label>
+<input type="date" id="calcBirthDate">
+
+<label for="calcBirthPlace">Place of Birth</label>
+<select id="calcBirthPlace">
+<option value="H501">Rome</option>
+<option value="F205">Milan</option>
+<option value="F839">Naples</option>
+<option value="L219">Turin</option>
+<option value="D612">Florence</option>
+<option value="G273">Palermo</option>
+<option value="A662">Bari</option>
+<option value="D969">Genoa</option>
+<option value="C351">Catania</option>
+<option value="H224">Reggio Calabria</option>
+</select>
+
+<button onclick="calculateFiscalCode()">Calculate</button>
+<button onclick="clearFiscalCalc()">Clear</button>
+
+<div id="fiscalCalcMessage" class="message"></div>
+<div id="fiscalCalcResult" class="result-box"></div>
+</div>
+
+<div class="card tool-section" id="fiscalTool">
 <h2>Italian Fiscal Code Validator</h2>
 <p class="info">Validate the structure and control character of an Italian fiscal code.</p>
 
@@ -260,6 +300,7 @@ runActiveTool();
 function runActiveTool(){
 const tool=toolSelector.value;
 
+if(tool==="fiscalCalc") calculateFiscalCode();
 if(tool==="fiscal") validateFiscalCode();
 if(tool==="vat") validateVat();
 if(tool==="iban") validateIban();
@@ -501,7 +542,93 @@ sum+=((i+1)%2===1) ? oddMap[char] : evenMap[char];
 
 return String.fromCharCode((sum%26)+65);
 }
+function clearFiscalCalc(){
+document.getElementById("calcLastName").value="";
+document.getElementById("calcFirstName").value="";
+document.getElementById("calcGender").value="M";
+document.getElementById("calcBirthDate").value="";
+document.getElementById("calcBirthPlace").value="H501";
 
+document.getElementById("fiscalCalcMessage").textContent="";
+document.getElementById("fiscalCalcMessage").className="message";
+
+document.getElementById("fiscalCalcResult").innerHTML="";
+document.getElementById("fiscalCalcResult").style.display="none";
+}
+
+function fiscalNameCode(value,isFirstName){
+const clean=value
+.toUpperCase()
+.replace(/[^A-Z]/g,"");
+
+const consonants=clean.replace(/[AEIOU]/g,"");
+const vowels=clean.replace(/[^AEIOU]/g,"");
+
+let code="";
+
+if(isFirstName && consonants.length>=4){
+code=consonants[0] + consonants[2] + consonants[3];
+}else{
+code=(consonants + vowels + "XXX").slice(0,3);
+}
+
+return code;
+}
+
+function calculateFiscalCode(){
+const lastName=document.getElementById("calcLastName").value.trim();
+const firstName=document.getElementById("calcFirstName").value.trim();
+const gender=document.getElementById("calcGender").value;
+const birthDate=document.getElementById("calcBirthDate").value;
+const birthPlace=document.getElementById("calcBirthPlace").value;
+
+if(!lastName){
+setMessage("fiscalCalcMessage","Please enter the last name.","error");
+return;
+}
+
+if(!firstName){
+setMessage("fiscalCalcMessage","Please enter the first name.","error");
+return;
+}
+
+if(!birthDate){
+setMessage("fiscalCalcMessage","Please enter the date of birth.","error");
+return;
+}
+
+const months=[
+"A","B","C","D","E","H","L","M","P","R","S","T"
+];
+
+const date=new Date(birthDate);
+const year=String(date.getFullYear()).slice(-2);
+const month=months[date.getMonth()];
+let day=date.getDate();
+
+if(gender==="F"){
+day+=40;
+}
+
+day=String(day).padStart(2,"0");
+
+const partialCode=
+fiscalNameCode(lastName,false) +
+fiscalNameCode(firstName,true) +
+year +
+month +
+day +
+birthPlace;
+
+const control=fiscalControlChar(partialCode);
+const fiscalCode=partialCode + control;
+
+setMessage("fiscalCalcMessage","Fiscal code calculated successfully.","success");
+setResult(
+"fiscalCalcResult",
+"Fiscal Code: <strong>" + fiscalCode + "</strong><br>Birth place code: <strong>" + birthPlace + "</strong>"
+);
+}
 function validateFiscalCode(){
 const input=document.getElementById("fiscalInput");
 const value=normalize(input.value);
