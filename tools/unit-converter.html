@@ -257,9 +257,6 @@ populateUnits();
 message.textContent="";
 message.className="message";
 });
-conversionHistory=[];
-lastResultText="";
-});
 
 document.addEventListener("keydown",function(e){
 if(e.ctrlKey && e.key==="Enter"){
@@ -368,6 +365,9 @@ fromUnit.selectedIndex=0;
 if(toUnit.options.length>1){
 toUnit.selectedIndex=1;
 }
+
+conversionHistory=[];
+lastResultText="";
 
 clearResult();
 
