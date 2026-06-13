@@ -175,9 +175,9 @@ Convert length, weight, temperature, area, volume and speed units instantly.
 <label for="toUnit">To</label>
 <select id="toUnit"></select>
 
+<button onclick="swapUnits()">Swap Units</button>
 <button onclick="convertUnits()">Convert</button>
 <button onclick="clearConverter()">Clear</button>
-
 <div id="message" class="message"></div>
 <div id="resultBox" class="result-box"></div>
 
@@ -303,7 +303,13 @@ message.className="message";
 resultBox.innerHTML="";
 resultBox.style.display="none";
 }
+function swapUnits(){
 
+const temp=fromUnit.value;
+fromUnit.value=toUnit.value;
+toUnit.value=temp;
+
+}
 function clearConverter(){
 inputValue.value="";
 populateUnits();
