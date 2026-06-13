@@ -297,10 +297,14 @@ function clearHistory(){
 
 conversionHistory=[];
 
-if(lastResultText){
-resultBox.innerHTML=
-resultBox.innerHTML.split("<br><strong>Conversion History</strong><br>")[0];
+if(!lastResultText){
+return;
 }
+
+resultBox.innerHTML=
+"<strong>" + lastResultText.split(" = ")[0] + "</strong><br>" +
+"= <strong>" + lastResultText.split(" = ")[1] + "</strong><br><br>" +
+'<button onclick="copyResult()">Copy Result</button>';
 
 }
 function updateHistory(text){
