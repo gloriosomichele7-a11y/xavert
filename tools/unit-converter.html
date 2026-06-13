@@ -199,6 +199,7 @@ Convert length, weight, temperature, area, volume and speed units instantly.
 <div id="toast"></div>
 <script>
 const category=document.getElementById("category");
+const favoriteConversion=document.getElementById("favoriteConversion");
 const inputValue=document.getElementById("inputValue");
 const fromUnit=document.getElementById("fromUnit");
 const toUnit=document.getElementById("toUnit");
@@ -268,7 +269,22 @@ populateUnits();
 message.textContent="";
 message.className="message";
 });
+favoriteConversion.addEventListener("change",function(){
 
+if(!favoriteConversion.value){
+return;
+}
+
+const parts=favoriteConversion.value.split("|");
+
+category.value=parts[0];
+
+populateUnits();
+
+fromUnit.value=parts[1];
+toUnit.value=parts[2];
+
+});
 document.addEventListener("keydown",function(e){
 if(e.ctrlKey && e.key==="Enter"){
 convertUnits();
