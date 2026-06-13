@@ -333,8 +333,8 @@ return;
 }
 
 resultBox.innerHTML=
-"<strong>" + lastResultText.split(" = ")[0] + "</strong><br>" +
-"= <strong>" + lastResultText.split(" = ")[1] + "</strong><br><br>" +
+"<strong>" + lastResultText.split(" → ")[0] + "</strong><br>" +
+"= <strong>" + lastResultText.split(" → ")[1] + "</strong><br><br>" +
 '<button onclick="copyResult()">Copy Result</button>';
 
 }
@@ -413,7 +413,7 @@ if(!isFinite(value)){
 return "Invalid result";
 }
 
-return Number(value.toFixed(10)).toString();
+return Number(value.toFixed(6)).toString();
 }
 
 function convertTemperature(value,from,to){
@@ -465,7 +465,7 @@ result=base/units[category.value][to];
 setMessage("Conversion completed.","success");
 
 lastResultText=
-formatNumber(value) + " " + from + " = " + formatNumber(result) + " " + to;
+formatNumber(value) + " " + from + " → " + formatNumber(result) + " " + to;
 
 resultBox.style.display="block";
 resultBox.innerHTML=
