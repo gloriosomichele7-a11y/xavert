@@ -284,6 +284,10 @@ populateUnits();
 fromUnit.value=parts[1];
 toUnit.value=parts[2];
 
+if(inputValue.value){
+convertUnits();
+}
+
 });
 document.addEventListener("keydown",function(e){
 if(e.ctrlKey && e.key==="Enter"){
