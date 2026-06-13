@@ -194,7 +194,7 @@ const toUnit=document.getElementById("toUnit");
 const message=document.getElementById("message");
 const resultBox=document.getElementById("resultBox");
 const toast=document.getElementById("toast");
-
+let lastResultText="";
 const units={
 length:{
 meter:1,
@@ -291,7 +291,22 @@ if(list.length>1){
 toUnit.value=list[1];
 }
 }
+function copyResult(){
 
+if(!lastResultText){
+return;
+}
+
+navigator.clipboard.writeText(lastResultText);
+
+toast.textContent="Result copied.";
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
 function setMessage(text,type){
 message.textContent=text;
 message.className="message " + type;
@@ -311,9 +326,21 @@ toUnit.value=temp;
 
 }
 function clearConverter(){
+
 inputValue.value="";
+
+category.value="length";
+
 populateUnits();
+
+fromUnit.selectedIndex=0;
+
+if(toUnit.options.length>1){
+toUnit.selectedIndex=1;
+}
+
 clearResult();
+
 }
 
 function formatNumber(value){
@@ -372,10 +399,14 @@ result=base/units[category.value][to];
 
 setMessage("Conversion completed.","success");
 
+lastResultText=
+formatNumber(value) + " " + from + " = " + formatNumber(result) + " " + to;
+
 resultBox.style.display="block";
 resultBox.innerHTML=
 "<strong>" + formatNumber(value) + " " + from + "</strong><br>" +
-"= <strong>" + formatNumber(result) + " " + to + "</strong>";
+"= <strong>" + formatNumber(result) + " " + to + "</strong><br><br>" +
+'<button onclick="copyResult()">Copy Result</button>';
 }
 
 populateUnits();
