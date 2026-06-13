@@ -254,7 +254,9 @@ const temperatureUnits=[
 
 category.addEventListener("change",function(){
 populateUnits();
-clearResult();
+message.textContent="";
+message.className="message";
+});
 conversionHistory=[];
 lastResultText="";
 });
@@ -294,16 +296,27 @@ if(list.length>1){
 toUnit.value=list[1];
 }
 }
+function clearHistory(){
+
+conversionHistory=[];
+
+if(lastResultText){
+resultBox.innerHTML=
+resultBox.innerHTML.split("<br><strong>Conversion History</strong><br>")[0];
+}
+
+}
 function updateHistory(text){
 
 conversionHistory.unshift(text);
-conversionHistory=conversionHistory.slice(0,5);
+conversionHistory=conversionHistory.slice(0,15);
 
 const historyHtml=
 "<br><strong>Conversion History</strong><br>" +
 conversionHistory.map((item,index)=>{
 return (index+1) + ". " + item;
-}).join("<br>");
+}).join("<br>") +
+'<br><br><button onclick="clearHistory()">Clear History</button>';
 
 return historyHtml;
 
