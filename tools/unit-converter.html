@@ -195,6 +195,7 @@ const message=document.getElementById("message");
 const resultBox=document.getElementById("resultBox");
 const toast=document.getElementById("toast");
 let lastResultText="";
+let conversionHistory=[];
 const units={
 length:{
 meter:1,
@@ -254,6 +255,8 @@ const temperatureUnits=[
 category.addEventListener("change",function(){
 populateUnits();
 clearResult();
+conversionHistory=[];
+lastResultText="";
 });
 
 document.addEventListener("keydown",function(e){
@@ -290,6 +293,20 @@ toUnit.appendChild(optionTo);
 if(list.length>1){
 toUnit.value=list[1];
 }
+}
+function updateHistory(text){
+
+conversionHistory.unshift(text);
+conversionHistory=conversionHistory.slice(0,5);
+
+const historyHtml=
+"<br><strong>Conversion History</strong><br>" +
+conversionHistory.map((item,index)=>{
+return (index+1) + ". " + item;
+}).join("<br>");
+
+return historyHtml;
+
 }
 function copyResult(){
 
@@ -406,7 +423,8 @@ resultBox.style.display="block";
 resultBox.innerHTML=
 "<strong>" + formatNumber(value) + " " + from + "</strong><br>" +
 "= <strong>" + formatNumber(result) + " " + to + "</strong><br><br>" +
-'<button onclick="copyResult()">Copy Result</button>';
+'<button onclick="copyResult()">Copy Result</button>' +
+updateHistory(lastResultText);
 }
 
 populateUnits();
