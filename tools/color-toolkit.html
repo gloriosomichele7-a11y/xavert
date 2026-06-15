@@ -352,6 +352,11 @@ document.getElementById("generatorMessage").textContent="";
 
 document.getElementById("generatorPreview").style.background="#ffffff";
 
+document.getElementById("contrastResult").innerHTML="";
+document.getElementById("contrastResult").style.display="none";
+
+document.getElementById("contrastMessage").textContent="";
+document.getElementById("contrastMessage").className="message";  
 }
 
 
@@ -431,7 +436,7 @@ rgb.r + ", " +
 rgb.g + ", " +
 rgb.b +
 "</strong><br><br>" +
-'<button class="small-button" onclick="copyText(\''
+'<button class="small-button" onclick="copyText(\'' +
 hex.toUpperCase() +
 '\')">Copy HEX</button> ' +
 '<button class="small-button" onclick="copyText(\'rgb(' +
@@ -466,9 +471,9 @@ r + ", " +
 g + ", " +
 b +
 "</strong><br><br>" +
-'<button onclick="copyText(\'' +
+'<button class="small-button" onclick="copyText(\'' +
 hex +
-')">Copy Color</button>' +
+'\')">Copy Color</button>' +
 updateColorHistory(hex);
 
 setMessage(
