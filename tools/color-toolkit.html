@@ -239,7 +239,7 @@ Convert, generate and analyze colors directly in your browser.
 
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
-
+let colorHistory=[];
 toolSelector.addEventListener("change",function(){
 
 document.querySelectorAll(".tool-section").forEach(section=>{
@@ -282,7 +282,39 @@ toast.style.display="none";
 },2200);
 
 }
+function updateColorHistory(hex){
 
+colorHistory.unshift(hex);
+colorHistory=[...new Set(colorHistory)];
+colorHistory=colorHistory.slice(0,15);
+
+const historyHtml=
+"<br><strong>Color History</strong><br>" +
+colorHistory.map((color,index)=>{
+return (index+1) + ". " +
+'<span style="display:inline-block;width:18px;height:18px;background:' +
+color +
+';border:1px solid #d1d5db;border-radius:4px;margin-right:6px;vertical-align:middle;"></span>' +
+color +
+' <button class="small-button" onclick="copyText(\'' +
+color +
+'\')">Copy</button>';
+}).join("<br>") +
+'<br><br><button class="small-button" onclick="clearColorHistory()">Clear History</button>';
+
+return historyHtml;
+
+}
+
+function clearColorHistory(){
+
+colorHistory=[];
+
+document.querySelectorAll(".result-box").forEach(box=>{
+box.innerHTML=box.innerHTML.split("<br><strong>Color History</strong><br>")[0];
+});
+
+}
 function copyText(text){
 
 navigator.clipboard.writeText(text);
@@ -389,8 +421,9 @@ hex.toUpperCase() +
 '\')">Copy HEX</button> ' +
 '<button class="small-button" onclick="copyText(\'rgb(' +
 rgb.r + "," + rgb.g + "," + rgb.b +
-')\')">Copy RGB</button>';
-')\')">Copy RGB</button>';
+')\')">Copy RGB</button>' +
+updateColorHistory(hex.toUpperCase());
+
 setMessage(
 "converterMessage",
 "Conversion completed.",
@@ -420,7 +453,8 @@ b +
 "</strong><br><br>" +
 '<button onclick="copyText(\'' +
 hex +
-'\')">Copy Color</button>';
+')">Copy Color</button>' +
+updateColorHistory(hex);
 
 setMessage(
 "generatorMessage",
