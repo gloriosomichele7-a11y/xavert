@@ -255,6 +255,7 @@ const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
 let colorHistory=[];
 let savedPalettes=[];
+let currentPalette=[];
 toolSelector.addEventListener("change",function(){
 
 document.querySelectorAll(".tool-section").forEach(section=>{
@@ -529,7 +530,7 @@ rgbToHex(
 (rgb.b+128)%256
 )
 ];
-
+currentPalette = palette;
 document.getElementById("paletteResult").style.display="block";
 
 document.getElementById("paletteResult").innerHTML=
@@ -567,15 +568,10 @@ Copy
 `;
 
 }).join("");
-
 document.getElementById("paletteResult").innerHTML +=
-'<br><button onclick="savePalette(palette)">Save Palette</button>';
+'<br><button onclick="savePalette(currentPalette)">Save Palette</button>';
 
-setMessage(
-"paletteMessage",
-"Palette generated successfully.",
-"success"
-);
+
 setMessage(
 "paletteMessage",
 "Palette generated successfully.",
