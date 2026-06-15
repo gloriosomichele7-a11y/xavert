@@ -281,7 +281,9 @@ generateRandomColor();
 if(tool==="contrast"){
 checkContrast();
 }
-
+if(tool==="palette"){
+generatePalette();
+}
 }
 
 });
@@ -499,7 +501,81 @@ setMessage(
 );
 
 }
+function generatePalette(){
 
+const base=document.getElementById("paletteColor").value;
+
+const rgb=hexToRgb(base);
+
+const palette=[
+base,
+rgbToHex(
+Math.min(rgb.r+40,255),
+Math.min(rgb.g+40,255),
+Math.min(rgb.b+40,255)
+),
+rgbToHex(
+Math.max(rgb.r-40,0),
+Math.max(rgb.g-40,0),
+Math.max(rgb.b-40,0)
+),
+rgbToHex(
+255-rgb.r,
+255-rgb.g,
+255-rgb.b
+),
+rgbToHex(
+(rgb.r+128)%256,
+(rgb.g+128)%256,
+(rgb.b+128)%256
+)
+];
+
+document.getElementById("paletteResult").style.display="block";
+
+document.getElementById("paletteResult").innerHTML=
+palette.map(color=>{
+
+return `
+<div style="
+margin:10px 0;
+padding:12px;
+border:1px solid #d1d5db;
+border-radius:10px;
+display:flex;
+align-items:center;
+justify-content:space-between;
+">
+
+<div style="
+width:40px;
+height:40px;
+border-radius:8px;
+background:${color};
+border:1px solid #d1d5db;
+"></div>
+
+<div>
+<strong>${color}</strong>
+</div>
+
+<button class="small-button"
+onclick="copyText('${color}')">
+Copy
+</button>
+
+</div>
+`;
+
+}).join("");
+
+setMessage(
+"paletteMessage",
+"Palette generated successfully.",
+"success"
+);
+
+}
 function luminance(r,g,b){
 
 const values=[r,g,b].map(value=>{
