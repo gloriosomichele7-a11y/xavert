@@ -309,7 +309,9 @@ return historyHtml;
 function clearColorHistory(){
 
 colorHistory=[];
-
+document.querySelectorAll(".result-box").forEach(box=>{
+box.innerHTML="";
+});
 document.querySelectorAll(".result-box").forEach(box=>{
 box.innerHTML=box.innerHTML.split("<br><strong>Color History</strong><br>")[0];
 });
@@ -418,7 +420,7 @@ setMessage(
 "Invalid HEX color.",
 "error"
 );
-
+document.getElementById("converterResult").style.display="none";
 return;
 
 }
