@@ -326,9 +326,7 @@ return historyHtml;
 function clearColorHistory(){
 
 colorHistory=[];
-document.querySelectorAll(".result-box").forEach(box=>{
-box.innerHTML="";
-});
+
 document.querySelectorAll(".result-box").forEach(box=>{
 box.innerHTML=box.innerHTML.split("<br><strong>Color History</strong><br>")[0];
 });
@@ -570,6 +568,14 @@ Copy
 
 }).join("");
 
+document.getElementById("paletteResult").innerHTML +=
+'<br><button onclick="savePalette(palette)">Save Palette</button>';
+
+setMessage(
+"paletteMessage",
+"Palette generated successfully.",
+"success"
+);
 setMessage(
 "paletteMessage",
 "Palette generated successfully.",
@@ -681,8 +687,7 @@ ratio.toFixed(2) +
 "Accessibility: <strong>" +
 status +
 "</strong>";
-document.getElementById("paletteResult").innerHTML +=
-'<br><button onclick="savePalette(palette)">Save Palette</button>';
+
 setMessage(
 "contrastMessage",
 "Contrast analysis completed.",
