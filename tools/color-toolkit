@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Color Toolkit</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.color-preview{
+width:100%;
+height:120px;
+border-radius:12px;
+border:1px solid #d1d5db;
+margin-top:16px;
+background:#ffffff;
+}
+
+.result-box{
+display:none;
+margin-top:16px;
+padding:14px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.7;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>Color Toolkit</h1>
+
+<p class="subtitle">
+Convert, generate and analyze colors directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="toolSelector">Select Tool</label>
+
+<select id="toolSelector">
+<option value="converter">HEX / RGB Converter</option>
+<option value="generator">Random Color Generator</option>
+<option value="contrast">Contrast Checker</option>
+</select>
+
+</div>
+
+<div class="card tool-section active" id="converterTool">
+
+<h2>HEX / RGB Converter</h2>
+
+<label for="hexInput">HEX Color</label>
+<input type="text" id="hexInput" placeholder="#FF5733">
+
+<button onclick="convertHex()">Convert</button>
+<button onclick="clearConverter()">Clear</button>
+
+<div id="converterMessage" class="message"></div>
+<div id="converterResult" class="result-box"></div>
+
+<div id="converterPreview" class="color-preview"></div>
+
+</div>
+
+<div class="card tool-section" id="generatorTool">
+
+<h2>Random Color Generator</h2>
+
+<button onclick="generateRandomColor()">Generate Color</button>
+
+<div id="generatorMessage" class="message"></div>
+<div id="generatorResult" class="result-box"></div>
+
+<div id="generatorPreview" class="color-preview"></div>
+
+</div>
+
+<div class="card tool-section" id="contrastTool">
+
+<h2>Contrast Checker</h2>
+
+<label for="foregroundColor">Text Color</label>
+<input type="color" id="foregroundColor" value="#000000">
+
+<label for="backgroundColor">Background Color</label>
+<input type="color" id="backgroundColor" value="#ffffff">
+
+<button onclick="checkContrast()">Check Contrast</button>
+
+<div id="contrastMessage" class="message"></div>
+<div id="contrastResult" class="result-box"></div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+<script>
+
+const toolSelector=document.getElementById("toolSelector");
+const toast=document.getElementById("toast");
+
+toolSelector.addEventListener("change",function(){
+
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+
+});
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+
+const tool=toolSelector.value;
+
+if(tool==="converter"){
+convertHex();
+}
+
+if(tool==="generator"){
+generateRandomColor();
+}
+
+if(tool==="contrast"){
+checkContrast();
+}
+
+}
+
+});
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function copyText(text){
+
+navigator.clipboard.writeText(text);
+showToast("Copied.");
+
+}
+
+function setMessage(id,text,type){
+
+const element=document.getElementById(id);
+
+element.textContent=text;
+element.className="message " + type;
+
+}
+
+function clearConverter(){
+
+document.getElementById("hexInput").value="";
+document.getElementById("converterMessage").textContent="";
+document.getElementById("converterResult").style.display="none";
+document.getElementById("converterPreview").style.background="#ffffff";
+
+}
+
+function hexToRgb(hex){
+
+hex=hex.replace("#","");
+
+if(hex.length===3){
+
+hex=
+hex[0]+hex[0]+
+hex[1]+hex[1]+
+hex[2]+hex[2];
+
+}
+
+const r=parseInt(hex.substring(0,2),16);
+const g=parseInt(hex.substring(2,4),16);
+const b=parseInt(hex.substring(4,6),16);
+
+return {r,g,b};
+
+}
+
+function rgbToHex(r,g,b){
+
+return "#" +
+((1<<24)+(r<<16)+(g<<8)+b)
+.toString(16)
+.slice(1)
+.toUpperCase();
+
+}
+
+function convertHex(){
+
+let hex=document.getElementById("hexInput").value.trim();
+
+if(!hex){
+
+setMessage(
+"converterMessage",
+"Please enter a HEX color.",
+"error"
+);
+
+return;
+
+}
+
+if(!hex.startsWith("#")){
+hex="#" + hex;
+}
+
+if(!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)){
+
+setMessage(
+"converterMessage",
+"Invalid HEX color.",
+"error"
+);
+
+return;
+
+}
+
+const rgb=hexToRgb(hex);
+
+document.getElementById("converterPreview").style.background=hex;
+
+document.getElementById("converterResult").style.display="block";
+
+document.getElementById("converterResult").innerHTML=
+"HEX: <strong>" + hex.toUpperCase() + "</strong><br>" +
+"RGB: <strong>" +
+rgb.r + ", " +
+rgb.g + ", " +
+rgb.b +
+"</strong><br><br>" +
+'<button onclick="copyText(\'' +
+hex.toUpperCase() +
+'\')">Copy HEX</button>';
+
+setMessage(
+"converterMessage",
+"Conversion completed.",
+"success"
+);
+
+}
+
+function generateRandomColor(){
+
+const r=Math.floor(Math.random()*256);
+const g=Math.floor(Math.random()*256);
+const b=Math.floor(Math.random()*256);
+
+const hex=rgbToHex(r,g,b);
+
+document.getElementById("generatorPreview").style.background=hex;
+
+document.getElementById("generatorResult").style.display="block";
+
+document.getElementById("generatorResult").innerHTML=
+"HEX: <strong>" + hex + "</strong><br>" +
+"RGB: <strong>" +
+r + ", " +
+g + ", " +
+b +
+"</strong><br><br>" +
+'<button onclick="copyText(\'' +
+hex +
+'\')">Copy Color</button>';
+
+setMessage(
+"generatorMessage",
+"Color generated successfully.",
+"success"
+);
+
+}
+
+function luminance(r,g,b){
+
+const values=[r,g,b].map(value=>{
+
+value/=255;
+
+return value<=0.03928
+? value/12.92
+: Math.pow((value+0.055)/1.055,2.4);
+
+});
+
+return (
+0.2126*values[0] +
+0.7152*values[1] +
+0.0722*values[2]
+);
+
+}
+
+function checkContrast(){
+
+const foreground=
+document.getElementById("foregroundColor").value;
+
+const background=
+document.getElementById("backgroundColor").value;
+
+const fg=hexToRgb(foreground);
+const bg=hexToRgb(background);
+
+const l1=luminance(fg.r,fg.g,fg.b);
+const l2=luminance(bg.r,bg.g,bg.b);
+
+const ratio=
+(Math.max(l1,l2)+0.05)/
+(Math.min(l1,l2)+0.05);
+
+let status="Fail";
+
+if(ratio>=7){
+status="AAA";
+}else if(ratio>=4.5){
+status="AA";
+}
+
+document.getElementById("contrastResult").style.display="block";
+
+document.getElementById("contrastResult").innerHTML=
+"Contrast Ratio: <strong>" +
+ratio.toFixed(2) +
+":1</strong><br>" +
+"Accessibility: <strong>" +
+status +
+"</strong>";
+
+setMessage(
+"contrastMessage",
+"Contrast analysis completed.",
+"success"
+);
+
+}
+
+</script>
+
+</body>
+</html>
