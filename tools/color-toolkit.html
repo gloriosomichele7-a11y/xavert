@@ -334,11 +334,26 @@ element.className="message " + type;
 function clearConverter(){
 
 document.getElementById("hexInput").value="";
+
 document.getElementById("converterMessage").textContent="";
+document.getElementById("converterMessage").className="message";
+
+document.getElementById("converterResult").innerHTML="";
 document.getElementById("converterResult").style.display="none";
+
 document.getElementById("converterPreview").style.background="#ffffff";
 
+colorHistory=[];
+
+document.getElementById("generatorResult").innerHTML="";
+document.getElementById("generatorResult").style.display="none";
+
+document.getElementById("generatorMessage").textContent="";
+
+document.getElementById("generatorPreview").style.background="#ffffff";
+
 }
+
 
 function hexToRgb(hex){
 
