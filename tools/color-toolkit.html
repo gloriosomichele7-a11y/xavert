@@ -375,6 +375,18 @@ document.getElementById("contrastResult").style.display="none";
 
 document.getElementById("contrastMessage").textContent="";
 document.getElementById("contrastMessage").className="message";  
+
+document.getElementById("paletteResult").innerHTML="";
+document.getElementById("paletteResult").style.display="none";
+
+document.getElementById("paletteMessage").textContent="";
+document.getElementById("paletteMessage").className="message";
+
+document.getElementById("savedPalettes").innerHTML="";
+document.getElementById("savedPalettes").style.display="none";
+
+savedPalettes=[];
+currentPalette=[];
 }
 
 
@@ -585,7 +597,7 @@ savedPalettes.unshift([...palette]);
 savedPalettes=savedPalettes.slice(0,10);
 
 renderSavedPalettes();
-
+showToast("Palette saved.");
 }
 
 function renderSavedPalettes(){
