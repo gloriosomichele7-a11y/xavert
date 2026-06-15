@@ -243,7 +243,7 @@ Convert, generate and analyze colors directly in your browser.
 
 <div id="paletteMessage" class="message"></div>
 <div id="paletteResult" class="result-box"></div>
-
+<div id="savedPalettes" class="result-box"></div>
 </div>
 
 </div>
@@ -254,6 +254,7 @@ Convert, generate and analyze colors directly in your browser.
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
 let colorHistory=[];
+let savedPalettes=[];
 toolSelector.addEventListener("change",function(){
 
 document.querySelectorAll(".tool-section").forEach(section=>{
@@ -576,6 +577,55 @@ setMessage(
 );
 
 }
+function savePalette(palette){
+
+savedPalettes.unshift([...palette]);
+savedPalettes=savedPalettes.slice(0,10);
+
+renderSavedPalettes();
+
+}
+
+function renderSavedPalettes(){
+
+if(savedPalettes.length===0){
+return;
+}
+
+document.getElementById("savedPalettes").style.display="block";
+
+document.getElementById("savedPalettes").innerHTML=
+
+"<strong>Saved Palettes</strong><br><br>" +
+
+savedPalettes.map((palette,index)=>{
+
+return `
+<div style="margin-bottom:15px;padding:10px;border:1px solid #d1d5db;border-radius:10px;">
+<strong>Palette ${index+1}</strong><br><br>
+
+${palette.map(color=>`
+<span
+onclick="copyText('${color}')"
+style="
+display:inline-block;
+width:30px;
+height:30px;
+background:${color};
+border:1px solid #ccc;
+border-radius:6px;
+cursor:pointer;
+margin-right:6px;
+">
+</span>
+`).join("")}
+
+</div>
+`;
+
+}).join("");
+
+}
 function luminance(r,g,b){
 
 const values=[r,g,b].map(value=>{
@@ -631,7 +681,8 @@ ratio.toFixed(2) +
 "Accessibility: <strong>" +
 status +
 "</strong>";
-
+document.getElementById("paletteResult").innerHTML +=
+'<br><button onclick="savePalette(palette)">Save Palette</button>';
 setMessage(
 "contrastMessage",
 "Contrast analysis completed.",
