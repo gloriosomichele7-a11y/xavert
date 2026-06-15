@@ -381,8 +381,10 @@ rgb.b +
 "</strong><br><br>" +
 '<button onclick="copyText(\'' +
 hex.toUpperCase() +
-'\')">Copy HEX</button>';
-
+'\')">Copy HEX</button> ' +
+'<button onclick="copyText(\'rgb(' +
+rgb.r + "," + rgb.g + "," + rgb.b +
+')\')">Copy RGB</button>';
 setMessage(
 "converterMessage",
 "Conversion completed.",
