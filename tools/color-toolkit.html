@@ -181,6 +181,7 @@ Convert, generate and analyze colors directly in your browser.
 <option value="converter">HEX / RGB Converter</option>
 <option value="generator">Random Color Generator</option>
 <option value="contrast">Contrast Checker</option>
+<option value="palette">Palette Generator</option>
 </select>
 
 </div>
@@ -229,6 +230,19 @@ Convert, generate and analyze colors directly in your browser.
 
 <div id="contrastMessage" class="message"></div>
 <div id="contrastResult" class="result-box"></div>
+
+</div>
+<div class="card tool-section" id="paletteTool">
+
+<h2>Palette Generator</h2>
+
+<label for="paletteColor">Base Color</label>
+<input type="color" id="paletteColor" value="#FF5733">
+
+<button onclick="generatePalette()">Generate Palette</button>
+
+<div id="paletteMessage" class="message"></div>
+<div id="paletteResult" class="result-box"></div>
 
 </div>
 
