@@ -93,7 +93,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.small-button{
+padding:10px 16px;
+font-size:14px;
+margin-right:8px;
+margin-top:10px;
+}
 .tool-section{
 display:none;
 }
@@ -379,11 +384,12 @@ rgb.r + ", " +
 rgb.g + ", " +
 rgb.b +
 "</strong><br><br>" +
-'<button onclick="copyText(\'' +
+'<button class="small-button" onclick="copyText(\''
 hex.toUpperCase() +
 '\')">Copy HEX</button> ' +
-'<button onclick="copyText(\'rgb(' +
+'<button class="small-button" onclick="copyText(\'rgb(' +
 rgb.r + "," + rgb.g + "," + rgb.b +
+')\')">Copy RGB</button>';
 ')\')">Copy RGB</button>';
 setMessage(
 "converterMessage",
