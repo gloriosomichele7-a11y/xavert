@@ -318,13 +318,13 @@ Minify JSON data by removing unnecessary spaces and line breaks.
 <button onclick="minifyJson()">Minify JSON</button>
 <button onclick="clearFields('jsonMinifyInput','jsonMinifyOutput','jsonMinifyMessage')">Clear</button>
 
-<label for="xmlJsonOutput">JSON Output</label>
-<textarea id="xmlJsonOutput" readonly></textarea>
+<label for="jsonMinifyOutput">Minified JSON</label>
+<textarea id="jsonMinifyOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('xmlJsonOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'converted.json')">Download</button>
+<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">Copy Result</button>
+<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">Download</button>
 
-<div id="xmlJsonMessage" class="message"></div>
+<div id="jsonMinifyMessage" class="message"></div>
 
 </div>
 <div class="card tool-section" id="jsonvalidateTool">
@@ -356,12 +356,13 @@ Convert XML data into JSON.
 
 <button onclick="xmlToJson()">Convert to JSON</button>
 <button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">Clear</button>
-<label for="jsonMinifyOutput">Minified JSON</label>
-<textarea id="jsonMinifyOutput" readonly></textarea>
+<label for="xmlJsonOutput">JSON Output</label>
+<textarea id="xmlJsonOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">Download</button>
-<div id="jsonMinifyMessage" class="message"></div>
+<button onclick="copyText(document.getElementById('xmlJsonOutput').value)">Copy Result</button>
+<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'converted.json')">Download</button>
+
+<div id="xmlJsonMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonxmlTool">
 
