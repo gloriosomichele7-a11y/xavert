@@ -212,6 +212,7 @@ Calculate dates, timestamps, ages and time differences instantly.
 <input type="number" id="timestampInput" placeholder="Example: 1710000000">
 
 <button onclick="convertTimestamp()">Convert</button>
+<button onclick="getCurrentTimestamp()">Get Current Timestamp</button>
 <button onclick="clearAll()">Clear</button>
 
 <div id="timestampMessage" class="message"></div>
@@ -435,7 +436,28 @@ updateHistory(lastResultText)
 );
 
 }
+function getCurrentTimestamp(){
 
+const now=new Date();
+const unixSeconds=Math.floor(now.getTime()/1000);
+
+lastResultText=
+"Current Unix Timestamp: " + unixSeconds;
+
+setMessage(
+"timestampMessage",
+"Current timestamp generated.",
+"success"
+);
+
+setResult(
+"timestampResult",
+"<strong>" + lastResultText + "</strong><br><br>" +
+'<button onclick="copyText(\'' + unixSeconds + '\')">Copy Timestamp</button>' +
+updateHistory(lastResultText)
+);
+
+}
 function convertTimestamp(){
 
 const value=document.getElementById("timestampInput").value;
