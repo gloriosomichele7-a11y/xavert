@@ -180,6 +180,7 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="xmljson">XML to JSON</option>
 <option value="jsonxml">JSON to XML</option>
 <option value="jsonformat">JSON Formatter</option>
+<option value="jsonminify">JSON Minifier</option>
 <option value="jsonvalidate">JSON Validator</option>
 <option value="xmlformat">XML Formatter</option>
 <option value="xmlvalidate">XML Validator</option>
@@ -286,6 +287,26 @@ Format and beautify JSON data.
 <textarea id="jsonFormatOutput" readonly></textarea>
 
 <div id="jsonFormatMessage" class="message"></div>
+</div>
+<div class="card tool-section" id="jsonminifyTool">
+
+<h2>JSON Minifier</h2>
+
+<p class="info">
+Minify JSON data by removing unnecessary spaces and line breaks.
+</p>
+
+<label for="jsonMinifyInput">JSON Input</label>
+<textarea id="jsonMinifyInput" placeholder="Paste JSON data here"></textarea>
+
+<button onclick="minifyJson()">Minify JSON</button>
+<button onclick="clearFields('jsonMinifyInput','jsonMinifyOutput','jsonMinifyMessage')">Clear</button>
+
+<label for="jsonMinifyOutput">Minified JSON</label>
+<textarea id="jsonMinifyOutput" readonly></textarea>
+
+<div id="jsonMinifyMessage" class="message"></div>
+
 </div>
 <div class="card tool-section" id="jsonvalidateTool">
 
@@ -770,6 +791,29 @@ setMessage(
 
 }
 }
+function minifyJson(){
+
+const input=document.getElementById("jsonMinifyInput").value.trim();
+
+if(!input){
+setMessage("jsonMinifyMessage","Please enter JSON data.","error");
+return;
+}
+
+try{
+const json=JSON.parse(input);
+
+document.getElementById("jsonMinifyOutput").value=
+JSON.stringify(json);
+
+setMessage("jsonMinifyMessage","JSON minified successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("jsonMinifyMessage","Invalid JSON.","error");
+}
+
+}
 function validateJson(){
 
 const text=document.getElementById("jsonValidateInput").value.trim();
@@ -1072,6 +1116,7 @@ setMessage("xmlValidateMessage","Invalid XML","error");
 enableCtrlEnter("jsonXlsxInput",jsonToXlsx);
 enableCtrlEnter("jsonCsvInput",jsonToCsv);
 enableCtrlEnter("jsonFormatInput",formatJson);
+enableCtrlEnter("jsonMinifyInput",minifyJson);
 enableCtrlEnter("jsonValidateInput",validateJson);
 enableCtrlEnter("xmlJsonInput",xmlToJson);
 enableCtrlEnter("jsonXmlInput",jsonToXml);
