@@ -142,7 +142,20 @@ font-weight:600;
 .error{color:#dc2626;}
 .success{color:#047857;}
 .loading{color:#4b5563;}
-
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -435,6 +448,7 @@ Validate XML syntax.
 <div id="xmlValidateMessage" class="message"></div>
 
 </div>
+<div id="toast"></div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 
@@ -525,14 +539,28 @@ bestSeparator=separator;
 
 return bestSeparator;
 }
+function showToast(text){
+
+const toast=document.getElementById("toast");
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
 function copyText(text){
 
 if(!text){
-setMessage("jsonFormatMessage","Nothing to copy.","error");
+showToast("Nothing to copy.");
 return;
 }
 
 navigator.clipboard.writeText(text);
+showToast("Copied.");
 
 }
 function downloadBlob(blob,fileName){
