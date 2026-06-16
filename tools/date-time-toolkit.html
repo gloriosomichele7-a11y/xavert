@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Date & Time Toolkit</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.result-box{
+display:none;
+margin-top:16px;
+padding:14px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.7;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>Date & Time Toolkit</h1>
+
+<p class="subtitle">
+Calculate dates, timestamps, ages and time differences instantly.
+</p>
+
+<div class="card">
+
+<label for="toolSelector">Select Tool</label>
+
+<select id="toolSelector">
+<option value="difference">Date Difference</option>
+<option value="age">Age Calculator</option>
+<option value="timestamp">Timestamp Converter</option>
+</select>
+
+</div>
+
+<div class="card tool-section active" id="differenceTool">
+
+<h2>Date Difference</h2>
+
+<label for="dateStart">Start Date</label>
+<input type="date" id="dateStart">
+
+<label for="dateEnd">End Date</label>
+<input type="date" id="dateEnd">
+
+<button onclick="calculateDifference()">Calculate</button>
+<button onclick="clearAll()">Clear</button>
+
+<div id="differenceMessage" class="message"></div>
+<div id="differenceResult" class="result-box"></div>
+
+</div>
+
+<div class="card tool-section" id="ageTool">
+
+<h2>Age Calculator</h2>
+
+<label for="birthDate">Birth Date</label>
+<input type="date" id="birthDate">
+
+<button onclick="calculateAge()">Calculate Age</button>
+<button onclick="clearAll()">Clear</button>
+
+<div id="ageMessage" class="message"></div>
+<div id="ageResult" class="result-box"></div>
+
+</div>
+
+<div class="card tool-section" id="timestampTool">
+
+<h2>Timestamp Converter</h2>
+
+<label for="timestampInput">Unix Timestamp</label>
+<input type="number" id="timestampInput" placeholder="Example: 1710000000">
+
+<button onclick="convertTimestamp()">Convert</button>
+<button onclick="clearAll()">Clear</button>
+
+<div id="timestampMessage" class="message"></div>
+<div id="timestampResult" class="result-box"></div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+<script>
+
+const toolSelector=document.getElementById("toolSelector");
+const toast=document.getElementById("toast");
+
+let dateHistory=[];
+let lastResultText="";
+
+toolSelector.addEventListener("change",function(){
+
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+document.getElementById(toolSelector.value + "Tool").classList.add("active");
+
+});
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+
+const tool=toolSelector.value;
+
+if(tool==="difference"){
+calculateDifference();
+}
+
+if(tool==="age"){
+calculateAge();
+}
+
+if(tool==="timestamp"){
+convertTimestamp();
+}
+
+}
+
+});
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function copyText(text){
+
+navigator.clipboard.writeText(text);
+showToast("Copied.");
+
+}
+
+function setMessage(id,text,type){
+
+const element=document.getElementById(id);
+element.textContent=text;
+element.className="message " + type;
+
+}
+
+function setResult(id,html){
+
+const element=document.getElementById(id);
+element.innerHTML=html;
+element.style.display="block";
+
+}
+
+function updateHistory(text){
+
+dateHistory.unshift(text);
+dateHistory=dateHistory.slice(0,15);
+
+return "<br><strong>History</strong><br>" +
+dateHistory.map((item,index)=>{
+return (index+1) + ". " + item;
+}).join("<br>") +
+'<br><br><button onclick="clearHistory()">Clear History</button>';
+
+}
+
+function clearHistory(){
+
+dateHistory=[];
+
+document.querySelectorAll(".result-box").forEach(box=>{
+box.innerHTML=box.innerHTML.split("<br><strong>History</strong><br>")[0];
+});
+
+}
+
+function clearAll(){
+
+document.querySelectorAll("input").forEach(input=>{
+input.value="";
+});
+
+document.querySelectorAll(".message").forEach(message=>{
+message.textContent="";
+message.className="message";
+});
+
+document.querySelectorAll(".result-box").forEach(box=>{
+box.innerHTML="";
+box.style.display="none";
+});
+
+dateHistory=[];
+lastResultText="";
+
+}
+
+function calculateDifference(){
+
+const startValue=document.getElementById("dateStart").value;
+const endValue=document.getElementById("dateEnd").value;
+
+if(!startValue || !endValue){
+
+setMessage(
+"differenceMessage",
+"Please select both dates.",
+"error"
+);
+
+return;
+
+}
+
+const start=new Date(startValue);
+const end=new Date(endValue);
+
+const diffTime=Math.abs(end-start);
+const diffDays=Math.floor(diffTime/(1000*60*60*24));
+
+const weeks=Math.floor(diffDays/7);
+const remainingDays=diffDays%7;
+
+lastResultText=
+diffDays + " days (" + weeks + " weeks and " + remainingDays + " days)";
+
+setMessage(
+"differenceMessage",
+"Date difference calculated.",
+"success"
+);
+
+setResult(
+"differenceResult",
+"<strong>" + lastResultText + "</strong><br><br>" +
+'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
+updateHistory(lastResultText)
+);
+
+}
+
+function calculateAge(){
+
+const birthValue=document.getElementById("birthDate").value;
+
+if(!birthValue){
+
+setMessage(
+"ageMessage",
+"Please select a birth date.",
+"error"
+);
+
+return;
+
+}
+
+const birthDate=new Date(birthValue);
+const today=new Date();
+
+let years=today.getFullYear()-birthDate.getFullYear();
+let months=today.getMonth()-birthDate.getMonth();
+let days=today.getDate()-birthDate.getDate();
+
+if(days<0){
+months--;
+const previousMonth=new Date(today.getFullYear(),today.getMonth(),0);
+days+=previousMonth.getDate();
+}
+
+if(months<0){
+years--;
+months+=12;
+}
+
+lastResultText=
+years + " years, " + months + " months, " + days + " days";
+
+setMessage(
+"ageMessage",
+"Age calculated.",
+"success"
+);
+
+setResult(
+"ageResult",
+"<strong>" + lastResultText + "</strong><br><br>" +
+'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
+updateHistory(lastResultText)
+);
+
+}
+
+function convertTimestamp(){
+
+const value=document.getElementById("timestampInput").value;
+
+if(!value){
+
+setMessage(
+"timestampMessage",
+"Please enter a timestamp.",
+"error"
+);
+
+return;
+
+}
+
+let timestamp=parseInt(value,10);
+
+if(isNaN(timestamp)){
+
+setMessage(
+"timestampMessage",
+"Invalid timestamp.",
+"error"
+);
+
+return;
+
+}
+
+if(String(timestamp).length===10){
+timestamp=timestamp*1000;
+}
+
+const date=new Date(timestamp);
+
+if(isNaN(date.getTime())){
+
+setMessage(
+"timestampMessage",
+"Invalid timestamp.",
+"error"
+);
+
+return;
+
+}
+
+lastResultText=date.toLocaleString();
+
+setMessage(
+"timestampMessage",
+"Timestamp converted.",
+"success"
+);
+
+setResult(
+"timestampResult",
+"<strong>" + lastResultText + "</strong><br><br>" +
+'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
+updateHistory(lastResultText)
+);
+
+}
+
+</script>
+
+</body>
+</html>
