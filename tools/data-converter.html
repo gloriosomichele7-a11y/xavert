@@ -287,6 +287,8 @@ Format and beautify JSON data.
 <label for="jsonFormatOutput">Formatted JSON</label>
 <textarea id="jsonFormatOutput" readonly></textarea>
 
+<button onclick="copyText(document.getElementById('jsonFormatOutput').value)">Copy Result</button>
+
 <div id="jsonFormatMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonminifyTool">
@@ -512,6 +514,16 @@ bestSeparator=separator;
 });
 
 return bestSeparator;
+}
+function copyText(text){
+
+if(!text){
+setMessage("jsonFormatMessage","Nothing to copy.","error");
+return;
+}
+
+navigator.clipboard.writeText(text);
+
 }
 function downloadBlob(blob,fileName){
 const link=document.createElement("a");
