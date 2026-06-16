@@ -482,10 +482,7 @@ updateHistory(lastResultText)
 function calculateNewDate(){
 
 const dateValue=document.getElementById("baseDate").value;
-const daysValue=parseInt(
-document.getElementById("daysToAdd").value,
-10
-);
+const daysValue=parseInt(document.getElementById("daysToAdd").value,10);
 
 if(!dateValue || isNaN(daysValue)){
 
