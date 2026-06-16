@@ -513,12 +513,29 @@ const weekdays=[
 "Saturday"
 ];
 
+const months=[
+"January",
+"February",
+"March",
+"April",
+"May",
+"June",
+"July",
+"August",
+"September",
+"October",
+"November",
+"December"
+];
+
 const result=
-date.getFullYear() + "-" +
-String(date.getMonth()+1).padStart(2,"0") + "-" +
-String(date.getDate()).padStart(2,"0") +
-" — " +
-weekdays[date.getDay()];
+weekdays[date.getDay()] +
+", " +
+date.getDate() +
+" " +
+months[date.getMonth()] +
+" " +
+date.getFullYear();
 
 lastResultText=result;
 
