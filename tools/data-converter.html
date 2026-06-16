@@ -342,10 +342,12 @@ Convert XML data into JSON.
 
 <button onclick="xmlToJson()">Convert to JSON</button>
 <button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">Clear</button>
-<label for="xmlJsonOutput">JSON Output</label>
-<textarea id="xmlJsonOutput" readonly></textarea>
+<label for="jsonMinifyOutput">Minified JSON</label>
+<textarea id="jsonMinifyOutput" readonly></textarea>
 
-<div id="xmlJsonMessage" class="message"></div>
+<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">Copy Result</button>
+
+<div id="jsonMinifyMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonxmlTool">
 
@@ -364,6 +366,8 @@ Convert JSON data into XML.
 <label for="jsonXmlOutput">XML Output</label>
 
 <textarea id="jsonXmlOutput" readonly></textarea>
+
+<button onclick="copyText(document.getElementById('jsonXmlOutput').value)">Copy Result</button>
 
 <div id="jsonXmlMessage" class="message"></div>
 </div>
@@ -386,6 +390,8 @@ Format and beautify XML data.
 
 <textarea id="xmlFormatOutput" readonly></textarea>
 
+<button onclick="copyText(document.getElementById('xmlFormatOutput').value)">Copy Result</button>
+
 <div id="xmlFormatMessage" class="message"></div>
 
 </div>
@@ -405,6 +411,8 @@ Minify XML data by removing unnecessary spaces and line breaks.
 
 <label for="xmlMinifyOutput">Minified XML</label>
 <textarea id="xmlMinifyOutput" readonly></textarea>
+
+<button onclick="copyText(document.getElementById('xmlMinifyOutput').value)">Copy Result</button>
 
 <div id="xmlMinifyMessage" class="message"></div>
 
