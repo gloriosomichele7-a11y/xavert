@@ -183,6 +183,7 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="jsonminify">JSON Minifier</option>
 <option value="jsonvalidate">JSON Validator</option>
 <option value="xmlformat">XML Formatter</option>
+<option value="xmlminify">XML Minifier</option>
 <option value="xmlvalidate">XML Validator</option>
 </select>
 </div>
@@ -382,6 +383,26 @@ Format and beautify XML data.
 <textarea id="xmlFormatOutput" readonly></textarea>
 
 <div id="xmlFormatMessage" class="message"></div>
+
+</div>
+<div class="card tool-section" id="xmlminifyTool">
+
+<h2>XML Minifier</h2>
+
+<p class="info">
+Minify XML data by removing unnecessary spaces and line breaks.
+</p>
+
+<label for="xmlMinifyInput">XML Input</label>
+<textarea id="xmlMinifyInput" placeholder="Paste XML data here"></textarea>
+
+<button onclick="minifyXml()">Minify XML</button>
+<button onclick="clearFields('xmlMinifyInput','xmlMinifyOutput','xmlMinifyMessage')">Clear</button>
+
+<label for="xmlMinifyOutput">Minified XML</label>
+<textarea id="xmlMinifyOutput" readonly></textarea>
+
+<div id="xmlMinifyMessage" class="message"></div>
 
 </div>
 <div class="card tool-section" id="xmlvalidateTool">
@@ -1089,6 +1110,43 @@ console.error(error);
 setMessage("xmlFormatMessage","Unable to format XML.","error");
 }
 }
+function minifyXml(){
+
+const text=document.getElementById("xmlMinifyInput").value.trim();
+
+if(!text){
+setMessage("xmlMinifyMessage","Please enter XML data.","error");
+return;
+}
+
+try{
+const parser=new DOMParser();
+const xmlDoc=parser.parseFromString(text,"application/xml");
+
+if(xmlDoc.getElementsByTagName("parsererror").length){
+setMessage("xmlMinifyMessage","Invalid XML.","error");
+return;
+}
+
+const serializer=new XMLSerializer();
+
+let xml=serializer.serializeToString(xmlDoc);
+
+xml=xml
+.replace(/>\s+</g,"><")
+.replace(/\s{2,}/g," ")
+.trim();
+
+document.getElementById("xmlMinifyOutput").value=xml;
+
+setMessage("xmlMinifyMessage","XML minified successfully.","success");
+
+}catch(error){
+console.error(error);
+setMessage("xmlMinifyMessage","Unable to minify XML.","error");
+}
+
+}
 function validateXml(){
 const text=document.getElementById("xmlValidateInput").value.trim();
 
@@ -1121,6 +1179,7 @@ enableCtrlEnter("jsonValidateInput",validateJson);
 enableCtrlEnter("xmlJsonInput",xmlToJson);
 enableCtrlEnter("jsonXmlInput",jsonToXml);
 enableCtrlEnter("xmlFormatInput",formatXml);
+enableCtrlEnter("xmlMinifyInput",minifyXml);
 enableCtrlEnter("xmlValidateInput",validateXml);
 </script>
 
