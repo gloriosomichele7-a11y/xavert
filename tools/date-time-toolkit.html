@@ -162,11 +162,12 @@ Calculate dates, timestamps, ages and time differences instantly.
 <div class="card">
 
 <label for="toolSelector">Select Tool</label>
-
 <select id="toolSelector">
 <option value="difference">Date Difference</option>
 <option value="age">Age Calculator</option>
 <option value="timestamp">Timestamp Converter</option>
+<option value="dateadd">Add / Subtract Days</option>
+</select>
 </select>
 
 </div>
@@ -219,7 +220,24 @@ Calculate dates, timestamps, ages and time differences instantly.
 <div id="timestampResult" class="result-box"></div>
 
 </div>
+<div class="card tool-section" id="dateaddTool">
 
+<h2>Add / Subtract Days</h2>
+
+<label for="baseDate">Base Date</label>
+<input type="date" id="baseDate">
+
+<label for="daysToAdd">Days (+ or -)</label>
+<input type="number" id="daysToAdd" placeholder="Example: 30 or -15">
+
+<button onclick="calculateNewDate()">Calculate</button>
+<button onclick="clearAll()">Clear</button>
+
+<div id="dateaddMessage" class="message"></div>
+<div id="dateaddResult" class="result-box"></div>
+
+</div>
+  
 </div>
 
 <div id="toast"></div>
@@ -258,7 +276,10 @@ calculateAge();
 if(tool==="timestamp"){
 convertTimestamp();
 }
-
+if(tool==="dateadd"){
+calculateNewDate();
+}
+  
 }
 
 });
@@ -455,6 +476,63 @@ setResult(
 "<strong>" + lastResultText + "</strong><br><br>" +
 '<button onclick="copyText(\'' + unixSeconds + '\')">Copy Timestamp</button>' +
 updateHistory(lastResultText)
+);
+
+}
+function calculateNewDate(){
+
+const dateValue=document.getElementById("baseDate").value;
+const daysValue=parseInt(
+document.getElementById("daysToAdd").value,
+10
+);
+
+if(!dateValue || isNaN(daysValue)){
+
+setMessage(
+"dateaddMessage",
+"Please enter a date and number of days.",
+"error"
+);
+
+return;
+
+}
+
+const date=new Date(dateValue);
+
+date.setDate(date.getDate()+daysValue);
+
+const weekdays=[
+"Sunday",
+"Monday",
+"Tuesday",
+"Wednesday",
+"Thursday",
+"Friday",
+"Saturday"
+];
+
+const result=
+date.getFullYear() + "-" +
+String(date.getMonth()+1).padStart(2,"0") + "-" +
+String(date.getDate()).padStart(2,"0") +
+" — " +
+weekdays[date.getDay()];
+
+lastResultText=result;
+
+setMessage(
+"dateaddMessage",
+"Date calculated.",
+"success"
+);
+
+setResult(
+"dateaddResult",
+"<strong>" + result + "</strong><br><br>" +
+'<button onclick="copyText(\'' + result + '\')">Copy Result</button>' +
+updateHistory(result)
 );
 
 }
