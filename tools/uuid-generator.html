@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | UUID Generator</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+input,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:220px;
+resize:vertical;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.result-box{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.8;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>UUID Generator</h1>
+
+<p class="subtitle">
+Generate one or multiple UUID v4 identifiers directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="quantity">Number of UUIDs</label>
+
+<input
+type="number"
+id="quantity"
+min="1"
+max="1000"
+value="1"
+>
+
+<button onclick="generateUUIDs()">
+Generate UUIDs
+</button>
+
+<button onclick="clearResults()">
+Clear
+</button>
+
+<div id="message" class="message"></div>
+
+<div id="resultBox" class="result-box">
+
+<label for="uuidOutput">Generated UUIDs</label>
+
+<textarea id="uuidOutput" readonly></textarea>
+
+<button onclick="copyAllUUIDs()">
+Copy All
+</button>
+
+<button onclick="downloadUUIDs()">
+Download
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+<script>
+
+const resultBox=document.getElementById("resultBox");
+const uuidOutput=document.getElementById("uuidOutput");
+const message=document.getElementById("message");
+const toast=document.getElementById("toast");
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function generateUUID(){
+
+if(window.crypto && crypto.randomUUID){
+return crypto.randomUUID();
+}
+
+return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g,function(c){
+const r=Math.random()*16|0;
+const v=c==="x" ? r : (r&0x3|0x8);
+return v.toString(16);
+});
+
+}
+
+function generateUUIDs(){
+
+const quantity=parseInt(
+document.getElementById("quantity").value
+);
+
+if(!quantity || quantity<1 || quantity>1000){
+setMessage(
+"Please enter a value between 1 and 1000.",
+"error"
+);
+return;
+}
+
+const uuids=[];
+
+for(let i=0;i<quantity;i++){
+uuids.push(generateUUID());
+}
+
+uuidOutput.value=uuids.join("\n");
+
+resultBox.style.display="block";
+
+setMessage(
+quantity + " UUID(s) generated successfully.",
+"success"
+);
+
+}
+
+function copyAllUUIDs(){
+
+if(!uuidOutput.value){
+showToast("Nothing to copy.");
+return;
+}
+
+navigator.clipboard.writeText(uuidOutput.value);
+
+showToast("Copied.");
+
+}
+
+function downloadUUIDs(){
+
+if(!uuidOutput.value){
+showToast("Nothing to download.");
+return;
+}
+
+const blob=new Blob(
+[uuidOutput.value],
+{type:"text/plain;charset=utf-8"}
+);
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="xavert-uuids.txt";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+}
+
+function clearResults(){
+
+document.getElementById("quantity").value=1;
+
+uuidOutput.value="";
+
+resultBox.style.display="none";
+
+message.textContent="";
+message.className="message";
+
+}
+
+</script>
+
+</body>
+</html>
