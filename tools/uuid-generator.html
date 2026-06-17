@@ -71,6 +71,7 @@ font-weight:700;
 }
 
 input,
+select,
 textarea{
 width:100%;
 padding:14px;
@@ -81,6 +82,10 @@ background:white;
 }
 #quantity{
 width:120px;
+}
+#uuidVersion{
+width:160px;
+margin-bottom:12px;
 }
 textarea{
 min-height:220px;
@@ -164,14 +169,19 @@ Generate one or multiple UUID v4 identifiers directly in your browser.
 </p>
 
 <div class="card">
+<label for="uuidVersion">UUID Version</label>
 
+<select id="uuidVersion">
+<option value="v4">UUID v4</option>
+<option value="v7">UUID v7</option>
+</select>
 <label for="quantity">Number of UUIDs</label>
 
 <input
 type="number"
 id="quantity"
 min="1"
-max="1000"
+max="10000"
 value="1"
 >
 
@@ -243,6 +253,27 @@ document.getElementById("quantity").value=1;
 generateUUIDs();
 
 }
+function generateUUIDv7(){
+
+const timestamp=Date.now().toString(16).padStart(12,"0");
+
+const randomBytes=new Uint8Array(10);
+crypto.getRandomValues(randomBytes);
+
+const randomHex=Array.from(randomBytes)
+.map(byte=>byte.toString(16).padStart(2,"0"))
+.join("");
+
+return (
+timestamp.substring(0,8) + "-" +
+timestamp.substring(8,12) + "-" +
+"7" + randomHex.substring(0,3) + "-" +
+((parseInt(randomHex.substring(3,4),16)&0x3)|0x8).toString(16) +
+randomHex.substring(4,7) + "-" +
+randomHex.substring(7,19)
+);
+
+}
 function generateUUID(){
 
 if(window.crypto && crypto.randomUUID){
@@ -263,18 +294,25 @@ const quantity=parseInt(
 document.getElementById("quantity").value
 );
 
-if(!quantity || quantity<1 || quantity>1000){
+if(!quantity || quantity<1 || quantity>10000){
 setMessage(
-"Please enter a value between 1 and 1000.",
+"Please enter a value between 1 and 10000.",
 "error"
 );
 return;
 }
 
-const uuids=[];
+const version=document.getElementById("uuidVersion").value;
+const versionLabel=version.toUpperCase();
 
 for(let i=0;i<quantity;i++){
+
+if(version==="v7"){
+uuids.push(generateUUIDv7());
+}else{
 uuids.push(generateUUID());
+}
+
 }
 
 uuidOutput.value=uuids.join("\n");
@@ -284,14 +322,14 @@ resultBox.style.display="block";
 if(quantity===1){
 
 setMessage(
-"1 UUID generated successfully.",
+"1 " + versionLabel + " UUID generated successfully."
 "success"
 );
 
 }else{
 
 setMessage(
-quantity + " UUIDs generated successfully.",
+quantity + " " + versionLabel + " UUIDs generated successfully."
 "success"
 );
 
@@ -325,7 +363,8 @@ const blob=new Blob(
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-uuids.txt";
+const version=document.getElementById("uuidVersion").value;
+link.download="xavert-" + version + "-uuids.txt";
 
 document.body.appendChild(link);
 link.click();
@@ -357,7 +396,8 @@ const blob=new Blob(
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-uuids.csv";
+const version=document.getElementById("uuidVersion").value;
+link.download="xavert-" + version + "-uuids.csv";
 
 document.body.appendChild(link);
 link.click();
