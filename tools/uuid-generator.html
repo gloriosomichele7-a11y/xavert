@@ -305,6 +305,8 @@ return;
 const version=document.getElementById("uuidVersion").value;
 const versionLabel=version.toUpperCase();
 
+const uuids=[];
+
 for(let i=0;i<quantity;i++){
 
 if(version==="v7"){
@@ -322,14 +324,14 @@ resultBox.style.display="block";
 if(quantity===1){
 
 setMessage(
-"1 " + versionLabel + " UUID generated successfully."
+"1 " + versionLabel + " UUID generated successfully.",
 "success"
 );
 
 }else{
 
 setMessage(
-quantity + " " + versionLabel + " UUIDs generated successfully."
+quantity + " " + versionLabel + " UUIDs generated successfully.",
 "success"
 );
 
