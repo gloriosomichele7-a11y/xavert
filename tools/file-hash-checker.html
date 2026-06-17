@@ -317,12 +317,15 @@ const hashArray=Array.from(new Uint8Array(hashBuffer));
 const hashHex=hashArray
 .map(byte=>byte.toString(16).padStart(2,"0"))
 .join("");
-
+const fileSize=(file.size/1024/1024).toFixed(2) + " MB";
 resultBox.style.display="block";
 
 resultBox.innerHTML=
 "<strong>File</strong><br>" +
 file.name +
+"<br><br>" +
+"<strong>Size</strong><br>" +
+fileSize +
 "<br><br>" +
 "<strong>Algorithm</strong><br>" +
 "SHA-256" +
