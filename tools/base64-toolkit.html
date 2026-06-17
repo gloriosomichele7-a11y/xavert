@@ -119,7 +119,12 @@ font-weight:600;
 
 .error{color:#dc2626;}
 .success{color:#047857;}
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 #toast{
 position:fixed;
 bottom:22px;
@@ -163,9 +168,21 @@ Encode and decode Base64 text directly in your browser.
 <label for="inputText">Input Text</label>
 <textarea id="inputText" placeholder="Paste text or Base64 data here"></textarea>
 
-<button onclick="encodeBase64()">Base64 Encode</button>
-<button onclick="decodeBase64()">Base64 Decode</button>
-<button onclick="clearAll()">Clear</button>
+<div class="button-group">
+
+<button onclick="encodeBase64()">
+Base64 Encode
+</button>
+
+<button onclick="decodeBase64()">
+Base64 Decode
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
 
 <div id="message" class="message"></div>
 
