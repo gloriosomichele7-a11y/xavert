@@ -165,6 +165,17 @@ body{padding:24px 14px;}
 .card{padding:20px;}
 button{width:100%;}
 }
+code{
+display:block;
+margin-top:8px;
+padding:12px;
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:8px;
+font-size:13px;
+font-family:monospace;
+word-break:break-all;
+}
 </style>
 </head>
 
@@ -318,6 +329,7 @@ const hashHex=hashArray
 .map(byte=>byte.toString(16).padStart(2,"0"))
 .join("");
 const fileSize=(file.size/1024/1024).toFixed(2) + " MB";
+const generatedAt=new Date().toLocaleString();
 resultBox.style.display="block";
 
 resultBox.innerHTML=
@@ -330,8 +342,13 @@ fileSize +
 "<strong>Algorithm</strong><br>" +
 "SHA-256" +
 "<br><br>" +
-"<strong>Hash</strong><br>" +
+"<strong>Generated</strong><br>" +
+generatedAt +
+"<br><br>" +
+"<strong>Hash</strong><br><code>" +
 hashHex +
+"</code>" +
+"</code>" +
 "<br><br>" +
 '<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex + '\')">Copy Hash</button>';
 setMessage("Hash generated successfully.","success");
