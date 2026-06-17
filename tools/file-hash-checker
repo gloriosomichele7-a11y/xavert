@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | File Hash Checker</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.drop-zone{
+border:2px dashed #d1d5db;
+border-radius:16px;
+padding:30px;
+text-align:center;
+background:#f9fafb;
+cursor:pointer;
+margin-top:14px;
+}
+
+.drop-zone.dragover{
+border-color:#dc2626;
+background:#fff1f2;
+}
+
+.file-count{
+margin-top:12px;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
+.result-box{
+display:none;
+margin-top:16px;
+padding:14px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.7;
+word-break:break-all;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+.loading{color:#4b5563;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>File Hash Checker</h1>
+
+<p class="subtitle">
+Generate and verify file hashes directly in your browser.
+</p>
+
+<div class="card">
+
+<h2>Hash Generator</h2>
+
+<p class="subtitle">
+Upload a file and generate its SHA-256 hash.
+</p>
+
+<div class="drop-zone" id="dropZone">
+Click or drag a file here
+</div>
+
+<input type="file" id="fileInput" hidden>
+
+<div id="fileCount" class="file-count">No file selected</div>
+
+<button onclick="generateHash()">Generate SHA-256</button>
+<button onclick="clearAll()">Clear</button>
+
+<div id="message" class="message"></div>
+<div id="resultBox" class="result-box"></div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+<script>
+
+const dropZone=document.getElementById("dropZone");
+const fileInput=document.getElementById("fileInput");
+const fileCount=document.getElementById("fileCount");
+const message=document.getElementById("message");
+const resultBox=document.getElementById("resultBox");
+const toast=document.getElementById("toast");
+
+dropZone.addEventListener("click",function(){
+fileInput.click();
+});
+
+dropZone.addEventListener("dragover",function(e){
+e.preventDefault();
+dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave",function(){
+dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop",function(e){
+e.preventDefault();
+dropZone.classList.remove("dragover");
+fileInput.files=e.dataTransfer.files;
+updateFileCount();
+});
+
+fileInput.addEventListener("change",function(){
+updateFileCount();
+});
+
+function updateFileCount(){
+
+const file=fileInput.files[0];
+
+fileCount.textContent=file ? file.name : "No file selected";
+
+}
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function clearAll(){
+
+fileInput.value="";
+fileCount.textContent="No file selected";
+
+message.textContent="";
+message.className="message";
+
+resultBox.innerHTML="";
+resultBox.style.display="none";
+
+}
+
+function copyText(text){
+
+if(!text){
+showToast("Nothing to copy.");
+return;
+}
+
+navigator.clipboard.writeText(text);
+showToast("Copied.");
+
+}
+
+async function generateHash(){
+
+const file=fileInput.files[0];
+
+if(!file){
+setMessage("Please select a file.","error");
+return;
+}
+
+try{
+
+setMessage("Generating SHA-256 hash...","loading");
+
+const buffer=await file.arrayBuffer();
+
+const hashBuffer=await crypto.subtle.digest("SHA-256",buffer);
+
+const hashArray=Array.from(new Uint8Array(hashBuffer));
+
+const hashHex=hashArray
+.map(byte=>byte.toString(16).padStart(2,"0"))
+.join("");
+
+resultBox.style.display="block";
+
+resultBox.innerHTML=
+"<strong>File:</strong> " + file.name + "<br>" +
+"<strong>Algorithm:</strong> SHA-256<br>" +
+"<strong>Hash:</strong><br>" +
+hashHex +
+"<br><br>" +
+'<button onclick="copyText(\'' + hashHex + '\')">Copy Hash</button>';
+
+setMessage("Hash generated successfully.","success");
+
+}catch(error){
+
+console.error(error);
+setMessage("Unable to generate hash.","error");
+
+}
+
+}
+
+</script>
+
+</body>
+</html>
