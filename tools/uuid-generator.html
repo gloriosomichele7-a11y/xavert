@@ -79,10 +79,15 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+#quantity{
+width:120px;
+}
 textarea{
 min-height:220px;
 resize:vertical;
+font-family:monospace;
+font-size:14px;
+line-height:1.7;
 }
 
 button{
@@ -174,6 +179,10 @@ value="1"
 Generate UUIDs
 </button>
 
+<button onclick="generateSingleUUID()">
+Generate New UUID
+</button>
+
 <button onclick="clearResults()">
 Clear
 </button>
@@ -193,7 +202,9 @@ Copy All
 <button onclick="downloadUUIDs()">
 Download
 </button>
-
+<button onclick="downloadUUIDsCSV()">
+Download CSV
+</button>
 </div>
 
 </div>
@@ -225,7 +236,13 @@ message.textContent=text;
 message.className="message " + type;
 
 }
+function generateSingleUUID(){
 
+document.getElementById("quantity").value=1;
+
+generateUUIDs();
+
+}
 function generateUUID(){
 
 if(window.crypto && crypto.randomUUID){
@@ -264,8 +281,17 @@ uuidOutput.value=uuids.join("\n");
 
 resultBox.style.display="block";
 
+if(quantity===1){
+
 setMessage(
-quantity + " UUID(s) generated successfully.",
+"1 UUID generated successfully.",
+"success"
+);
+
+}else{
+
+setMessage(
+quantity + " UUIDs generated successfully.",
 "success"
 );
 
@@ -300,6 +326,38 @@ const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
 link.download="xavert-uuids.txt";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+}
+function downloadUUIDsCSV(){
+
+if(!uuidOutput.value){
+showToast("Nothing to download.");
+return;
+}
+
+const rows=uuidOutput.value
+.split("\n")
+.filter(item=>item.trim()!=="");
+
+const csv=
+"uuid\n" +
+rows.join("\n");
+
+const blob=new Blob(
+[csv],
+{type:"text/csv;charset=utf-8"}
+);
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="xavert-uuids.csv";
 
 document.body.appendChild(link);
 link.click();
