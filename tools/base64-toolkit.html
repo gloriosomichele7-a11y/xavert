@@ -72,7 +72,7 @@ font-weight:700;
 
 textarea{
 width:100%;
-min-height:170px;
+min-height:220px;
 padding:14px;
 border:1px solid #d1d5db;
 border-radius:10px;
@@ -82,7 +82,10 @@ resize:vertical;
 font-family:monospace;
 line-height:1.6;
 }
-
+.result-box textarea{
+background:#f9fafb;
+border-color:#dbe3ea;
+}
 button{
 background:#dc2626;
 color:white;
@@ -160,15 +163,15 @@ Encode and decode Base64 text directly in your browser.
 <label for="inputText">Input Text</label>
 <textarea id="inputText" placeholder="Paste text or Base64 data here"></textarea>
 
-<button onclick="encodeBase64()">Encode</button>
-<button onclick="decodeBase64()">Decode</button>
+<button onclick="encodeBase64()">Base64 Encode</button>
+<button onclick="decodeBase64()">Base64 Decode</button>
 <button onclick="clearAll()">Clear</button>
 
 <div id="message" class="message"></div>
 
 <div id="resultBox" class="result-box">
 
-<label for="outputText">Output</label>
+<label id="outputLabel" for="outputText">Output</label>
 <textarea id="outputText" readonly></textarea>
 
 <button onclick="copyResult()">Copy Result</button>
@@ -185,10 +188,11 @@ Encode and decode Base64 text directly in your browser.
 
 const inputText=document.getElementById("inputText");
 const outputText=document.getElementById("outputText");
+const outputLabel=document.getElementById("outputLabel");
 const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
-
+let lastAction="result";
 function showToast(text){
 
 toast.textContent=text;
@@ -221,6 +225,8 @@ try{
 const encoded=btoa(unescape(encodeURIComponent(text)));
 
 outputText.value=encoded;
+lastAction="encoded";
+outputLabel.textContent="Encoded Output";
 resultBox.style.display="block";
 
 setMessage("Text encoded successfully.","success");
@@ -248,6 +254,8 @@ try{
 const decoded=decodeURIComponent(escape(atob(text)));
 
 outputText.value=decoded;
+lastAction="decoded";
+outputLabel.textContent="Decoded Output";
 resultBox.style.display="block";
 
 setMessage("Base64 decoded successfully.","success");
@@ -288,7 +296,7 @@ const blob=new Blob(
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-base64-result.txt";
+link.download="xavert-base64-" + lastAction + ".txt";
 
 document.body.appendChild(link);
 link.click();
@@ -303,7 +311,8 @@ function clearAll(){
 inputText.value="";
 outputText.value="";
 resultBox.style.display="none";
-
+outputLabel.textContent="Output";
+lastAction="result";
 message.textContent="";
 message.className="message";
 
