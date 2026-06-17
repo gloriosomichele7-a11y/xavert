@@ -189,6 +189,11 @@ Clear
 <div id="resultBox" class="result-box">
 
 <label id="outputLabel" for="outputText">Output</label>
+
+<div id="outputInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;">
+Characters: 0
+</div>
+
 <textarea id="outputText" readonly></textarea>
 
 <button onclick="copyResult()">Copy Result</button>
@@ -206,6 +211,7 @@ Clear
 const inputText=document.getElementById("inputText");
 const outputText=document.getElementById("outputText");
 const outputLabel=document.getElementById("outputLabel");
+const outputInfo=document.getElementById("outputInfo");
 const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
@@ -242,6 +248,7 @@ try{
 const encoded=btoa(unescape(encodeURIComponent(text)));
 
 outputText.value=encoded;
+outputInfo.textContent="Characters: " + encoded.length;
 lastAction="encoded";
 outputLabel.textContent="Encoded Output";
 resultBox.style.display="block";
@@ -277,6 +284,7 @@ try{
 const decoded=decodeURIComponent(escape(atob(text)));
 
 outputText.value=decoded;
+outputInfo.textContent="Characters: " + decoded.length;
 lastAction="decoded";
 outputLabel.textContent="Decoded Output";
 resultBox.style.display="block";
@@ -336,6 +344,7 @@ outputText.value="";
 resultBox.style.display="none";
 outputLabel.textContent="Output";
 lastAction="result";
+outputInfo.textContent="Characters: 0";
 message.textContent="";
 message.className="message";
 
