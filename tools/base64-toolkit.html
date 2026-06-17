@@ -234,10 +234,16 @@ setMessage("Text encoded successfully.","success");
 }catch(error){
 
 console.error(error);
-setMessage("Unable to encode text.","error");
+
+outputText.value="";
+resultBox.style.display="none";
+
+setMessage(
+"Invalid Base64 data. Please check the input and try again.",
+"error"
+);
 
 }
-
 }
 
 function decodeBase64(){
