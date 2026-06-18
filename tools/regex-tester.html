@@ -458,7 +458,47 @@ return item.replace(/^\d+\.\s/,"");
 navigator.clipboard.writeText(cleanItems);
 showToast("Matches copied.");
 }
+function downloadMatches(){
 
+const items = Array.from(
+matches.querySelectorAll("li")
+).map(function(li){
+return li.textContent;
+});
+
+if(
+items.length===0 ||
+items[0].includes("No matches")
+){
+showToast("Nothing to download.");
+return;
+}
+
+const content = items.map(function(item){
+return item.replace(/^\d+\.\s/,"");
+}).join("\n");
+
+const blob = new Blob(
+[content],
+{type:"text/plain;charset=utf-8"}
+);
+
+const url = URL.createObjectURL(blob);
+
+const a = document.createElement("a");
+
+a.href = url;
+a.download = "xavert-regex-matches.txt";
+
+document.body.appendChild(a);
+a.click();
+document.body.removeChild(a);
+
+URL.revokeObjectURL(url);
+
+showToast("Download started.");
+
+}
 function clearAll(){
 pattern.value="";
 inputText.value="";
