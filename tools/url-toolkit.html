@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | URL Toolkit</title>
+
+<meta name="description"
+content="Encode, decode, analyze and build URLs directly in your browser.">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+textarea,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:180px;
+resize:vertical;
+line-height:1.6;
+}
+
+textarea:focus,
+input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.result-box{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+}
+
+.result-box textarea{
+background:#ffffff;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{
+color:#dc2626;
+}
+
+.success{
+color:#047857;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">
+← Back to Home
+</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>URL Toolkit</h1>
+
+<p class="subtitle">
+Encode, decode, analyze and build URLs directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="inputUrl">
+Input URL or Text
+</label>
+
+<textarea
+id="inputUrl"
+placeholder="Paste URL or text here">
+</textarea>
+
+<div class="button-group">
+
+<button onclick="encodeURL()">
+URL Encode
+</button>
+
+<button onclick="decodeURL()">
+URL Decode
+</button>
+
+<button onclick="parseURL()">
+Parse URL
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
+
+<div id="message" class="message"></div>
+
+<div id="resultBox" class="result-box">
+
+<label for="outputText">
+Result
+</label>
+
+<textarea
+id="outputText"
+readonly>
+</textarea>
+
+<div class="button-group">
+
+<button onclick="copyResult()">
+Copy Result
+</button>
+
+<button onclick="downloadResult()">
+Download Result
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div class="card">
+
+<h2 style="margin-bottom:18px;">
+UTM Builder
+</h2>
+
+<label>
+Website URL
+</label>
+
+<input id="utmUrl" placeholder="https://example.com">
+
+<label>
+Source
+</label>
+
+<input id="utmSource" placeholder="google">
+
+<label>
+Medium
+</label>
+
+<input id="utmMedium" placeholder="cpc">
+
+<label>
+Campaign
+</label>
+
+<input id="utmCampaign" placeholder="summer-sale">
+
+<div class="button-group">
+
+<button onclick="buildUTM()">
+Build UTM URL
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const inputUrl=document.getElementById("inputUrl");
+const outputText=document.getElementById("outputText");
+const resultBox=document.getElementById("resultBox");
+const message=document.getElementById("message");
+const toast=document.getElementById("toast");
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function showResult(value){
+
+outputText.value=value;
+resultBox.style.display="block";
+
+}
+
+function encodeURL(){
+
+const value=inputUrl.value;
+
+if(!value){
+setMessage("Please enter text to encode.","error");
+return;
+}
+
+try{
+
+showResult(
+encodeURIComponent(value)
+);
+
+setMessage(
+"URL encoded successfully.",
+"success"
+);
+
+}catch(error){
+
+setMessage(
+"Unable to encode.",
+"error"
+);
+
+}
+
+}
+
+function decodeURL(){
+
+const value=inputUrl.value;
+
+if(!value){
+setMessage("Please enter text to decode.","error");
+return;
+}
+
+try{
+
+showResult(
+decodeURIComponent(value)
+);
+
+setMessage(
+"URL decoded successfully.",
+"success"
+);
+
+}catch(error){
+
+setMessage(
+"Invalid encoded URL.",
+"error"
+);
+
+}
+
+}
+
+function parseURL(){
+
+const value=inputUrl.value.trim();
+
+if(!value){
+setMessage("Please enter a URL.","error");
+return;
+}
+
+try{
+
+const url=new URL(value);
+
+let result="";
+
+result += "Protocol: " + url.protocol + "\n";
+result += "Host: " + url.host + "\n";
+result += "Hostname: " + url.hostname + "\n";
+result += "Pathname: " + url.pathname + "\n";
+result += "Hash: " + url.hash + "\n";
+result += "Search: " + url.search + "\n";
+
+if(url.searchParams.toString()){
+
+result += "\nParameters\n";
+result += "------------------\n";
+
+for(const [key,val] of url.searchParams){
+
+result += key + " = " + val + "\n";
+
+}
+
+}
+
+showResult(result);
+
+setMessage(
+"URL parsed successfully.",
+"success"
+);
+
+}catch(error){
+
+setMessage(
+"Invalid URL.",
+"error"
+);
+
+}
+
+}
+
+function buildUTM(){
+
+const base=document
+.getElementById("utmUrl")
+.value
+.trim();
+
+if(!base){
+showToast("Website URL required.");
+return;
+}
+
+try{
+
+const url=new URL(base);
+
+const source=
+document.getElementById("utmSource").value.trim();
+
+const medium=
+document.getElementById("utmMedium").value.trim();
+
+const campaign=
+document.getElementById("utmCampaign").value.trim();
+
+if(source){
+url.searchParams.set(
+"utm_source",
+source
+);
+}
+
+if(medium){
+url.searchParams.set(
+"utm_medium",
+medium
+);
+}
+
+if(campaign){
+url.searchParams.set(
+"utm_campaign",
+campaign
+);
+}
+
+showResult(url.toString());
+
+resultBox.style.display="block";
+
+setMessage(
+"UTM URL created successfully.",
+"success"
+);
+
+}catch(error){
+
+setMessage(
+"Invalid website URL.",
+"error"
+);
+
+}
+
+}
+
+function copyResult(){
+
+if(!outputText.value){
+showToast("Nothing to copy.");
+return;
+}
+
+navigator.clipboard.writeText(
+outputText.value
+);
+
+showToast("Copied.");
+
+}
+
+function downloadResult(){
+
+if(!outputText.value){
+showToast("Nothing to download.");
+return;
+}
+
+const blob=new Blob(
+[outputText.value],
+{
+type:"text/plain;charset=utf-8"
+}
+);
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("a");
+
+link.href=url;
+link.download="xavert-url-toolkit.txt";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+URL.revokeObjectURL(url);
+
+showToast("Download started.");
+
+}
+
+function clearAll(){
+
+inputUrl.value="";
+outputText.value="";
+
+resultBox.style.display="none";
+
+message.textContent="";
+message.className="message";
+
+}
+
+</script>
+
+</body>
+</html>
