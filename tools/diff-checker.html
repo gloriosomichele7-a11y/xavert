@@ -350,12 +350,8 @@ const lineA=linesA[i] || "";
 const lineB=linesB[i] || "";
 
 if(lineA===lineB){
-
-html+=`
-<div class="same">
-Line ${i+1}: ${escapeHtml(lineA)}
-</div>
-`;
+continue;
+}
 
 }else{
 
@@ -399,7 +395,15 @@ stats.innerHTML=
 " | Lines B: " + linesB.length +
 "<br>" +
 "Differences: " + differences;
+if(differences===0){
 
+html=`
+<div class="same">
+No differences found. The texts are identical.
+</div>
+`;
+
+}
 result.innerHTML=html;
 resultBox.style.display="block";
 
