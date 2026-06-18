@@ -1,1 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Regex Tester</title>
 
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:900px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+input[type="text"],
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+font-family:monospace;
+line-height:1.6;
+}
+
+textarea{
+min-height:220px;
+resize:vertical;
+}
+
+input[type="text"]:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.flags{
+display:flex;
+gap:14px;
+flex-wrap:wrap;
+margin-top:10px;
+}
+
+.flags label{
+display:flex;
+align-items:center;
+gap:7px;
+margin:0;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.secondary{
+background:#ffffff;
+color:#111827;
+border:1px solid #d1d5db;
+}
+
+.secondary:hover{
+background:#ffffff;
+color:#dc2626;
+border-color:#dc2626;
+}
+
+.result-box{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+}
+
+.result-title{
+font-weight:700;
+margin-bottom:10px;
+}
+
+.preview{
+background:white;
+border:1px solid #dbe3ea;
+border-radius:10px;
+padding:14px;
+min-height:140px;
+white-space:pre-wrap;
+word-break:break-word;
+font-family:monospace;
+line-height:1.6;
+}
+
+mark{
+background:rgba(220,38,38,.18);
+color:#991b1b;
+padding:2px 3px;
+border-radius:4px;
+}
+
+.match-list{
+list-style:none;
+margin-top:8px;
+}
+
+.match-list li{
+padding:9px 0;
+border-bottom:1px solid #e5e7eb;
+font-family:monospace;
+font-size:14px;
+word-break:break-word;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+.flags{gap:10px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo.png" alt="XAVERT">
+</div>
+
+<h1>Regex Tester</h1>
+
+<p class="subtitle">
+Test regular expressions, highlight matches and copy results directly in your browser.
+</p>
+
+<div class="card">
+
+<label for="pattern">Regular Expression</label>
+<input id="pattern" type="text" placeholder="Example: \d+">
+
+<label>Flags</label>
+<div class="flags">
+<label><input type="checkbox" id="flagG" checked> Global</label>
+<label><input type="checkbox" id="flagI"> Ignore Case</label>
+<label><input type="checkbox" id="flagM"> Multiline</label>
+</div>
+
+<label for="inputText">Test Text</label>
+<textarea id="inputText" placeholder="Paste the text you want to test here"></textarea>
+
+<div class="button-group">
+<button onclick="testRegex()">Test Regex</button>
+<button onclick="copyMatches()">Copy Matches</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+<div id="message" class="message"></div>
+
+<div id="resultBox" class="result-box">
+
+<div class="result-title">Highlighted Preview</div>
+<div id="preview" class="preview">Matches will appear here.</div>
+
+<br>
+
+<div class="result-title">Matches</div>
+<div id="matchInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;">
+Matches: 0
+</div>
+
+<ul id="matches" class="match-list">
+<li>No matches yet.</li>
+</ul>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const pattern=document.getElementById("pattern");
+const inputText=document.getElementById("inputText");
+const resultBox=document.getElementById("resultBox");
+const preview=document.getElementById("preview");
+const matches=document.getElementById("matches");
+const matchInfo=document.getElementById("matchInfo");
+const message=document.getElementById("message");
+const toast=document.getElementById("toast");
+
+function showToast(text){
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+}
+
+function setMessage(text,type){
+message.textContent=text;
+message.className="message " + type;
+}
+
+function escapeHtml(value){
+return value
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+}
+
+function getFlags(){
+let flags="";
+
+if(document.getElementById("flagG").checked){
+flags+="g";
+}
+
+if(document.getElementById("flagI").checked){
+flags+="i";
+}
+
+if(document.getElementById("flagM").checked){
+flags+="m";
+}
+
+return flags;
+}
+
+function testRegex(){
+const regexValue=pattern.value;
+const textValue=inputText.value;
+const flags=getFlags();
+
+matches.innerHTML="";
+preview.innerHTML="";
+
+if(!regexValue){
+resultBox.style.display="none";
+setMessage("Please enter a regular expression.","error");
+return;
+}
+
+if(!textValue){
+resultBox.style.display="none";
+setMessage("Please enter text to test.","error");
+return;
+}
+
+try{
+const regex=new RegExp(regexValue,flags);
+let found=[];
+let highlighted="";
+let lastIndex=0;
+
+if(flags.includes("g")){
+let match;
+
+while((match=regex.exec(textValue))!==null){
+found.push(match[0]);
+
+highlighted+=escapeHtml(textValue.slice(lastIndex,match.index));
+highlighted+="<mark>" + escapeHtml(match[0]) + "</mark>";
+
+lastIndex=match.index + match[0].length;
+
+if(match[0]===""){
+regex.lastIndex++;
+}
+}
+
+highlighted+=escapeHtml(textValue.slice(lastIndex));
+}else{
+const match=regex.exec(textValue);
+
+if(match){
+found.push(match[0]);
+
+highlighted+=escapeHtml(textValue.slice(0,match.index));
+highlighted+="<mark>" + escapeHtml(match[0]) + "</mark>";
+highlighted+=escapeHtml(textValue.slice(match.index + match[0].length));
+}else{
+highlighted=escapeHtml(textValue);
+}
+}
+
+preview.innerHTML=highlighted || escapeHtml(textValue);
+resultBox.style.display="block";
+matchInfo.textContent="Matches: " + found.length;
+
+if(found.length===0){
+matches.innerHTML="<li>No matches found.</li>";
+setMessage("No matches found.","error");
+return;
+}
+
+found.forEach(function(item,index){
+const li=document.createElement("li");
+li.textContent=(index + 1) + ". " + item;
+matches.appendChild(li);
+});
+
+setMessage("Regex tested successfully.","success");
+
+}catch(error){
+resultBox.style.display="none";
+setMessage("Invalid regular expression: " + error.message,"error");
+}
+}
+
+function copyMatches(){
+const items=Array.from(matches.querySelectorAll("li")).map(function(li){
+return li.textContent;
+});
+
+if(
+items.length===0 ||
+items[0].includes("No matches")
+){
+showToast("Nothing to copy.");
+return;
+}
+
+const cleanItems=items.map(function(item){
+return item.replace(/^\d+\.\s/,"");
+}).join("\n");
+
+navigator.clipboard.writeText(cleanItems);
+showToast("Matches copied.");
+}
+
+function clearAll(){
+pattern.value="";
+inputText.value="";
+preview.textContent="Matches will appear here.";
+matches.innerHTML="<li>No matches yet.</li>";
+matchInfo.textContent="Matches: 0";
+resultBox.style.display="none";
+message.textContent="";
+message.className="message";
+}
+
+pattern.addEventListener("input",testRegex);
+inputText.addEventListener("input",testRegex);
+
+document.querySelectorAll(".flags input").forEach(function(flag){
+flag.addEventListener("change",testRegex);
+});
+</script>
+
+</body>
+</html>
