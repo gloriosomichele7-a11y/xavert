@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Regex Tester</title>
-
+<title>XAVERT | Regex Tester & Regular Expression Tool</title>
+<meta name="description" content="Test regular expressions online. Highlight matches, validate patterns and analyze text directly in your browser.">
 <style>
 *{
 margin:0;
@@ -244,7 +244,25 @@ Test regular expressions, highlight matches and copy results directly in your br
 
 <label for="pattern">Regular Expression</label>
 <input id="pattern" type="text" placeholder="Example: \d+">
+<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
 
+<button type="button" onclick="loadRegex('\\d+')">
+Numbers
+</button>
+
+<button type="button" onclick="loadRegex('[A-Za-z]+')">
+Words
+</button>
+
+<button type="button" onclick="loadRegex('https?:\\/\\/[^\\s]+')">
+URLs
+</button>
+
+<button type="button" onclick="loadRegex('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}')">
+Email
+</button>
+
+</div>
 <label>Flags</label>
 <div class="flags">
 <label><input type="checkbox" id="flagG" checked> Global</label>
@@ -258,6 +276,7 @@ Test regular expressions, highlight matches and copy results directly in your br
 <div class="button-group">
 <button onclick="testRegex()">Test Regex</button>
 <button onclick="copyMatches()">Copy Matches</button>
+<button onclick="downloadMatches()">Download Matches</button>
 <button onclick="clearAll()">Clear</button>
 </div>
 
@@ -450,7 +469,10 @@ resultBox.style.display="none";
 message.textContent="";
 message.className="message";
 }
-
+function loadRegex(value){
+pattern.value = value;
+testRegex();
+}
 pattern.addEventListener("input",testRegex);
 inputText.addEventListener("input",testRegex);
 
