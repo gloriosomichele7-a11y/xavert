@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Diff Checker</title>
+
+<meta name="description"
+content="Compare two texts online and instantly identify differences directly in your browser.">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+textarea{
+width:100%;
+min-height:260px;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+resize:vertical;
+line-height:1.6;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.result-box{
+display:none;
+margin-top:20px;
+padding:20px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+}
+
+.stats{
+margin-bottom:16px;
+font-size:14px;
+color:#6b7280;
+line-height:1.6;
+}
+
+.diff-line{
+background:#fee2e2;
+border-left:4px solid #dc2626;
+padding:12px;
+border-radius:8px;
+margin-bottom:12px;
+}
+
+.line-number{
+font-weight:700;
+color:#991b1b;
+margin-bottom:8px;
+}
+
+.line-label{
+font-weight:700;
+margin-top:6px;
+}
+
+.same{
+background:#ecfdf5;
+border-left:4px solid #10b981;
+padding:10px;
+border-radius:8px;
+margin-bottom:10px;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{
+color:#dc2626;
+}
+
+.success{
+color:#047857;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+.grid{
+grid-template-columns:1fr;
+}
+
+button{
+width:100%;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>Diff Checker</h1>
+
+<p class="subtitle">
+Compare two texts and instantly identify differences line by line.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+<label for="textA">Text A</label>
+<textarea id="textA" placeholder="Paste first text here"></textarea>
+</div>
+
+<div>
+<label for="textB">Text B</label>
+<textarea id="textB" placeholder="Paste second text here"></textarea>
+</div>
+
+</div>
+
+<div class="button-group">
+
+<button onclick="compareTexts()">
+Compare
+</button>
+
+<button onclick="copyResult()">
+Copy Result
+</button>
+
+<button onclick="downloadResult()">
+Download Result
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
+
+<div id="message" class="message"></div>
+
+<div id="resultBox" class="result-box">
+
+<div id="stats" class="stats">
+Characters A: 0 | Characters B: 0
+</div>
+
+<div id="result"></div>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast"></div>
+
+<script>
+const textA=document.getElementById("textA");
+const textB=document.getElementById("textB");
+const result=document.getElementById("result");
+const resultBox=document.getElementById("resultBox");
+const stats=document.getElementById("stats");
+const message=document.getElementById("message");
+const toast=document.getElementById("toast");
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function escapeHtml(value){
+
+return value
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#039;");
+
+}
+
+function compareTexts(){
+
+const a=textA.value;
+const b=textB.value;
+
+if(!a && !b){
+setMessage("Please enter text to compare.","error");
+return;
+}
+
+const linesA=a.split("\n");
+const linesB=b.split("\n");
+
+const maxLines=Math.max(
+linesA.length,
+linesB.length
+);
+
+let html="";
+let differences=0;
+
+for(let i=0;i<maxLines;i++){
+
+const lineA=linesA[i] || "";
+const lineB=linesB[i] || "";
+
+if(lineA===lineB){
+
+html+=`
+<div class="same">
+Line ${i+1}: ${escapeHtml(lineA)}
+</div>
+`;
+
+}else{
+
+differences++;
+
+html+=`
+<div class="diff-line">
+
+<div class="line-number">
+Line ${i+1}
+</div>
+
+<div class="line-label">
+Text A
+</div>
+
+<div>
+${escapeHtml(lineA)}
+</div>
+
+<div class="line-label">
+Text B
+</div>
+
+<div>
+${escapeHtml(lineB)}
+</div>
+
+</div>
+`;
+
+}
+
+}
+
+stats.innerHTML=
+"Characters A: " + a.length +
+" | Characters B: " + b.length +
+"<br>" +
+"Lines A: " + linesA.length +
+" | Lines B: " + linesB.length +
+"<br>" +
+"Differences: " + differences;
+
+result.innerHTML=html;
+resultBox.style.display="block";
+
+if(differences===0){
+setMessage("Texts are identical.","success");
+}else{
+setMessage(
+differences + " difference(s) found.",
+"success"
+);
+}
+
+}
+
+function copyResult(){
+
+if(!result.innerText.trim()){
+showToast("Nothing to copy.");
+return;
+}
+
+navigator.clipboard.writeText(
+result.innerText
+);
+
+showToast("Copied.");
+
+}
+
+function downloadResult(){
+
+if(!result.innerText.trim()){
+showToast("Nothing to download.");
+return;
+}
+
+const blob=new Blob(
+[result.innerText],
+{
+type:"text/plain;charset=utf-8"
+}
+);
+
+const url=URL.createObjectURL(blob);
+
+const link=document.createElement("a");
+
+link.href=url;
+link.download="xavert-diff-result.txt";
+
+document.body.appendChild(link);
+
+link.click();
+
+document.body.removeChild(link);
+
+URL.revokeObjectURL(url);
+
+showToast("Download started.");
+
+}
+
+function clearAll(){
+
+textA.value="";
+textB.value="";
+
+result.innerHTML="";
+
+resultBox.style.display="none";
+
+stats.innerHTML=
+"Characters A: 0 | Characters B: 0";
+
+message.textContent="";
+message.className="message";
+
+}
+
+</script>
+
+</body>
+</html>
