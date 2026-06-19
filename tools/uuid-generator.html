@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | UUID Generator</title>
 
+<meta name="description" content="Generate UUID v4 and UUID v7 identifiers online directly in your browser. Create, copy and download unique IDs.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -110,7 +114,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .result-box{
 display:none;
 margin-top:20px;
@@ -159,7 +168,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>UUID Generator</h1>
@@ -184,6 +193,8 @@ max="10000"
 value="1"
 >
 
+<div class="button-group">
+
 <button onclick="generateUUIDs()">
 Generate UUIDs
 </button>
@@ -196,6 +207,8 @@ Generate New UUID
 Clear
 </button>
 
+</div>
+
 <div id="message" class="message"></div>
 
 <div id="resultBox" class="result-box">
@@ -204,6 +217,8 @@ Clear
 
 <textarea id="uuidOutput" readonly></textarea>
 
+<div class="button-group">
+
 <button onclick="copyAllUUIDs()">
 Copy All
 </button>
@@ -211,12 +226,13 @@ Copy All
 <button onclick="downloadUUIDs()">
 Download
 </button>
+
 <button onclick="downloadUUIDsCSV()">
 Download CSV
 </button>
-</div>
 
 </div>
+
 
 </div>
 
