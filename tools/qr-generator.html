@@ -399,7 +399,10 @@ detectedType.textContent="";
 document.getElementById("qrcode").innerHTML="";
 downloadButtons.style.display="none";
 qrStats.style.display="none";
-qrStats.innerHTML="QR Type: -<br>Characters: 0<br>Error Correction: H";
+qrStats.innerHTML="QR Type: -<br>Characters: 0<br>Size: 350×350 px<br>Error Correction: H";
+downloadCount.style.display="none";
+downloadCount.textContent="Downloads: 0";
+totalDownloads=0;
 currentQRData="";
 }
 function clearQRTool(){
@@ -701,7 +704,11 @@ downloadButtons.style.display="block";
 
 function downloadPNG(){
 const canvas=document.querySelector("#qrcode canvas");
-if(!canvas) return;
+
+if(!canvas){
+showToast("Generate a QR code first.");
+return;
+}
 
 const link=document.createElement("a");
 link.download="QR-" + getFileName() + ".png";
@@ -713,7 +720,10 @@ registerDownload();
 }
 
 function downloadPNGHD(){
-if(!currentQRData) return;
+if(!currentQRData){
+showToast("Generate a QR code first.");
+return;
+}
 
 QRCode.toCanvas(currentQRData,{width:2000,errorCorrectionLevel:"H"},function(error,canvas){
 if(error){
