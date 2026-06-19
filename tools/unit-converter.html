@@ -140,6 +140,19 @@ padding:12px 20px;
 border-radius:10px;
 display:none;
 z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
 }
 
 @media(max-width:768px){
@@ -224,6 +237,14 @@ Clear
 </div>
 
 <div id="toast"></div>
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
 <script>
 const category=document.getElementById("category");
 const favoriteConversion=document.getElementById("favoriteConversion");
@@ -316,7 +337,23 @@ convertUnits();
 }
 
 });
+fromUnit.addEventListener("change",function(){
+
+if(inputValue.value){
+convertUnits();
+}
+
+});
+
+toUnit.addEventListener("change",function(){
+
+if(inputValue.value){
+convertUnits();
+}
+
+});
 document.addEventListener("keydown",function(e){
+
 if(e.ctrlKey && e.key==="Enter"){
 convertUnits();
 }
@@ -380,6 +417,19 @@ return (index+1) + ". " + item;
 return historyHtml;
 
 }
+function showToast(message,type="info"){
+
+toast.textContent=message;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
+
 function copyResult(){
 
 if(!lastResultText){
@@ -388,12 +438,7 @@ return;
 
 navigator.clipboard.writeText(lastResultText);
 
-toast.textContent="Result copied.";
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-},2200);
+showToast("Result copied.","success");
 
 }
 function setMessage(text,type){
@@ -412,6 +457,10 @@ function swapUnits(){
 const temp=fromUnit.value;
 fromUnit.value=toUnit.value;
 toUnit.value=temp;
+
+if(inputValue.value){
+convertUnits();
+}
 
 }
 function clearConverter(){
