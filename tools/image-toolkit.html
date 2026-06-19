@@ -752,6 +752,7 @@ preview.innerHTML='<img src="' + imageUrl + '" alt="Processed image">';
 downloadArea.style.display="block";
 
 setMessage("Image processed successfully.","success");
+showToast("Image processed successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -760,7 +761,10 @@ setMessage("Unable to process image.","error");
 }
 
 function downloadProcessed(){
-if(!processedBlob) return;
+if(!processedBlob){
+showToast("Process an image first.","error");
+return;
+}
 
 const link=document.createElement("a");
 link.href=URL.createObjectURL(processedBlob);
