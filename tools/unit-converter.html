@@ -236,7 +236,6 @@ Clear
 
 </div>
 
-<div id="toast"></div>
 <div style="
 text-align:center;
 color:#6b7280;
@@ -245,6 +244,9 @@ margin-top:28px;
 ">
 Powered by XAVERT
 </div>
+
+<div id="toast"></div>
+
 <script>
 const category=document.getElementById("category");
 const favoriteConversion=document.getElementById("favoriteConversion");
@@ -468,7 +470,7 @@ function clearConverter(){
 inputValue.value="";
 
 category.value="length";
-
+favoriteConversion.value="";
 populateUnits();
 
 fromUnit.selectedIndex=0;
