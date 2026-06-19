@@ -190,6 +190,10 @@ background:#047857 !important;
 background:#dc2626 !important;
 }
 
+.toast-warning{
+background:#d97706 !important;
+}
+
 .toast-info{
 background:#111827 !important;
 }
@@ -845,7 +849,7 @@ if(inputId==="extractFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
 document.getElementById("extractCount").textContent=
-files[0].name + " • Actual PDF pages: " + count;
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
 });
 }else{
 document.getElementById("extractCount").textContent="No file selected";
@@ -855,7 +859,7 @@ if(inputId==="deleteFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
 document.getElementById("deleteCount").textContent=
-files[0].name + " • Actual PDF pages: " + count;
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
 });
 }else{
 document.getElementById("deleteCount").textContent="No file selected";
@@ -891,7 +895,7 @@ if(inputId==="signPdfFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
 document.getElementById("signPdfCount").textContent=
-files[0].name + " • Actual PDF pages: " + count;
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
 });
 }else{
 document.getElementById("signPdfCount").textContent="No PDF selected";
@@ -1022,7 +1026,7 @@ const blob=new Blob([bytes],{type:"application/pdf"});
 
 downloadBlob(blob,"XAVERT-Merged-PDF.pdf");
 setMessage("mergeMessage","PDF files merged successfully.","success");
-showToast("PDF merged successfully.");
+showToast("PDF merged successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -1103,7 +1107,7 @@ const zipBlob=await zip.generateAsync({type:"blob"});
 downloadBlob(zipBlob,"XAVERT-Split-PDF.zip");
 
 setMessage("splitMessage","PDF pages extracted successfully.","success");
-showToast("PDF split completed.");
+showToast("PDF split completed.","success");
 
 }catch(error){
 console.error(error);
@@ -1153,7 +1157,7 @@ pdf.addImage(dataUrl,file.type==="image/png" ? "PNG" : "JPEG",x,y,imgWidth,imgHe
 pdf.save("XAVERT-Images-to-PDF.pdf");
 
 setMessage("imageMessage","Images converted to PDF successfully.","success");
-showToast("Images converted to PDF.");
+showToast("Images converted to PDF.","success");
 
 }catch(error){
 console.error(error);
@@ -1660,8 +1664,11 @@ setMessage(
 return;
 }
 if(pageOrder.length!==pageCount){
-showToast("Warning: not all pages are included.");
-} 
+showToast(
+"Warning: not all pages are included.",
+"warning"
+);
+}
 if(!pageOrder.length){
 setMessage("reorderMessage","Invalid page order.","error");
 return;
