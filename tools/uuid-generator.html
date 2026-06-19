@@ -85,7 +85,7 @@ font-size:15px;
 background:white;
 }
 #quantity{
-width:120px;
+max-width:140px;
 }
 #uuidVersion{
 width:160px;
@@ -98,7 +98,13 @@ font-family:monospace;
 font-size:14px;
 line-height:1.7;
 }
-
+input:focus,
+select:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 button{
 background:#dc2626;
 color:white;
@@ -233,6 +239,7 @@ Download CSV
 
 </div>
 
+</div>
 
 </div>
 
@@ -389,6 +396,8 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
+showToast("Download started.");
+
 }
 function downloadUUIDsCSV(){
 
@@ -421,6 +430,8 @@ link.click();
 document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
+
+showToast("Download started.");
 
 }
 
