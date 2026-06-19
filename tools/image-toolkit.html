@@ -83,7 +83,12 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 button{
 background:#dc2626;
 color:white;
@@ -99,7 +104,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .drop-zone{
 border:2px dashed #d1d5db;
 border-radius:16px;
@@ -280,15 +290,32 @@ Compressed images are exported without EXIF metadata.
 <label for="watermarkSize">Watermark Size</label>
 <input type="number" id="watermarkSize" value="40" min="10" max="120">
 </div>
-<button onclick="processImage()">Process Image</button>
-<button onclick="clearImageTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="processImage()">
+Process Image
+</button>
+
+<button onclick="clearImageTool()">
+Clear
+</button>
+
+</div>
 
 <div id="message" class="message"></div>
 
 <div class="preview" id="preview"></div>
 
 <div class="download-area" id="downloadArea">
-<button onclick="downloadProcessed()">Download Result</button>
+
+<div class="button-group" style="justify-content:center;">
+
+<button onclick="downloadProcessed()">
+Download Result
+</button>
+
+</div>
+
 </div>
 
 </div>
