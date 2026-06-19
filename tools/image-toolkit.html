@@ -187,7 +187,17 @@ display:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -224,6 +234,8 @@ Resize, compress, convert, rotate and export images directly in your browser.
 <option value="rotate">Rotate Image</option>
 <option value="flip">Flip Image</option>
 <option value="watermark">Watermark Image</option>
+<option value="grayscale">Grayscale Image</option>
+<option value="metadata">Clean Metadata</option>
 <option value="pdf">Image to PDF</option>
 </select>
 
@@ -320,7 +332,14 @@ Download Result
 
 </div>
 </div>
-
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
 <div id="toast"></div>
 
 <script>
@@ -379,9 +398,24 @@ processImage();
 });
 
 function updateFileCount(){
+
 const file=imageFile.files[0];
-fileCount.textContent=file ? file.name : "No image selected";
+
+if(file){
+
+const size=(file.size/(1024*1024)).toFixed(2);
+
+fileCount.textContent=
+file.name + " • " + size + " MB";
+
+}else{
+
+fileCount.textContent="No image selected";
+
+}
+
 resetOutput();
+
 }
 
 function setMessage(text,type){
@@ -389,13 +423,17 @@ message.textContent=text;
 message.className="message " + type;
 }
 
-function showToast(text){
+function showToast(text,type="info"){
+
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
+
 }
 
 function resetOutput(){
@@ -637,6 +675,37 @@ ctx.fillText(watermarkText,x,y);
 outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
 processedFileName="XAVERT-Watermarked-" + getCleanName(file.name) + "." + getExtension(outputType);
 }
+if(tool==="grayscale"){
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+const data=imageData.data;
+
+for(let i=0;i<data.length;i+=4){
+const gray=(data[i]+data[i+1]+data[i+2])/3;
+data[i]=gray;
+data[i+1]=gray;
+data[i+2]=gray;
+}
+
+ctx.putImageData(imageData,0,0);
+
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Grayscale-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
+
+if(tool==="metadata"){
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+outputType=file.type==="image/png" ? "image/png" : "image/jpeg";
+processedFileName="XAVERT-Cleaned-" + getCleanName(file.name) + "." + getExtension(outputType);
+}
 if(tool==="pdf"){
 const { jsPDF } = window.jspdf;
 const pdf=new jsPDF();
@@ -671,7 +740,7 @@ pdf.addImage(dataUrl,"JPEG",x,y,imgWidth,imgHeight);
 pdf.save("XAVERT-Image-to-PDF.pdf");
 
 setMessage("Image converted to PDF successfully.","success");
-showToast("PDF downloaded.");
+showToast("PDF downloaded.","success");
 return;
 }
 
@@ -683,7 +752,6 @@ preview.innerHTML='<img src="' + imageUrl + '" alt="Processed image">';
 downloadArea.style.display="block";
 
 setMessage("Image processed successfully.","success");
-showToast("Image processed successfully.");
 
 }catch(error){
 console.error(error);
@@ -698,6 +766,8 @@ const link=document.createElement("a");
 link.href=URL.createObjectURL(processedBlob);
 link.download=processedFileName;
 link.click();
+
+showToast("Download started.","success");
 
 URL.revokeObjectURL(link.href);
 }
