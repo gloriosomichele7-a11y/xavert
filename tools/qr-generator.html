@@ -677,7 +677,11 @@ currentQRData=data;
 const qrDiv=document.getElementById("qrcode");
 qrDiv.innerHTML="";
 
-QRCode.toCanvas(data,{width:350,errorCorrectionLevel:"H"},function(error,canvas){
+QRCode.toCanvas(data,{
+width:350,
+margin:4,
+errorCorrectionLevel:"H"
+},function(error,canvas){
 if(error){
 console.error(error);
 setError("Unable to generate QR code. Please try again.");
@@ -725,7 +729,11 @@ showToast("Generate a QR code first.");
 return;
 }
 
-QRCode.toCanvas(currentQRData,{width:2000,errorCorrectionLevel:"H"},function(error,canvas){
+QRCode.toCanvas(currentQRData,{
+width:2000,
+margin:4,
+errorCorrectionLevel:"H"
+},function(error,canvas){
 if(error){
 console.error(error);
 return;
@@ -746,7 +754,12 @@ showToast("Generate a QR code first.");
 return;
 }
 
-QRCode.toString(currentQRData,{type:"svg",width:350,errorCorrectionLevel:"H"},function(error,svg){
+QRCode.toString(currentQRData,{
+type:"svg",
+width:350,
+margin:4,
+errorCorrectionLevel:"H"
+},function(error,svg){
 if(error){
 console.error(error);
 return;
@@ -775,7 +788,11 @@ return;
 const qrSize=size==="hd" ? 3000 : 1600;
 const fileSuffix=size==="hd" ? "-HD" : "";
 
-QRCode.toCanvas(currentQRData,{width:qrSize,errorCorrectionLevel:"H"},function(error,canvas){
+QRCode.toCanvas(currentQRData,{
+width:qrSize,
+margin:4,
+errorCorrectionLevel:"H"
+},function(error,canvas){
 if(error){
 console.error(error);
 return;
