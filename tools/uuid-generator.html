@@ -225,6 +225,9 @@ Clear
 <div id="uuidCount" style="margin-top:8px;color:#6b7280;font-size:13px;">
 UUIDs: 0
 </div>
+<div id="uuidVersionInfo" style="color:#6b7280;font-size:13px;">
+Version: -
+</div>
 <div class="button-group">
 
 <button onclick="copyAllUUIDs()">
@@ -348,6 +351,8 @@ uuids.push(generateUUID());
 uuidOutput.value=uuids.join("\n");
 document.getElementById("uuidCount").textContent =
 "UUIDs: " + uuids.length;
+document.getElementById("uuidVersionInfo").textContent =
+"Version: " + versionLabel;
 resultBox.style.display="block";
 
 if(quantity===1){
@@ -484,7 +489,8 @@ uuidOutput.value="";
 
 document.getElementById("uuidCount").textContent =
 "UUIDs: 0";
-
+document.getElementById("uuidVersionInfo").textContent =
+"Version: -";
 resultBox.style.display="none";
 
 message.textContent="";
