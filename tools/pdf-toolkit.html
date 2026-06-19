@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | PDF Toolkit</title>
 
+<meta name="description" content="Merge, split, compress, rotate, convert, watermark, sign and manage PDF files directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -81,7 +85,13 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 button{
 background:#dc2626;
 color:white;
@@ -101,7 +111,12 @@ background:#b91c1c;
 .tool-section{
 display:none;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .tool-section.active{
 display:block;
 }
@@ -167,7 +182,23 @@ display:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
+.tool-footer{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+}
 @media(max-width:768px){
 body{
 padding:24px 14px;
@@ -195,7 +226,7 @@ width:100%;
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>PDF Toolkit</h1>
@@ -233,8 +264,18 @@ Click or drag PDF files here
 <input type="file" id="mergeFiles" accept="application/pdf" multiple hidden>
 <div id="mergeCount" class="file-count">No files selected</div>
 
-<button onclick="mergePDF()">Merge PDF</button>
-<button onclick="clearFileTool('mergeFiles','mergeCount','mergeMessage','No files selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="mergePDF()">
+Merge PDF
+</button>
+
+<button onclick="clearFileTool('mergeFiles','mergeCount','mergeMessage','No files selected')">
+Clear
+</button>
+
+</div>
+
 <div id="mergeMessage" class="message"></div>
 </div>
 
@@ -259,8 +300,18 @@ Click or drag one PDF file here
 <label for="splitPages">Pages</label>
 <input type="text" id="splitPages" placeholder="Example: 1-3 or 1,3,5">
 
-<button onclick="splitPDF()">Split PDF</button>
-<button onclick="clearFileTextTool('splitFile','splitCount','splitPages','splitMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="splitPDF()">
+Split PDF
+</button>
+
+<button onclick="clearFileTextTool('splitFile','splitCount','splitPages','splitMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="splitMessage" class="message"></div>
 </div>
 
@@ -275,8 +326,18 @@ Click or drag image files here
 <input type="file" id="imageFiles" accept="image/jpeg,image/png" multiple hidden>
 <div id="imageCount" class="file-count">No files selected</div>
 
-<button onclick="imagesToPDF()">Convert to PDF</button>
-<button onclick="clearFileTool('imageFiles','imageCount','imageMessage','No files selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="imagesToPDF()">
+Convert to PDF
+</button>
+
+<button onclick="clearFileTool('imageFiles','imageCount','imageMessage','No files selected')">
+Clear
+</button>
+
+</div>
+
 <div id="imageMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="pdfjpgTool">
@@ -290,8 +351,18 @@ Click or drag one PDF file here
 <input type="file" id="pdfJpgFile" accept="application/pdf" hidden>
 <div id="pdfJpgCount" class="file-count">No file selected</div>
 
-<button onclick="pdfToJPG()">Convert to JPG</button>
-<button onclick="clearFileTool('pdfJpgFile','pdfJpgCount','pdfJpgMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="pdfToJPG()">
+Convert to JPG
+</button>
+
+<button onclick="clearFileTool('pdfJpgFile','pdfJpgCount','pdfJpgMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="pdfJpgMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="rotateTool">
@@ -312,8 +383,18 @@ Click or drag one PDF file here
 <option value="270">270°</option>
 </select>
 
-<button onclick="rotatePDF()">Rotate PDF</button>
-<button onclick="clearRotateTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="rotatePDF()">
+Rotate PDF
+</button>
+
+<button onclick="clearRotateTool()">
+Clear
+</button>
+
+</div>
+
 <div id="rotateMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="extractTool">
@@ -337,8 +418,18 @@ Pages are counted from the actual PDF structure, not from page numbers printed i
 Tip: If you are working with invoices, contracts or utility bills, use Split PDF first to identify the actual page numbers.
 </p>
 
-<button onclick="extractPages()">Extract Pages</button>
-<button onclick="clearFileTextTool('extractFile','extractCount','extractPages','extractMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="extractPages()">
+Extract Pages
+</button>
+
+<button onclick="clearFileTextTool('extractFile','extractCount','extractPages','extractMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="extractMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="deleteTool">
@@ -362,8 +453,18 @@ Pages are counted from the actual PDF structure, not from page numbers printed i
 Tip: If you are working with invoices, contracts or utility bills, use Split PDF first to identify the actual page numbers.
 </p>
 
-<button onclick="deletePages()">Delete Pages</button>
-<button onclick="clearFileTextTool('deleteFile','deleteCount','deletePages','deleteMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="deletePages()">
+Delete Pages
+</button>
+
+<button onclick="clearFileTextTool('deleteFile','deleteCount','deletePages','deleteMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="deleteMessage" class="message"></div>
 </div>
 
@@ -378,8 +479,18 @@ Click or drag one PDF file here
 <input type="file" id="pngFile" accept="application/pdf" hidden>
 <div id="pngCount" class="file-count">No file selected</div>
 
-<button onclick="pdfToPNG()">Convert to PNG</button>
-<button onclick="clearFileTool('pngFile','pngCount','pngMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="pdfToPNG()">
+Convert to PNG
+</button>
+
+<button onclick="clearFileTool('pngFile','pngCount','pngMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="pngMessage" class="message"></div>
 </div>
 
@@ -398,8 +509,18 @@ Click or drag one PDF file here
 <input type="text" id="watermarkText" placeholder="Example: CONFIDENTIAL">
 <label for="watermarkSize">Watermark Size</label>
 <input type="number" id="watermarkSize" value="40" min="10" max="120">
-<button onclick="watermarkPDF()">Add Watermark</button>
-<button onclick="clearWatermarkTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="watermarkPDF()">
+Add Watermark
+</button>
+
+<button onclick="clearWatermarkTool()">
+Clear
+</button>
+
+</div>
+
 <div id="watermarkMessage" class="message"></div>
 </div>
  <div class="card tool-section" id="compressTool">
@@ -422,8 +543,18 @@ Click or drag one PDF file here
 <p class="info">
 This tool rebuilds the PDF using optimized images. Results are best with scanned documents, invoices and image-based PDFs. Text-only PDFs may not compress significantly.
 </p>
-<button onclick="compressPDF()">Compress PDF</button>
-<button onclick="clearCompressTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="compressPDF()">
+Compress PDF
+</button>
+
+<button onclick="clearCompressTool()">
+Clear
+</button>
+
+</div>
+
 <div id="compressMessage" class="message"></div>
 </div>
 
@@ -448,8 +579,18 @@ Click or drag one PDF file here
 Use actual PDF page numbers. Example: 3,1,2 creates a PDF with page 3 first, then page 1, then page 2.
 </p>
 
-<button onclick="reorderPages()">Reorder Pages</button>
-<button onclick="clearFileTextTool('reorderFile','reorderCount','reorderPages','reorderMessage','No file selected')">Clear</button>
+<div class="button-group">
+
+<button onclick="reorderPages()">
+Reorder Pages
+</button>
+
+<button onclick="clearFileTextTool('reorderFile','reorderCount','reorderPages','reorderMessage','No file selected')">
+Clear
+</button>
+
+</div>
+
 <div id="reorderMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="numbersTool">
@@ -479,8 +620,18 @@ Click or drag one PDF file here
 <label for="numbersStart">Start Number</label>
 <input type="number" id="numbersStart" value="1" min="1">
 
-<button onclick="addPageNumbers()">Add Page Numbers</button>
-<button onclick="clearNumbersTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="addPageNumbers()">
+Add Page Numbers
+</button>
+
+<button onclick="clearNumbersTool()">
+Clear
+</button>
+
+</div>
+
 <div id="numbersMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="signTool">
@@ -526,14 +677,27 @@ Click or drag signature image here
 <div id="signatureImageCount" class="file-count">No signature image selected</div>
 </div>
 
-<button onclick="signPDF()">Sign PDF</button>
-<button onclick="clearSignTool()">Clear</button>
+<div class="button-group">
+
+<button onclick="signPDF()">
+Sign PDF
+</button>
+
+<button onclick="clearSignTool()">
+Clear
+</button>
+
+</div>
+
 <div id="signMessage" class="message"></div>
 </div>
 </div>
 
-<div id="toast"></div>
+<div class="tool-footer">
+Powered by XAVERT
+</div>
 
+<div id="toast"></div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
@@ -619,24 +783,64 @@ function updateFileCount(inputId){
 const files=document.getElementById(inputId).files;
 
 if(inputId==="mergeFiles"){
-document.getElementById("mergeCount").textContent=files.length ? files.length + " PDF files selected" : "No files selected";
+
+if(files.length){
+
+let totalSize=0;
+
+Array.from(files).forEach(function(file){
+totalSize+=file.size;
+});
+
+document.getElementById("mergeCount").textContent=
+files.length + " PDF files selected • " + formatFileSize(totalSize);
+
+}else{
+
+document.getElementById("mergeCount").textContent=
+"No files selected";
+
+}
+
 }
 
 if(inputId==="splitFile"){
-document.getElementById("splitCount").textContent=files.length ? files[0].name : "No file selected";
+document.getElementById("splitCount").textContent=
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
 
 if(inputId==="imageFiles"){
-document.getElementById("imageCount").textContent=files.length ? files.length + " image files selected" : "No files selected";
+
+if(files.length){
+
+let totalSize=0;
+
+Array.from(files).forEach(function(file){
+totalSize+=file.size;
+});
+
+document.getElementById("imageCount").textContent=
+files.length + " image files selected • " + formatFileSize(totalSize);
+
+}else{
+
+document.getElementById("imageCount").textContent=
+"No files selected";
+
+}
+
 }
 
 if(inputId==="pdfJpgFile"){
-document.getElementById("pdfJpgCount").textContent=files.length ? files[0].name : "No file selected";
+document.getElementById("pdfJpgCount").textContent=
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
+ 
 if(inputId==="rotateFile"){
 document.getElementById("rotateCount").textContent=
-files.length ? files[0].name : "No file selected";
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
+ 
 if(inputId==="extractFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
@@ -660,25 +864,29 @@ document.getElementById("deleteCount").textContent="No file selected";
 
 if(inputId==="pngFile"){
 document.getElementById("pngCount").textContent=
-files.length ? files[0].name : "No file selected";
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
 
 if(inputId==="watermarkFile"){
 document.getElementById("watermarkCount").textContent=
-files.length ? files[0].name : "No file selected";
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
- if(inputId==="compressFile"){
+ 
+if(inputId==="compressFile"){
 document.getElementById("compressCount").textContent=
-files.length ? files[0].name : "No file selected";
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
+
 if(inputId==="reorderFile"){
 document.getElementById("reorderCount").textContent=
-files.length ? files[0].name : "No file selected";
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
 }
+
 if(inputId==="numbersFile"){
 document.getElementById("numbersCount").textContent=
-files.length ? files[0].name : "No file selected";
-} 
+files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+}
+
 if(inputId==="signPdfFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
@@ -694,13 +902,17 @@ document.getElementById("signatureImageCount").textContent=
 files.length ? files[0].name : "No signature image selected";
 }
 }
-function showToast(message){
+function showToast(message,type="info"){
+
 toast.textContent=message;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
+
 }
 
 function setMessage(id,text,type){
