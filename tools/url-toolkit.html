@@ -9,6 +9,8 @@
 <meta name="description"
 content="Encode, decode, analyze and build URLs directly in your browser.">
 
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 
 *{
@@ -158,6 +160,19 @@ padding:12px 20px;
 border-radius:10px;
 display:none;
 z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
 }
 
 @media(max-width:768px){
@@ -303,6 +318,15 @@ Build UTM URL
 
 </div>
 
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
 <div id="toast"></div>
 
 <script>
@@ -312,17 +336,18 @@ const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
-
 function setMessage(text,type){
 
 message.textContent=text;
@@ -529,7 +554,7 @@ navigator.clipboard.writeText(
 outputText.value
 );
 
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
@@ -562,7 +587,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(url);
 
-showToast("Download started.");
+showToast("Download started.","success");
 
 }
 
@@ -570,6 +595,11 @@ function clearAll(){
 
 inputUrl.value="";
 outputText.value="";
+
+document.getElementById("utmUrl").value="";
+document.getElementById("utmSource").value="";
+document.getElementById("utmMedium").value="";
+document.getElementById("utmCampaign").value="";
 
 resultBox.style.display="none";
 
