@@ -318,7 +318,7 @@ Clear
 
 </div>
 
-<div id="jsonXlsxMessage" class="message"></div>tocsv
+<div id="jsonXlsxMessage" class="message"></div>
 
 </div>
 <div class="card tool-section" id="jsoncsvTool">
@@ -427,16 +427,32 @@ Minify JSON data by removing unnecessary spaces and line breaks.
 <label for="jsonMinifyInput">JSON Input</label>
 <textarea id="jsonMinifyInput" placeholder="Paste JSON data here"></textarea>
 
-<button onclick="minifyJson()">Minify JSON</button>
-<button onclick="clearFields('jsonMinifyInput','jsonMinifyOutput','jsonMinifyMessage')">Clear</button>
-<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">Download</button>
+<div class="button-group">
+
+<button onclick="minifyJson()">
+Minify JSON
+</button>
+
+<button onclick="clearFields('jsonMinifyInput','jsonMinifyOutput','jsonMinifyMessage')">
+Clear
+</button>
+
+</div>
 
 <label for="jsonMinifyOutput">Minified JSON</label>
 <textarea id="jsonMinifyOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">Download</button>
+<div class="button-group">
+
+<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">
+Copy Result
+</button>
+
+<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">
+Download
+</button>
+
+</div>
 
 <div id="jsonMinifyMessage" class="message"></div>
 
@@ -730,7 +746,6 @@ type:"text/plain;charset=utf-8"
 });
 
 downloadBlob(blob,fileName);
-showToast("Download started.","success");
 
 }
 async function csvToXlsx(){
