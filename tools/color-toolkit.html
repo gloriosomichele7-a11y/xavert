@@ -319,7 +319,17 @@ Clear
 
 </div>
 
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
 <div id="toast"></div>
+
 <script>
 
 const toolSelector=document.getElementById("toolSelector");
@@ -761,7 +771,7 @@ savedPalettes.unshift([...palette]);
 savedPalettes=savedPalettes.slice(0,10);
 
 renderSavedPalettes();
-showToast("Palette saved.");
+showToast("Palette saved.","success");
 }
 
 function renderSavedPalettes(){
