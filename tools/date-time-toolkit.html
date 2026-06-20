@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Date & Time Toolkit</title>
 
+<meta name="description" content="Calculate date differences, ages, Unix timestamps and add or subtract days directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -77,7 +81,12 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 button{
 background:#dc2626;
 color:white;
@@ -93,7 +102,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .tool-section{
 display:none;
 }
@@ -132,6 +146,19 @@ padding:12px 20px;
 border-radius:10px;
 display:none;
 z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
 }
 
 @media(max-width:768px){
@@ -150,7 +177,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>Date & Time Toolkit</h1>
@@ -181,8 +208,17 @@ Calculate dates, timestamps, ages and time differences instantly.
 <label for="dateEnd">End Date</label>
 <input type="date" id="dateEnd">
 
-<button onclick="calculateDifference()">Calculate</button>
-<button onclick="clearAll()">Clear</button>
+<div class="button-group">
+
+<button onclick="calculateDifference()">
+Calculate
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
 
 <div id="differenceMessage" class="message"></div>
 <div id="differenceResult" class="result-box"></div>
@@ -196,8 +232,17 @@ Calculate dates, timestamps, ages and time differences instantly.
 <label for="birthDate">Birth Date</label>
 <input type="date" id="birthDate">
 
-<button onclick="calculateAge()">Calculate Age</button>
-<button onclick="clearAll()">Clear</button>
+<div class="button-group">
+
+<button onclick="calculateAge()">
+Calculate Age
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
 
 <div id="ageMessage" class="message"></div>
 <div id="ageResult" class="result-box"></div>
@@ -211,9 +256,21 @@ Calculate dates, timestamps, ages and time differences instantly.
 <label for="timestampInput">Unix Timestamp</label>
 <input type="number" id="timestampInput" placeholder="Example: 1710000000">
 
-<button onclick="convertTimestamp()">Convert</button>
-<button onclick="getCurrentTimestamp()">Get Current Timestamp</button>
-<button onclick="clearAll()">Clear</button>
+<div class="button-group">
+
+<button onclick="convertTimestamp()">
+Convert
+</button>
+
+<button onclick="getCurrentTimestamp()">
+Get Current Timestamp
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
 
 <div id="timestampMessage" class="message"></div>
 <div id="timestampResult" class="result-box"></div>
@@ -229,8 +286,17 @@ Calculate dates, timestamps, ages and time differences instantly.
 <label for="daysToAdd">Days (+ or -)</label>
 <input type="number" id="daysToAdd" placeholder="Example: 30 or -15">
 
-<button onclick="calculateNewDate()">Calculate</button>
-<button onclick="clearAll()">Clear</button>
+<div class="button-group">
+
+<button onclick="calculateNewDate()">
+Calculate
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
 
 <div id="dateaddMessage" class="message"></div>
 <div id="dateaddResult" class="result-box"></div>
@@ -239,7 +305,17 @@ Calculate dates, timestamps, ages and time differences instantly.
   
 </div>
 
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
 <div id="toast"></div>
+
 <script>
 
 const toolSelector=document.getElementById("toolSelector");
@@ -283,13 +359,15 @@ calculateNewDate();
 
 });
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -297,7 +375,7 @@ toast.style.display="none";
 function copyText(text){
 
 navigator.clipboard.writeText(text);
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
@@ -386,9 +464,14 @@ const diffDays=Math.floor(diffTime/(1000*60*60*24));
 
 const weeks=Math.floor(diffDays/7);
 const remainingDays=diffDays%7;
-
+const years=Math.floor(diffDays/365);
+const months=Math.floor((diffDays%365)/30);
 lastResultText=
-diffDays + " days (" + weeks + " weeks and " + remainingDays + " days)";
+diffDays + " days (" +
+years + " years, " +
+months + " months, " +
+weeks + " weeks and " +
+remainingDays + " days)";
 
 setMessage(
 "differenceMessage",
@@ -439,8 +522,14 @@ years--;
 months+=12;
 }
 
+const totalDays=Math.floor(
+(today-birthDate)/(1000*60*60*24)
+);
+
 lastResultText=
-years + " years, " + months + " months, " + days + " days";
+years + " years, " +
+months + " months, " +
+days + " days";
 
 setMessage(
 "ageMessage",
@@ -450,7 +539,8 @@ setMessage(
 
 setResult(
 "ageResult",
-"<strong>" + lastResultText + "</strong><br><br>" +
+"<strong>" + lastResultText + "</strong><br>" +
+"Total Days: <strong>" + totalDays + "</strong><br><br>" +
 '<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
