@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | File Hash Checker</title>
 
+<meta name="description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file hashes directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -80,7 +84,13 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 textarea{
 min-height:120px;
 resize:vertical;
@@ -101,7 +111,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .drop-zone{
 border:2px dashed #d1d5db;
 border-radius:16px;
@@ -112,9 +127,10 @@ cursor:pointer;
 margin-top:14px;
 }
 
+.drop-zone:hover,
 .drop-zone.dragover{
 border-color:#dc2626;
-background:#fff1f2;
+background:#fff5f5;
 }
 
 .file-count{
@@ -186,7 +202,7 @@ word-break:break-all;
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>File Hash Checker</h1>
@@ -210,9 +226,27 @@ Click or drag a file here
 <input type="file" id="fileInput" hidden>
 
 <div id="fileCount" class="file-count">No file selected</div>
+<label for="hashAlgorithm">Hash Algorithm</label>
 
-<button onclick="generateHash()">Generate SHA-256</button>
-<button onclick="clearAll()">Clear</button>
+<select id="hashAlgorithm">
+<option value="SHA-256">SHA-256</option>
+<option value="SHA-384">SHA-384</option>
+<option value="SHA-512">SHA-512</option>
+</select>
+<div class="button-group">
+
+<button onclick="generateHash()">
+Generate Hash
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
+
+<label for="expectedHash">Expected Hash / Checksum</label>
+<textarea id="expectedHash" placeholder="Paste the expected hash here to verify the file..."></textarea>
 
 <div id="message" class="message"></div>
 <div id="resultBox" class="result-box"></div>
@@ -285,7 +319,7 @@ function clearAll(){
 
 fileInput.value="";
 fileCount.textContent="No file selected";
-
+document.getElementById("expectedHash").value="";
 message.textContent="";
 message.className="message";
 
@@ -321,7 +355,12 @@ setMessage("Generating SHA-256 hash...","loading");
 
 const buffer=await file.arrayBuffer();
 
-const hashBuffer=await crypto.subtle.digest("SHA-256",buffer);
+const algorithm=document.getElementById("hashAlgorithm").value;
+
+const hashBuffer=await crypto.subtle.digest(
+algorithm,
+buffer
+);
 
 const hashArray=Array.from(new Uint8Array(hashBuffer));
 
@@ -330,6 +369,24 @@ const hashHex=hashArray
 .join("");
 const fileSize=(file.size/1024/1024).toFixed(2) + " MB";
 const generatedAt=new Date().toLocaleString();
+const expectedHash=document.getElementById("expectedHash").value.trim().toLowerCase();
+
+let verificationHtml="";
+
+if(expectedHash){
+
+if(expectedHash===hashHex.toLowerCase()){
+verificationHtml=
+"<strong>Verification</strong><br>" +
+'<span style="color:#047857;font-weight:700;">Match</span><br><br>';
+}else{
+verificationHtml=
+"<strong>Verification</strong><br>" +
+'<span style="color:#dc2626;font-weight:700;">No Match</span><br><br>';
+}
+
+}
+
 resultBox.style.display="block";
 
 resultBox.innerHTML=
@@ -340,11 +397,12 @@ file.name +
 fileSize +
 "<br><br>" +
 "<strong>Algorithm</strong><br>" +
-"SHA-256" +
+algorithm +
 "<br><br>" +
 "<strong>Generated</strong><br>" +
 generatedAt +
 "<br><br>" +
+verificationHtml +
 "<strong>Hash</strong><br><code>" +
 hashHex +
 "</code>" +
