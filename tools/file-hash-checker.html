@@ -375,14 +375,14 @@ return;
 
 try{
 
+const algorithm=document.getElementById("hashAlgorithm").value;
+
 setMessage(
 "Generating " + algorithm + " hash...",
 "loading"
 );
 
 const buffer=await file.arrayBuffer();
-
-const algorithm=document.getElementById("hashAlgorithm").value;
 
 const hashBuffer=await crypto.subtle.digest(
 algorithm,
@@ -405,11 +405,11 @@ if(expectedHash){
 if(expectedHash===hashHex.toLowerCase()){
 verificationHtml=
 "<strong>Verification</strong><br>" +
-'<span style="color:#047857;font-weight:700;">Match</span><br><br>';
+'<span style="color:#047857;font-weight:700;">✓ Match</span><br><br>';
 }else{
 verificationHtml=
 "<strong>Verification</strong><br>" +
-'<span style="color:#dc2626;font-weight:700;">No Match</span><br><br>';
+'<span style="color:#dc2626;font-weight:700;">✗ No Match</span><br><br>';
 }
 
 }
@@ -448,7 +448,13 @@ setMessage("Unable to generate hash.","error");
 }
 
 }
+document.addEventListener("keydown",function(e){
 
+if(e.ctrlKey && e.key==="Enter"){
+generateHash();
+}
+
+});
 </script>
 
 </body>
