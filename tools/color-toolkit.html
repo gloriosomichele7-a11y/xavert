@@ -609,7 +609,7 @@ const g=Math.floor(Math.random()*256);
 const b=Math.floor(Math.random()*256);
 
 const hex=rgbToHex(r,g,b);
-
+const hsl=rgbToHsl(r,g,b);
 document.getElementById("generatorPreview").style.background=hex;
 
 document.getElementById("generatorResult").style.display="block";
@@ -620,10 +620,25 @@ document.getElementById("generatorResult").innerHTML=
 r + ", " +
 g + ", " +
 b +
+"</strong><br>" +
+"HSL: <strong>" +
+hsl.h + ", " +
+hsl.s + "%, " +
+hsl.l + "%" +
 "</strong><br><br>" +
+
 '<button class="small-button" onclick="copyText(\'' +
 hex +
-'\')">Copy Color</button>' +
+'\')">Copy HEX</button> ' +
+
+'<button class="small-button" onclick="copyText(\'rgb(' +
+r + "," + g + "," + b +
+')\')">Copy RGB</button> ' +
+
+'<button class="small-button" onclick="copyText(\'hsl(' +
+hsl.h + "," + hsl.s + "%," + hsl.l + "%" +
+')\')">Copy HSL</button>' +
+
 updateColorHistory(hex);
 
 setMessage(
@@ -701,7 +716,10 @@ Copy
 
 }).join("");
 document.getElementById("paletteResult").innerHTML +=
-'<br><button onclick="savePalette(currentPalette)">Save Palette</button>';
+'<br><div class="button-group">' +
+'<button onclick="savePalette(currentPalette)">Save Palette</button>' +
+'<button onclick="downloadPalette()">Download Palette</button>' +
+'</div>';
 
 
 setMessage(
@@ -709,6 +727,32 @@ setMessage(
 "Palette generated successfully.",
 "success"
 );
+
+}
+function downloadPalette(){
+
+if(!currentPalette.length){
+showToast("Generate a palette first.","error");
+return;
+}
+
+const text=currentPalette.join("\n");
+
+const blob=new Blob([text],{
+type:"text/plain;charset=utf-8"
+});
+
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download="xavert-color-palette.txt";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Palette downloaded.","success");
 
 }
 function savePalette(palette){
