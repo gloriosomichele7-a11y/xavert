@@ -174,7 +174,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -255,7 +265,17 @@ Clear
 
 </div>
 
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
 <div id="toast"></div>
+
 <script>
 
 const dropZone=document.getElementById("dropZone");
@@ -293,17 +313,21 @@ function updateFileCount(){
 
 const file=fileInput.files[0];
 
-fileCount.textContent=file ? file.name : "No file selected";
+fileCount.textContent=file
+? file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB"
+: "No file selected";
 
 }
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -336,7 +360,7 @@ return;
 }
 
 navigator.clipboard.writeText(text);
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
@@ -351,7 +375,10 @@ return;
 
 try{
 
-setMessage("Generating SHA-256 hash...","loading");
+setMessage(
+"Generating " + algorithm + " hash...",
+"loading"
+);
 
 const buffer=await file.arrayBuffer();
 
@@ -403,6 +430,9 @@ algorithm +
 generatedAt +
 "<br><br>" +
 verificationHtml +
+"<strong>Length</strong><br>" +
+hashHex.length +
+" characters<br><br>" +
 "<strong>Hash</strong><br><code>" +
 hashHex +
 "</code>" +
