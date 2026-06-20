@@ -482,7 +482,7 @@ setMessage(
 setResult(
 "differenceResult",
 "<strong>" + lastResultText + "</strong><br><br>" +
-'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
+'<button onclick="copyText(\'' + lastResultText + " • Total Days: " + totalDays + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
 
@@ -506,7 +506,17 @@ return;
 
 const birthDate=new Date(birthValue);
 const today=new Date();
+if(birthDate>today){
 
+setMessage(
+"ageMessage",
+"Birth date cannot be in the future.",
+"error"
+);
+
+return;
+
+}
 let years=today.getFullYear()-birthDate.getFullYear();
 let months=today.getMonth()-birthDate.getMonth();
 let days=today.getDate()-birthDate.getDate();
