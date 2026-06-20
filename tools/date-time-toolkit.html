@@ -509,7 +509,7 @@ setMessage(
 setResult(
 "differenceResult",
 "<strong>" + lastResultText + "</strong><br><br>" +
-'<button onclick="copyText(\'' + lastResultText + " • Total Days: " + totalDays + '\')">Copy Result</button>' +
+'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
 
@@ -664,7 +664,7 @@ setMessage(
 setResult(
 "countdownResult",
 "<strong>" + lastResultText + "</strong><br><br>" +
-'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
+'<button onclick="copyText(\'' + lastResultText + " • Total Days: " + totalDays + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
 
