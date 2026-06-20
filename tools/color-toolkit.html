@@ -288,6 +288,10 @@ Clear
 <div id="contrastMessage" class="message"></div>
 <div id="contrastResult" class="result-box"></div>
 
+<div id="contrastPreview" class="result-box" style="font-size:20px;font-weight:700;text-align:center;">
+Sample Text Preview
+</div>
+
 </div>
 <div class="card tool-section" id="paletteTool">
 
@@ -444,7 +448,7 @@ document.getElementById("contrastResult").style.display="none";
 
 document.getElementById("contrastMessage").textContent="";
 document.getElementById("contrastMessage").className="message";  
-
+document.getElementById("contrastPreview").style.display="none";
 document.getElementById("paletteResult").innerHTML="";
 document.getElementById("paletteResult").style.display="none";
 
@@ -801,7 +805,12 @@ status="AAA";
 }else if(ratio>=4.5){
 status="AA";
 }
+const contrastPreview=document.getElementById("contrastPreview");
 
+contrastPreview.style.display="block";
+contrastPreview.style.color=foreground;
+contrastPreview.style.background=background;
+contrastPreview.textContent="Sample Text Preview";
 document.getElementById("contrastResult").style.display="block";
 
 document.getElementById("contrastResult").innerHTML=
