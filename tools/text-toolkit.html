@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Text Toolkit</title>
 
+<meta name="description" content="Count, clean, convert, sort, encode and transform text directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -78,7 +82,13 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 textarea{
 min-height:180px;
 resize:vertical;
@@ -99,7 +109,12 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
 .tool-section{
 display:none;
 }
@@ -162,7 +177,8 @@ body{padding:24px 14px;}
 button{width:100%;}
 }
 </style>
-</head
+</head>
+
 <body>
 
 <div class="container">
@@ -170,7 +186,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>Text Toolkit</h1>
