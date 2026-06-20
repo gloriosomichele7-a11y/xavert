@@ -221,8 +221,6 @@ Convert spreadsheets and structured data directly in your browser.
 <option value="jsonxlsx">JSON to XLSX</option>
 <option value="jsoncsv">JSON to CSV</option>
 <option value="csvjson">CSV to JSON</option>
-<option value="csvtsv">CSV to TSV</option>
-<option value="tsvcsv">TSV to CSV</option>
 <option value="xmljson">XML to JSON</option>
 <option value="jsonxml">JSON to XML</option>
 <option value="jsonformat">JSON Formatter</option>
@@ -469,10 +467,19 @@ Validate JSON syntax.
 
 <textarea id="jsonValidateInput"></textarea>
 
-<button onclick="validateJson()">Validate JSON</button>
-<button onclick="clearFields('jsonValidateInput',null,'jsonValidateMessage')">Clear</button>
-<div id="jsonValidateMessage" class="message"></div>
+<div class="button-group">
 
+<button onclick="validateJson()">
+Validate JSON
+</button>
+
+<button onclick="clearFields('jsonValidateInput',null,'jsonValidateMessage')">
+Clear
+</button>
+
+</div>
+
+<div id="jsonValidateMessage" class="message"></div>
 </div>
   <div class="card tool-section" id="xmljsonTool">
 <h2>XML to JSON</h2>
@@ -484,14 +491,31 @@ Convert XML data into JSON.
 <label for="xmlJsonInput">XML Input</label>
 <textarea id="xmlJsonInput" placeholder="Paste XML data here"></textarea>
 
-<button onclick="xmlToJson()">Convert to JSON</button>
-<button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">Clear</button>
+<div class="button-group">
+
+<button onclick="xmlToJson()">
+Convert to JSON
+</button>
+
+<button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">
+Clear
+</button>
+
+</div>
 <label for="xmlJsonOutput">JSON Output</label>
 <textarea id="xmlJsonOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('xmlJsonOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'converted.json')">Download</button>
+<div class="button-group">
 
+<button onclick="copyText(document.getElementById('xmlJsonOutput').value)">
+Copy Result
+</button>
+
+<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'converted.json')">
+Download
+</button>
+
+</div>
 <div id="xmlJsonMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="jsonxmlTool">
@@ -506,14 +530,32 @@ Convert JSON data into XML.
 
 <textarea id="jsonXmlInput"></textarea>
 
-<button onclick="jsonToXml()">Convert to XML</button>
-<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">Clear</button>
+<div class="button-group">
+
+<button onclick="jsonToXml()">
+Convert to XML
+</button>
+
+<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">
+Clear
+</button>
+
+</div>
 <label for="jsonXmlOutput">XML Output</label>
 
 <textarea id="jsonXmlOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('jsonXmlOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('jsonXmlOutput').value,'converted.xml')">Download</button>
+<div class="button-group">
+
+<button onclick="copyText(document.getElementById('jsonXmlOutput').value)">
+Copy Result
+</button>
+
+<button onclick="downloadText(document.getElementById('jsonXmlOutput').value,'converted.xml')">
+Download
+</button>
+
+</div>
 <div id="jsonXmlMessage" class="message"></div>
 </div>
 <div class="card tool-section" id="xmlformatTool">
@@ -528,15 +570,33 @@ Format and beautify XML data.
 
 <textarea id="xmlFormatInput" placeholder="Paste XML data here"></textarea>
 
-<button onclick="formatXml()">Format XML</button>
-<button onclick="clearFields('xmlFormatInput','xmlFormatOutput','xmlFormatMessage')">Clear</button>
+<div class="button-group">
+
+<button onclick="formatXml()">
+Format XML
+</button>
+
+<button onclick="clearFields('xmlFormatInput','xmlFormatOutput','xmlFormatMessage')">
+Clear
+</button>
+
+</div>
 
 <label for="xmlFormatOutput">Formatted XML</label>
 
 <textarea id="xmlFormatOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('xmlFormatOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('xmlFormatOutput').value,'formatted.xml')">Download</button>
+<div class="button-group">
+
+<button onclick="copyText(document.getElementById('xmlFormatOutput').value)">
+Copy Result
+</button>
+
+<button onclick="downloadText(document.getElementById('xmlFormatOutput').value,'formatted.xml')">
+Download
+</button>
+
+</div>
 <div id="xmlFormatMessage" class="message"></div>
 
 </div>
@@ -551,14 +611,32 @@ Minify XML data by removing unnecessary spaces and line breaks.
 <label for="xmlMinifyInput">XML Input</label>
 <textarea id="xmlMinifyInput" placeholder="Paste XML data here"></textarea>
 
-<button onclick="minifyXml()">Minify XML</button>
-<button onclick="clearFields('xmlMinifyInput','xmlMinifyOutput','xmlMinifyMessage')">Clear</button>
+<div class="button-group">
+
+<button onclick="minifyXml()">
+Minify XML
+</button>
+
+<button onclick="clearFields('xmlMinifyInput','xmlMinifyOutput','xmlMinifyMessage')">
+Clear
+</button>
+
+</div>
 
 <label for="xmlMinifyOutput">Minified XML</label>
 <textarea id="xmlMinifyOutput" readonly></textarea>
 
-<button onclick="copyText(document.getElementById('xmlMinifyOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('xmlMinifyOutput').value,'minified.xml')">Download</button>
+<div class="button-group">
+
+<button onclick="copyText(document.getElementById('xmlMinifyOutput').value)">
+Copy Result
+</button>
+
+<button onclick="downloadText(document.getElementById('xmlMinifyOutput').value,'minified.xml')">
+Download
+</button>
+
+</div>
 <div id="xmlMinifyMessage" class="message"></div>
 
 </div>
@@ -574,8 +652,19 @@ Validate XML syntax.
 
 <textarea id="xmlValidateInput" placeholder="Paste XML data here"></textarea>
 
-<button onclick="validateXml()">Validate XML</button>
-<button onclick="clearFields('xmlValidateInput',null,'xmlValidateMessage')">Clear</button>
+<div class="button-group">
+
+<button onclick="validateXml()">
+Validate XML
+</button>
+
+<button onclick="clearFields('xmlValidateInput',null,'xmlValidateMessage')">
+Clear
+</button>
+
+</div>
+
+<div id="xmlValidateMessage" class="message"></div>
 
 <div id="xmlValidateMessage" class="message"></div>
 
