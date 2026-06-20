@@ -217,8 +217,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <label for="counterInput">Text</label>
 <textarea id="counterInput" placeholder="Paste or type your text here..."></textarea>
 
-<button onclick="countText()">Count Text</button>
-<button onclick="clearFields('counterInput',null,'counterMessage','counterResult')">Clear</button>
+<div class="button-group">
+
+<button onclick="countText()">
+Count Text
+</button>
+
+<button onclick="clearFields('counterInput',null,'counterMessage','counterResult')">
+Clear
+</button>
+
+</div>
 
 <div id="counterMessage" class="message"></div>
 <div id="counterResult" class="result-box"></div>
@@ -240,8 +249,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <option value="alternating">aLtErNaTiNg CaSe</option>
 </select>
 
-<button onclick="convertCase()">Convert Case</button>
-<button onclick="clearFields('caseInput','caseOutput','caseMessage',null)">Clear</button>
+<div class="button-group">
+
+<button onclick="convertCase()">
+Convert Case
+</button>
+
+<button onclick="clearFields('caseInput','caseOutput','caseMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="caseOutput">Output</label>
@@ -258,8 +276,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <label for="spacesInput">Text</label>
 <textarea id="spacesInput" placeholder="Paste messy text here..."></textarea>
 
-<button onclick="removeExtraSpaces()">Clean Text</button>
-<button onclick="clearFields('spacesInput','spacesOutput','spacesMessage',null)">Clear</button>
+<div class="button-group">
+
+<button onclick="removeExtraSpaces()">
+Clean Text
+</button>
+
+<button onclick="clearFields('spacesInput','spacesOutput','spacesMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="spacesOutput">Output</label>
@@ -276,8 +303,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <label for="duplicatesInput">Text</label>
 <textarea id="duplicatesInput" placeholder="Paste lines here..."></textarea>
 
-<button onclick="removeDuplicateLines()">Remove Duplicates</button>
-<button onclick="clearFields('duplicatesInput','duplicatesOutput','duplicatesMessage',null)">Clear</button>
+<div class="button-group">
+
+<button onclick="removeDuplicateLines()">
+Remove Duplicates
+</button>
+
+<button onclick="clearFields('duplicatesInput','duplicatesOutput','duplicatesMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="duplicatesOutput">Output</label>
@@ -300,8 +336,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <option value="za">Z to A</option>
 </select>
 
-<button onclick="sortLines()">Sort Lines</button>
-<button onclick="clearFields('sortInput','sortOutput','sortMessage',null)">Clear</button>
+<div class="button-group">
+
+<button onclick="sortLines()">
+Sort Lines
+</button>
+
+<button onclick="clearFields('sortInput','sortOutput','sortMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="sortOutput">Output</label>
@@ -323,8 +368,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <label for="replaceText">Replace With</label>
 <input type="text" id="replaceText" placeholder="Replacement text">
 
-<button onclick="findAndReplace()">Replace</button>
-<button onclick="clearFindReplace()">Clear</button>
+<div class="button-group">
+
+<button onclick="findAndReplace()">
+Replace
+</button>
+
+<button onclick="clearFindReplace()">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="findReplaceOutput">Output</label>
@@ -340,7 +394,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <label for="slugInput">Text</label>
 <textarea id="slugInput"></textarea>
 
-<button onclick="textToSlug()">Generate Slug</button>
+<div class="button-group">
+
+<button onclick="textToSlug()">
+Generate Slug
+</button>
+
+<button onclick="clearFields('slugInput','slugOutput','slugMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="slugOutput">Output</label>
@@ -362,7 +426,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <option value="decode">Decode</option>
 </select>
 
-<button onclick="processUrl()">Process</button>
+<div class="button-group">
+
+<button onclick="processUrl()">
+Process
+</button>
+
+<button onclick="clearFields('urlInput','urlOutput','urlMessage',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="urlOutput">Output</label>
@@ -384,7 +458,17 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 <option value="decode">Decode</option>
 </select>
 
-<button onclick="processBase64()">Process</button>
+<div class="button-group">
+
+<button onclick="processBase64()">
+Process
+</button>
+
+<button onclick="clearFields('base64Input','base64Output','base64Message',null)">
+Clear
+</button>
+
+</div>
 
 <div class="output-area">
 <label for="base64Output">Output</label>
@@ -395,10 +479,37 @@ Count, clean, convert, sort, encode and transform text directly in your browser.
 </div>
 
 </div>
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
 
+<div id="toast"></div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
+document.addEventListener("keydown",function(e){
 
+if(e.ctrlKey && e.key==="Enter"){
+
+const selectedTool=toolSelector.value;
+
+if(selectedTool==="counter") countText();
+if(selectedTool==="case") convertCase();
+if(selectedTool==="spaces") removeExtraSpaces();
+if(selectedTool==="duplicates") removeDuplicateLines();
+if(selectedTool==="sort") sortLines();
+if(selectedTool==="findreplace") findAndReplace();
+if(selectedTool==="slug") textToSlug();
+if(selectedTool==="url") processUrl();
+if(selectedTool==="base64") processBase64();
+
+}
+
+});
 toolSelector.addEventListener("change",function(){
 document.querySelectorAll(".tool-section").forEach(section=>{
 section.classList.remove("active");
