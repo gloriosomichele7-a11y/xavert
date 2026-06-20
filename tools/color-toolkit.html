@@ -5,6 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Color Toolkit</title>
 
+<meta name="description" content="Convert HEX and RGB colors, generate palettes, check contrast ratios and create random colors directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -77,7 +81,12 @@ border-radius:10px;
 font-size:15px;
 background:white;
 }
-
+select:focus,
+input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
 button{
 background:#dc2626;
 color:white;
@@ -92,6 +101,12 @@ margin-top:14px;
 
 button:hover{
 background:#b91c1c;
+}
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
 }
 .small-button{
 padding:10px 16px;
@@ -146,6 +161,19 @@ padding:12px 20px;
 border-radius:10px;
 display:none;
 z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
 }
 
 @media(max-width:768px){
@@ -164,7 +192,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>Color Toolkit</h1>
@@ -192,9 +220,18 @@ Convert, generate and analyze colors directly in your browser.
 
 <label for="hexInput">HEX Color</label>
 <input type="text" id="hexInput" placeholder="#FF5733">
+<div class="button-group">
 
-<button onclick="convertHex()">Convert</button>
-<button onclick="clearConverter()">Clear</button>
+<button onclick="convertHex()">
+Convert
+</button>
+
+<button onclick="clearConverter()">
+Clear
+</button>
+
+</div>
+
 
 <div id="converterMessage" class="message"></div>
 <div id="converterResult" class="result-box"></div>
@@ -290,13 +327,15 @@ generatePalette();
 
 });
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -336,7 +375,7 @@ box.innerHTML=box.innerHTML.split("<br><strong>Color History</strong><br>")[0];
 function copyText(text){
 
 navigator.clipboard.writeText(text);
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
