@@ -194,6 +194,7 @@ Calculate dates, timestamps, ages and time differences instantly.
 <option value="age">Age Calculator</option>
 <option value="timestamp">Timestamp Converter</option>
 <option value="dateadd">Add / Subtract Days</option>
+<option value="countdown">Countdown Calculator</option>
 </select>
 
 </div>
@@ -302,6 +303,30 @@ Clear
 <div id="dateaddResult" class="result-box"></div>
 
 </div>
+
+<div class="card tool-section" id="countdownTool">
+
+<h2>Countdown Calculator</h2>
+
+<label for="countdownDate">Future Date</label>
+<input type="datetime-local" id="countdownDate">
+
+<div class="button-group">
+
+<button onclick="calculateCountdown()">
+Calculate Countdown
+</button>
+
+<button onclick="clearAll()">
+Clear
+</button>
+
+</div>
+
+<div id="countdownMessage" class="message"></div>
+<div id="countdownResult" class="result-box"></div>
+
+</div>
   
 </div>
 
@@ -354,7 +379,9 @@ convertTimestamp();
 if(tool==="dateadd"){
 calculateNewDate();
 }
-  
+if(tool==="countdown"){
+calculateCountdown();
+}  
 }
 
 });
@@ -574,6 +601,70 @@ setResult(
 "timestampResult",
 "<strong>" + lastResultText + "</strong><br><br>" +
 '<button onclick="copyText(\'' + unixSeconds + '\')">Copy Timestamp</button>' +
+updateHistory(lastResultText)
+);
+
+}
+function calculateCountdown(){
+
+const value=document.getElementById("countdownDate").value;
+
+if(!value){
+
+setMessage(
+"countdownMessage",
+"Please select a future date and time.",
+"error"
+);
+
+return;
+
+}
+
+const target=new Date(value);
+const now=new Date();
+
+if(target<=now){
+
+setMessage(
+"countdownMessage",
+"Countdown date must be in the future.",
+"error"
+);
+
+return;
+
+}
+
+let diff=target-now;
+
+const days=Math.floor(diff/(1000*60*60*24));
+diff-=days*(1000*60*60*24);
+
+const hours=Math.floor(diff/(1000*60*60));
+diff-=hours*(1000*60*60);
+
+const minutes=Math.floor(diff/(1000*60));
+diff-=minutes*(1000*60);
+
+const seconds=Math.floor(diff/1000);
+
+lastResultText=
+days + " days, " +
+hours + " hours, " +
+minutes + " minutes, " +
+seconds + " seconds";
+
+setMessage(
+"countdownMessage",
+"Countdown calculated.",
+"success"
+);
+
+setResult(
+"countdownResult",
+"<strong>" + lastResultText + "</strong><br><br>" +
+'<button onclick="copyText(\'' + lastResultText + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
 
