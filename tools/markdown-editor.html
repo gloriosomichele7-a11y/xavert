@@ -133,9 +133,18 @@ line-height:1.7;
 overflow:auto;
 }
 
-.preview-box h1,
-.preview-box h2,
+.preview-box h1{
+font-size:32px;
+margin:14px 0 8px;
+}
+
+.preview-box h2{
+font-size:26px;
+margin:14px 0 8px;
+}
+
 .preview-box h3{
+font-size:22px;
 margin:14px 0 8px;
 }
 
@@ -425,7 +434,7 @@ html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
 html=html.replace(/^\- \[x\] (.*$)/gim,'<li><input type="checkbox" checked disabled> $1</li>');
 html=html.replace(/^\- \[ \] (.*$)/gim,'<li><input type="checkbox" disabled> $1</li>');
 html=html.replace(/^\- (.*$)/gim,"<li>$1</li>");
-html=html.replace(/(<li>.*<\/li>)/gims,"<ul>$1</ul>");
+html=html.replace(/(<li[\s\S]*?<\/li>)/gim,"<ul>$1</ul>");
 
 html=html
 .split(/\n{2,}/)
