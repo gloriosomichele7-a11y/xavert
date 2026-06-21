@@ -6,8 +6,7 @@
 
 <title>XAVERT | JWT Decoder</title>
 
-<meta name="description" content="Decode and inspect JSON Web Tokens (JWT) directly in your browser. View header, payload, expiration date and token information instantly.">
-
+<meta name="description" content="Free online JWT Decoder to decode, inspect and validate JSON Web Tokens directly in your browser. View header, payload, expiration and issued-at data instantly.">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
 <style>
@@ -246,6 +245,10 @@ placeholder="Paste your JWT token here..."
 Decode JWT
 </button>
 
+<button onclick="copyToken()">
+Copy Token
+</button>
+
 <button onclick="clearAll()">
 Clear
 </button>
@@ -311,6 +314,10 @@ readonly
 <div class="button-group">
 <button onclick="copyPayload()">
 Copy Payload
+</button>
+
+<button onclick="downloadDecodedJWT()">
+Download JSON
 </button>
 </div>
 
@@ -493,7 +500,13 @@ navigator.clipboard.writeText(text);
 showToast("Copied.");
 
 }
+function copyToken(){
 
+copyText(
+document.getElementById("jwtInput").value
+);
+
+}
 function copyHeader(){
 
 copyText(
@@ -509,7 +522,42 @@ document.getElementById("payloadOutput").value
 );
 
 }
+function downloadDecodedJWT(){
 
+const header=document.getElementById("headerOutput").value;
+const payload=document.getElementById("payloadOutput").value;
+
+if(!header || !payload){
+showToast("Nothing to download.");
+return;
+}
+
+const data={
+header:JSON.parse(header),
+payload:JSON.parse(payload)
+};
+
+const blob=new Blob(
+[JSON.stringify(data,null,2)],
+{
+type:"application/json;charset=utf-8"
+}
+);
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="xavert-decoded-jwt.json";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started.");
+
+}
 function clearAll(){
 
 document.getElementById("jwtInput").value="";
