@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | Markdown Editor</title>
+
+<meta name="description" content="Write, preview, convert and export Markdown documents directly in your browser. Copy Markdown, copy HTML and download files instantly.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+textarea{
+width:100%;
+min-height:300px;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+resize:vertical;
+line-height:1.6;
+font-family:monospace;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+.editor-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.preview-box{
+min-height:300px;
+padding:18px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.7;
+overflow:auto;
+}
+
+.preview-box h1,
+.preview-box h2,
+.preview-box h3{
+margin:14px 0 8px;
+}
+
+.preview-box p{
+margin:10px 0;
+}
+
+.preview-box ul,
+.preview-box ol{
+margin:10px 0 10px 24px;
+}
+
+.preview-box code{
+background:#ffffff;
+border:1px solid #e5e7eb;
+padding:2px 6px;
+border-radius:6px;
+font-family:monospace;
+}
+
+.preview-box pre{
+background:#111827;
+color:white;
+padding:14px;
+border-radius:10px;
+overflow:auto;
+margin:12px 0;
+}
+
+.preview-box blockquote{
+border-left:4px solid #dc2626;
+padding-left:12px;
+color:#4b5563;
+margin:12px 0;
+}
+
+.preview-box a{
+color:#dc2626;
+font-weight:700;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:16px;
+}
+
+.stat-box{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:14px;
+text-align:center;
+}
+
+.stat-box strong{
+display:block;
+font-size:22px;
+margin-bottom:4px;
+}
+
+.stat-box span{
+font-size:13px;
+color:#6b7280;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
+
+@media(max-width:900px){
+.editor-grid{
+grid-template-columns:1fr;
+}
+.stats{
+grid-template-columns:repeat(2,1fr);
+}
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+h1{font-size:34px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>Markdown Editor</h1>
+
+<p class="subtitle">
+Write, preview, convert and export Markdown documents directly in your browser.
+</p>
+
+<div class="card">
+
+<div class="editor-grid">
+
+<div>
+<label for="markdownInput">Markdown Input</label>
+<textarea id="markdownInput" placeholder="# Hello XAVERT
+
+Write your Markdown here...
+
+## Features
+
+- Live preview
+- Copy Markdown
+- Copy HTML
+- Download .md
+- Download .html"></textarea>
+
+<div class="button-group">
+<button onclick="renderMarkdown()">Update Preview</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+</div>
+
+<div>
+<label>Live Preview</label>
+<div id="previewBox" class="preview-box"></div>
+
+<div class="button-group">
+<button onclick="copyMarkdown()">Copy Markdown</button>
+<button onclick="copyHtml()">Copy HTML</button>
+<button onclick="downloadMarkdown()">Download .md</button>
+<button onclick="downloadHtml()">Download .html</button>
+</div>
+</div>
+
+</div>
+
+<div class="stats">
+<div class="stat-box">
+<strong id="wordCount">0</strong>
+<span>Words</span>
+</div>
+
+<div class="stat-box">
+<strong id="charCount">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat-box">
+<strong id="lineCount">0</strong>
+<span>Lines</span>
+</div>
+
+<div class="stat-box">
+<strong id="headingCount">0</strong>
+<span>Headings</span>
+</div>
+</div>
+
+<div id="message" class="message"></div>
+
+</div>
+
+</div>
+
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+const markdownInput=document.getElementById("markdownInput");
+const previewBox=document.getElementById("previewBox");
+const message=document.getElementById("message");
+const toast=document.getElementById("toast");
+
+markdownInput.addEventListener("input",function(){
+renderMarkdown(false);
+});
+
+document.addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+renderMarkdown(true);
+}
+});
+
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function escapeHtml(text){
+
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
+
+}
+
+function markdownToHtml(markdown){
+
+let html=escapeHtml(markdown);
+
+html=html.replace(/```([\s\S]*?)```/g,function(match,code){
+return "<pre><code>" + code.trim() + "</code></pre>";
+});
+
+html=html.replace(/^###### (.*$)/gim,"<h6>$1</h6>");
+html=html.replace(/^##### (.*$)/gim,"<h5>$1</h5>");
+html=html.replace(/^#### (.*$)/gim,"<h4>$1</h4>");
+html=html.replace(/^### (.*$)/gim,"<h3>$1</h3>");
+html=html.replace(/^## (.*$)/gim,"<h2>$1</h2>");
+html=html.replace(/^# (.*$)/gim,"<h1>$1</h1>");
+
+html=html.replace(/\*\*(.*?)\*\*/gim,"<strong>$1</strong>");
+html=html.replace(/\*(.*?)\*/gim,"<em>$1</em>");
+html=html.replace(/`([^`]+)`/gim,"<code>$1</code>");
+
+html=html.replace(/$begin:math:display$\(\[\^$end:math:display$]+)\]$begin:math:text$\(\[\^\)\]\+\)$end:math:text$/gim,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
+
+html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
+
+html=html.replace(/^\- (.*$)/gim,"<li>$1</li>");
+html=html.replace(/(<li>.*<\/li>)/gims,"<ul>$1</ul>");
+
+html=html
+.split(/\n{2,}/)
+.map(block=>{
+if(
+block.startsWith("<h") ||
+block.startsWith("<ul") ||
+block.startsWith("<pre") ||
+block.startsWith("<blockquote")
+){
+return block;
+}
+return "<p>" + block.replace(/\n/g,"<br>") + "</p>";
+})
+.join("");
+
+return html;
+
+}
+
+function updateStats(text){
+
+const words=text.trim()
+? text.trim().split(/\s+/).length
+: 0;
+
+const characters=text.length;
+
+const lines=text
+? text.split(/\r?\n/).length
+: 0;
+
+const headings=(text.match(/^#{1,6}\s/gm) || []).length;
+
+document.getElementById("wordCount").textContent=words;
+document.getElementById("charCount").textContent=characters;
+document.getElementById("lineCount").textContent=lines;
+document.getElementById("headingCount").textContent=headings;
+
+}
+
+function renderMarkdown(showMessage=true){
+
+const text=markdownInput.value;
+
+const html=markdownToHtml(text);
+
+previewBox.innerHTML=html || "<p style='color:#6b7280;'>Live preview will appear here.</p>";
+
+updateStats(text);
+
+if(showMessage){
+setMessage("Preview updated successfully.","success");
+}
+
+}
+
+function copyText(text){
+
+if(!text){
+showToast("Nothing to copy.","error");
+return;
+}
+
+navigator.clipboard.writeText(text);
+showToast("Copied.","success");
+
+}
+
+function copyMarkdown(){
+copyText(markdownInput.value);
+}
+
+function copyHtml(){
+copyText(previewBox.innerHTML);
+}
+
+function downloadText(text,fileName,type){
+
+if(!text){
+showToast("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([text],{
+type:type
+});
+
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download=fileName;
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started.","success");
+
+}
+
+function downloadMarkdown(){
+
+downloadText(
+markdownInput.value,
+"xavert-markdown-document.md",
+"text/markdown;charset=utf-8"
+);
+
+}
+
+function downloadHtml(){
+
+const htmlDocument=
+"<!DOCTYPE html>\n" +
+"<html lang=\"en\">\n" +
+"<head>\n" +
+"<meta charset=\"UTF-8\">\n" +
+"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
+"<title>XAVERT Markdown Export</title>\n" +
+"</head>\n" +
+"<body>\n" +
+previewBox.innerHTML +
+"\n</body>\n" +
+"</html>";
+
+downloadText(
+htmlDocument,
+"xavert-markdown-export.html",
+"text/html;charset=utf-8"
+);
+
+}
+
+function clearAll(){
+
+markdownInput.value="";
+previewBox.innerHTML="";
+message.textContent="";
+message.className="message";
+updateStats("");
+
+}
+
+renderMarkdown(false);
+</script>
+
+</body>
+</html>
