@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | Sitemap Generator</title>
+
+<meta name="description" content="Generate XML sitemaps for websites directly in your browser. Create valid sitemap.xml files for search engines.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+resize:vertical;
+font-family:monospace;
+line-height:1.6;
+}
+
+#urls{
+min-height:220px;
+}
+
+#output{
+min-height:320px;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.success{
+color:#047857;
+}
+
+.error{
+color:#dc2626;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:12px;
+margin-top:16px;
+}
+
+.stat-box{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:14px;
+text-align:center;
+}
+
+.stat-box strong{
+display:block;
+font-size:20px;
+margin-bottom:4px;
+}
+
+.stat-box span{
+font-size:13px;
+color:#6b7280;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+h1{
+font-size:34px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>Sitemap Generator</h1>
+
+<p class="subtitle">
+Create XML sitemaps for websites and improve search engine indexing.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+
+<label>Website URLs (one per line)</label>
+
+<textarea
+id="urls"
+placeholder="https://example.com
+https://example.com/about
+https://example.com/contact"
+></textarea>
+
+<label>Change Frequency</label>
+
+<select id="changefreq">
+<option value="daily">daily</option>
+<option value="weekly">weekly</option>
+<option value="monthly">monthly</option>
+<option value="yearly">yearly</option>
+</select>
+
+<label>Priority</label>
+
+<select id="priority">
+<option value="1.0">1.0</option>
+<option value="0.9">0.9</option>
+<option value="0.8" selected>0.8</option>
+<option value="0.7">0.7</option>
+<option value="0.6">0.6</option>
+<option value="0.5">0.5</option>
+</select>
+
+<div class="button-group">
+<button onclick="generateSitemap()">Generate Sitemap</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+<div id="message" class="message"></div>
+
+<div class="stats">
+
+<div class="stat-box">
+<strong id="urlCount">0</strong>
+<span>URLs</span>
+</div>
+
+<div class="stat-box">
+<strong id="xmlSize">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat-box">
+<strong id="validCount">0</strong>
+<span>Valid URLs</span>
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<label>Generated sitemap.xml</label>
+
+<textarea
+id="output"
+readonly
+placeholder="Generated XML sitemap will appear here..."
+></textarea>
+
+<div class="button-group">
+<button onclick="copyOutput()">Copy XML</button>
+<button onclick="downloadSitemap()">Download sitemap.xml</button>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const toast=document.getElementById("toast");
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+generateSitemap();
+}
+
+});
+
+function showToast(text,type="success"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+toast.className="";
+
+},2200);
+
+}
+
+function setMessage(text,type){
+
+const message=document.getElementById("message");
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function isValidUrl(url){
+
+try{
+new URL(url);
+return true;
+}catch{
+return false;
+}
+
+}
+
+function generateSitemap(){
+
+const urlsText=document.getElementById("urls").value.trim();
+
+if(!urlsText){
+
+setMessage(
+"Please enter at least one URL.",
+"error"
+);
+
+return;
+
+}
+
+const urls=urlsText
+.split(/\r?\n/)
+.map(url=>url.trim())
+.filter(url=>url);
+
+const validUrls=urls.filter(isValidUrl);
+
+if(validUrls.length===0){
+
+setMessage(
+"No valid URLs found.",
+"error"
+);
+
+return;
+
+}
+
+const changefreq=document.getElementById("changefreq").value;
+const priority=document.getElementById("priority").value;
+
+const today=new Date().toISOString().split("T")[0];
+
+let xml='<?xml version="1.0" encoding="UTF-8"?>\n';
+xml+='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
+
+validUrls.forEach(function(url){
+
+xml+='  <url>\n';
+xml+='    <loc>'+url+'</loc>\n';
+xml+='    <lastmod>'+today+'</lastmod>\n';
+xml+='    <changefreq>'+changefreq+'</changefreq>\n';
+xml+='    <priority>'+priority+'</priority>\n';
+xml+='  </url>\n';
+
+});
+
+xml+='</urlset>';
+
+document.getElementById("output").value=xml;
+
+document.getElementById("urlCount").textContent=
+urls.length;
+
+document.getElementById("validCount").textContent=
+validUrls.length;
+
+document.getElementById("xmlSize").textContent=
+xml.length;
+
+setMessage(
+"Sitemap generated successfully.",
+"success"
+);
+
+}
+
+function copyOutput(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to copy","error");
+return;
+}
+
+navigator.clipboard.writeText(text);
+
+showToast("Copied");
+
+}
+
+function downloadSitemap(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to download","error");
+return;
+}
+
+const blob=new Blob(
+[text],
+{
+type:"application/xml;charset=utf-8"
+}
+);
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="sitemap.xml";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started");
+
+}
+
+function clearAll(){
+
+document.getElementById("urls").value="";
+document.getElementById("output").value="";
+
+document.getElementById("urlCount").textContent="0";
+document.getElementById("validCount").textContent="0";
+document.getElementById("xmlSize").textContent="0";
+
+document.getElementById("message").textContent="";
+document.getElementById("message").className="message";
+
+}
+
+</script>
+
+</body>
+</html>
