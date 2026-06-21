@@ -105,13 +105,31 @@ box-shadow:0 16px 32px rgba(220,38,38,.22);
 padding:40px 6% 45px;
 }
 
-.grid{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:14px;
-align-items:stretch;
+.tool-category{
+margin-bottom:42px;
 }
 
+.category-title{
+font-size:26px;
+font-weight:800;
+margin-bottom:8px;
+letter-spacing:-.4px;
+}
+
+.category-description{
+font-size:15px;
+color:#6b7280;
+margin-bottom:18px;
+max-width:760px;
+line-height:1.6;
+}
+
+.grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:16px;
+align-items:stretch;
+}
 .card-link{
 text-decoration:none;
 color:inherit;
@@ -219,6 +237,12 @@ line-height:1.6;
 grid-template-columns:repeat(3,1fr);
 }
 }
+
+@media(max-width:980px){
+.grid{
+grid-template-columns:repeat(2,1fr);
+}
+}
 @media(max-width:768px){
 .navbar{
 padding:6px 20px;
@@ -275,13 +299,254 @@ Professional browser-based tools for productivity and development.
 
 <section class="services" id="services">
 
+<div class="tool-category">
+<h2 class="category-title">Developer Tools</h2>
+<p class="category-description">
+Tools for developers, technical workflows, testing, encoding, identifiers and structured data.
+</p>
+
+<div class="grid">
+
+<a href="tools/json-toolkit.html" class="card-link">
+<div class="card">
+<h3>JSON Toolkit Pro</h3>
+<p>Format, validate, minify, escape, unescape and compare JSON data directly in your browser.</p>
+<h4>JSON Tools</h4>
+<ul>
+<li>JSON Formatter</li>
+<li>JSON Minifier</li>
+<li>JSON Validator</li>
+<li>JSON Escape / Unescape</li>
+<li>JSON Compare</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Upload JSON Files</li>
+<li>Copy & Download Results</li>
+<li>JSON Statistics</li>
+<li>Browser-Side Processing</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/regex-tester.html" class="card-link">
+<div class="card">
+<h3>Regex Tester</h3>
+<p>Test regular expressions and preview matches directly in your browser.</p>
+<h4>Regex Tools</h4>
+<ul>
+<li>Live Regex Testing</li>
+<li>Match Highlighting</li>
+<li>Flags Support</li>
+<li>Match Count</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Copy Matches</li>
+<li>Clear Inputs</li>
+<li>Browser-Side Processing</li>
+<li>No Data Uploads</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/base64-toolkit.html" class="card-link">
+<div class="card">
+<h3>Base64 Toolkit</h3>
+<p>Encode and decode Base64 data directly in your browser.</p>
+<h4>Tools Included</h4>
+<ul>
+<li>Base64 Encode</li>
+<li>Base64 Decode</li>
+<li>Copy Result</li>
+<li>Download Result</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Instant Conversion</li>
+<li>UTF-8 Support</li>
+<li>Browser-Side Processing</li>
+<li>No Data Uploads</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/uuid-generator.html" class="card-link">
+<div class="card">
+<h3>UUID Generator</h3>
+<p>Generate unique UUIDs directly in your browser.</p>
+<h4>UUID Tools</h4>
+<ul>
+<li>UUID v4 Generator</li>
+<li>UUID v7 Generator</li>
+<li>Bulk UUID Generation</li>
+<li>Copy All UUIDs</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Custom Quantity</li>
+<li>TXT / CSV / JSON Export</li>
+<li>Clear Results</li>
+<li>Browser-Side Processing</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/file-hash-checker.html" class="card-link">
+<div class="card">
+<h3>File Hash Checker</h3>
+<p>Generate and verify file hashes directly in your browser.</p>
+<h4>Hash Algorithms</h4>
+<ul>
+<li>SHA-256</li>
+<li>SHA-384</li>
+<li>SHA-512</li>
+<li>Checksum Verification</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Drag & Drop Files</li>
+<li>Match / No Match Check</li>
+<li>Copy Results</li>
+<li>Browser-Side Processing</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/diff-checker.html" class="card-link">
+<div class="card">
+<h3>Text Diff Checker</h3>
+<p>Compare two texts and instantly identify line-by-line differences directly in your browser.</p>
+<h4>Comparison Tools</h4>
+<ul>
+<li>Text Comparison</li>
+<li>Difference Detection</li>
+<li>Character Count</li>
+<li>Line Comparison</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Highlight Differences</li>
+<li>Copy Result</li>
+<li>Download Result</li>
+<li>Browser-Side Processing</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/url-toolkit.html" class="card-link">
+<div class="card">
+<h3>URL Toolkit</h3>
+<p>Encode, decode, analyze and build URLs directly in your browser.</p>
+<h4>URL Tools</h4>
+<ul>
+<li>URL Encoder</li>
+<li>URL Decoder</li>
+<li>URL Parser</li>
+<li>UTM Builder</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Query Parameter Reader</li>
+<li>Copy Results</li>
+<li>Download Results</li>
+<li>Browser-Side Processing</li>
+</ul>
+</div>
+</a>
+
+</div>
+</div>
+
+<div class="tool-category">
+<h2 class="category-title">Documents</h2>
+<p class="category-description">
+Tools for working with PDF files and document workflows directly in the browser.
+</p>
+
+<div class="grid">
+
+<a href="tools/pdf-toolkit.html" class="card-link">
+<div class="card">
+<h3>PDF Toolkit</h3>
+<p>Edit, organize, secure and convert PDF documents directly in your browser.</p>
+<h4>PDF Tools</h4>
+<ul>
+<li>Merge & Split PDF</li>
+<li>Compress & Rotate PDF</li>
+<li>Page Management</li>
+<li>Watermark & Numbering</li>
+<li>Sign PDF</li>
+</ul>
+<h4>Conversions</h4>
+<ul>
+<li>PDF → JPG / PNG</li>
+<li>Images → PDF</li>
+</ul>
+</div>
+</a>
+
+</div>
+</div>
+
+<div class="tool-category">
+<h2 class="category-title">Images & Design</h2>
+<p class="category-description">
+Image editing, color conversion, palettes and design utilities for creators and developers.
+</p>
+
+<div class="grid">
+
+<a href="tools/image-toolkit.html" class="card-link">
+<div class="card">
+<h3>Image Toolkit</h3>
+<p>Resize, compress, convert and optimize images.</p>
+<h4>Image Tools</h4>
+<ul>
+<li>Resize & Compress</li>
+<li>JPG / PNG / WEBP Conversion</li>
+<li>Rotate & Flip</li>
+<li>Image to PDF</li>
+</ul>
+</div>
+</a>
+
+<a href="tools/color-toolkit.html" class="card-link">
+<div class="card">
+<h3>Color Toolkit</h3>
+<p>Convert, generate and check colors for accessibility.</p>
+<h4>Color Tools</h4>
+<ul>
+<li>HEX / RGB / HSL Converter</li>
+<li>Random Color Generator</li>
+<li>Contrast Checker</li>
+<li>Palette Generator</li>
+</ul>
+<h4>Features</h4>
+<ul>
+<li>Color Preview</li>
+<li>Copy Color Values</li>
+<li>Saved Palettes</li>
+<li>Download Palette</li>
+</ul>
+</div>
+</a>
+
+</div>
+</div>
+
+<div class="tool-category">
+<h2 class="category-title">Utilities</h2>
+<p class="category-description">
+Everyday productivity tools for conversions, passwords, dates, QR codes and text workflows.
+</p>
+
 <div class="grid">
 
 <a href="tools/qr-generator.html" class="card-link">
 <div class="card">
 <h3>QR Code Generator</h3>
 <p>Create QR codes for websites, Wi-Fi networks, contacts, events and more.</p>
-
 <h4>Supported QR Types</h4>
 <ul>
 <li>URL & Website QR Codes</li>
@@ -292,7 +557,6 @@ Professional browser-based tools for productivity and development.
 <li>Event QR Codes</li>
 <li>Text QR Codes</li>
 </ul>
-
 <h4>Export Options</h4>
 <ul>
 <li>PNG & PNG HD</li>
@@ -303,122 +567,32 @@ Professional browser-based tools for productivity and development.
 </div>
 </a>
 
-<a href="tools/pdf-toolkit.html" class="card-link">
+<a href="tools/date-time-toolkit.html" class="card-link">
 <div class="card">
-<h3>PDF Toolkit</h3>
-<p>Edit, organize, secure and convert PDF documents directly in your browser.</p>
-
-<h4>PDF Tools</h4>
+<h3>Date & Time Toolkit</h3>
+<p>Calculate dates, ages, timestamps and time differences.</p>
+<h4>Tools Included</h4>
 <ul>
-<li>Merge & Split PDF</li>
-<li>Compress & Rotate PDF</li>
-<li>Page Management</li>
-<li>Watermark & Numbering</li>
-<li>Sign PDF</li>
+<li>Date Difference Calculator</li>
+<li>Age Calculator</li>
+<li>Timestamp Converter</li>
+<li>Add / Subtract Days</li>
+<li>Countdown Calculator</li>
 </ul>
-
-<h4>Conversions</h4>
-<ul>
-<li>PDF → JPG / PNG</li>
-<li>Images → PDF</li>
-</ul>
-</div>
-</a>
-<a href="tools/image-toolkit.html" class="card-link">
-<div class="card">
-
-<h3>Image Toolkit</h3>
-
-<p>Resize, compress, convert and optimize images.</p>
-
-<h4>Image Tools</h4>
-<ul>
-<li>Resize & Compress</li>
-<li>JPG / PNG / WEBP Conversion</li>
-<li>Rotate & Flip</li>
-<li>Image to PDF</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/data-converter.html" class="card-link">
-<div class="card">
-
-<h3>Data Converter</h3>
-
-<p>Convert CSV, XLSX, JSON and XML directly in your browser.</p>
-
-<h4>Conversions</h4>
-<ul>
-<li>CSV ↔ XLSX</li>
-<li>XLSX ↔ JSON</li>
-<li>CSV ↔ JSON</li>
-<li>JSON ↔ XML</li>
-</ul>
-
-<h4>Utilities</h4>
-<ul>
-<li>JSON Tools</li>
-<li>XML Tools</li>
-</ul>
-</div>
-</a>
-<a href="tools/text-toolkit.html" class="card-link">
-<div class="card">
-
-<h3>Text Toolkit</h3>
-
-<p>Count, clean, convert, sort, encode and transform text directly in your browser.</p>
-
-<h4>Text Tools</h4>
-<ul>
-<li>Word & Character Counter</li>
-<li>Case Converter</li>
-<li>Text Cleanup Tools</li>
-<li>Find & Replace</li>
-</ul>
-
-<h4>Utilities</h4>
-<ul>
-<li>Text to Slug</li>
-<li>URL Encode / Decode</li>
-<li>Base64 Encode / Decode</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/password-toolkit.html" class="card-link">
-<div class="card">
-
-<h3>Password Toolkit</h3>
-
-<p>Generate passwords, passphrases and secure hashes.</p>
-
-<h4>Security Tools</h4>
-<ul>
-<li>Password Generator</li>
-<li>Password Strength Checker</li>
-<li>Passphrase Generator</li>
-<li>SHA-256 / SHA-512 Hash Generator</li>
-</ul>
-
 <h4>Features</h4>
 <ul>
-<li>Custom Password Length</li>
-<li>Password History</li>
-<li>Copy Password & Passphrase</li>
-<li>Secure Hash Generation</li>
+<li>Copy Results</li>
+<li>Calculation History</li>
+<li>Clear History</li>
+<li>Keyboard Shortcut</li>
 </ul>
-
 </div>
 </a>
+
 <a href="tools/unit-converter.html" class="card-link">
 <div class="card">
-
 <h3>Unit Converter</h3>
-
 <p>Convert length, weight, temperature, area and more.</p>
-
 <h4>Conversion Categories</h4>
 <ul>
 <li>Length</li>
@@ -428,7 +602,6 @@ Professional browser-based tools for productivity and development.
 <li>Volume</li>
 <li>Speed</li>
 </ul>
-
 <h4>Features</h4>
 <ul>
 <li>Favorite Conversions</li>
@@ -436,214 +609,85 @@ Professional browser-based tools for productivity and development.
 <li>Copy Results</li>
 <li>Conversion History</li>
 </ul>
-
 </div>
 </a>
-<a href="tools/color-toolkit.html" class="card-link">
+
+<a href="tools/password-toolkit.html" class="card-link">
 <div class="card">
-
-<h3>Color Toolkit</h3>
-
-<p>Convert, generate and check colors for accessibility.</p>
-
-<h4>Color Tools</h4>
+<h3>Password Toolkit</h3>
+<p>Generate passwords, passphrases and secure hashes.</p>
+<h4>Security Tools</h4>
 <ul>
-<li>HEX / RGB Converter</li>
-<li>Random Color Generator</li>
-<li>Contrast Checker</li>
-<li>Palette Generator</li>
+<li>Password Generator</li>
+<li>Password Strength Checker</li>
+<li>Passphrase Generator</li>
+<li>SHA-256 / SHA-512 Hash Generator</li>
 </ul>
-
 <h4>Features</h4>
 <ul>
-<li>Color Preview</li>
-<li>Copy Color Values</li>
-<li>Saved Palettes</li>
-<li>Accessibility Check</li>
+<li>Custom Password Length</li>
+<li>Password History</li>
+<li>Copy Password & Passphrase</li>
+<li>Secure Hash Generation</li>
 </ul>
-
 </div>
 </a>
-<a href="tools/date-time-toolkit.html" class="card-link">
+
+<a href="tools/text-toolkit.html" class="card-link">
 <div class="card">
-
-<h3>Date & Time Toolkit</h3>
-
-<p>Calculate dates, ages, timestamps and time differences.</p>
-
-<h4>Tools Included</h4>
+<h3>Text Toolkit</h3>
+<p>Count, clean, convert, sort, encode and transform text directly in your browser.</p>
+<h4>Text Tools</h4>
 <ul>
-<li>Date Difference Calculator</li>
-<li>Age Calculator</li>
-<li>Timestamp Converter</li>
-<li>Add / Subtract Days</li>
-<li>Current Timestamp</li>
+<li>Word & Character Counter</li>
+<li>Case Converter</li>
+<li>Text Cleanup Tools</li>
+<li>Find & Replace</li>
 </ul>
-
-<h4>Features</h4>
+<h4>Utilities</h4>
 <ul>
-<li>Copy Results</li>
-<li>Calculation History</li>
-<li>Clear History</li>
-<li>Keyboard Shortcut (Ctrl + Enter)</li>
+<li>Text to Slug</li>
+<li>URL Encode / Decode</li>
+<li>Base64 Encode / Decode</li>
 </ul>
-
 </div>
 </a>
-<a href="tools/file-hash-checker.html" class="card-link">
-<div class="card">
-
-<h3>File Hash Checker</h3>
-
-<p>Generate and verify file hashes directly in your browser.</p>
-
-<h4>Hash Algorithms</h4>
-<ul>
-<li>MD5</li>
-<li>SHA-1</li>
-<li>SHA-256</li>
-<li>SHA-512</li>
-</ul>
-
-<h4>Features</h4>
-<ul>
-<li>Drag & Drop Files</li>
-<li>Hash Verification</li>
-<li>Copy Results</li>
-<li>Browser-Side Processing</li>
-</ul>
 
 </div>
-</a>
-<a href="tools/uuid-generator.html" class="card-link">
-<div class="card">
-
-<h3>UUID Generator</h3>
-
-<p>Generate unique UUIDs directly in your browser.</p>
-
-<h4>UUID Tools</h4>
-<ul>
-<li>UUID v4 Generator</li>
-<li>Bulk UUID Generation</li>
-<li>Copy Single UUID</li>
-<li>Copy All UUIDs</li>
-</ul>
-
-<h4>Features</h4>
-<ul>
-<li>Custom Quantity</li>
-<li>Download Results</li>
-<li>Clear Results</li>
-<li>Browser-Side Processing</li>
-</ul>
-
 </div>
-</a>
-<a href="tools/base64-toolkit.html" class="card-link">
+
+<div class="tool-category">
+<h2 class="category-title">Data & Conversion</h2>
+<p class="category-description">
+Convert structured data files and formats without uploading data to external servers.
+</p>
+
+<div class="grid">
+
+<a href="tools/data-converter.html" class="card-link">
 <div class="card">
-
-<h3>Base64 Toolkit</h3>
-
-<p>Encode and decode Base64 data directly in your browser.</p>
-
-<h4>Tools Included</h4>
+<h3>Data Converter</h3>
+<p>Convert CSV, XLSX, JSON and XML directly in your browser.</p>
+<h4>Conversions</h4>
 <ul>
-<li>Base64 Encode</li>
-<li>Base64 Decode</li>
-<li>Copy Result</li>
-<li>Download Result</li>
+<li>CSV ↔ XLSX</li>
+<li>XLSX ↔ JSON</li>
+<li>CSV ↔ JSON</li>
+<li>JSON ↔ XML</li>
 </ul>
-
-<h4>Features</h4>
+<h4>Utilities</h4>
 <ul>
-<li>Instant Conversion</li>
-<li>UTF-8 Support</li>
-<li>Browser-Side Processing</li>
-<li>No Data Uploads</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/regex-tester.html" class="card-link">
-<div class="card">
-
-<h3>Regex Tester</h3>
-
-<p>Test regular expressions and preview matches directly in your browser.</p>
-
-<h4>Regex Tools</h4>
-<ul>
-<li>Live Regex Testing</li>
-<li>Match Highlighting</li>
-<li>Flags Support</li>
-<li>Match Count</li>
-</ul>
-
-<h4>Features</h4>
-<ul>
-<li>Copy Matches</li>
-<li>Clear Inputs</li>
-<li>Browser-Side Processing</li>
-<li>No Data Uploads</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/diff-checker.html" class="card-link">
-<div class="card">
-
-<h3>Text Diff Checker</h3>
-
-<p>Compare two texts and instantly identify line-by-line differences directly in your browser.</p>
-
-<h4>Comparison Tools</h4>
-<ul>
-<li>Text Comparison</li>
-<li>Difference Detection</li>
-<li>Character Count</li>
-<li>Line Comparison</li>
-</ul>
-
-<h4>Features</h4>
-<ul>
-<li>Highlight Differences</li>
-<li>Copy Result</li>
-<li>Download Result</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/url-toolkit.html" class="card-link">
-<div class="card">
-
-<h3>URL Toolkit</h3>
-
-<p>Encode, decode, analyze and build URLs directly in your browser.</p>
-
-<h4>URL Tools</h4>
-<ul>
-<li>URL Encoder</li>
-<li>URL Decoder</li>
-<li>URL Parser</li>
-<li>UTM Builder</li>
-</ul>
-
-<h4>Features</h4>
-<ul>
-<li>Query Parameter Reader</li>
+<li>JSON Tools</li>
+<li>XML Tools</li>
 <li>Copy Results</li>
 <li>Download Results</li>
-<li>Browser-Side Processing</li>
 </ul>
-
 </div>
 </a>
-<a href="tools/json-toolkit.html" class="tool-card">
-<h3>JSON Toolkit Pro</h3>
-<p>Format, validate, minify, escape, unescape and compare JSON data directly in your browser.</p>
-</a>
+
+</div>
+</div>
+
 </section>
 
 <footer class="footer" id="footer">
