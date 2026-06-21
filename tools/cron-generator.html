@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | Cron Expression Generator</title>
+
+<meta name="description" content="Create cron expressions and understand schedules directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+font-size:42px;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+}
+
+textarea{
+resize:none;
+}
+
+select:focus,
+input:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.result{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:16px;
+margin-top:16px;
+word-break:break-all;
+font-family:monospace;
+}
+
+.description{
+margin-top:14px;
+padding:14px;
+background:#fef2f2;
+border:1px solid #fecaca;
+border-radius:12px;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:900px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+h1{
+font-size:34px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>Cron Expression Generator</h1>
+
+<p class="subtitle">
+Create cron schedules and understand task timing instantly.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+
+<label>Minute</label>
+<input id="minute" value="0">
+
+<label>Hour</label>
+<input id="hour" value="0">
+
+<label>Day of Month</label>
+<input id="day" value="*">
+
+<label>Month</label>
+<input id="month" value="*">
+
+<label>Day of Week</label>
+<input id="weekday" value="*">
+
+<div class="button-group">
+<button onclick="generateCron()">Generate Cron</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+</div>
+
+<div>
+
+<label>Cron Expression</label>
+
+<textarea
+id="cronOutput"
+rows="4"
+readonly
+placeholder="Cron expression will appear here..."
+></textarea>
+
+<div class="button-group">
+<button onclick="copyCron()">Copy</button>
+<button onclick="downloadCron()">Download TXT</button>
+</div>
+
+<div id="cronDescription" class="description">
+Waiting for cron generation...
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const toast=document.getElementById("toast");
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+generateCron();
+}
+
+});
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function generateCron(){
+
+const minute=document.getElementById("minute").value.trim();
+const hour=document.getElementById("hour").value.trim();
+const day=document.getElementById("day").value.trim();
+const month=document.getElementById("month").value.trim();
+const weekday=document.getElementById("weekday").value.trim();
+
+const cron=
+`${minute} ${hour} ${day} ${month} ${weekday}`;
+
+document.getElementById("cronOutput").value=cron;
+
+document.getElementById("cronDescription").innerHTML=
+`Runs at minute <strong>${minute}</strong>, hour <strong>${hour}</strong>, day <strong>${day}</strong>, month <strong>${month}</strong>, weekday <strong>${weekday}</strong>.`;
+
+}
+
+function copyCron(){
+
+const text=document.getElementById("cronOutput").value;
+
+if(!text){
+showToast("Nothing to copy");
+return;
+}
+
+navigator.clipboard.writeText(text);
+
+showToast("Copied");
+
+}
+
+function downloadCron(){
+
+const text=document.getElementById("cronOutput").value;
+
+if(!text){
+showToast("Nothing to download");
+return;
+}
+
+const blob=new Blob([text],{
+type:"text/plain;charset=utf-8"
+});
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="cron-expression.txt";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started");
+
+}
+
+function clearAll(){
+
+document.getElementById("minute").value="0";
+document.getElementById("hour").value="0";
+document.getElementById("day").value="*";
+document.getElementById("month").value="*";
+document.getElementById("weekday").value="*";
+
+document.getElementById("cronOutput").value="";
+
+document.getElementById("cronDescription").innerHTML=
+"Waiting for cron generation...";
+
+}
+
+</script>
+
+</body>
+</html>
