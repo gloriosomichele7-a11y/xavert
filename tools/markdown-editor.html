@@ -430,57 +430,13 @@ html=html.replace(/`([^`]+)`/gim,"<code>$1</code>");
 html=html.replace(/$begin:math:display$\(\[\^$end:math:display$]+)\]$begin:math:text$\(\[\^\)\]\+\)$end:math:text$/gim,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
 
-const lines=html.split(/\r?\n/);
-let result="";
-let inList=false;
-
-lines.forEach(function(line){
-
-if(/^- $begin:math:display$x$end:math:display$ /i.test(line)){
-if(!inList){
-result+="<ul>";
-inList=true;
-}
-result+=line.replace(/^- $begin:math:display$x$end:math:display$ (.*)$/i,'<li><input type="checkbox" checked disabled> $1</li>');
-return;
-}
-
-if(/^- $begin:math:display$ $end:math:display$ /i.test(line)){
-if(!inList){
-result+="<ul>";
-inList=true;
-}
-result+=line.replace(/^- $begin:math:display$ $end:math:display$ (.*)$/i,'<li><input type="checkbox" disabled> $1</li>');
-return;
-}
-
-if(/^- /.test(line)){
-if(!inList){
-result+="<ul>";
-inList=true;
-}
-result+=line.replace(/^- (.*)$/,'<li>$1</li>');
-return;
-}
-
-if(inList){
-result+="</ul>";
-inList=false;
-}
-
-result+=line + "\n";
-
-});
-
-if(inList){
-result+="</ul>";
-}
-
-html=result;
+html=html.replace(/^- (.*$)/gim,"<li>$1</li>");
+html=html.replace(/(<li>.*<\/li>)/gims,"<ul>$1</ul>");
 
 html=html
 .split(/\n{2,}/)
-.map(block=>{
+.map(function(block){
+
 block=block.trim();
 
 if(!block){
@@ -497,6 +453,7 @@ return block;
 }
 
 return "<p>" + block.replace(/\n/g,"<br>") + "</p>";
+
 })
 .join("");
 
