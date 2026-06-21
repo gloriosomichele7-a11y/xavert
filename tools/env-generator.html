@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | .ENV Generator</title>
+
+<meta name="description" content="Generate .env environment files directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+}
+
+h1{
+text-align:center;
+font-size:42px;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+label{
+display:block;
+margin:12px 0 6px;
+font-weight:700;
+}
+
+input,
+select,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+}
+
+textarea{
+min-height:320px;
+font-family:monospace;
+resize:vertical;
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:900px){
+
+.grid{
+grid-template-columns:1fr;
+}
+
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+h1{
+font-size:34px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>.ENV Generator</h1>
+
+<p class="subtitle">
+Generate environment configuration files for web applications.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+
+<label>Application Name</label>
+<input id="appName" value="XAVERT">
+
+<label>Environment</label>
+<select id="appEnv">
+<option>production</option>
+<option>development</option>
+<option>local</option>
+<option>staging</option>
+</select>
+
+<label>Debug Mode</label>
+<select id="appDebug">
+<option>false</option>
+<option>true</option>
+</select>
+
+<label>Application URL</label>
+<input id="appUrl" placeholder="https://example.com">
+
+<label>Database Host</label>
+<input id="dbHost" value="localhost">
+
+<label>Database Port</label>
+<input id="dbPort" value="3306">
+
+<label>Database Name</label>
+<input id="dbName" placeholder="database_name">
+
+<label>Database User</label>
+<input id="dbUser" placeholder="database_user">
+
+<label>Database Password</label>
+<input id="dbPassword" placeholder="database_password">
+
+<div class="button-group">
+<button onclick="generateEnv()">Generate</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+</div>
+
+<div>
+
+<label>Generated .ENV</label>
+
+<textarea
+id="output"
+readonly
+placeholder=".env file will appear here..."
+></textarea>
+
+<div class="button-group">
+<button onclick="copyOutput()">Copy</button>
+<button onclick="downloadOutput()">Download .env</button>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const toast=document.getElementById("toast");
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function generateEnv(){
+
+const env=
+`APP_NAME="${document.getElementById("appName").value}"
+APP_ENV=${document.getElementById("appEnv").value}
+APP_DEBUG=${document.getElementById("appDebug").value}
+APP_URL=${document.getElementById("appUrl").value}
+
+DB_HOST=${document.getElementById("dbHost").value}
+DB_PORT=${document.getElementById("dbPort").value}
+DB_NAME=${document.getElementById("dbName").value}
+DB_USER=${document.getElementById("dbUser").value}
+DB_PASSWORD=${document.getElementById("dbPassword").value}`;
+
+document.getElementById("output").value=env;
+
+}
+
+function copyOutput(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to copy");
+return;
+}
+
+navigator.clipboard.writeText(text);
+
+showToast("Copied");
+
+}
+
+function downloadOutput(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to download");
+return;
+}
+
+const blob=new Blob([text],{
+type:"text/plain;charset=utf-8"
+});
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download=".env";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started");
+
+}
+
+function clearAll(){
+
+document.getElementById("appName").value="XAVERT";
+document.getElementById("appUrl").value="";
+document.getElementById("dbName").value="";
+document.getElementById("dbUser").value="";
+document.getElementById("dbPassword").value="";
+document.getElementById("output").value="";
+
+}
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+generateEnv();
+}
+
+});
+
+</script>
+
+</body>
+</html>
