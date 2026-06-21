@@ -331,16 +331,25 @@ Downloads: 0
 </div>
 
 <div class="download-buttons" id="downloadButtons">
+
+<div class="button-group">
 <button onclick="downloadPNG()">Download PNG</button>
-<button onclick="downloadPNGHD()">Download PNG HD</button>
 <button onclick="downloadSVG()">Download SVG</button>
-<button onclick="downloadTXT()">Download TXT</button>
 <button onclick="downloadPDF()">Download PDF</button>
+</div>
+
+<div class="button-group">
+<button onclick="downloadPNGHD()">Download PNG HD</button>
 <button onclick="downloadPDFHD()">Download PDF HD</button>
+<button onclick="downloadTXT()">Download TXT</button>
+</div>
+
+<div class="button-group">
 <button onclick="copyQRData()">Copy QR Data</button>
 <button onclick="copyQR()">Copy QR Image</button>
 </div>
 
+</div>
 </div>
 </div>
 
@@ -699,7 +708,8 @@ qrStats.innerHTML=
 detected.replace("Detected type: ","QR Type: ") +
 "<br>Characters: " + data.length +
 "<br>Size: 350×350 px" +
-"<br>Error Correction: H";
+"<br>Error Correction: H" +
+"<br>Generated: " + new Date().toLocaleString();
 
 qrStats.style.display="block";
 
