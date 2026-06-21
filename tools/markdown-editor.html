@@ -654,7 +654,17 @@ if(!inList){
 html += "<ul>";
 inList=true;
 }
-html += "<li>" + parseInline(line.slice(2)) + "</li>";
+
+const itemText=line.slice(2);
+
+if(itemText.toLowerCase().startsWith("[x] ")){
+html += '<li><input type="checkbox" checked disabled> ' + parseInline(itemText.slice(4)) + "</li>";
+}else if(itemText.startsWith("[ ] ")){
+html += '<li><input type="checkbox" disabled> ' + parseInline(itemText.slice(4)) + "</li>";
+}else{
+html += "<li>" + parseInline(itemText) + "</li>";
+}
+
 continue;
 }
 
