@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/qr-generator.html">
 <title>XAVERT | QR Code Generator</title>
 
 <meta name="description" content="Free online QR Code Generator to create QR codes for URLs, text, email, phone numbers, SMS, Wi-Fi networks, contacts and events directly in your browser. Download PNG, SVG and PDF files instantly.">
@@ -478,6 +479,9 @@ if(input.startsWith("mailto:")) return "Detected type: Email Address";
 if(input.startsWith("tel:")) return "Detected type: Phone Number";
 if(input.startsWith("sms:")) return "Detected type: SMS";
 if(input.startsWith("http://") || input.startsWith("https://")) return "Detected type: Website URL";
+if(/^[a-z0-9-]+(\.[a-z0-9-]+)+([\/?#].*)?$/i.test(input)){
+return "Detected type: Website URL";
+}
 if(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input)) return "Detected type: Email Address";
 if(/^\+?[0-9\s\-()]{7,}$/.test(input)) return "Detected type: Phone Number";
 
@@ -709,6 +713,7 @@ detected.replace("Detected type: ","QR Type: ") +
 "<br>Characters: " + data.length +
 "<br>Size: 350×350 px" +
 "<br>Error Correction: H" +
+"<br>File Name: QR-" + getFileName() +
 "<br>Generated: " + new Date().toLocaleString();
 
 qrStats.style.display="block";
