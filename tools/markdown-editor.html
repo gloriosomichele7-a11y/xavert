@@ -460,6 +460,7 @@ return "<p>" + block.replace(/\n/g,"<br>") + "</p>";
 return html;
 
 }
+
 function updateStats(text){
 
 const words=text.trim()
@@ -478,15 +479,16 @@ document.getElementById("wordCount").textContent=words;
 document.getElementById("charCount").textContent=characters;
 document.getElementById("lineCount").textContent=lines;
 document.getElementById("headingCount").textContent=headings;
+
 const readingTime=Math.max(1,Math.ceil(words/200));
 document.getElementById("readingTime").textContent=
 words ? readingTime + " min" : "0 min";
+
 }
 
 function renderMarkdown(showMessage=true){
 
 const text=markdownInput.value;
-
 const html=markdownToHtml(text);
 
 previewBox.innerHTML=html || "<p style='color:#6b7280;'>Live preview will appear here.</p>";
@@ -589,6 +591,5 @@ updateStats("");
 
 renderMarkdown(false);
 </script>
-
 </body>
 </html>
