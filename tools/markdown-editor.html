@@ -6,7 +6,7 @@
 
 <title>XAVERT | Markdown Editor</title>
 
-<meta name="description" content="Write, preview, convert and export Markdown documents directly in your browser. Copy Markdown, copy HTML and download files instantly.">
+<meta name="description" content="Free online Markdown Editor with live preview, Markdown to HTML conversion, copy tools and file export directly in your browser.">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -179,7 +179,7 @@ font-weight:700;
 
 .stats{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(5,1fr);
 gap:12px;
 margin-top:16px;
 }
@@ -331,7 +331,12 @@ Write your Markdown here...
 <strong id="headingCount">0</strong>
 <span>Headings</span>
 </div>
+
+<div class="stat-box">
+<strong id="readingTime">0 min</strong>
+<span>Reading Time</span>
 </div>
+</div> 
 
 <div id="message" class="message"></div>
 
@@ -417,6 +422,8 @@ html=html.replace(/`([^`]+)`/gim,"<code>$1</code>");
 html=html.replace(/\[([^\]]+)\]\(([^)]+)\)/gim,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
 html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
 
+html=html.replace(/^\- \[x\] (.*$)/gim,'<li><input type="checkbox" checked disabled> $1</li>');
+html=html.replace(/^\- \[ \] (.*$)/gim,'<li><input type="checkbox" disabled> $1</li>');
 html=html.replace(/^\- (.*$)/gim,"<li>$1</li>");
 html=html.replace(/(<li>.*<\/li>)/gims,"<ul>$1</ul>");
 
@@ -457,7 +464,9 @@ document.getElementById("wordCount").textContent=words;
 document.getElementById("charCount").textContent=characters;
 document.getElementById("lineCount").textContent=lines;
 document.getElementById("headingCount").textContent=headings;
-
+const readingTime=Math.max(1,Math.ceil(words/200));
+document.getElementById("readingTime").textContent=
+words ? readingTime + " min" : "0 min";
 }
 
 function renderMarkdown(showMessage=true){
@@ -557,7 +566,7 @@ htmlDocument,
 function clearAll(){
 
 markdownInput.value="";
-previewBox.innerHTML="";
+previewBox.innerHTML="<p style='color:#6b7280;'>Live preview will appear here.</p>";
 message.textContent="";
 message.className="message";
 updateStats("");
