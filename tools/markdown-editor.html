@@ -185,7 +185,24 @@ margin:12px 0;
 color:#dc2626;
 font-weight:700;
 }
+.preview-box table{
+width:100%;
+border-collapse:collapse;
+margin:14px 0;
+font-size:14px;
+}
 
+.preview-box th,
+.preview-box td{
+border:1px solid #d1d5db;
+padding:10px;
+text-align:left;
+}
+
+.preview-box th{
+background:#f3f4f6;
+font-weight:800;
+}
 .stats{
 display:grid;
 grid-template-columns:repeat(5,1fr);
@@ -462,7 +479,70 @@ return result;
 }
 
 function parseInline(text){
+function isTableSeparator(line){
 
+const trimmed=line.trim();
+
+if(!trimmed.includes("|")){
+return false;
+}
+
+return trimmed
+.split("|")
+.filter(cell=>cell.trim() !== "")
+.every(cell=>/^:?-{3,}:?$/.test(cell.trim()));
+
+}
+
+function parseTable(lines,startIndex){
+
+let header=lines[startIndex].trim();
+let separator=lines[startIndex+1].trim();
+let rows=[];
+let index=startIndex+2;
+
+if(!header.includes("|") || !isTableSeparator(separator)){
+return null;
+}
+
+while(index<lines.length && lines[index].includes("|") && lines[index].trim()!==""){
+rows.push(lines[index].trim());
+index++;
+}
+
+function splitRow(row){
+return row
+.split("|")
+.map(cell=>cell.trim())
+.filter((cell,pos,array)=>!(cell==="" && (pos===0 || pos===array.length-1)));
+}
+
+let headers=splitRow(header);
+
+let html="<table><thead><tr>";
+
+headers.forEach(function(cell){
+html+="<th>" + parseInline(cell) + "</th>";
+});
+
+html+="</tr></thead><tbody>";
+
+rows.forEach(function(row){
+html+="<tr>";
+splitRow(row).forEach(function(cell){
+html+="<td>" + parseInline(cell) + "</td>";
+});
+html+="</tr>";
+});
+
+html+="</tbody></table>";
+
+return {
+html:html,
+nextIndex:index
+};
+
+}
 text=parseLinks(text);
 text=replacePairs(text,"`","<code>","</code>");
 text=replacePairs(text,"**","<strong>","</strong>");
@@ -515,7 +595,17 @@ if(line.trim()===""){
 closeList();
 continue;
 }
+if(i+1<lines.length && line.includes("|") && isTableSeparator(lines[i+1])){
+closeList();
 
+const table=parseTable(lines,i);
+
+if(table){
+html += table.html;
+i=table.nextIndex-1;
+continue;
+}
+}
 if(line.startsWith("# ")){
 closeList();
 html += "<h1>" + parseInline(line.slice(2)) + "</h1>";
