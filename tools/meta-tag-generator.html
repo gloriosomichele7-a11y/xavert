@@ -269,7 +269,13 @@ Create SEO meta tags, Open Graph tags and Twitter Card tags directly in your bro
 <option value="summary_large_image">summary_large_image</option>
 <option value="summary">summary</option>
 </select>
-
+<label for="robotsMeta">Robots Meta</label>
+<select id="robotsMeta">
+<option value="index, follow">index, follow</option>
+<option value="noindex, follow">noindex, follow</option>
+<option value="index, nofollow">index, nofollow</option>
+<option value="noindex, nofollow">noindex, nofollow</option>
+</select>
 <div class="button-group">
 <button onclick="generateTags()">Generate Tags</button>
 <button onclick="clearAll()">Clear</button>
@@ -323,6 +329,7 @@ const keywordsInput=document.getElementById("keywords");
 const canonicalInput=document.getElementById("canonicalUrl");
 const imageInput=document.getElementById("imageUrl");
 const twitterCardInput=document.getElementById("twitterCard");
+const robotsMetaInput=document.getElementById("robotsMeta");
 const output=document.getElementById("output");
 const toast=document.getElementById("toast");
 
@@ -433,7 +440,7 @@ let tags="";
 
 tags += '<title>' + escapeHtml(title) + '</title>\n';
 tags += '<meta name="description" content="' + escapeHtml(description) + '">\n';
-
+tags += '<meta name="robots" content="' + escapeHtml(robotsMetaInput.value) + '">\n';
 if(keywords){
 tags += '<meta name="keywords" content="' + escapeHtml(keywords) + '">\n';
 }
@@ -525,6 +532,7 @@ keywordsInput.value="";
 canonicalInput.value="";
 imageInput.value="";
 twitterCardInput.value="summary_large_image";
+robotsMetaInput.value="index, follow";
 output.value="";
 
 document.getElementById("message").textContent="";
