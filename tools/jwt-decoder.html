@@ -279,6 +279,11 @@ Clear
 <span>Status</span>
 </div>
 
+<div class="info-box">
+<strong id="lengthValue">-</strong>
+<span>Length</span>
+</div>
+  
 </div>
 
 <div class="grid">
@@ -469,7 +474,8 @@ status=
 
 document.getElementById("statusValue").textContent=
 status;
-
+document.getElementById("lengthValue").textContent=
+token.length
 setMessage(
 "JWT decoded successfully.",
 "success"
@@ -568,7 +574,7 @@ document.getElementById("algValue").textContent="-";
 document.getElementById("expValue").textContent="-";
 document.getElementById("iatValue").textContent="-";
 document.getElementById("statusValue").textContent="-";
-
+document.getElementById("lengthValue").textContent="-";
 document.getElementById("message").textContent="";
 
 }
