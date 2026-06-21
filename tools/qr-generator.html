@@ -6,8 +6,7 @@
 
 <title>XAVERT | QR Code Generator</title>
 
-<meta name="description" content="Create QR codes for URLs, text, email, phone numbers, SMS, Wi-Fi networks, contacts and events directly in your browser.">
-
+<meta name="description" content="Free online QR Code Generator to create QR codes for URLs, text, email, phone numbers, SMS, Wi-Fi networks, contacts and events directly in your browser. Download PNG, SVG and PDF files instantly.">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
@@ -337,6 +336,7 @@ Downloads: 0
 <button onclick="downloadSVG()">Download SVG</button>
 <button onclick="downloadPDF()">Download PDF</button>
 <button onclick="downloadPDFHD()">Download PDF HD</button>
+<button onclick="copyQRData()">Copy QR Data</button>
 <button onclick="copyQR()">Copy QR Image</button>
 </div>
 
@@ -833,7 +833,18 @@ createPDF("standard");
 function downloadPDFHD(){
 createPDF("hd");
 }
+function copyQRData(){
 
+if(!currentQRData){
+showToast("Generate a QR code first.");
+return;
+}
+
+navigator.clipboard.writeText(currentQRData);
+
+showToast("QR data copied.");
+
+}
 async function copyQR(){
 
 const canvas=document.querySelector("#qrcode canvas");
