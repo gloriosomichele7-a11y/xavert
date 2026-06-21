@@ -381,7 +381,6 @@ renderMarkdown(true);
 });
 
 function showToast(text,type="info"){
-
 toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
@@ -390,72 +389,194 @@ setTimeout(function(){
 toast.style.display="none";
 toast.className="";
 },2200);
-
 }
 
 function setMessage(text,type){
-
 message.textContent=text;
 message.className="message " + type;
-
 }
 
 function escapeHtml(text){
-
 return text
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;");
+.split("&").join("&amp;")
+.split("<").join("&lt;")
+.split(">").join("&gt;");
+}
+
+function replacePairs(text,marker,openTag,closeTag){
+
+let result="";
+let open=false;
+let i=0;
+
+while(i<text.length){
+
+if(text.slice(i,i+marker.length)===marker){
+result += open ? closeTag : openTag;
+open=!open;
+i += marker.length;
+}else{
+result += text[i];
+i++;
+}
+
+}
+
+if(open){
+result += closeTag;
+}
+
+return result;
+
+}
+
+function parseLinks(text){
+
+let result="";
+let i=0;
+
+while(i<text.length){
+
+let start=text.indexOf("[",i);
+let mid=text.indexOf("](",start);
+let end=text.indexOf(")",mid);
+
+if(start===-1 || mid===-1 || end===-1){
+result += text.slice(i);
+break;
+}
+
+result += text.slice(i,start);
+
+let label=text.slice(start+1,mid);
+let url=text.slice(mid+2,end);
+
+result += '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
+
+i=end+1;
+
+}
+
+return result;
+
+}
+
+function parseInline(text){
+
+text=parseLinks(text);
+text=replacePairs(text,"`","<code>","</code>");
+text=replacePairs(text,"**","<strong>","</strong>");
+text=replacePairs(text,"*","<em>","</em>");
+
+return text;
 
 }
 
 function markdownToHtml(markdown){
 
-let html=escapeHtml(markdown);
+const lines=markdown.split("\n");
+let html="";
+let inList=false;
+let inCode=false;
+let codeBuffer="";
 
-html=html.replace(/```([\s\S]*?)```/g,function(match,code){
-return "<pre><code>" + code.trim() + "</code></pre>";
-});
-
-html=html.replace(/^###### (.*$)/gim,"<h6>$1</h6>");
-html=html.replace(/^##### (.*$)/gim,"<h5>$1</h5>");
-html=html.replace(/^#### (.*$)/gim,"<h4>$1</h4>");
-html=html.replace(/^### (.*$)/gim,"<h3>$1</h3>");
-html=html.replace(/^## (.*$)/gim,"<h2>$1</h2>");
-html=html.replace(/^# (.*$)/gim,"<h1>$1</h1>");
-
-html=html.replace(/\*\*(.*?)\*\*/gim,"<strong>$1</strong>");
-html=html.replace(/\*(.*?)\*/gim,"<em>$1</em>");
-html=html.replace(/`([^`]+)`/gim,"<code>$1</code>");
-html=html.replace(/$begin:math:display$\(\[\^$end:math:display$]+)\]$begin:math:text$\(\[\^\)\]\+\)$end:math:text$/gim,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
-
-html=html.replace(/^- (.*$)/gim,"<li>$1</li>");
-html=html.replace(/(<li>.*<\/li>)/gims,"<ul>$1</ul>");
-
-html=html
-.split(/\n{2,}/)
-.map(function(block){
-
-block=block.trim();
-
-if(!block){
-return "";
+function closeList(){
+if(inList){
+html += "</ul>";
+inList=false;
+}
 }
 
-if(
-block.startsWith("<h") ||
-block.startsWith("<ul") ||
-block.startsWith("<pre") ||
-block.startsWith("<blockquote")
-){
-return block;
+for(let i=0;i<lines.length;i++){
+
+let line=escapeHtml(lines[i]);
+
+if(line.trim().startsWith("```")){
+
+if(!inCode){
+closeList();
+inCode=true;
+codeBuffer="";
+}else{
+html += "<pre><code>" + codeBuffer.trim() + "</code></pre>";
+inCode=false;
+codeBuffer="";
 }
 
-return "<p>" + block.replace(/\n/g,"<br>") + "</p>";
+continue;
+}
 
-})
-.join("");
+if(inCode){
+codeBuffer += line + "\n";
+continue;
+}
+
+if(line.trim()===""){
+closeList();
+continue;
+}
+
+if(line.startsWith("# ")){
+closeList();
+html += "<h1>" + parseInline(line.slice(2)) + "</h1>";
+continue;
+}
+
+if(line.startsWith("## ")){
+closeList();
+html += "<h2>" + parseInline(line.slice(3)) + "</h2>";
+continue;
+}
+
+if(line.startsWith("### ")){
+closeList();
+html += "<h3>" + parseInline(line.slice(4)) + "</h3>";
+continue;
+}
+
+if(line.startsWith("#### ")){
+closeList();
+html += "<h4>" + parseInline(line.slice(5)) + "</h4>";
+continue;
+}
+
+if(line.startsWith("##### ")){
+closeList();
+html += "<h5>" + parseInline(line.slice(6)) + "</h5>";
+continue;
+}
+
+if(line.startsWith("###### ")){
+closeList();
+html += "<h6>" + parseInline(line.slice(7)) + "</h6>";
+continue;
+}
+
+if(line.startsWith("> ")){
+closeList();
+html += "<blockquote>" + parseInline(line.slice(2)) + "</blockquote>";
+continue;
+}
+
+if(line.startsWith("- ")){
+if(!inList){
+html += "<ul>";
+inList=true;
+}
+html += "<li>" + parseInline(line.slice(2)) + "</li>";
+continue;
+}
+
+closeList();
+html += "<p>" + parseInline(line) + "</p>";
+
+}
+
+closeList();
+
+if(inCode){
+html += "<pre><code>" + codeBuffer.trim() + "</code></pre>";
+}
 
 return html;
 
@@ -463,17 +584,17 @@ return html;
 
 function updateStats(text){
 
-const words=text.trim()
-? text.trim().split(/\s+/).length
-: 0;
-
+const clean=text.trim();
+const words=clean ? clean.split(/\s+/).length : 0;
 const characters=text.length;
+const lines=text ? text.split("\n").length : 0;
 
-const lines=text
-? text.split(/\r?\n/).length
-: 0;
-
-const headings=(text.match(/^#{1,6}\s/gm) || []).length;
+let headings=0;
+text.split("\n").forEach(function(line){
+if(line.startsWith("#")){
+headings++;
+}
+});
 
 document.getElementById("wordCount").textContent=words;
 document.getElementById("charCount").textContent=characters;
@@ -528,11 +649,9 @@ showToast("Nothing to download.","error");
 return;
 }
 
-const blob=new Blob([text],{
-type:type
-});
-
+const blob=new Blob([text],{type:type});
 const link=document.createElement("a");
+
 link.href=URL.createObjectURL(blob);
 link.download=fileName;
 
@@ -547,13 +666,7 @@ showToast("Download started.","success");
 }
 
 function downloadMarkdown(){
-
-downloadText(
-markdownInput.value,
-"xavert-markdown-document.md",
-"text/markdown;charset=utf-8"
-);
-
+downloadText(markdownInput.value,"xavert-markdown-document.md","text/markdown;charset=utf-8");
 }
 
 function downloadHtml(){
@@ -571,11 +684,7 @@ previewBox.innerHTML +
 "\n</body>\n" +
 "</html>";
 
-downloadText(
-htmlDocument,
-"xavert-markdown-export.html",
-"text/html;charset=utf-8"
-);
+downloadText(htmlDocument,"xavert-markdown-export.html","text/html;charset=utf-8");
 
 }
 
@@ -591,5 +700,6 @@ updateStats("");
 
 renderMarkdown(false);
 </script>
+  
 </body>
 </html>
