@@ -1,0 +1,758 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | JSON Toolkit Pro</title>
+
+<meta name="description" content="Format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+textarea,
+input{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+select:focus,
+textarea:focus,
+input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+textarea{
+min-height:220px;
+resize:vertical;
+line-height:1.6;
+font-family:monospace;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+margin-top:14px;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+.tool-section{
+display:none;
+}
+
+.tool-section.active{
+display:block;
+}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.error{color:#dc2626;}
+.success{color:#047857;}
+.loading{color:#4b5563;}
+
+.result-box{
+display:none;
+margin-top:16px;
+padding:16px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+line-height:1.7;
+word-break:break-word;
+}
+
+.drop-zone{
+border:2px dashed #d1d5db;
+border-radius:16px;
+padding:26px;
+text-align:center;
+background:#f9fafb;
+cursor:pointer;
+margin-top:12px;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover{
+border-color:#dc2626;
+background:#fff5f5;
+}
+
+.file-count{
+margin-top:10px;
+font-size:14px;
+font-weight:700;
+color:#374151;
+}
+
+.diff-added{
+background:#dcfce7;
+color:#166534;
+padding:6px;
+border-radius:6px;
+margin-bottom:6px;
+}
+
+.diff-removed{
+background:#fee2e2;
+color:#991b1b;
+padding:6px;
+border-radius:6px;
+margin-bottom:6px;
+}
+
+.diff-changed{
+background:#fef3c7;
+color:#92400e;
+padding:6px;
+border-radius:6px;
+margin-bottom:6px;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+h1{font-size:34px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>JSON Toolkit Pro</h1>
+
+<p class="subtitle">
+Format, validate, minify, escape, unescape and compare JSON data directly in your browser.
+</p>
+
+<div class="card">
+<label for="toolSelector">Select Tool</label>
+<select id="toolSelector">
+<option value="formatter">JSON Formatter</option>
+<option value="minifier">JSON Minifier</option>
+<option value="validator">JSON Validator</option>
+<option value="escape">JSON Escape</option>
+<option value="unescape">JSON Unescape</option>
+<option value="compare">JSON Compare</option>
+</select>
+</div>
+
+<div class="card tool-section active" id="formatterTool">
+<h2>JSON Formatter</h2>
+
+<label for="jsonInput">JSON Input</label>
+<textarea id="jsonInput" placeholder='Paste JSON here, for example: {"name":"XAVERT"}'></textarea>
+
+<div class="drop-zone" id="dropZone">
+Click or drag a JSON file here
+</div>
+
+<input type="file" id="jsonFile" accept=".json,application/json" hidden>
+<div id="fileCount" class="file-count">No file selected</div>
+
+<div class="button-group">
+<button onclick="formatJson()">Format JSON</button>
+<button onclick="minifyJson()">Minify JSON</button>
+<button onclick="validateJson()">Validate JSON</button>
+<button onclick="clearMain()">Clear</button>
+</div>
+
+<label for="jsonOutput">Result</label>
+<textarea id="jsonOutput" readonly></textarea>
+
+<div class="button-group">
+<button onclick="copyResult()">Copy Result</button>
+<button onclick="downloadResult('xavert-json-result.json')">Download Result</button>
+</div>
+
+<div id="mainMessage" class="message"></div>
+<div id="jsonStats" class="result-box"></div>
+</div>
+
+<div class="card tool-section" id="minifierTool">
+<h2>JSON Minifier</h2>
+<p class="subtitle">Use the main input area above or switch back to Formatter. Minify is available there.</p>
+</div>
+
+<div class="card tool-section" id="validatorTool">
+<h2>JSON Validator</h2>
+<p class="subtitle">Use the main input area above or press Ctrl + Enter to validate the current JSON.</p>
+</div>
+
+<div class="card tool-section" id="escapeTool">
+<h2>JSON Escape / Unescape</h2>
+
+<label for="escapeInput">Text Input</label>
+<textarea id="escapeInput" placeholder="Paste text or escaped JSON string here..."></textarea>
+
+<div class="button-group">
+<button onclick="escapeJsonText()">Escape</button>
+<button onclick="unescapeJsonText()">Unescape</button>
+<button onclick="clearEscape()">Clear</button>
+</div>
+
+<label for="escapeOutput">Result</label>
+<textarea id="escapeOutput" readonly></textarea>
+
+<div class="button-group">
+<button onclick="copyText(document.getElementById('escapeOutput').value)">Copy Result</button>
+<button onclick="downloadText(document.getElementById('escapeOutput').value,'xavert-json-escaped.txt')">Download TXT</button>
+</div>
+
+<div id="escapeMessage" class="message"></div>
+</div>
+
+<div class="card tool-section" id="unescapeTool">
+<h2>JSON Unescape</h2>
+<p class="subtitle">Use the Escape / Unescape section above.</p>
+</div>
+
+<div class="card tool-section" id="compareTool">
+<h2>JSON Compare</h2>
+
+<label for="compareA">JSON A</label>
+<textarea id="compareA" placeholder='{"name":"XAVERT","version":1}'></textarea>
+
+<label for="compareB">JSON B</label>
+<textarea id="compareB" placeholder='{"name":"XAVERT","version":2}'></textarea>
+
+<div class="button-group">
+<button onclick="compareJson()">Compare JSON</button>
+<button onclick="clearCompare()">Clear</button>
+</div>
+
+<div id="compareMessage" class="message"></div>
+<div id="compareResult" class="result-box"></div>
+</div>
+
+</div>
+
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+const toolSelector=document.getElementById("toolSelector");
+const jsonInput=document.getElementById("jsonInput");
+const jsonOutput=document.getElementById("jsonOutput");
+const mainMessage=document.getElementById("mainMessage");
+const jsonStats=document.getElementById("jsonStats");
+const dropZone=document.getElementById("dropZone");
+const jsonFile=document.getElementById("jsonFile");
+const fileCount=document.getElementById("fileCount");
+const toast=document.getElementById("toast");
+
+toolSelector.addEventListener("change",function(){
+
+document.querySelectorAll(".tool-section").forEach(section=>{
+section.classList.remove("active");
+});
+
+const selected=document.getElementById(toolSelector.value + "Tool");
+
+if(selected){
+selected.classList.add("active");
+}
+
+if(toolSelector.value==="minifier" || toolSelector.value==="validator"){
+document.getElementById("formatterTool").classList.add("active");
+}
+
+if(toolSelector.value==="unescape"){
+document.getElementById("escapeTool").classList.add("active");
+}
+
+});
+
+dropZone.addEventListener("click",function(){
+jsonFile.click();
+});
+
+dropZone.addEventListener("dragover",function(e){
+e.preventDefault();
+dropZone.classList.add("dragover");
+});
+
+dropZone.addEventListener("dragleave",function(){
+dropZone.classList.remove("dragover");
+});
+
+dropZone.addEventListener("drop",function(e){
+e.preventDefault();
+dropZone.classList.remove("dragover");
+jsonFile.files=e.dataTransfer.files;
+loadJsonFile();
+});
+
+jsonFile.addEventListener("change",loadJsonFile);
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+const tool=toolSelector.value;
+
+if(tool==="formatter") formatJson();
+if(tool==="minifier") minifyJson();
+if(tool==="validator") validateJson();
+if(tool==="escape") escapeJsonText();
+if(tool==="unescape") unescapeJsonText();
+if(tool==="compare") compareJson();
+}
+
+});
+
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
+
+function setMessage(element,text,type){
+element.textContent=text;
+element.className="message " + type;
+}
+
+function copyText(text){
+
+if(!text){
+showToast("Nothing to copy.","error");
+return;
+}
+
+navigator.clipboard.writeText(text);
+showToast("Copied.","success");
+
+}
+
+function copyResult(){
+copyText(jsonOutput.value);
+}
+
+function downloadText(text,fileName){
+
+if(!text){
+showToast("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([text],{
+type:"text/plain;charset=utf-8"
+});
+
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download=fileName;
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started.","success");
+
+}
+
+function downloadResult(fileName){
+downloadText(jsonOutput.value,fileName);
+}
+
+async function loadJsonFile(){
+
+const file=jsonFile.files[0];
+
+if(!file){
+fileCount.textContent="No file selected";
+return;
+}
+
+fileCount.textContent=
+file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB";
+
+try{
+jsonInput.value=await file.text();
+setMessage(mainMessage,"File loaded successfully.","success");
+}catch(error){
+setMessage(mainMessage,"Unable to read file.","error");
+}
+
+}
+
+function getJsonInput(){
+
+const text=jsonInput.value.trim();
+
+if(!text){
+setMessage(mainMessage,"Please enter JSON data.","error");
+return null;
+}
+
+try{
+return JSON.parse(text);
+}catch(error){
+setMessage(mainMessage,"Invalid JSON: " + error.message,"error");
+return null;
+}
+
+}
+
+function updateStats(text){
+
+const lines=text ? text.split(/\r?\n/).length : 0;
+const characters=text.length;
+
+jsonStats.style.display="block";
+jsonStats.innerHTML=
+"<strong>JSON Stats</strong><br>" +
+"Lines: <strong>" + lines + "</strong><br>" +
+"Characters: <strong>" + characters + "</strong>";
+
+}
+
+function formatJson(){
+
+const json=getJsonInput();
+
+if(!json){
+jsonOutput.value="";
+jsonStats.style.display="none";
+return;
+}
+
+const result=JSON.stringify(json,null,2);
+
+jsonOutput.value=result;
+
+updateStats(result);
+
+setMessage(mainMessage,"JSON formatted successfully.","success");
+
+}
+
+function minifyJson(){
+
+const json=getJsonInput();
+
+if(!json){
+jsonOutput.value="";
+jsonStats.style.display="none";
+return;
+}
+
+const result=JSON.stringify(json);
+
+jsonOutput.value=result;
+
+updateStats(result);
+
+setMessage(mainMessage,"JSON minified successfully.","success");
+
+}
+
+function validateJson(){
+
+const json=getJsonInput();
+
+if(!json){
+jsonStats.style.display="none";
+return;
+}
+
+jsonOutput.value="Valid JSON";
+
+jsonStats.style.display="block";
+jsonStats.innerHTML=
+"<strong>Validation</strong><br>" +
+"Status: <strong>Valid JSON</strong><br>" +
+"Top-level type: <strong>" +
+(Array.isArray(json) ? "Array" : typeof json) +
+"</strong>";
+
+setMessage(mainMessage,"JSON is valid.","success");
+
+}
+
+function escapeJsonText(){
+
+const input=document.getElementById("escapeInput").value;
+
+if(!input){
+setMessage(document.getElementById("escapeMessage"),"Please enter text to escape.","error");
+return;
+}
+
+document.getElementById("escapeOutput").value=JSON.stringify(input).slice(1,-1);
+
+setMessage(document.getElementById("escapeMessage"),"Text escaped successfully.","success");
+
+}
+
+function unescapeJsonText(){
+
+const input=document.getElementById("escapeInput").value;
+
+if(!input){
+setMessage(document.getElementById("escapeMessage"),"Please enter text to unescape.","error");
+return;
+}
+
+try{
+document.getElementById("escapeOutput").value=JSON.parse('"' + input.replace(/"/g,'\\"') + '"');
+setMessage(document.getElementById("escapeMessage"),"Text unescaped successfully.","success");
+}catch(error){
+setMessage(document.getElementById("escapeMessage"),"Invalid escaped text.","error");
+}
+
+}
+
+function clearMain(){
+
+jsonInput.value="";
+jsonOutput.value="";
+jsonFile.value="";
+fileCount.textContent="No file selected";
+
+mainMessage.textContent="";
+mainMessage.className="message";
+
+jsonStats.innerHTML="";
+jsonStats.style.display="none";
+
+}
+
+function clearEscape(){
+
+document.getElementById("escapeInput").value="";
+document.getElementById("escapeOutput").value="";
+document.getElementById("escapeMessage").textContent="";
+document.getElementById("escapeMessage").className="message";
+
+}
+
+function flattenObject(obj,prefix="",result={}){
+
+if(typeof obj!=="object" || obj===null){
+result[prefix || "value"]=obj;
+return result;
+}
+
+Object.keys(obj).forEach(key=>{
+const path=prefix ? prefix + "." + key : key;
+flattenObject(obj[key],path,result);
+});
+
+return result;
+
+}
+
+function compareJson(){
+
+const aText=document.getElementById("compareA").value.trim();
+const bText=document.getElementById("compareB").value.trim();
+const compareMessage=document.getElementById("compareMessage");
+const compareResult=document.getElementById("compareResult");
+
+if(!aText || !bText){
+setMessage(compareMessage,"Please enter both JSON values.","error");
+return;
+}
+
+try{
+
+const a=flattenObject(JSON.parse(aText));
+const b=flattenObject(JSON.parse(bText));
+
+let html="";
+let changes=0;
+
+const keys=[...new Set([...Object.keys(a),...Object.keys(b)])];
+
+keys.forEach(key=>{
+
+if(!(key in b)){
+changes++;
+html+='<div class="diff-removed">Removed: <strong>' + key + '</strong> = ' + JSON.stringify(a[key]) + '</div>';
+}else if(!(key in a)){
+changes++;
+html+='<div class="diff-added">Added: <strong>' + key + '</strong> = ' + JSON.stringify(b[key]) + '</div>';
+}else if(JSON.stringify(a[key])!==JSON.stringify(b[key])){
+changes++;
+html+='<div class="diff-changed">Changed: <strong>' + key + '</strong><br>A: ' + JSON.stringify(a[key]) + '<br>B: ' + JSON.stringify(b[key]) + '</div>';
+}
+
+});
+
+compareResult.style.display="block";
+
+if(changes===0){
+compareResult.innerHTML="<strong>No differences found.</strong>";
+}else{
+compareResult.innerHTML=
+"<strong>Differences found: " + changes + "</strong><br><br>" +
+html;
+}
+
+setMessage(compareMessage,"JSON comparison completed.","success");
+
+}catch(error){
+compareResult.style.display="none";
+setMessage(compareMessage,"Invalid JSON in one or both inputs.","error");
+}
+
+}
+
+function clearCompare(){
+
+document.getElementById("compareA").value="";
+document.getElementById("compareB").value="";
+document.getElementById("compareMessage").textContent="";
+document.getElementById("compareMessage").className="message";
+document.getElementById("compareResult").innerHTML="";
+document.getElementById("compareResult").style.display="none";
+
+}
+</script>
+
+</body>
+</html>
