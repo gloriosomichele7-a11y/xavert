@@ -427,9 +427,7 @@ html=html.replace(/^# (.*$)/gim,"<h1>$1</h1>");
 html=html.replace(/\*\*(.*?)\*\*/gim,"<strong>$1</strong>");
 html=html.replace(/\*(.*?)\*/gim,"<em>$1</em>");
 html=html.replace(/`([^`]+)`/gim,"<code>$1</code>");
-
 html=html.replace(/$begin:math:display$\(\[\^$end:math:display$]+)\]$begin:math:text$\(\[\^\)\]\+\)$end:math:text$/gim,'<a href="$2" target="_blank" rel="noopener noreferrer">$1</a>');
-
 html=html.replace(/^> (.*$)/gim,"<blockquote>$1</blockquote>");
 
 const lines=html.split(/\r?\n/);
@@ -437,15 +435,6 @@ let result="";
 let inList=false;
 
 lines.forEach(function(line){
-
-if(/^<li>/.test(line)){
-if(!inList){
-result+="<ul>";
-inList=true;
-}
-result+=line;
-return;
-}
 
 if(/^- $begin:math:display$x$end:math:display$ /i.test(line)){
 if(!inList){
@@ -514,7 +503,6 @@ return "<p>" + block.replace(/\n/g,"<br>") + "</p>";
 return html;
 
 }
-
 function updateStats(text){
 
 const words=text.trim()
