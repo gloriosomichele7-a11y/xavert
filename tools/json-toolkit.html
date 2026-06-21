@@ -6,7 +6,7 @@
 
 <title>XAVERT | JSON Toolkit Pro</title>
 
-<meta name="description" content="Format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser.">
+<meta name="description" content="Free online JSON Toolkit to format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser.">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -512,7 +512,7 @@ file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB";
 
 try{
 jsonInput.value=await file.text();
-setMessage(mainMessage,"File loaded successfully.","success");
+setMessage(mainMessage,"JSON file loaded successfully. You can now format, minify or validate it.","success");
 }catch(error){
 setMessage(mainMessage,"Unable to read file.","error");
 }
@@ -537,16 +537,33 @@ return null;
 
 }
 
-function updateStats(text){
+function updateStats(text,json=null){
 
 const lines=text ? text.split(/\r?\n/).length : 0;
 const characters=text.length;
+const bytes=new Blob([text]).size;
+
+let type="-";
+let keys="-";
+
+if(json!==null){
+type=Array.isArray(json) ? "Array" : typeof json;
+
+if(Array.isArray(json)){
+keys=json.length + " items";
+}else if(typeof json==="object"){
+keys=Object.keys(json).length + " keys";
+}
+}
 
 jsonStats.style.display="block";
 jsonStats.innerHTML=
 "<strong>JSON Stats</strong><br>" +
+"Type: <strong>" + type + "</strong><br>" +
+"Structure: <strong>" + keys + "</strong><br>" +
 "Lines: <strong>" + lines + "</strong><br>" +
-"Characters: <strong>" + characters + "</strong>";
+"Characters: <strong>" + characters + "</strong><br>" +
+"Size: <strong>" + bytes + " bytes</strong>";
 
 }
 
@@ -564,7 +581,7 @@ const result=JSON.stringify(json,null,2);
 
 jsonOutput.value=result;
 
-updateStats(result);
+updateStats(result,json);
 
 setMessage(mainMessage,"JSON formatted successfully.","success");
 
@@ -584,7 +601,7 @@ const result=JSON.stringify(json);
 
 jsonOutput.value=result;
 
-updateStats(result);
+updateStats(result,json);
 
 setMessage(mainMessage,"JSON minified successfully.","success");
 
