@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | HTACCESS Generator</title>
+
+<meta name="description" content="Generate common .htaccess rules for redirects, HTTPS and security directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1000px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+}
+
+h1{
+text-align:center;
+font-size:42px;
+margin-bottom:10px;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+select,
+input,
+textarea{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+}
+
+textarea{
+min-height:260px;
+font-family:monospace;
+resize:vertical;
+}
+
+select:focus,
+input:focus,
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:16px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
+
+@media(max-width:768px){
+
+body{
+padding:24px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card{
+padding:20px;
+}
+
+button{
+width:100%;
+}
+
+h1{
+font-size:34px;
+}
+
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>HTACCESS Generator</h1>
+
+<p class="subtitle">
+Generate common .htaccess rules for redirects, HTTPS and security.
+</p>
+
+<div class="card">
+
+<label>Configuration Type</label>
+
+<select id="configType">
+<option value="https">Force HTTPS</option>
+<option value="www">Redirect non-WWW → WWW</option>
+<option value="nonwww">Redirect WWW → non-WWW</option>
+<option value="redirect301">301 Redirect</option>
+<option value="security">Basic Security Headers</option>
+</select>
+
+<label>Domain (only for redirects)</label>
+
+<input
+id="domain"
+placeholder="example.com"
+>
+
+<div class="button-group">
+<button onclick="generateHtaccess()">Generate</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+<label style="margin-top:20px;">Generated .htaccess</label>
+
+<textarea
+id="output"
+readonly
+placeholder=".htaccess code will appear here..."
+></textarea>
+
+<div class="button-group">
+<button onclick="copyOutput()">Copy</button>
+<button onclick="downloadOutput()">Download .htaccess</button>
+</div>
+
+</div>
+
+</div>
+
+<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+
+const toast=document.getElementById("toast");
+
+function showToast(text){
+
+toast.textContent=text;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+},2200);
+
+}
+
+function generateHtaccess(){
+
+const type=document.getElementById("configType").value;
+const domain=document.getElementById("domain").value.trim();
+
+let code="";
+
+if(type==="https"){
+
+code=`RewriteEngine On
+
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]`;
+
+}
+
+else if(type==="www"){
+
+code=`RewriteEngine On
+
+RewriteCond %{HTTP_HOST} !^www\\. [NC]
+RewriteRule ^(.*)$ https://www.${domain}/$1 [L,R=301]`;
+
+}
+
+else if(type==="nonwww"){
+
+code=`RewriteEngine On
+
+RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]
+RewriteRule ^(.*)$ https://${domain}/$1 [L,R=301]`;
+
+}
+
+else if(type==="redirect301"){
+
+code=`Redirect 301 / https://${domain}/`;
+
+}
+
+else if(type==="security"){
+
+code=`Header always set X-Frame-Options SAMEORIGIN
+Header always set X-Content-Type-Options nosniff
+Header always set Referrer-Policy strict-origin-when-cross-origin
+Header always set X-XSS-Protection "1; mode=block"`;
+
+}
+
+document.getElementById("output").value=code;
+
+}
+
+function copyOutput(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to copy");
+return;
+}
+
+navigator.clipboard.writeText(text);
+
+showToast("Copied");
+
+}
+
+function downloadOutput(){
+
+const text=document.getElementById("output").value;
+
+if(!text){
+showToast("Nothing to download");
+return;
+}
+
+const blob=new Blob([text],{
+type:"text/plain;charset=utf-8"
+});
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download=".htaccess";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started");
+
+}
+
+function clearAll(){
+
+document.getElementById("domain").value="";
+document.getElementById("output").value="";
+
+}
+
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+generateHtaccess();
+}
+
+});
+
+</script>
+
+</body>
+</html>
