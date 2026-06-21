@@ -478,7 +478,6 @@ return result;
 
 }
 
-function parseInline(text){
 function isTableSeparator(line){
 
 const trimmed=line.trim();
@@ -543,6 +542,9 @@ nextIndex:index
 };
 
 }
+
+function parseInline(text){
+
 text=parseLinks(text);
 text=replacePairs(text,"`","<code>","</code>");
 text=replacePairs(text,"**","<strong>","</strong>");
@@ -551,7 +553,6 @@ text=replacePairs(text,"*","<em>","</em>");
 return text;
 
 }
-
 function markdownToHtml(markdown){
 
 const lines=markdown.split("\n");
