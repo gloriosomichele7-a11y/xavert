@@ -254,7 +254,8 @@ Create SEO meta tags, Open Graph tags and Twitter Card tags directly in your bro
 <textarea id="siteDescription" placeholder="Write a short SEO description for your page..."></textarea>
 
 <div id="descriptionCounter" class="counter">0 characters</div>
-
+<label for="authorName">Meta Author</label>
+<input id="authorName" type="text" placeholder="John Smith">
 <label for="keywords">Meta Keywords</label>
 <input id="keywords" type="text" placeholder="tools, seo, converter, developer">
 
@@ -326,6 +327,7 @@ Powered by XAVERT
 const titleInput=document.getElementById("siteTitle");
 const descriptionInput=document.getElementById("siteDescription");
 const keywordsInput=document.getElementById("keywords");
+const authorInput=document.getElementById("authorName");
 const canonicalInput=document.getElementById("canonicalUrl");
 const imageInput=document.getElementById("imageUrl");
 const twitterCardInput=document.getElementById("twitterCard");
@@ -422,6 +424,7 @@ const title=titleInput.value.trim();
 const description=descriptionInput.value.trim();
 const keywords=keywordsInput.value.trim();
 const canonical=canonicalInput.value.trim();
+const author=authorInput.value.trim();
 const image=imageInput.value.trim();
 const twitterCard=twitterCardInput.value;
 
@@ -444,7 +447,9 @@ tags += '<meta name="robots" content="' + escapeHtml(robotsMetaInput.value) + '"
 if(keywords){
 tags += '<meta name="keywords" content="' + escapeHtml(keywords) + '">\n';
 }
-
+if(author){
+tags += '<meta name="author" content="' + escapeHtml(author) + '">\n';
+}
 if(canonical){
 tags += '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n';
 }
