@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | Meta Tag Generator</title>
+
+<meta name="description" content="Create SEO meta tags, Open Graph tags and Twitter Card tags for websites directly in your browser.">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+padding:40px 20px;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+}
+
+.back{
+display:inline-block;
+margin-bottom:20px;
+text-decoration:none;
+color:#dc2626;
+font-weight:700;
+}
+
+.logo{
+text-align:center;
+margin-bottom:25px;
+}
+
+.logo img{
+width:180px;
+height:auto;
+}
+
+h1{
+text-align:center;
+margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
+}
+
+.subtitle{
+text-align:center;
+color:#6b7280;
+margin-bottom:28px;
+}
+
+.card{
+background:white;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+margin-bottom:20px;
+}
+
+label{
+display:block;
+margin:14px 0 8px;
+font-weight:700;
+}
+
+input,
+textarea,
+select{
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+background:white;
+}
+
+textarea{
+min-height:120px;
+resize:vertical;
+}
+
+input:focus,
+textarea:focus,
+select:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-group{
+display:flex;
+gap:10px;
+flex-wrap:wrap;
+margin-top:14px;
+}
+
+button{
+background:#dc2626;
+color:white;
+border:none;
+padding:14px 22px;
+border-radius:10px;
+cursor:pointer;
+font-size:15px;
+font-weight:700;
+}
+
+button:hover{
+background:#b91c1c;
+}
+
+.grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:20px;
+}
+
+.output{
+min-height:260px;
+font-family:monospace;
+font-size:13px;
+line-height:1.6;
+}
+
+.preview-box{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:18px;
+margin-top:16px;
+}
+
+.google-title{
+color:#1a0dab;
+font-size:20px;
+line-height:1.3;
+margin-bottom:4px;
+}
+
+.google-url{
+color:#006621;
+font-size:14px;
+margin-bottom:6px;
+word-break:break-all;
+}
+
+.google-description{
+color:#4b5563;
+font-size:14px;
+line-height:1.5;
+}
+
+.counter{
+font-size:13px;
+color:#6b7280;
+margin-top:6px;
+}
+
+.good{color:#047857;}
+.warn{color:#d97706;}
+.bad{color:#dc2626;}
+
+.message{
+margin-top:14px;
+font-size:14px;
+font-weight:600;
+}
+
+.success{color:#047857;}
+.error{color:#dc2626;}
+
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:white;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+box-shadow:0 4px 12px rgba(0,0,0,.2);
+}
+
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
+
+@media(max-width:900px){
+.grid{
+grid-template-columns:1fr;
+}
+}
+
+@media(max-width:768px){
+body{padding:24px 14px;}
+.logo img{width:150px;}
+.card{padding:20px;}
+button{width:100%;}
+h1{font-size:34px;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back">← Back to Home</a>
+
+<div class="logo">
+<img src="../logo-hero.svg" alt="XAVERT">
+</div>
+
+<h1>Meta Tag Generator</h1>
+
+<p class="subtitle">
+Create SEO meta tags, Open Graph tags and Twitter Card tags directly in your browser.
+</p>
+
+<div class="card">
+
+<div class="grid">
+
+<div>
+
+<label for="siteTitle">Meta Title</label>
+<input id="siteTitle" type="text" placeholder="Example: XAVERT | Free Online Tools">
+
+<div id="titleCounter" class="counter">0 characters</div>
+
+<label for="siteDescription">Meta Description</label>
+<textarea id="siteDescription" placeholder="Write a short SEO description for your page..."></textarea>
+
+<div id="descriptionCounter" class="counter">0 characters</div>
+
+<label for="keywords">Meta Keywords</label>
+<input id="keywords" type="text" placeholder="tools, seo, converter, developer">
+
+<label for="canonicalUrl">Canonical URL</label>
+<input id="canonicalUrl" type="url" placeholder="https://example.com/page">
+
+<label for="imageUrl">Open Graph Image URL</label>
+<input id="imageUrl" type="url" placeholder="https://example.com/image.jpg">
+
+<label for="twitterCard">Twitter Card Type</label>
+<select id="twitterCard">
+<option value="summary_large_image">summary_large_image</option>
+<option value="summary">summary</option>
+</select>
+
+<div class="button-group">
+<button onclick="generateTags()">Generate Tags</button>
+<button onclick="clearAll()">Clear</button>
+</div>
+
+<div id="message" class="message"></div>
+
+</div>
+
+<div>
+
+<label for="output">Generated HTML</label>
+<textarea id="output" class="output" readonly></textarea>
+
+<div class="button-group">
+<button onclick="copyOutput()">Copy HTML</button>
+<button onclick="downloadOutput()">Download .html</button>
+</div>
+
+<div class="preview-box">
+<strong>Google Preview</strong>
+<br><br>
+<div id="previewTitle" class="google-title">Your page title will appear here</div>
+<div id="previewUrl" class="google-url">https://example.com/page</div>
+<div id="previewDescription" class="google-description">Your meta description preview will appear here.</div>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
+</div>
+
+<div id="toast"></div>
+
+<script>
+const titleInput=document.getElementById("siteTitle");
+const descriptionInput=document.getElementById("siteDescription");
+const keywordsInput=document.getElementById("keywords");
+const canonicalInput=document.getElementById("canonicalUrl");
+const imageInput=document.getElementById("imageUrl");
+const twitterCardInput=document.getElementById("twitterCard");
+const output=document.getElementById("output");
+const toast=document.getElementById("toast");
+
+titleInput.addEventListener("input",updatePreview);
+descriptionInput.addEventListener("input",updatePreview);
+canonicalInput.addEventListener("input",updatePreview);
+
+document.addEventListener("keydown",function(e){
+if(e.ctrlKey && e.key==="Enter"){
+generateTags();
+}
+});
+
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
+
+function setMessage(text,type){
+
+const message=document.getElementById("message");
+
+message.textContent=text;
+message.className="message " + type;
+
+}
+
+function escapeHtml(value){
+
+return value
+.replace(/&/g,"&amp;")
+.replace(/"/g,"&quot;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;");
+
+}
+
+function updateCounter(id,count,type){
+
+const element=document.getElementById(id);
+
+let status="good";
+
+if(type==="title"){
+if(count<30 || count>65) status="warn";
+if(count>75) status="bad";
+}
+
+if(type==="description"){
+if(count<80 || count>160) status="warn";
+if(count>180) status="bad";
+}
+
+element.textContent=count + " characters";
+element.className="counter " + status;
+
+}
+
+function updatePreview(){
+
+const title=titleInput.value.trim();
+const description=descriptionInput.value.trim();
+const url=canonicalInput.value.trim();
+
+document.getElementById("previewTitle").textContent=
+title || "Your page title will appear here";
+
+document.getElementById("previewDescription").textContent=
+description || "Your meta description preview will appear here.";
+
+document.getElementById("previewUrl").textContent=
+url || "https://example.com/page";
+
+updateCounter("titleCounter",title.length,"title");
+updateCounter("descriptionCounter",description.length,"description");
+
+}
+
+function generateTags(){
+
+const title=titleInput.value.trim();
+const description=descriptionInput.value.trim();
+const keywords=keywordsInput.value.trim();
+const canonical=canonicalInput.value.trim();
+const image=imageInput.value.trim();
+const twitterCard=twitterCardInput.value;
+
+if(!title || !description){
+
+setMessage(
+"Please enter at least a title and description.",
+"error"
+);
+
+return;
+
+}
+
+let tags="";
+
+tags += '<title>' + escapeHtml(title) + '</title>\n';
+tags += '<meta name="description" content="' + escapeHtml(description) + '">\n';
+
+if(keywords){
+tags += '<meta name="keywords" content="' + escapeHtml(keywords) + '">\n';
+}
+
+if(canonical){
+tags += '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n';
+}
+
+tags += '\n<!-- Open Graph -->\n';
+tags += '<meta property="og:title" content="' + escapeHtml(title) + '">\n';
+tags += '<meta property="og:description" content="' + escapeHtml(description) + '">\n';
+
+if(canonical){
+tags += '<meta property="og:url" content="' + escapeHtml(canonical) + '">\n';
+}
+
+tags += '<meta property="og:type" content="website">\n';
+
+if(image){
+tags += '<meta property="og:image" content="' + escapeHtml(image) + '">\n';
+}
+
+tags += '\n<!-- Twitter Card -->\n';
+tags += '<meta name="twitter:card" content="' + escapeHtml(twitterCard) + '">\n';
+tags += '<meta name="twitter:title" content="' + escapeHtml(title) + '">\n';
+tags += '<meta name="twitter:description" content="' + escapeHtml(description) + '">\n';
+
+if(image){
+tags += '<meta name="twitter:image" content="' + escapeHtml(image) + '">\n';
+}
+
+output.value=tags;
+
+updatePreview();
+
+setMessage(
+"Meta tags generated successfully.",
+"success"
+);
+
+}
+
+function copyText(text){
+
+if(!text){
+showToast("Nothing to copy.","error");
+return;
+}
+
+navigator.clipboard.writeText(text);
+showToast("Copied.","success");
+
+}
+
+function copyOutput(){
+copyText(output.value);
+}
+
+function downloadOutput(){
+
+if(!output.value){
+showToast("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([output.value],{
+type:"text/html;charset=utf-8"
+});
+
+const link=document.createElement("a");
+link.href=URL.createObjectURL(blob);
+link.download="xavert-meta-tags.html";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Download started.","success");
+
+}
+
+function clearAll(){
+
+titleInput.value="";
+descriptionInput.value="";
+keywordsInput.value="";
+canonicalInput.value="";
+imageInput.value="";
+twitterCardInput.value="summary_large_image";
+output.value="";
+
+document.getElementById("message").textContent="";
+document.getElementById("message").className="message";
+
+updatePreview();
+
+}
+
+updatePreview();
+</script>
+
+</body>
+</html>
