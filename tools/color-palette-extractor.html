@@ -6,10 +6,12 @@
 
 <title>XAVERT | Color Palette Extractor</title>
 
-<meta name="description" content="Extract dominant colors from images and generate color palettes directly in your browser.">
+<meta name="description" content="Free online Color Palette Extractor to extract dominant colors from images and generate HEX and RGB color palettes directly in your browser. Copy and download palettes instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/color-palette-extractor.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -256,14 +258,18 @@ Palette Size
 </div>
 
 </div>
-
+<div id="imageInfo" style="display:none;text-align:center;color:#6b7280;font-size:14px;margin-top:16px;">
+</div>
 <div class="preview">
 <img id="previewImage" style="display:none;">
 </div>
 
 <div class="actions">
+<button onclick="copyPalette()">Copy Palette</button>
 <button onclick="downloadTXT()">Download TXT</button>
 <button onclick="downloadJSON()">Download JSON</button>
+<button onclick="downloadCSS()">Download CSS</button>
+<button onclick="downloadASE()">Download ASE</button>
 </div>
 
 <div id="palette" class="palette"></div>
@@ -288,7 +294,7 @@ let extractedColors=[];
 const dropzone=document.getElementById("dropzone");
 const fileInput=document.getElementById("fileInput");
 const previewImage=document.getElementById("previewImage");
-
+const imageInfo=document.getElementById("imageInfo");
 dropzone.addEventListener("click",()=>{
 fileInput.click();
 });
@@ -335,16 +341,79 @@ const reader=new FileReader();
 
 reader.onload=function(e){
 
+previewImage.onload=function(){
+
+const size=(file.size/(1024*1024)).toFixed(2);
+
+imageInfo.style.display="block";
+imageInfo.textContent=
+file.name + " • " + size + " MB • " +
+previewImage.naturalWidth + "×" + previewImage.naturalHeight + " px";
+
+};
+
 previewImage.src=e.target.result;
 previewImage.style.display="block";
 imageLoaded=true;
+extractedColors=[];
+document.getElementById("palette").innerHTML="";
 
 };
 
 reader.readAsDataURL(file);
 
 }
+function rgbToHsl(r,g,b){
 
+r/=255;
+g/=255;
+b/=255;
+
+const max=Math.max(r,g,b);
+const min=Math.min(r,g,b);
+
+let h,s,l=(max+min)/2;
+
+if(max===min){
+
+h=0;
+s=0;
+
+}else{
+
+const d=max-min;
+
+s=l>0.5
+? d/(2-max-min)
+: d/(max+min);
+
+switch(max){
+
+case r:
+h=(g-b)/d + (g<b ? 6 : 0);
+break;
+
+case g:
+h=(b-r)/d + 2;
+break;
+
+case b:
+h=(r-g)/d + 4;
+break;
+
+}
+
+h/=6;
+
+}
+
+return {
+h:Math.round(h*360),
+s:Math.round(s*100),
+l:Math.round(l*100)
+};
+
+}
 function rgbToHex(r,g,b){
 
 return "#" +
@@ -402,7 +471,10 @@ document.getElementById("paletteSize").value
 const sorted=Object.entries(buckets)
 .sort((a,b)=>b[1]-a[1])
 .slice(0,size);
-
+const totalPixels=sorted.reduce(
+(sum,item)=>sum+item[1],
+0
+);
 extractedColors=[];
 
 const palette=document.getElementById("palette");
@@ -419,10 +491,19 @@ rgb[0],
 rgb[1],
 rgb[2]
 );
-
+const hsl=rgbToHsl(
+rgb[0],
+rgb[1],
+rgb[2]
+);
+const percentage=
+((item[1]/totalPixels)*100)
+.toFixed(1);
 extractedColors.push({
 hex,
-rgb:`rgb(${rgb.join(", ")})`
+rgb:`rgb(${rgb.join(", ")})`,
+hsl:`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+percentage:percentage + "%"
 });
 
 const card=document.createElement("div");
@@ -433,7 +514,9 @@ card.innerHTML=`
 
 <div class="color-info">
 <div><strong>${hex}</strong></div>
+<div>${percentage}%</div>
 <div>rgb(${rgb.join(", ")})</div>
+<div>hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</div>
 <button class="copy-btn">Copy HEX</button>
 </div>
 `;
@@ -451,7 +534,22 @@ palette.appendChild(card);
 });
 
 }
+function copyPalette(){
 
+if(!extractedColors.length){
+showToast("Generate a palette first");
+return;
+}
+
+const content=extractedColors
+.map(c=>`${c.hex} | ${c.rgb}`)
+.join("\n");
+
+navigator.clipboard.writeText(content);
+
+showToast("Palette copied");
+
+}
 function downloadTXT(){
 
 if(!extractedColors.length){
@@ -485,6 +583,49 @@ JSON.stringify(extractedColors,null,2),
 );
 
 }
+
+function downloadCSS(){
+
+if(!extractedColors.length){
+showToast("Generate a palette first");
+return;
+}
+
+const content=
+":root {\n" +
+extractedColors
+.map((c,index)=>"  --color-" + (index+1) + ": " + c.hex + ";")
+.join("\n") +
+"\n}";
+
+downloadFile(
+content,
+"xavert-palette.css",
+"text/css"
+);
+
+}
+
+function downloadASE(){
+
+if(!extractedColors.length){
+showToast("Generate a palette first");
+return;
+}
+
+const content=extractedColors
+.map((c,index)=>{
+return "Color " + (index+1) + " = " + c.hex;
+})
+.join("\n");
+
+downloadFile(
+content,
+"xavert-palette.ase.txt",
+"text/plain"
+);
+
+}  
 
 function downloadFile(content,name,type){
 
