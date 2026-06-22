@@ -270,6 +270,7 @@ Palette Size
 <button onclick="downloadJSON()">Download JSON</button>
 <button onclick="downloadCSS()">Download CSS</button>
 <button onclick="downloadASE()">Download ASE</button>
+<button onclick="downloadSVG()">Download SVG</button>
 </div>
 
 <div id="palette" class="palette"></div>
@@ -517,16 +518,25 @@ card.innerHTML=`
 <div>${percentage}%</div>
 <div>rgb(${rgb.join(", ")})</div>
 <div>hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</div>
-<button class="copy-btn">Copy HEX</button>
+<button class="copy-btn copy-hex">Copy HEX</button>
+<button class="copy-btn copy-rgb">Copy RGB</button>
+<button class="copy-btn copy-hsl">Copy HSL</button>
 </div>
 `;
 
-card.querySelector("button")
-.addEventListener("click",()=>{
-
+card.querySelector(".copy-hex").addEventListener("click",()=>{
 navigator.clipboard.writeText(hex);
-showToast("Copied");
+showToast("HEX copied");
+});
 
+card.querySelector(".copy-rgb").addEventListener("click",()=>{
+navigator.clipboard.writeText(`rgb(${rgb.join(", ")})`);
+showToast("RGB copied");
+});
+
+card.querySelector(".copy-hsl").addEventListener("click",()=>{
+navigator.clipboard.writeText(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`);
+showToast("HSL copied");
 });
 
 palette.appendChild(card);
@@ -626,7 +636,43 @@ content,
 );
 
 }  
+function downloadSVG(){
 
+if(!extractedColors.length){
+showToast("Generate a palette first");
+return;
+}
+
+const swatchWidth=140;
+const swatchHeight=140;
+const labelHeight=52;
+const width=swatchWidth*extractedColors.length;
+const height=swatchHeight+labelHeight;
+
+let svg=
+'<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '">' +
+'<rect width="100%" height="100%" fill="#ffffff"/>';
+
+extractedColors.forEach((color,index)=>{
+
+const x=index*swatchWidth;
+
+svg+=
+'<rect x="' + x + '" y="0" width="' + swatchWidth + '" height="' + swatchHeight + '" fill="' + color.hex + '"/>' +
+'<text x="' + (x+swatchWidth/2) + '" y="' + (swatchHeight+22) + '" text-anchor="middle" font-family="Arial" font-size="13" fill="#111827">' + color.hex + '</text>' +
+'<text x="' + (x+swatchWidth/2) + '" y="' + (swatchHeight+42) + '" text-anchor="middle" font-family="Arial" font-size="11" fill="#6b7280">' + color.percentage + '</text>';
+
+});
+
+svg+='</svg>';
+
+downloadFile(
+svg,
+"xavert-palette.svg",
+"image/svg+xml"
+);
+
+}
 function downloadFile(content,name,type){
 
 const blob=new Blob([content],{type});
