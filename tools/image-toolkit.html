@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Image Toolkit</title>
 
-<meta name="description" content="Resize, crop, compress, convert, rotate, flip, watermark and export images directly in your browser.">
+<meta name="description" content="Free online Image Toolkit to resize, crop, compress, convert, rotate, flip, watermark, clean metadata and export images directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/image-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 
 <style>
@@ -317,13 +319,25 @@ Clear
 <div id="message" class="message"></div>
 
 <div class="preview" id="preview"></div>
-
+<div id="imageStats" class="file-count" style="display:none;text-align:center;"></div>
 <div class="download-area" id="downloadArea">
+
+<label for="downloadFormat">Download Format</label>
+<select id="downloadFormat">
+<option value="original">Original Result Format</option>
+<option value="image/jpeg">JPG</option>
+<option value="image/png">PNG</option>
+<option value="image/webp">WEBP</option>
+</select>
 
 <div class="button-group" style="justify-content:center;">
 
 <button onclick="downloadProcessed()">
 Download Result
+</button>
+
+<button onclick="copyProcessedImage()">
+Copy Image
 </button>
 
 </div>
@@ -350,6 +364,8 @@ const fileCount=document.getElementById("fileCount");
 const message=document.getElementById("message");
 const preview=document.getElementById("preview");
 const downloadArea=document.getElementById("downloadArea");
+const downloadFormat=document.getElementById("downloadFormat");
+const imageStats=document.getElementById("imageStats");
 const toast=document.getElementById("toast");
 
 let processedBlob=null;
@@ -405,8 +421,17 @@ if(file){
 
 const size=(file.size/(1024*1024)).toFixed(2);
 
+loadImage(file).then(function(img){
+
+fileCount.textContent=
+file.name + " • " + size + " MB • " + img.width + "×" + img.height + " px";
+
+}).catch(function(){
+
 fileCount.textContent=
 file.name + " • " + size + " MB";
+
+});
 
 }else{
 
@@ -441,6 +466,8 @@ message.textContent="";
 message.className="message";
 preview.innerHTML="";
 downloadArea.style.display="none";
+imageStats.style.display="none";
+imageStats.textContent="";
 processedBlob=null;
 processedFileName="";
 }
@@ -746,9 +773,38 @@ return;
 
 processedBlob=await canvasToBlob(canvas,outputType,quality);
 
+const originalSize=(file.size/(1024*1024)).toFixed(2);
+const newSize=(processedBlob.size/(1024*1024)).toFixed(2);
+
 const imageUrl=URL.createObjectURL(processedBlob);
 
 preview.innerHTML='<img src="' + imageUrl + '" alt="Processed image">';
+
+imageStats.style.display="block";
+
+if(tool==="compress"){
+
+const reduction=
+Math.round(
+(1-(processedBlob.size/file.size))*100
+);
+
+imageStats.textContent=
+"Output: " + processedFileName +
+" • " + canvas.width + "×" + canvas.height + " px" +
+" • Original: " + originalSize + " MB" +
+" • New: " + newSize + " MB" +
+" • Reduction: " + reduction + "%";
+
+}else{
+
+imageStats.textContent=
+"Output: " + processedFileName +
+" • " + canvas.width + "×" + canvas.height + " px" +
+" • " + newSize + " MB";
+
+}
+
 downloadArea.style.display="block";
 
 setMessage("Image processed successfully.","success");
@@ -759,21 +815,95 @@ console.error(error);
 setMessage("Unable to process image.","error");
 }
 }
+async function copyProcessedImage(){
 
-function downloadProcessed(){
 if(!processedBlob){
 showToast("Process an image first.","error");
 return;
 }
 
+try{
+
+await navigator.clipboard.write([
+new ClipboardItem({
+[processedBlob.type]:processedBlob
+})
+]);
+
+showToast("Image copied to clipboard.","success");
+
+}catch(error){
+
+showToast("Copy image is not supported by this browser.","error");
+
+}
+
+}
+ function loadImageFromBlob(blob){
+
+return new Promise((resolve,reject)=>{
+
+const url=URL.createObjectURL(blob);
+const img=new Image();
+
+img.onload=function(){
+URL.revokeObjectURL(url);
+resolve(img);
+};
+
+img.onerror=function(){
+URL.revokeObjectURL(url);
+reject();
+};
+
+img.src=url;
+
+});
+
+} 
+async function downloadProcessed(){
+
+if(!processedBlob){
+showToast("Process an image first.","error");
+return;
+}
+
+let blobToDownload=processedBlob;
+let fileName=processedFileName;
+
+if(downloadFormat.value!=="original"){
+
+const img=await loadImageFromBlob(processedBlob);
+
+const canvas=document.createElement("canvas");
+const ctx=canvas.getContext("2d");
+
+canvas.width=img.width;
+canvas.height=img.height;
+
+ctx.drawImage(img,0,0);
+
+blobToDownload=await canvasToBlob(
+canvas,
+downloadFormat.value,
+0.92
+);
+
+const extension=getExtension(downloadFormat.value);
+
+fileName=processedFileName.replace(/\.[^/.]+$/,"") + "." + extension;
+
+}
+
 const link=document.createElement("a");
-link.href=URL.createObjectURL(processedBlob);
-link.download=processedFileName;
+link.href=URL.createObjectURL(blobToDownload);
+link.download=fileName;
 link.click();
 
 showToast("Download started.","success");
 
 URL.revokeObjectURL(link.href);
+
 }
 </script>
 
