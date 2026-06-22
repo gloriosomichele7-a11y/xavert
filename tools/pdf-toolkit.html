@@ -855,9 +855,19 @@ document.getElementById("pdfJpgCount").textContent="No file selected";
 }
 }
  
-if(inputId==="rotateFile"){
-document.getElementById("rotateCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+if(inputId==="pdfJpgFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
+document.getElementById("pdfJpgCount").textContent=
+files[0].name + " • " +
+formatFileSize(files[0].size) +
+" • " +
+count +
+" pages";
+});
+}else{
+document.getElementById("pdfJpgCount").textContent="No file selected";
+}
 }
  
 if(inputId==="extractFile"){
@@ -882,28 +892,58 @@ document.getElementById("deleteCount").textContent="No file selected";
 }
 
 if(inputId==="pngFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("pngCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
+});
+}else{
+document.getElementById("pngCount").textContent="No file selected";
+}
 }
 
 if(inputId==="watermarkFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("watermarkCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
+});
+}else{
+document.getElementById("watermarkCount").textContent="No file selected";
+}
 }
  
-if(inputId==="compressFile"){
-document.getElementById("compressCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+if(inputId==="watermarkFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
+document.getElementById("watermarkCount").textContent=
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
+});
+}else{
+document.getElementById("watermarkCount").textContent="No file selected";
+}
 }
 
 if(inputId==="reorderFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("reorderCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
+});
+}else{
+document.getElementById("reorderCount").textContent="No file selected";
+}
 }
 
 if(inputId==="numbersFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("numbersCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
+});
+}else{
+document.getElementById("numbersCount").textContent="No file selected";
+}
 }
 
 if(inputId==="signPdfFile"){
