@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | PDF Toolkit</title>
 
-<meta name="description" content="Merge, split, compress, rotate, convert, watermark, sign and manage PDF files directly in your browser.">
+<meta name="description" content="Free online PDF Toolkit to merge, split, compress, rotate, convert, watermark, sign, reorder and manage PDF files directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/pdf-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <script src="https://cdn.jsdelivr.net/npm/pdf-lib/dist/pdf-lib.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
@@ -236,9 +238,12 @@ width:100%;
 <h1>PDF Toolkit</h1>
 
 <p class="subtitle">
-Merge PDFs, split pages and convert images to PDF directly in your browser.
+Merge, split, compress, convert, sign and manage PDF files directly in your browser.
 </p>
 
+<p class="info" style="text-align:center;max-width:720px;margin:0 auto 28px;">
+Your files are processed locally in your browser. No PDF files are uploaded to a server.
+</p>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -836,8 +841,18 @@ document.getElementById("imageCount").textContent=
 }
 
 if(inputId==="pdfJpgFile"){
+if(files.length){
+getPDFPageCount(files[0]).then(count=>{
 document.getElementById("pdfJpgCount").textContent=
-files.length ? files[0].name + " • " + formatFileSize(files[0].size) : "No file selected";
+files[0].name + " • " +
+formatFileSize(files[0].size) +
+" • " +
+count +
+" pages";
+});
+}else{
+document.getElementById("pdfJpgCount").textContent="No file selected";
+}
 }
  
 if(inputId==="rotateFile"){
