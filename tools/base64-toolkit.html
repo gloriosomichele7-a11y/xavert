@@ -5,6 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Base64 Toolkit</title>
 
+<meta name="description" content="Free online Base64 Toolkit to encode and decode Base64 text directly in your browser. Copy and download encoded or decoded results instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/base64-toolkit.html">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <style>
 *{
 margin:0;
@@ -154,7 +161,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>Base64 Toolkit</h1>
@@ -167,7 +174,12 @@ Encode and decode Base64 text directly in your browser.
 
 <label for="inputText">Input Text</label>
 <textarea id="inputText" placeholder="Paste text or Base64 data here"></textarea>
-
+<div id="inputInfo" style="margin-top:8px;color:#6b7280;font-size:13px;">
+Characters: 0
+</div>
+<div id="inputType" style="margin-top:4px;color:#6b7280;font-size:13px;">
+Detected: —
+</div>
 <div class="button-group">
 
 <button onclick="encodeBase64()">
@@ -195,7 +207,10 @@ Characters: 0
 </div>
 
 <textarea id="outputText" readonly></textarea>
-
+<div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;">
+<div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;">
+</div>
+</div>
 <button onclick="copyResult()">Copy Result</button>
 <button onclick="downloadResult()">Download Result</button>
 
@@ -209,13 +224,64 @@ Characters: 0
 <script>
 
 const inputText=document.getElementById("inputText");
+const inputInfo=document.getElementById("inputInfo");
+const inputType=document.getElementById("inputType");
 const outputText=document.getElementById("outputText");
 const outputLabel=document.getElementById("outputLabel");
 const outputInfo=document.getElementById("outputInfo");
+const conversionStats=document.getElementById("conversionStats");
+const utfInfo=document.getElementById("utfInfo");
 const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
 let lastAction="result";
+inputText.addEventListener("input",function(){
+
+const value=inputText.value.trim();
+
+inputInfo.textContent=
+"Characters: " + value.length;
+
+if(!value){
+
+inputType.textContent="Detected: —";
+
+}else if(looksLikeBase64(value)){
+
+inputType.textContent="Detected: Possible Base64";
+
+try{
+
+const decoded=decodeURIComponent(
+escape(atob(value))
+);
+
+outputText.value=decoded;
+outputInfo.textContent=
+"Characters: " + decoded.length;
+const diff=text.length-decoded.length;
+
+conversionStats.style.display="block";
+conversionStats.textContent=
+"Input: " + text.length +
+" • Output: " + decoded.length +
+" • Saved: " + diff + " characters";
+outputLabel.textContent="Decoded Output";
+resultBox.style.display="block";
+utfInfo.style.display="block";
+utfInfo.textContent="Decoded as UTF-8 text";
+
+}catch(error){
+// ignora Base64 non valida
+}
+
+}else{
+
+inputType.textContent="Detected: Plain Text";
+
+}
+
+});
 function showToast(text){
 
 toast.textContent=text;
@@ -249,6 +315,15 @@ const encoded=btoa(unescape(encodeURIComponent(text)));
 
 outputText.value=encoded;
 outputInfo.textContent="Characters: " + encoded.length;
+const diff=encoded.length-text.length;
+const ratio=((encoded.length/text.length)*100).toFixed(0);
+
+conversionStats.style.display="block";
+conversionStats.textContent=
+"Input: " + text.length +
+" • Output: " + encoded.length +
+" • Difference: +" + diff +
+" • Size: " + ratio + "%";
 lastAction="encoded";
 outputLabel.textContent="Encoded Output";
 resultBox.style.display="block";
@@ -269,7 +344,15 @@ setMessage(
 
 }
 }
+function looksLikeBase64(value){
 
+if(value.length<16){
+return false;
+}
+
+return /^[A-Za-z0-9+/=\s]+$/.test(value);
+
+}
 function decodeBase64(){
 
 const text=inputText.value.trim();
@@ -288,6 +371,8 @@ outputInfo.textContent="Characters: " + decoded.length;
 lastAction="decoded";
 outputLabel.textContent="Decoded Output";
 resultBox.style.display="block";
+utfInfo.style.display="block";
+utfInfo.textContent="Decoded as UTF-8 text";
 
 setMessage("Base64 decoded successfully.","success");
 
@@ -342,9 +427,15 @@ function clearAll(){
 inputText.value="";
 outputText.value="";
 resultBox.style.display="none";
+conversionStats.style.display="none";
+conversionStats.textContent="";
 outputLabel.textContent="Output";
 lastAction="result";
 outputInfo.textContent="Characters: 0";
+utfInfo.style.display="none";
+utfInfo.textContent="";
+inputInfo.textContent="Characters: 0";
+inputType.textContent="Detected: —";
 message.textContent="";
 message.className="message";
 
