@@ -501,6 +501,7 @@ function swapHtml(){
 
 const input=document.getElementById("inputHtml");
 const output=document.getElementById("outputHtml");
+const operation=document.getElementById("operationType").textContent;
 
 if(!output.value){
 showToast("Nothing to swap","error");
@@ -511,7 +512,8 @@ input.value=output.value;
 
 updateStats(
 input.value,
-output.value
+output.value,
+operation
 );
 
 showToast("Output moved to input");
