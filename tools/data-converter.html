@@ -575,6 +575,10 @@ Format and beautify XML data.
 
 <label for="xmlFormatInput">XML Input</label>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadXmlExample();return false;">Load Sample XML</a>
+</div>
+
 <textarea id="xmlFormatInput" placeholder="Paste XML data here"></textarea>
 
 <div class="button-group">
@@ -1413,7 +1417,18 @@ callback();
 }
 });
 }
+function loadXmlExample(){
 
+document.getElementById("xmlFormatInput").value=
+`<company>
+<name>XAVERT</name>
+<type>Toolkit</type>
+<version>1</version>
+</company>`;
+
+showToast("Sample XML loaded.","success");
+
+}
 function formatXml(){
 const text=document.getElementById("xmlFormatInput").value.trim();
 
