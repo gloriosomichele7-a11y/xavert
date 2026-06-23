@@ -6,7 +6,10 @@
 
 <title>XAVERT | Lorem Ipsum Generator</title>
 
-<meta name="description" content="Generate Lorem Ipsum placeholder text directly in your browser. Create words, sentences and paragraphs instantly.">
+<meta name="description" content="Free online Lorem Ipsum Generator to create placeholder text for websites, apps, layouts and design projects directly in your browser. Generate words, sentences and paragraphs instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/lorem-ipsum-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -276,7 +279,7 @@ Start with "Lorem ipsum"
 </label>
 
 <div class="button-group">
-<button onclick="generateLorem()">Generate</button>
+<button onclick="generateLorem()">Generate Text</button>
 <button onclick="clearAll()">Clear</button>
 </div>
 
@@ -285,7 +288,9 @@ Start with "Lorem ipsum"
 </div>
 
 <div>
-
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleLorem();return false;">Load Sample</a>
+</div>
 <label>Generated Text</label>
 
 <textarea
@@ -414,7 +419,17 @@ sentences.push(createSentence());
 return sentences.join(" ");
 
 }
+function loadSampleLorem(){
 
+document.getElementById("type").value="paragraphs";
+document.getElementById("quantity").value="3";
+document.getElementById("startLorem").checked=true;
+
+generateLorem();
+
+showToast("Sample generated");
+
+}
 function generateLorem(){
 
 const type=document.getElementById("type").value;
@@ -481,7 +496,7 @@ setMessage(
 "Lorem Ipsum generated successfully.",
 "success"
 );
-
+showToast("Lorem Ipsum generated");
 }
 
 function updateStats(text){
@@ -535,7 +550,10 @@ type:"text/plain;charset=utf-8"
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-lorem-ipsum.txt";
+const type=document.getElementById("type").value;
+
+link.download=
+"xavert-lorem-" + type + ".txt";
 
 document.body.appendChild(link);
 link.click();
@@ -551,7 +569,8 @@ function clearAll(){
 
 document.getElementById("output").value="";
 document.getElementById("quantity").value="5";
-
+document.getElementById("type").value="paragraphs";
+document.getElementById("startLorem").checked=true;
 document.getElementById("wordCount").textContent="0";
 document.getElementById("charCount").textContent="0";
 document.getElementById("paragraphCount").textContent="0";
