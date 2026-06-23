@@ -371,6 +371,42 @@ weekday.value="*";
 }
 
 }
+function getNextRun(minute,hour,day,month,weekday){
+
+const now=new Date();
+let next=new Date(now.getTime()+60000);
+next.setSeconds(0);
+next.setMilliseconds(0);
+
+for(let i=0;i<525600;i++){
+
+const m=String(next.getMinutes());
+const h=String(next.getHours());
+const d=String(next.getDate());
+const mo=String(next.getMonth()+1);
+const w=String(next.getDay());
+
+const minuteMatch=
+minute==="*" ||
+minute===m ||
+(minute.startsWith("*/") && next.getMinutes()%parseInt(minute.slice(2),10)===0);
+
+const hourMatch=hour==="*" || hour===h;
+const dayMatch=day==="*" || day===d;
+const monthMatch=month==="*" || month===mo;
+const weekdayMatch=weekday==="*" || weekday===w;
+
+if(minuteMatch && hourMatch && dayMatch && monthMatch && weekdayMatch){
+return next.toLocaleString();
+}
+
+next.setMinutes(next.getMinutes()+1);
+
+}
+
+return "Unable to calculate";
+
+}
 function generateCron(){
 if(
 !minute ||
@@ -417,6 +453,8 @@ const cron=
 document.getElementById("cronOutput").value=cron;
 document.getElementById("cronStats").textContent=
 "Fields: " + cron.split(" ").length;
+document.getElementById("nextRun").textContent=
+"Next Run Preview: " + getNextRun(minute,hour,day,month,weekday);
 <div id="nextRun" style="margin-top:6px;color:#6b7280;font-size:13px;">
 Next Run Preview: —
 </div>
