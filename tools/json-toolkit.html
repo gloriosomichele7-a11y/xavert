@@ -296,7 +296,7 @@ Click or drag a JSON file here
 
 <div class="button-group">
 <button onclick="copyResult()">Copy Result</button>
-<button onclick="downloadResult('xavert-json-result.json')">Download Result</button>
+<button onclick="downloadResult()">
 </div>
 
 <div id="mainMessage" class="message"></div>
@@ -506,8 +506,24 @@ showToast("Download started.","success");
 
 }
 
-function downloadResult(fileName){
+function downloadResult(){
+
+let fileName="xavert-json-result.json";
+
+if(mainMessage.textContent.includes("formatted")){
+fileName="xavert-json-formatted.json";
+}
+
+if(mainMessage.textContent.includes("minified")){
+fileName="xavert-json-minified.json";
+}
+
+if(mainMessage.textContent.includes("valid")){
+fileName="xavert-json-validation.txt";
+}
+
 downloadText(jsonOutput.value,fileName);
+
 }
 
 async function loadJsonFile(){
@@ -554,7 +570,7 @@ function updateStats(text,json=null){
 const lines=text ? text.split(/\r?\n/).length : 0;
 const characters=text.length;
 const bytes=new Blob([text]).size;
-
+const prettySize=(bytes/1024).toFixed(2);
 let type="-";
 let keys="-";
 
@@ -575,7 +591,7 @@ jsonStats.innerHTML=
 "Structure: <strong>" + keys + "</strong><br>" +
 "Lines: <strong>" + lines + "</strong><br>" +
 "Characters: <strong>" + characters + "</strong><br>" +
-"Size: <strong>" + bytes + " bytes</strong>";
+"Size: <strong>" + bytes + " bytes (" + prettySize + " KB)</strong>";
 
 }
 function loadSampleJson(){
@@ -808,7 +824,7 @@ document.getElementById("compareMessage").textContent="";
 document.getElementById("compareMessage").className="message";
 document.getElementById("compareResult").innerHTML="";
 document.getElementById("compareResult").style.display="none";
-
+showToast("Compare cleared.","success");
 }
 </script>
 
