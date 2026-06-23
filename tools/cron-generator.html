@@ -408,12 +408,18 @@ return "Unable to calculate";
 
 }
 function generateCron(){
+const minuteValue=document.getElementById("minute").value.trim();
+const hourValue=document.getElementById("hour").value.trim();
+const dayValue=document.getElementById("day").value.trim();
+const monthValue=document.getElementById("month").value.trim();
+const weekdayValue=document.getElementById("weekday").value.trim();
+
 if(
-!minute ||
-!hour ||
-!day ||
-!month ||
-!weekday
+!minuteValue ||
+!hourValue ||
+!dayValue ||
+!monthValue ||
+!weekdayValue
 ){
 showToast("All fields are required");
 return;
