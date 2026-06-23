@@ -335,7 +335,7 @@ showToast("Database password generated");
 function generateEnv(){
 
 const env=
-APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
+`APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
 APP_ENV=${document.getElementById("appEnv").value}
 APP_DEBUG=${document.getElementById("appDebug").value}
 APP_URL=${document.getElementById("appUrl").value}
@@ -348,6 +348,8 @@ DB_USER=${document.getElementById("dbUser").value}
 DB_PASSWORD=${document.getElementById("dbPassword").value}`;
 
 document.getElementById("output").value=env;
+
+showToast(".ENV generated");
 
 }
 
@@ -396,17 +398,17 @@ showToast("Download started");
 
 function clearAll(){
 
-document.getElementById("appName").value="XAVERT";
+;
+document.getElementById("appName").value="";
 document.getElementById("appEnv").value="production";
 document.getElementById("appDebug").value="false";
 document.getElementById("appUrl").value="";
 
-document.getElementById("dbHost").value="localhost";
-document.getElementById("dbPort").value="3306";
+document.getElementById("dbHost").value="";
+document.getElementById("dbPort").value="";
 document.getElementById("dbName").value="";
 document.getElementById("dbUser").value="";
 document.getElementById("dbPassword").value="";
-
 document.getElementById("appKey").value="";
 document.getElementById("output").value="";
 
