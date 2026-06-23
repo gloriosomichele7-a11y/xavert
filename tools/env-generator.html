@@ -195,7 +195,7 @@ Generate environment configuration files directly in your browser. Nothing is up
 <div>
 
 <label>Application Name</label>
-<input id="appName" value="XAVERT">
+<input id="appName" placeholder="XAVERT">
 <label>Application Key</label>
 <input id="appKey" readonly>
 
@@ -222,10 +222,10 @@ Generate APP_KEY
 <input id="appUrl" placeholder="https://example.com">
 
 <label>Database Host</label>
-<input id="dbHost" value="localhost">
+<input id="dbHost" placeholder="localhost">
 
 <label>Database Port</label>
-<input id="dbPort" value="3306">
+<input id="dbPort" placeholder="3306">
 
 <label>Database Name</label>
 <input id="dbName" placeholder="database_name">
@@ -335,14 +335,14 @@ showToast("Database password generated");
 function generateEnv(){
 
 const env=
-`APP_NAME="${document.getElementById("appName").value}"
+APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
 APP_ENV=${document.getElementById("appEnv").value}
 APP_DEBUG=${document.getElementById("appDebug").value}
 APP_URL=${document.getElementById("appUrl").value}
 APP_KEY=${document.getElementById("appKey").value}
 
-DB_HOST=${document.getElementById("dbHost").value}
-DB_PORT=${document.getElementById("dbPort").value}
+DB_HOST=${document.getElementById("dbHost").value || "localhost"}
+DB_PORT=${document.getElementById("dbPort").value || "3306"}
 DB_NAME=${document.getElementById("dbName").value}
 DB_USER=${document.getElementById("dbUser").value}
 DB_PASSWORD=${document.getElementById("dbPassword").value}`;
