@@ -142,7 +142,13 @@ background:#fef2f2;
 border:1px solid #fecaca;
 border-radius:12px;
 }
-
+#cronOutput{
+font-family:monospace;
+font-size:18px;
+font-weight:700;
+text-align:center;
+background:#f9fafb;
+}
 #toast{
 position:fixed;
 bottom:22px;
@@ -247,7 +253,7 @@ Create cron schedules and understand task timing instantly.
 
 <textarea
 id="cronOutput"
-rows="4"
+rows="2"
 readonly
 placeholder="Cron expression will appear here..."
 ></textarea>
@@ -369,7 +375,10 @@ day.value="1";
 month.value="1";
 weekday.value="*";
 }
-
+if(preset){
+generateCron();
+}
+  
 }
 function getNextRun(minute,hour,day,month,weekday){
 
@@ -550,7 +559,7 @@ type:"text/plain;charset=utf-8"
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="cron-expression.txt";
+link.download="xavert-cron-expression.txt";
 
 document.body.appendChild(link);
 link.click();
@@ -563,7 +572,7 @@ showToast("Download started");
 }
 
 function clearAll(){
-
+document.getElementById("cronPreset").value="";
 document.getElementById("minute").value="0";
 document.getElementById("hour").value="0";
 document.getElementById("day").value="*";
