@@ -6,7 +6,11 @@
 
 <title>XAVERT | JWT Decoder</title>
 
-<meta name="description" content="Free online JWT Decoder to decode, inspect and validate JSON Web Tokens directly in your browser. View header, payload, expiration and issued-at data instantly.">
+<meta name="description" content="Free online JWT Decoder to decode, inspect and validate JSON Web Tokens directly in your browser. View JWT header, payload, algorithm, expiration, issued-at data and token status instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/jwt-decoder.html">
+
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
 <style>
@@ -234,6 +238,10 @@ Decode and inspect JSON Web Tokens directly in your browser.
 
 <label for="jwtInput">JWT Token</label>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleJWT();return false;">Load Sample JWT</a>
+</div>
+
 <textarea
 id="jwtInput"
 placeholder="Paste your JWT token here..."
@@ -281,7 +289,7 @@ Clear
 
 <div class="info-box">
 <strong id="lengthValue">-</strong>
-<span>Length</span>
+<span>Token Length</span>
 </div>
   
 </div>
@@ -319,6 +327,10 @@ readonly
 <div class="button-group">
 <button onclick="copyPayload()">
 Copy Payload
+</button>
+
+<button onclick="copyDecodedJWT()">
+Copy All
 </button>
 
 <button onclick="downloadDecodedJWT()">
@@ -397,10 +409,18 @@ if(!timestamp){
 return "-";
 }
 
-return new Date(timestamp * 1000).toLocaleDateString();
+return new Date(timestamp * 1000).toLocaleString();
 
 }
+function loadSampleJWT(){
 
+document.getElementById("jwtInput").value=
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlhBVkVSVCBVc2VyIiwiaWF0IjoxNzEwMDAwMDAwLCJleHAiOjQxMDI0NDQ4MDB9.sample-signature";
+
+setMessage("Sample JWT loaded.","success");
+showToast("Sample JWT loaded.");
+
+}
 function decodeJWT(){
 
 try{
@@ -472,8 +492,21 @@ status=
 
 }
 
-document.getElementById("statusValue").textContent=
-status;
+const statusElement=document.getElementById("statusValue");
+
+statusElement.textContent=status;
+
+if(status==="Valid"){
+statusElement.style.color="#047857";
+}
+
+if(status==="Expired"){
+statusElement.style.color="#dc2626";
+}
+
+if(status==="Unknown"){
+statusElement.style.color="#111827";
+}
 document.getElementById("lengthValue").textContent=
 token.length;
 setMessage(
@@ -525,6 +558,24 @@ function copyPayload(){
 
 copyText(
 document.getElementById("payloadOutput").value
+);
+
+}
+function copyDecodedJWT(){
+
+const header=document.getElementById("headerOutput").value;
+const payload=document.getElementById("payloadOutput").value;
+
+if(!header || !payload){
+showToast("Nothing to copy.");
+return;
+}
+
+copyText(
+"HEADER\n\n" +
+header +
+"\n\nPAYLOAD\n\n" +
+payload
 );
 
 }
