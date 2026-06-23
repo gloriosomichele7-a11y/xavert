@@ -412,24 +412,34 @@ if(e.ctrlKey && e.key==="Enter"){
 processImage();
 }
 });
+function formatFileSize(bytes){
 
+const mb=bytes/(1024*1024);
+
+if(mb>=1){
+return mb.toFixed(2) + " MB";
+}
+
+return (bytes/1024).toFixed(1) + " KB";
+
+}
 function updateFileCount(){
 
 const file=imageFile.files[0];
 
 if(file){
 
-const size=(file.size/(1024*1024)).toFixed(2);
+const size=formatFileSize(file.size);
 
 loadImage(file).then(function(img){
 
 fileCount.textContent=
-file.name + " • " + size + " MB • " + img.width + "×" + img.height + " px";
+file.name + " • " + size + " • " + img.width + "×" + img.height + " px";
 
 }).catch(function(){
 
 fileCount.textContent=
-file.name + " • " + size + " MB";
+file.name + " • " + size;
 
 });
 
@@ -773,9 +783,8 @@ return;
 
 processedBlob=await canvasToBlob(canvas,outputType,quality);
 
-const originalSize=(file.size/(1024*1024)).toFixed(2);
-const newSize=(processedBlob.size/(1024*1024)).toFixed(2);
-
+const originalSize=formatFileSize(file.size);
+const newSize=formatFileSize(processedBlob.size);
 const imageUrl=URL.createObjectURL(processedBlob);
 
 preview.innerHTML='<img src="' + imageUrl + '" alt="Processed image">';
@@ -792,8 +801,8 @@ Math.round(
 imageStats.textContent=
 "Output: " + processedFileName +
 " • " + canvas.width + "×" + canvas.height + " px" +
-" • Original: " + originalSize + " MB" +
-" • New: " + newSize + " MB" +
+" • Original: " + originalSize +
+" • New: " + newSize +
 " • Reduction: " + reduction + "%";
 
 }else{
@@ -801,7 +810,7 @@ imageStats.textContent=
 imageStats.textContent=
 "Output: " + processedFileName +
 " • " + canvas.width + "×" + canvas.height + " px" +
-" • " + newSize + " MB";
+" • " + newSize;
 
 }
 
