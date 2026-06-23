@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Date & Time Toolkit</title>
 
-<meta name="description" content="Calculate date differences, ages, Unix timestamps and add or subtract days directly in your browser.">
+<meta name="description" content="Free online Date and Time Toolkit to calculate date differences, ages, countdowns, Unix timestamps and add or subtract days directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/date-time-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -202,7 +205,11 @@ Calculate dates, timestamps, ages and time differences instantly.
 <div class="card tool-section active" id="differenceTool">
 
 <h2>Date Difference</h2>
-
+<div class="button-group">
+<button onclick="loadDateExample()">
+Load Example
+</button>
+</div>
 <label for="dateStart">Start Date</label>
 <input type="date" id="dateStart">
 
@@ -465,7 +472,14 @@ dateHistory=[];
 lastResultText="";
 
 }
+function loadDateExample(){
 
+document.getElementById("dateStart").value="2025-01-01";
+document.getElementById("dateEnd").value="2026-01-01";
+
+showToast("Example loaded.","success");
+
+}
 function calculateDifference(){
 
 const startValue=document.getElementById("dateStart").value;
@@ -491,8 +505,13 @@ const diffDays=Math.floor(diffTime/(1000*60*60*24));
 
 const weeks=Math.floor(diffDays/7);
 const remainingDays=diffDays%7;
-const years=Math.floor(diffDays/365);
-const months=Math.floor((diffDays%365)/30);
+let years=end.getFullYear()-start.getFullYear();
+let months=end.getMonth()-start.getMonth();
+
+if(months<0){
+years--;
+months+=12;
+}
 lastResultText=
 diffDays + " days (" +
 years + " years, " +
@@ -508,8 +527,9 @@ setMessage(
 
 setResult(
 "differenceResult",
-"<strong>" + lastResultText + "</strong><br><br>" +
-'<button onclick="copyText(\'' + lastResultText + " • Total Days: " + totalDays + '\')">Copy Result</button>' +
+"<strong>" + lastResultText + "</strong><br>" +
+"Total Days: <strong>" + diffDays + "</strong><br><br>" +
+'<button onclick="copyText(\'' + lastResultText + " • Total Days: " + diffDays + '\')">Copy Result</button>' +
 updateHistory(lastResultText)
 );
 
