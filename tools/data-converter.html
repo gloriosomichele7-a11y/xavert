@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Data Converter</title>
 
-<meta name="description" content="Convert CSV, XLSX, JSON and XML files directly in your browser. Format, minify and validate structured data online.">
+<meta name="description" content="Free online Data Converter to convert CSV, XLSX, JSON and XML files directly in your browser. Format, minify, validate and export structured data instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/data-converter.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -385,6 +388,11 @@ Format and beautify JSON data.
 </p>
 
 <label for="jsonFormatInput">JSON Input</label>
+
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadJsonExample();return false;">Load Sample JSON</a>
+</div>
+
 <textarea id="jsonFormatInput" placeholder="Paste JSON data here"></textarea>
 
 <div class="button-group">
@@ -407,7 +415,7 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('jsonFormatOutput').value,'formatted.json')">
+<button onclick="downloadText(document.getElementById('jsonFormatOutput').value,'XAVERT-Formatted-JSON.json')">
 Download
 </button>
 
@@ -446,7 +454,7 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'minified.json')">
+<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'XAVERT-Minified-JSON.json')">
 Download
 </button>
 
@@ -511,7 +519,7 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'converted.json')">
+<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'XAVERT-Converted-JSON.json')">
 Download
 </button>
 
@@ -551,10 +559,9 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('jsonXmlOutput').value,'converted.xml')">
+<button onclick="downloadText(document.getElementById('jsonXmlOutput').value,'XAVERT-Converted-XML.xml')">
 Download
 </button>
-
 </div>
 <div id="jsonXmlMessage" class="message"></div>
 </div>
@@ -592,7 +599,7 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('xmlFormatOutput').value,'formatted.xml')">
+<button onclick="downloadText(document.getElementById('xmlFormatOutput').value,'XAVERT-Formatted-XML.xml')">
 Download
 </button>
 
@@ -632,10 +639,9 @@ Clear
 Copy Result
 </button>
 
-<button onclick="downloadText(document.getElementById('xmlMinifyOutput').value,'minified.xml')">
+<button onclick="downloadText(document.getElementById('xmlMinifyOutput').value,'XAVERT-Minified-XML.xml')">
 Download
 </button>
-
 </div>
 <div id="xmlMinifyMessage" class="message"></div>
 
@@ -720,7 +726,28 @@ input.addEventListener("change",function(){
 updateFileCount(input.id);
 });
 });
+function formatFileSize(bytes){
 
+const mb=bytes/(1024*1024);
+
+if(mb>=1){
+return mb.toFixed(2) + " MB";
+}
+
+return (bytes/1024).toFixed(1) + " KB";
+
+}
+ function formatFileSize(bytes){
+
+const mb=bytes/(1024*1024);
+
+if(mb>=1){
+return mb.toFixed(2) + " MB";
+}
+
+return (bytes/1024).toFixed(1) + " KB";
+
+}
 function updateFileCount(inputId){
 const files=document.getElementById(inputId).files;
 
@@ -1047,6 +1074,18 @@ setMessage(
 }
 
 }
+function loadJsonExample(){
+
+document.getElementById("jsonFormatInput").value=`{
+  "name":"XAVERT",
+  "type":"Toolkit",
+  "version":1,
+  "active":true
+}`;
+
+showToast("Sample JSON loaded.","success");
+
+} 
 function formatJson(){
 const input=document.getElementById("jsonFormatInput").value.trim();
 
