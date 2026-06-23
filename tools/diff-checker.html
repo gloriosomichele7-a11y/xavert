@@ -5,9 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Diff Checker</title>
 
-<meta name="description"
-content="Compare two texts online and instantly identify differences directly in your browser.">
+<meta name="description" content="Free online Diff Checker to compare two texts, detect differences line by line and calculate similarity percentages directly in your browser.">
 
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/diff-checker.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <style>
 *{
 margin:0;
@@ -228,7 +230,7 @@ width:100%;
 <h1>Diff Checker</h1>
 
 <p class="subtitle">
-Compare two texts and instantly identify differences line by line.
+Compare two texts, source code, JSON files or documents and instantly identify differences line by line.
 </p>
 
 <div class="card">
@@ -248,6 +250,10 @@ Compare two texts and instantly identify differences line by line.
 </div>
 
 <div class="button-group">
+
+<button onclick="loadExample()">
+Load Example
+</button>
 
 <button onclick="compareTexts()">
 Compare
@@ -322,7 +328,19 @@ return value
 .replace(/'/g,"&#039;");
 
 }
+function loadExample(){
 
+textA.value=`Hello
+World
+Apple`;
+
+textB.value=`Hello
+World
+Orange`;
+
+showToast("Example loaded.");
+
+}
 function compareTexts(){
 
 const a=textA.value;
@@ -383,6 +401,12 @@ ${escapeHtml(lineB)}
 
 }
 
+const matchedLines=maxLines-differences;
+
+const matchPercent=maxLines
+? ((matchedLines/maxLines)*100).toFixed(1)
+: 0;
+
 stats.innerHTML=
 "Characters A: " + a.length +
 " | Characters B: " + b.length +
@@ -390,7 +414,9 @@ stats.innerHTML=
 "Lines A: " + linesA.length +
 " | Lines B: " + linesB.length +
 "<br>" +
-"Differences: " + differences;
+"Differences: " + differences +
+"<br>" +
+"Match: " + matchPercent + "%";
 if(differences===0){
 
 html=`
