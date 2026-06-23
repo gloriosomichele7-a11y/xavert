@@ -6,7 +6,10 @@
 
 <title>XAVERT | JSON Toolkit Pro</title>
 
-<meta name="description" content="Free online JSON Toolkit to format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser.">
+<meta name="description" content="Free online JSON Toolkit Pro to format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser. Work with JSON instantly without uploading data.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/json-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -268,8 +271,12 @@ Format, validate, minify, escape, unescape and compare JSON data directly in you
 <h2>JSON Formatter</h2>
 
 <label for="jsonInput">JSON Input</label>
-<textarea id="jsonInput" placeholder='Paste JSON here, for example: {"name":"XAVERT"}'></textarea>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleJson();return false;">Load Sample JSON</a>
+</div>
+
+<textarea id="jsonInput" placeholder='Paste JSON here, for example: {"name":"XAVERT"}'></textarea>
 <div class="drop-zone" id="dropZone">
 Click or drag a JSON file here
 </div>
@@ -338,6 +345,11 @@ Click or drag a JSON file here
 <h2>JSON Compare</h2>
 
 <label for="compareA">JSON A</label>
+
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadCompareSample();return false;">Load Compare Sample</a>
+</div>
+
 <textarea id="compareA" placeholder='{"name":"XAVERT","version":1}'></textarea>
 
 <label for="compareB">JSON B</label>
@@ -566,7 +578,17 @@ jsonStats.innerHTML=
 "Size: <strong>" + bytes + " bytes</strong>";
 
 }
+function loadSampleJson(){
 
+jsonInput.value=`{"name":"XAVERT","type":"JSON Toolkit","version":1,"features":["format","minify","validate","compare"],"active":true}`;
+
+jsonOutput.value="";
+jsonStats.style.display="none";
+
+setMessage(mainMessage,"Sample JSON loaded.","success");
+showToast("Sample JSON loaded.","success");
+
+}
 function formatJson(){
 
 const json=getJsonInput();
@@ -702,7 +724,26 @@ flattenObject(obj[key],path,result);
 return result;
 
 }
+function loadCompareSample(){
 
+document.getElementById("compareA").value=
+`{"name":"XAVERT","version":1,"active":true}`;
+
+document.getElementById("compareB").value=
+`{"name":"XAVERT","version":2,"active":true,"plan":"pro"}`;
+
+document.getElementById("compareResult").style.display="none";
+document.getElementById("compareResult").innerHTML="";
+
+setMessage(
+document.getElementById("compareMessage"),
+"Compare sample loaded.",
+"success"
+);
+
+showToast("Compare sample loaded.","success");
+
+}
 function compareJson(){
 
 const aText=document.getElementById("compareA").value.trim();
