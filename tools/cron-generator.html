@@ -455,9 +455,7 @@ document.getElementById("cronStats").textContent=
 "Fields: " + cron.split(" ").length;
 document.getElementById("nextRun").textContent=
 "Next Run Preview: " + getNextRun(minute,hour,day,month,weekday);
-<div id="nextRun" style="margin-top:6px;color:#6b7280;font-size:13px;">
-Next Run Preview: —
-</div>
+
 let description=
 `Runs at minute ${minute}, hour ${hour}, day ${day}, month ${month}, weekday ${weekday}.`;
 
