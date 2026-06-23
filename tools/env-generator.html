@@ -6,10 +6,12 @@
 
 <title>XAVERT | .ENV Generator</title>
 
-<meta name="description" content="Generate .env environment files directly in your browser.">
+<meta name="description" content="Free online .ENV Generator to create environment configuration files for web applications directly in your browser. Generate, copy and download .env files instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/env-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -183,7 +185,7 @@ font-size:34px;
 <h1>.ENV Generator</h1>
 
 <p class="subtitle">
-Generate environment configuration files for web applications.
+Generate environment configuration files directly in your browser. Nothing is uploaded to a server.
 </p>
 
 <div class="card">
@@ -194,7 +196,14 @@ Generate environment configuration files for web applications.
 
 <label>Application Name</label>
 <input id="appName" value="XAVERT">
+<label>Application Key</label>
+<input id="appKey" readonly>
 
+<div class="button-group">
+<button onclick="generateAppKey()">
+Generate APP_KEY
+</button>
+</div>
 <label>Environment</label>
 <select id="appEnv">
 <option>production</option>
@@ -226,6 +235,12 @@ Generate environment configuration files for web applications.
 
 <label>Database Password</label>
 <input id="dbPassword" placeholder="database_password">
+
+<div class="button-group">
+<button onclick="generateDbPassword()">
+Generate DB Password
+</button>
+</div>
 
 <div class="button-group">
 <button onclick="generateEnv()">Generate</button>
@@ -277,7 +292,47 @@ toast.style.display="none";
 },2200);
 
 }
+function getSecureRandomChar(chars){
 
+const array=new Uint32Array(1);
+crypto.getRandomValues(array);
+
+return chars.charAt(array[0] % chars.length);
+
+}
+
+function generateAppKey(){
+
+const chars=
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+let key="base64:";
+
+for(let i=0;i<32;i++){
+key+=getSecureRandomChar(chars);
+}
+
+document.getElementById("appKey").value=key;
+
+showToast("APP_KEY generated");
+
+}
+function generateDbPassword(){
+
+const chars=
+"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
+
+let password="";
+
+for(let i=0;i<24;i++){
+password+=getSecureRandomChar(chars);
+}
+
+document.getElementById("dbPassword").value=password;
+
+showToast("Database password generated");
+
+}
 function generateEnv(){
 
 const env=
@@ -285,6 +340,7 @@ const env=
 APP_ENV=${document.getElementById("appEnv").value}
 APP_DEBUG=${document.getElementById("appDebug").value}
 APP_URL=${document.getElementById("appUrl").value}
+APP_KEY=${document.getElementById("appKey").value}
 
 DB_HOST=${document.getElementById("dbHost").value}
 DB_PORT=${document.getElementById("dbPort").value}
