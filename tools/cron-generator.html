@@ -6,7 +6,10 @@
 
 <title>XAVERT | Cron Expression Generator</title>
 
-<meta name="description" content="Create cron expressions and understand schedules directly in your browser.">
+<meta name="description" content="Free online Cron Expression Generator to create, understand and export cron schedules directly in your browser. Generate cron jobs for Linux, Unix and server automation.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/cron-expression-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -206,7 +209,16 @@ Create cron schedules and understand task timing instantly.
 <div class="grid">
 
 <div>
+<label>Cron Presets</label>
 
+<select id="cronPreset" onchange="applyPreset()">
+<option value="">Custom</option>
+<option value="hourly">Every Hour</option>
+<option value="daily">Every Day</option>
+<option value="weekly">Every Week</option>
+<option value="monthly">Every Month</option>
+<option value="yearly">Every Year</option>
+</select>
 <label>Minute</label>
 <input id="minute" value="0">
 
@@ -239,7 +251,12 @@ rows="4"
 readonly
 placeholder="Cron expression will appear here..."
 ></textarea>
-
+<div id="cronStats" style="margin-top:10px;color:#6b7280;font-size:13px;">
+Fields: 0
+</div>
+<div id="nextRun" style="margin-top:6px;color:#6b7280;font-size:13px;">
+Next Run Preview: —
+</div>
 <div class="button-group">
 <button onclick="copyCron()">Copy</button>
 <button onclick="downloadCron()">Download TXT</button>
@@ -248,7 +265,14 @@ placeholder="Cron expression will appear here..."
 <div id="cronDescription" class="description">
 Waiting for cron generation...
 </div>
-
+<div id="cronExamples" style="margin-top:16px;color:#6b7280;font-size:14px;line-height:1.8;">
+Popular Examples:
+<br><a href="#" onclick="loadExample('*/5 * * * *');return false;">Every 5 minutes</a>
+<br><a href="#" onclick="loadExample('0 * * * *');return false;">Every hour</a>
+<br><a href="#" onclick="loadExample('0 0 * * *');return false;">Every day at midnight</a>
+<br><a href="#" onclick="loadExample('0 8 * * 1');return false;">Every Monday at 08:00</a>
+<br><a href="#" onclick="loadExample('0 0 1 * *');return false;">First day of month</a>
+</div>
 </div>
 
 </div>
@@ -266,7 +290,11 @@ Powered by XAVERT
 <script>
 
 const toast=document.getElementById("toast");
-
+const minute=document.getElementById("minute");
+const hour=document.getElementById("hour");
+const day=document.getElementById("day");
+const month=document.getElementById("month");
+const weekday=document.getElementById("weekday");
 document.addEventListener("keydown",function(e){
 
 if(e.ctrlKey && e.key==="Enter"){
@@ -285,23 +313,168 @@ toast.style.display="none";
 },2200);
 
 }
+function loadExample(expression){
 
+const parts=expression.split(" ");
+
+minute.value=parts[0];
+hour.value=parts[1];
+day.value=parts[2];
+month.value=parts[3];
+weekday.value=parts[4];
+
+generateCron();
+
+}
+function applyPreset(){
+
+const preset=document.getElementById("cronPreset").value;
+
+if(preset==="hourly"){
+minute.value="0";
+hour.value="*";
+day.value="*";
+month.value="*";
+weekday.value="*";
+}
+
+if(preset==="daily"){
+minute.value="0";
+hour.value="0";
+day.value="*";
+month.value="*";
+weekday.value="*";
+}
+
+if(preset==="weekly"){
+minute.value="0";
+hour.value="0";
+day.value="*";
+month.value="*";
+weekday.value="0";
+}
+
+if(preset==="monthly"){
+minute.value="0";
+hour.value="0";
+day.value="1";
+month.value="*";
+weekday.value="*";
+}
+
+if(preset==="yearly"){
+minute.value="0";
+hour.value="0";
+day.value="1";
+month.value="1";
+weekday.value="*";
+}
+
+}
 function generateCron(){
-
+if(
+!minute ||
+!hour ||
+!day ||
+!month ||
+!weekday
+){
+showToast("All fields are required");
+return;
+}
 const minute=document.getElementById("minute").value.trim();
 const hour=document.getElementById("hour").value.trim();
 const day=document.getElementById("day").value.trim();
 const month=document.getElementById("month").value.trim();
 const weekday=document.getElementById("weekday").value.trim();
+const cronRegex=
+/^[0-9*/,\-]+$/;
 
+const values=[
+minute,
+hour,
+day,
+month,
+weekday
+];
+
+for(const value of values){
+
+if(
+value!=="*" &&
+!cronRegex.test(value)
+){
+showToast(
+"Invalid cron value detected"
+);
+return;
+}
+
+}
 const cron=
 `${minute} ${hour} ${day} ${month} ${weekday}`;
 
 document.getElementById("cronOutput").value=cron;
+document.getElementById("cronStats").textContent=
+"Fields: " + cron.split(" ").length;
+<div id="nextRun" style="margin-top:6px;color:#6b7280;font-size:13px;">
+Next Run Preview: —
+</div>
+let description=
+`Runs at minute ${minute}, hour ${hour}, day ${day}, month ${month}, weekday ${weekday}.`;
+
+if(
+minute==="0" &&
+hour==="*" &&
+day==="*" &&
+month==="*" &&
+weekday==="*"
+){
+description="Runs every hour.";
+}
+
+if(
+minute==="0" &&
+hour==="0" &&
+day==="*" &&
+month==="*" &&
+weekday==="*"
+){
+description="Runs every day at 00:00.";
+}
+
+if(
+minute==="0" &&
+hour==="0" &&
+day==="*" &&
+month==="*" &&
+weekday==="0"
+){
+description="Runs every week on Sunday at 00:00.";
+}
+
+if(
+minute==="0" &&
+hour==="0" &&
+day==="1" &&
+month==="*" &&
+weekday==="*"
+){
+description="Runs on the first day of every month.";
+}
+
+if(
+minute==="0" &&
+hour==="0" &&
+day==="1" &&
+month==="1" &&
+weekday==="*"
+){
+description="Runs once a year on January 1st.";
+}
 
 document.getElementById("cronDescription").innerHTML=
-`Runs at minute <strong>${minute}</strong>, hour <strong>${hour}</strong>, day <strong>${day}</strong>, month <strong>${month}</strong>, weekday <strong>${weekday}</strong>.`;
-
+description;
 }
 
 function copyCron(){
@@ -356,7 +529,10 @@ document.getElementById("month").value="*";
 document.getElementById("weekday").value="*";
 
 document.getElementById("cronOutput").value="";
-
+document.getElementById("cronStats").textContent=
+"Fields: 0";
+document.getElementById("nextRun").textContent=
+"Next Run Preview: —";
 document.getElementById("cronDescription").innerHTML=
 "Waiting for cron generation...";
 
