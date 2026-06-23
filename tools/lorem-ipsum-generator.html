@@ -509,10 +509,12 @@ text.trim()
 document.getElementById("charCount").textContent=
 text.length;
 
+const type=document.getElementById("type").value;
+
 document.getElementById("paragraphCount").textContent=
-text.trim()
-? text.split(/\n\s*\n/).length
-: 0;
+type==="paragraphs"
+? (text.trim() ? text.split(/\n\s*\n/).length : 0)
+: "-";
 
 }
 
@@ -577,7 +579,7 @@ document.getElementById("paragraphCount").textContent="0";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-
+showToast("Cleared");
 }
 
 </script>
