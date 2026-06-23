@@ -4,7 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Regex Tester & Regular Expression Tool</title>
-<meta name="description" content="Test regular expressions online. Highlight matches, validate patterns and analyze text directly in your browser.">
+
+<meta name="description" content="Free online Regex Tester to test regular expressions, highlight matches, validate patterns, analyze text and download regex matches directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/regex-tester.html">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <style>
 *{
 margin:0;
@@ -231,7 +237,7 @@ button{width:100%;}
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo.png" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
 <h1>Regex Tester</h1>
@@ -290,7 +296,7 @@ Email
 <br>
 
 <div class="result-title">Matches</div>
-<div id="matchInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;">
+<div id="matchInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;line-height:1.7;">
 Matches: 0
 </div>
 
@@ -416,7 +422,11 @@ highlighted=escapeHtml(textValue);
 
 preview.innerHTML=highlighted || escapeHtml(textValue);
 resultBox.style.display="block";
-matchInfo.textContent="Matches: " + found.length;
+matchInfo.innerHTML=
+"Matches: " + found.length +
+"<br>Pattern Length: " + regexValue.length +
+"<br>Text Length: " + textValue.length +
+"<br>Flags: " + (flags || "-");
 
 if(found.length===0){
 matches.innerHTML="<li>No matches found.</li>";
@@ -431,7 +441,7 @@ matches.appendChild(li);
 });
 
 setMessage("Regex tested successfully.","success");
-
+showToast("Regex tested successfully.");
 }catch(error){
 resultBox.style.display="none";
 setMessage("Invalid regular expression: " + error.message,"error");
@@ -500,24 +510,52 @@ showToast("Download started.");
 
 }
 function clearAll(){
+
 pattern.value="";
 inputText.value="";
+
+document.getElementById("flagG").checked=true;
+document.getElementById("flagI").checked=false;
+document.getElementById("flagM").checked=false;
+
 preview.textContent="Matches will appear here.";
 matches.innerHTML="<li>No matches yet.</li>";
-matchInfo.textContent="Matches: 0";
+matchInfo.innerHTML="Matches: 0";
+
 resultBox.style.display="none";
+
 message.textContent="";
 message.className="message";
+
+showToast("Cleared.");
+
 }
 function loadRegex(value){
-pattern.value = value;
+
+pattern.value=value;
+
+if(!inputText.value.trim()){
+inputText.value=
+`Contact us at support@xavert.com or visit https://xavert.com.
+Order 12345 was created on 2026-01-15.
+The quick brown fox jumps over 42 lazy dogs.`;
+}
+
 testRegex();
+
 }
 pattern.addEventListener("input",testRegex);
 inputText.addEventListener("input",testRegex);
 
 document.querySelectorAll(".flags input").forEach(function(flag){
 flag.addEventListener("change",testRegex);
+});
+document.addEventListener("keydown",function(e){
+
+if(e.ctrlKey && e.key==="Enter"){
+testRegex();
+}
+
 });
 </script>
 
