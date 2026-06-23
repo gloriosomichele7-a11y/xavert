@@ -398,14 +398,22 @@ showToast("Download started");
 function clearAll(){
 
 document.getElementById("appName").value="XAVERT";
+document.getElementById("appEnv").value="production";
+document.getElementById("appDebug").value="false";
 document.getElementById("appUrl").value="";
+
+document.getElementById("dbHost").value="localhost";
+document.getElementById("dbPort").value="3306";
 document.getElementById("dbName").value="";
 document.getElementById("dbUser").value="";
 document.getElementById("dbPassword").value="";
+
+document.getElementById("appKey").value="";
 document.getElementById("output").value="";
 
-}
+showToast("Cleared");
 
+}
 document.addEventListener("keydown",function(e){
 
 if(e.ctrlKey && e.key==="Enter"){
