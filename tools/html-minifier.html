@@ -4,9 +4,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>XAVERT | HTML Minifier</title>
+<title>XAVERT | HTML Minifier & Beautifier</title>
 
-<meta name="description" content="Minify and beautify HTML code directly in your browser. Optimize HTML and improve readability instantly.">
+<meta name="description" content="Free online HTML Minifier and Beautifier to minify, format, clean and optimize HTML code directly in your browser. Reduce file size, improve readability and download HTML instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/html-minifier.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -121,7 +124,7 @@ background:#b91c1c;
 
 .stats{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(6,1fr);
 gap:12px;
 margin-top:20px;
 }
@@ -232,7 +235,7 @@ grid-template-columns:1fr;
 <img src="../logo-hero.svg" alt="XAVERT">
 </div>
 
-<h1>HTML Minifier</h1>
+<h1>HTML Minifier & Beautifier</h1>
 
 <p class="subtitle">
 Minify and beautify HTML code directly in your browser.
@@ -246,6 +249,10 @@ Minify and beautify HTML code directly in your browser.
 
 <label>Input HTML</label>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadExampleHtml();return false;">Load Sample HTML</a>
+</div>
+
 <textarea
 id="inputHtml"
 placeholder="Paste your HTML here..."
@@ -254,6 +261,7 @@ placeholder="Paste your HTML here..."
 <div class="button-group">
 <button onclick="minifyHtml()">Minify HTML</button>
 <button onclick="beautifyHtml()">Beautify HTML</button>
+<button onclick="swapHtml()">Swap</button>
 <button onclick="clearAll()">Clear</button>
 </div>
 
@@ -301,7 +309,16 @@ placeholder="Processed HTML will appear here..."
 <strong id="compression">0%</strong>
 <span>Compression</span>
 </div>
+  
+<div class="stat-box">
+<strong id="lineCount">0</strong>
+<span>Lines</span>
+</div>
 
+<div class="stat-box">
+<strong id="operationType">-</strong>
+<span>Operation</span>
+</div>
 </div>
 
 </div>
@@ -341,7 +358,7 @@ message.textContent=text;
 message.className="message " + type;
 }
 
-function updateStats(input,output){
+function updateStats(input,output,operation="-"){
 
 const inputLength=input.length;
 const outputLength=output.length;
@@ -352,13 +369,35 @@ const compression=inputLength
 ? ((saved/inputLength)*100).toFixed(1)
 : 0;
 
+const lines=input
+? input.split(/\r?\n/).length
+: 0;
+
 document.getElementById("inputChars").textContent=inputLength;
 document.getElementById("outputChars").textContent=outputLength;
 document.getElementById("savedChars").textContent=saved;
 document.getElementById("compression").textContent=compression + "%";
+document.getElementById("lineCount").textContent=lines;
+document.getElementById("operationType").textContent=operation;
 
 }
+function loadExampleHtml(){
 
+document.getElementById("inputHtml").value=
+`<!DOCTYPE html>
+<html>
+  <head>
+    <title>XAVERT</title>
+  </head>
+  <body>
+    <h1>Hello XAVERT</h1>
+    <p>Free online tools.</p>
+  </body>
+</html>`;
+
+showToast("Sample HTML loaded");
+
+}
 function minifyHtml(){
 
 const input=document.getElementById("inputHtml").value;
@@ -377,13 +416,13 @@ let output=input
 
 document.getElementById("outputHtml").value=output;
 
-updateStats(input,output);
+updateStats(input,output,"Minify");
 
 setMessage(
 "HTML minified successfully.",
 "success"
 );
-
+showToast("HTML minified successfully");
 }
 
 function beautifyHtml(){
@@ -400,13 +439,13 @@ let output=input
 
 document.getElementById("outputHtml").value=output;
 
-updateStats(input,output);
+updateStats(input,output,"Beautify");
 
 setMessage(
 "HTML beautified successfully.",
 "success"
 );
-
+showToast("HTML beautified successfully");
 }
 
 function copyOutput(){
@@ -442,7 +481,12 @@ type:"text/html;charset=utf-8"
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-html.html";
+const operation=
+document.getElementById("operationType").textContent
+.toLowerCase();
+
+link.download=
+"xavert-html-" + operation + ".html";
 
 document.body.appendChild(link);
 link.click();
@@ -453,7 +497,26 @@ URL.revokeObjectURL(link.href);
 showToast("Download started");
 
 }
+function swapHtml(){
 
+const input=document.getElementById("inputHtml");
+const output=document.getElementById("outputHtml");
+
+if(!output.value){
+showToast("Nothing to swap","error");
+return;
+}
+
+input.value=output.value;
+
+updateStats(
+input.value,
+output.value
+);
+
+showToast("Output moved to input");
+
+}
 function clearAll(){
 
 document.getElementById("inputHtml").value="";
@@ -463,6 +526,8 @@ document.getElementById("inputChars").textContent="0";
 document.getElementById("outputChars").textContent="0";
 document.getElementById("savedChars").textContent="0";
 document.getElementById("compression").textContent="0%";
+document.getElementById("lineCount").textContent="0";
+document.getElementById("operationType").textContent="-";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
