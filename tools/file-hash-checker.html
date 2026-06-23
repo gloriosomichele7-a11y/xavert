@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | File Hash Checker</title>
 
-<meta name="description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file hashes directly in your browser.">
+<meta name="description" content="Free online File Hash Checker to generate and verify SHA-256, SHA-384 and SHA-512 checksums directly in your browser. Compare file hashes instantly without uploading files.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/file-hash-checker.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -248,7 +251,9 @@ Click or drag a file here
 <button onclick="generateHash()">
 Generate Hash
 </button>
-
+<button onclick="downloadHashReport()">
+Download Report
+</button>
 <button onclick="clearAll()">
 Clear
 </button>
@@ -306,15 +311,31 @@ updateFileCount();
 });
 
 fileInput.addEventListener("change",function(){
-updateFileCount();
-});
 
+updateFileCount();
+
+if(fileInput.files.length){
+generateHash();
+}
+
+});
+function formatFileSize(bytes){
+
+const mb=bytes/(1024*1024);
+
+if(mb>=1){
+return mb.toFixed(2) + " MB";
+}
+
+return (bytes/1024).toFixed(1) + " KB";
+
+}
 function updateFileCount(){
 
 const file=fileInput.files[0];
 
 fileCount.textContent=file
-? file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB"
+? file.name + " • " + formatFileSize(file.size)
 : "No file selected";
 
 }
@@ -351,7 +372,34 @@ resultBox.innerHTML="";
 resultBox.style.display="none";
 
 }
+function downloadHashReport(){
 
+if(!resultBox.innerText.trim()){
+showToast("Generate a hash first.","error");
+return;
+}
+
+const blob=new Blob(
+[resultBox.innerText],
+{
+type:"text/plain;charset=utf-8"
+}
+);
+
+const link=document.createElement("a");
+
+link.href=URL.createObjectURL(blob);
+link.download="xavert-file-hash-report.txt";
+
+document.body.appendChild(link);
+link.click();
+document.body.removeChild(link);
+
+URL.revokeObjectURL(link.href);
+
+showToast("Report downloaded.","success");
+
+}
 function copyText(text){
 
 if(!text){
@@ -394,7 +442,7 @@ const hashArray=Array.from(new Uint8Array(hashBuffer));
 const hashHex=hashArray
 .map(byte=>byte.toString(16).padStart(2,"0"))
 .join("");
-const fileSize=(file.size/1024/1024).toFixed(2) + " MB";
+const fileSize=formatFileSize(file.size);
 const generatedAt=new Date().toLocaleString();
 const expectedHash=document.getElementById("expectedHash").value.trim().toLowerCase();
 
@@ -433,11 +481,16 @@ verificationHtml +
 "<strong>Length</strong><br>" +
 hashHex.length +
 " characters<br><br>" +
-"<strong>Hash</strong><br><code>" +
+"<strong>Hash Lowercase</strong><br><code>" +
 hashHex +
 "</code>" +
 "<br><br>" +
-'<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex + '\')">Copy Hash</button>';
+"<strong>Hash Uppercase</strong><br><code>" +
+hashHex.toUpperCase() +
+"</code>" +
+"<br><br>" +
+'<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex + '\')">Copy Lowercase</button> ' +
+'<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex.toUpperCase() + '\')">Copy Uppercase</button>';
 setMessage("Hash generated successfully.","success");
 
 }catch(error){
