@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | UUID Generator</title>
 
-<meta name="description" content="Generate UUID v4 and UUID v7 identifiers online directly in your browser. Create, copy and download unique IDs.">
+<meta name="description" content="Free online UUID Generator to create UUID v4 and UUID v7 identifiers directly in your browser. Generate, copy and download unique IDs instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/uuid-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -157,7 +160,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -182,6 +195,20 @@ button{width:100%;}
 <p class="subtitle">
 Generate UUID v4 and UUID v7 identifiers directly in your browser.
 </p>
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ UUIDs are generated locally in your browser. Nothing is uploaded or stored.
+</div>
+
 <div class="card">
 <label for="uuidVersion">UUID Version</label>
 
@@ -258,14 +285,22 @@ const resultBox=document.getElementById("resultBox");
 const uuidOutput=document.getElementById("uuidOutput");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
+document.addEventListener("keydown",function(e){
 
-function showToast(text){
+if(e.ctrlKey && e.key==="Enter"){
+generateUUIDs();
+}
+
+});
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -279,7 +314,7 @@ message.className="message " + type;
 function generateSingleUUID(){
 
 document.getElementById("quantity").value=1;
-
+document.getElementById("uuidVersion").value="v4";
 generateUUIDs();
 
 }
@@ -353,7 +388,7 @@ document.getElementById("uuidCount").textContent =
 document.getElementById("uuidVersionInfo").textContent =
 "Version: " + versionLabel;
 resultBox.style.display="block";
-
+showToast(versionLabel + " generated.","success");
 if(quantity===1){
 
 setMessage(
@@ -494,7 +529,7 @@ resultBox.style.display="none";
 
 message.textContent="";
 message.className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
