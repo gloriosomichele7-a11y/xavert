@@ -6,10 +6,12 @@
 
 <title>XAVERT | Robots.txt Generator</title>
 
-<meta name="description" content="Generate SEO-friendly robots.txt files for search engines directly in your browser.">
+<meta name="description" content="Free online Robots.txt Generator to create SEO-friendly robots.txt files for search engines and website crawling control directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/robots-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -217,7 +219,14 @@ Create robots.txt files for search engines and website crawling control.
 <div class="grid">
 
 <div>
+<title>XAVERT | Robots.txt Generator</title>
 
+<meta name="description" content="Free online Robots.txt Generator to create SEO-friendly robots.txt files for search engines and website crawling control directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/robots-generator.html">
+
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <label>User-Agent</label>
 <select id="userAgent">
 <option value="*">*</option>
@@ -314,7 +323,19 @@ message.textContent=text;
 message.className="message " + type;
 
 }
+function loadSampleRobots(){
 
+document.getElementById("userAgent").value="*";
+document.getElementById("disallow").value="/admin/";
+document.getElementById("allow").value="/";
+document.getElementById("crawlDelay").value="";
+document.getElementById("sitemap").value="https://xavert.com/sitemap.xml";
+document.getElementById("output").value="";
+
+setMessage("Sample robots.txt loaded.","success");
+showToast("Sample robots.txt loaded.","success");
+
+}
 function generateRobots(){
 
 const userAgent=document.getElementById("userAgent").value;
@@ -347,7 +368,7 @@ setMessage(
 "robots.txt generated successfully.",
 "success"
 );
-
+showToast("robots.txt generated.","success");
 }
 
 function copyOutput(){
