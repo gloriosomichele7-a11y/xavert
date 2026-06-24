@@ -1040,11 +1040,20 @@ document.getElementById("numbersPosition").value="bottom-center";
 document.getElementById("numbersStart").value="1";
 }
 function downloadBlob(blob,fileName){
+
 const link=document.createElement("a");
+
 link.href=URL.createObjectURL(blob);
 link.download=fileName;
+
+document.body.appendChild(link);
 link.click();
+document.body.removeChild(link);
+
 URL.revokeObjectURL(link.href);
+
+showToast("Download started.","success");
+
 }
 function formatFileSize(bytes){
 
@@ -1080,7 +1089,7 @@ pages.forEach(page=>mergedPdf.addPage(page));
 const bytes=await mergedPdf.save();
 const blob=new Blob([bytes],{type:"application/pdf"});
 
-downloadBlob(blob,"XAVERT-Merged-PDF.pdf");
+downloadBlob(blob,"merged-document.pdf");
 setMessage("mergeMessage","PDF files merged successfully.","success");
 showToast("PDF merged successfully.","success");
 
@@ -1160,7 +1169,7 @@ zip.file("page-" + (index+1) + ".pdf",bytes);
 }
 
 const zipBlob=await zip.generateAsync({type:"blob"});
-downloadBlob(zipBlob,"XAVERT-Split-PDF.zip");
+downloadBlob(zipBlob,"split-pages.zip");
 
 setMessage("splitMessage","PDF pages extracted successfully.","success");
 showToast("PDF split completed.","success");
@@ -1210,7 +1219,7 @@ pdf.addPage();
 pdf.addImage(dataUrl,file.type==="image/png" ? "PNG" : "JPEG",x,y,imgWidth,imgHeight);
 }
 
-pdf.save("XAVERT-Images-to-PDF.pdf");
+pdf.save("images-to-pdf.pdf");
 
 setMessage("imageMessage","Images converted to PDF successfully.","success");
 showToast("Images converted to PDF.","success");
@@ -1276,7 +1285,7 @@ zip.file("page-" + pageNumber + ".jpg",blob);
 }
 
 const zipBlob=await zip.generateAsync({type:"blob"});
-downloadBlob(zipBlob,"XAVERT-PDF-to-JPG.zip");
+downloadBlob(zipBlob,"pdf-to-jpg.zip");
 
 setMessage("pdfJpgMessage","PDF converted to JPG successfully.","success");
 showToast("PDF converted to JPG.");
@@ -1310,7 +1319,7 @@ page.setRotation(PDFLib.degrees(currentRotation + angle));
 const bytes=await pdf.save();
 const blob=new Blob([bytes],{type:"application/pdf"});
 
-downloadBlob(blob,"XAVERT-Rotated-PDF.pdf");
+downloadBlob(blob,"rotated-document.pdf");
 
 setMessage("rotateMessage","PDF rotated successfully.","success");
 showToast("PDF rotated successfully.");
@@ -1389,7 +1398,7 @@ zip.file("page-" + (index+1) + ".pdf",bytes);
 
 const zipBlob=await zip.generateAsync({type:"blob"});
 
-downloadBlob(zipBlob,"XAVERT-Extracted-Pages.zip");
+downloadBlob(zipBlob,"extracted-pages.zip");
 
 setMessage("extractMessage","Pages extracted successfully.","success");
 
@@ -1476,7 +1485,7 @@ const bytes=await newPdf.save();
 
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
-"XAVERT-Pages-Deleted.pdf"
+"cleaned-document.pdf"
 );
 
 setMessage("deleteMessage","Pages deleted successfully.","success");
@@ -1528,7 +1537,7 @@ zip.file("page-" + pageNumber + ".png",blob);
 
 const zipBlob=await zip.generateAsync({type:"blob"});
 
-downloadBlob(zipBlob,"XAVERT-PDF-to-PNG.zip");
+downloadBlob(zipBlob,"pdf-to-png.zip");
 
 setMessage("pngMessage","PDF converted successfully.","success");
 showToast("PDF converted to PNG.");
