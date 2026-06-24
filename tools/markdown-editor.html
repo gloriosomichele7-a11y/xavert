@@ -6,7 +6,10 @@
 
 <title>XAVERT | Markdown Editor</title>
 
-<meta name="description" content="Free online Markdown Editor with live preview, Markdown to HTML conversion, copy tools and file export directly in your browser.">
+<meta name="description" content="Free online Markdown Editor with live preview, Markdown to HTML conversion, tables, task lists, copy tools and file export directly in your browser. Write, preview and download Markdown instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/markdown-editor.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -305,6 +308,10 @@ Write, preview, convert and export Markdown documents directly in your browser.
 
 <div>
 <label for="markdownInput">Markdown Input</label>
+
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleMarkdown();return false;">Load Sample Markdown</a>
+</div>
 <textarea id="markdownInput" placeholder="# Hello XAVERT
 
 Write your Markdown here...
@@ -682,7 +689,37 @@ html += "<pre><code>" + codeBuffer.trim() + "</code></pre>";
 return html;
 
 }
+function loadSampleMarkdown(){
 
+markdownInput.value=
+`# XAVERT Markdown Editor
+
+Write **Markdown** and preview it instantly.
+
+## Features
+
+- Live preview
+- Markdown to HTML
+- Copy Markdown
+- Copy HTML
+- Download .md
+- Download .html
+
+> Everything runs directly in your browser.
+
+| Feature | Status |
+|---|---|
+| Preview | Ready |
+| Export | Ready |
+
+- [x] Create content
+- [ ] Export final document`;
+
+renderMarkdown(true);
+
+showToast("Sample Markdown loaded.","success");
+
+}
 function updateStats(text){
 
 const clean=text.trim();
@@ -796,7 +833,7 @@ previewBox.innerHTML="<p style='color:#6b7280;'>Live preview will appear here.</
 message.textContent="";
 message.className="message";
 updateStats("");
-
+showToast("Cleared.","success");
 }
 
 renderMarkdown(false);
