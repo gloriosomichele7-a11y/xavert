@@ -219,7 +219,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -245,7 +255,19 @@ button{width:100%;}
 <p class="subtitle">
 Test regular expressions, highlight matches and copy results directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Regex tests run locally in your browser. Your text is never uploaded or stored.
+</div>
 <div class="card">
 
 <label for="pattern">Regular Expression</label>
@@ -322,13 +344,17 @@ const matchInfo=document.getElementById("matchInfo");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
 
-function showToast(text){
+function showToast(text,type="info"){
+
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
+
 }
 
 function setMessage(text,type){
@@ -441,7 +467,7 @@ matches.appendChild(li);
 });
 
 setMessage("Regex tested successfully.","success");
-showToast("Regex tested successfully.");
+showToast("Regex tested successfully.","success");
 }catch(error){
 resultBox.style.display="none";
 setMessage("Invalid regular expression: " + error.message,"error");
@@ -527,7 +553,7 @@ resultBox.style.display="none";
 message.textContent="";
 message.className="message";
 
-showToast("Cleared.");
+showToast("Cleared.","success");
 
 }
 function loadRegex(value){
