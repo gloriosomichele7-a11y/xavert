@@ -144,7 +144,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -169,7 +179,19 @@ button{width:100%;}
 <p class="subtitle">
 Encode and decode Base64 text directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ All Base64 encoding and decoding is performed locally in your browser. No data is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="inputText">Input Text</label>
@@ -282,13 +304,15 @@ inputType.textContent="Detected: Plain Text";
 }
 
 });
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -329,7 +353,7 @@ outputLabel.textContent="Encoded Output";
 resultBox.style.display="block";
 
 setMessage("Text encoded successfully.","success");
-
+showToast("Text encoded successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -346,7 +370,13 @@ setMessage(
 }
 function looksLikeBase64(value){
 
-if(value.length<16){
+if(value.length<8){
+return false;
+}
+
+value=value.replace(/\s+/g,"");
+
+if(value.length%4!==0){
 return false;
 }
 
@@ -375,7 +405,7 @@ utfInfo.style.display="block";
 utfInfo.textContent="Decoded as UTF-8 text";
 
 setMessage("Base64 decoded successfully.","success");
-
+showToast("Base64 decoded successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -400,7 +430,7 @@ showToast("Copied.");
 function downloadResult(){
 
 if(!outputText.value){
-showToast("Nothing to download.");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -419,7 +449,7 @@ link.click();
 document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
-
+showToast("Download started.","success");
 }
 
 function clearAll(){
@@ -438,7 +468,7 @@ inputInfo.textContent="Characters: 0";
 inputType.textContent="Detected: —";
 message.textContent="";
 message.className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
