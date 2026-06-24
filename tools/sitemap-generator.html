@@ -6,7 +6,10 @@
 
 <title>XAVERT | Sitemap Generator</title>
 
-<meta name="description" content="Generate XML sitemaps for websites directly in your browser. Create valid sitemap.xml files for search engines.">
+<meta name="description" content="Free online Sitemap Generator to create valid XML sitemap files for websites directly in your browser. Generate sitemap.xml files for SEO and search engine indexing instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/sitemap-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -258,6 +261,10 @@ Create XML sitemaps for websites and improve search engine indexing.
 
 <label>Website URLs (one per line)</label>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleUrls();return false;">Load Sample URLs</a>
+</div>
+
 <textarea
 id="urls"
 placeholder="https://example.com
@@ -382,7 +389,16 @@ message.textContent=text;
 message.className="message " + type;
 
 }
+function escapeXml(value){
 
+return value
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&apos;");
+
+}
 function isValidUrl(url){
 
 try{
@@ -393,7 +409,18 @@ return false;
 }
 
 }
+function loadSampleUrls(){
 
+document.getElementById("urls").value=
+`https://xavert.com
+https://xavert.com/about
+https://xavert.com/tools
+https://xavert.com/privacy-first
+https://xavert.com/contact`;
+
+showToast("Sample URLs loaded");
+
+}
 function generateSitemap(){
 
 const urlsText=document.getElementById("urls").value.trim();
@@ -414,7 +441,11 @@ const urls=urlsText
 .map(url=>url.trim())
 .filter(url=>url);
 
-const validUrls=urls.filter(isValidUrl);
+const validUrls=[
+...new Set(
+urls.filter(isValidUrl)
+)
+];
 
 if(validUrls.length===0){
 
@@ -437,15 +468,22 @@ xml+='<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n';
 
 validUrls.forEach(function(url){
 
+const cleanUrl=url.replace(/\/$/,"");
+const baseUrl=new URL(url).origin;
+
+const pagePriority=
+cleanUrl===baseUrl
+? "1.0"
+: priority;
+
 xml+='  <url>\n';
-xml+='    <loc>'+url+'</loc>\n';
+xml+='    <loc>'+escapeXml(url)+'</loc>\n';
 xml+='    <lastmod>'+today+'</lastmod>\n';
 xml+='    <changefreq>'+changefreq+'</changefreq>\n';
-xml+='    <priority>'+priority+'</priority>\n';
+xml+='    <priority>'+pagePriority+'</priority>\n';
 xml+='  </url>\n';
 
 });
-
 xml+='</urlset>';
 
 document.getElementById("output").value=xml;
@@ -463,7 +501,7 @@ setMessage(
 "Sitemap generated successfully.",
 "success"
 );
-
+showToast("Sitemap generated");
 }
 
 function copyOutput(){
@@ -516,14 +554,15 @@ function clearAll(){
 
 document.getElementById("urls").value="";
 document.getElementById("output").value="";
-
+document.getElementById("changefreq").value="daily";
+document.getElementById("priority").value="0.8";
 document.getElementById("urlCount").textContent="0";
 document.getElementById("validCount").textContent="0";
 document.getElementById("xmlSize").textContent="0";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-
+showToast("Cleared");
 }
 
 </script>
