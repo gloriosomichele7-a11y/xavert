@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Text Toolkit</title>
 
-<meta name="description" content="Count, clean, convert, sort, encode and transform text directly in your browser.">
+<meta name="description" content="Free online Text Toolkit to count, clean, convert, sort, encode, decode and transform text directly in your browser. Process text instantly with privacy-first browser tools.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/text-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -169,7 +171,17 @@ display:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -194,7 +206,19 @@ button{width:100%;}
 <p class="subtitle">
 Count, clean, convert, sort, encode and transform text directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Text is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -491,6 +515,7 @@ Powered by XAVERT
 <div id="toast"></div>
 <script>
 const toolSelector=document.getElementById("toolSelector");
+const toast=document.getElementById("toast");
 document.addEventListener("keydown",function(e){
 
 if(e.ctrlKey && e.key==="Enter"){
@@ -517,7 +542,18 @@ section.classList.remove("active");
 
 document.getElementById(toolSelector.value + "Tool").classList.add("active");
 });
+function showToast(text,type="info"){
 
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
 function setMessage(id,text,type){
 const el=document.getElementById(id);
 if(!el) return;
@@ -550,20 +586,38 @@ const r=document.getElementById(resultId);
 r.innerHTML="";
 r.style.display="none";
 }
+
+showToast("Cleared.","success");
 }
 
 function countText(){
+
 const text=document.getElementById("counterInput").value;
 
-const words=text.trim() ? text.trim().split(/\s+/).length : 0;
+const words=text.trim()?text.trim().split(/\s+/).length:0;
+const characters=text.length;
+const charactersNoSpaces=text.replace(/\s/g,"").length;
+const lines=text?text.split(/\r?\n/).length:0;
+const paragraphs=text.trim()?text.trim().split(/\n\s*\n/).length:0;
+const sentences=(text.match(/[.!?]+/g)||[]).length;
 
-setMessage("counterMessage","Completed","success");
+const readingTime=Math.max(1,Math.ceil(words/200));
+
+setMessage("counterMessage","Analysis completed.","success");
 
 setResult(
 "counterResult",
-"Words: <strong>"+words+"</strong><br>" +
-"Characters: <strong>"+text.length+"</strong>"
+"Words: <strong>"+words+"</strong><br>"+
+"Characters: <strong>"+characters+"</strong><br>"+
+"Characters (no spaces): <strong>"+charactersNoSpaces+"</strong><br>"+
+"Sentences: <strong>"+sentences+"</strong><br>"+
+"Paragraphs: <strong>"+paragraphs+"</strong><br>"+
+"Lines: <strong>"+lines+"</strong><br>"+
+"Estimated reading time: <strong>"+readingTime+" min</strong>"
 );
+
+showToast("Analysis completed.","success");
+
 }
 
 function convertCase(){
@@ -585,18 +639,22 @@ output=text.split("").map((c,i)=>i%2?c.toUpperCase():c.toLowerCase()).join("");
 }
 
 document.getElementById("caseOutput").value=output;
+showToast("Completed.","success");  
 }
+  
 
 function removeExtraSpaces(){
 const text=document.getElementById("spacesInput").value;
 document.getElementById("spacesOutput").value=
 text.replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
+showToast("Completed.","success");
 }
 
 function removeDuplicateLines(){
 const text=document.getElementById("duplicatesInput").value;
 const unique=[...new Set(text.split(/\r?\n/))];
 document.getElementById("duplicatesOutput").value=unique.join("\n");
+showToast("Completed.","success");
 }
 
 function sortLines(){
@@ -610,6 +668,7 @@ lines.reverse();
 }
 
 document.getElementById("sortOutput").value=lines.join("\n");
+showToast("Completed.","success");
 }
 
 function findAndReplace(){
@@ -619,6 +678,7 @@ const replace=document.getElementById("replaceText").value;
 
 document.getElementById("findReplaceOutput").value=
 text.split(find).join(replace);
+showToast("Completed.","success");
 }
 
 function clearFindReplace(){
@@ -637,6 +697,7 @@ document.getElementById("slugOutput").value=text
 .replace(/[\u0300-\u036f]/g,"")
 .replace(/[^a-z0-9]+/g,"-")
 .replace(/^-+|-+$/g,"");
+showToast("Completed.","success");
 }
 
 function processUrl(){
@@ -647,16 +708,34 @@ document.getElementById("urlOutput").value=
 mode==="encode"
 ? encodeURIComponent(text)
 : decodeURIComponent(text);
+showToast("Completed.","success");
 }
 
 function processBase64(){
 const text=document.getElementById("base64Input").value;
 const mode=document.getElementById("base64Mode").value;
 
+try{
+
 document.getElementById("base64Output").value=
 mode==="encode"
 ? btoa(text)
 : atob(text);
+
+showToast("Completed.","success");
+
+}catch{
+
+setMessage(
+"base64Message",
+"Invalid Base64 string.",
+"error"
+);
+
+showToast("Invalid Base64.","error");
+
+}
+showToast("Completed.","success");
 }
 </script>
 
