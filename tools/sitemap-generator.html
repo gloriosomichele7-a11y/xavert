@@ -303,7 +303,7 @@ https://example.com/contact"
 
 <div class="stat-box">
 <strong id="urlCount">0</strong>
-<span>URLs</span>
+<span>Generated URLs</span>
 </div>
 
 <div class="stat-box">
@@ -313,7 +313,7 @@ https://example.com/contact"
 
 <div class="stat-box">
 <strong id="validCount">0</strong>
-<span>Valid URLs</span>
+<span>Input URLs</span>
 </div>
 
 </div>
@@ -489,10 +489,10 @@ xml+='</urlset>';
 document.getElementById("output").value=xml;
 
 document.getElementById("urlCount").textContent=
-urls.length;
+validUrls.length;
 
 document.getElementById("validCount").textContent=
-validUrls.length;
+urls.length;
 
 document.getElementById("xmlSize").textContent=
 xml.length;
