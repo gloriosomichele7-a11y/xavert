@@ -6,10 +6,12 @@
 
 <title>XAVERT | SQL Formatter</title>
 
-<meta name="description" content="Format, beautify and organize SQL queries directly in your browser. Improve readability instantly.">
+<meta name="description" content="Free online SQL Formatter to format, beautify and organize SQL queries directly in your browser. Improve SQL readability, copy formatted queries and download SQL files instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/sql-formatter.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -246,6 +248,16 @@ Format and beautify SQL queries directly in your browser.
 
 <label>Input SQL</label>
 
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleSql('join');return false;">JOIN Query</a>
+&nbsp;•&nbsp;
+<a href="#" onclick="loadSampleSql('select');return false;">SELECT</a>
+&nbsp;•&nbsp;
+<a href="#" onclick="loadSampleSql('insert');return false;">INSERT</a>
+&nbsp;•&nbsp;
+<a href="#" onclick="loadSampleSql('update');return false;">UPDATE</a>
+</div>
+
 <textarea
 id="inputSql"
 placeholder="Paste your SQL query here..."
@@ -253,9 +265,10 @@ placeholder="Paste your SQL query here..."
 
 <div class="button-group">
 <button onclick="formatSql()">Format SQL</button>
+<button onclick="minifySql()">Minify SQL</button>
+<button onclick="swapSql()">Swap</button>
 <button onclick="clearAll()">Clear</button>
 </div>
-
 <div id="message" class="message"></div>
 
 </div>
@@ -316,7 +329,7 @@ Powered by XAVERT
 <script>
 
 const toast=document.getElementById("toast");
-
+let lastOperation="query";
 document.addEventListener("keydown",function(e){
 if(e.ctrlKey && e.key==="Enter"){
 formatSql();
@@ -344,7 +357,37 @@ message.textContent=text;
 message.className="message " + type;
 
 }
+function loadSampleSql(type="join"){
 
+let sample="";
+
+if(type==="select"){
+sample=
+`select id, name, email from users where active = 1 order by name asc limit 20;`;
+}
+
+if(type==="join"){
+sample=
+`select users.id, users.name, orders.total from users inner join orders on users.id = orders.user_id where orders.total > 100 order by orders.total desc limit 10;`;
+}
+
+if(type==="insert"){
+sample=
+`insert into users (name, email, active) values ('Mario Rossi', 'mario@example.com', 1);`;
+}
+
+if(type==="update"){
+sample=
+`update users set active = 0, updated_at = now() where last_login < '2025-01-01';`;
+}
+
+document.getElementById("inputSql").value=sample;
+document.getElementById("outputSql").value="";
+
+setMessage("Sample SQL loaded.","success");
+showToast("Sample SQL loaded");
+
+}
 function formatSql(){
 
 let sql=document.getElementById("inputSql").value;
@@ -380,16 +423,56 @@ formatted=formatted
 .trim();
 
 document.getElementById("outputSql").value=formatted;
-
+lastOperation="formatted";
 updateStats(sql,formatted);
 
 setMessage(
 "SQL formatted successfully.",
 "success"
 );
+showToast("SQL formatted successfully");
+}
+function minifySql(){
 
+const sql=document.getElementById("inputSql").value;
+
+if(!sql.trim()){
+setMessage("Please enter SQL code.","error");
+return;
 }
 
+const minified=sql
+.replace(/--.*$/gm,"")
+.replace(/\/\*[\s\S]*?\*\//g,"")
+.replace(/\s+/g," ")
+.replace(/\s*([(),=<>+\-*\/])\s*/g,"$1")
+.trim();
+
+document.getElementById("outputSql").value=minified;
+lastOperation="minified";
+updateStats(sql,minified);
+
+setMessage("SQL minified successfully.","success");
+showToast("SQL minified successfully");
+
+}
+function swapSql(){
+
+const input=document.getElementById("inputSql");
+const output=document.getElementById("outputSql");
+
+if(!output.value){
+showToast("Nothing to swap","error");
+return;
+}
+
+input.value=output.value;
+
+updateStats(input.value,output.value);
+
+showToast("Output moved to input");
+
+}
 function updateStats(input,output){
 
 document.getElementById("inputChars").textContent=input.length;
@@ -403,8 +486,13 @@ output
 const keywordsFound=
 (output.match(/\b(SELECT|FROM|WHERE|JOIN|GROUP BY|ORDER BY|HAVING|LIMIT|INSERT INTO|UPDATE|DELETE|SET)\b/gi)||[]).length;
 
+const selectCount=(output.match(/\bSELECT\b/gi)||[]).length;
+const joinCount=(output.match(/\bJOIN\b/gi)||[]).length;
+const whereCount=(output.match(/\bWHERE\b/gi)||[]).length;
+const orderCount=(output.match(/\bORDER BY\b/gi)||[]).length;
+
 document.getElementById("keywordCount").textContent=
-keywordsFound;
+keywordsFound + " total";
 
 }
 
@@ -442,7 +530,7 @@ type:"text/plain;charset=utf-8"
 const link=document.createElement("a");
 
 link.href=URL.createObjectURL(blob);
-link.download="xavert-query.sql";
+link.download="xavert-sql-" + lastOperation + ".sql";
 
 document.body.appendChild(link);
 link.click();
@@ -458,7 +546,7 @@ function clearAll(){
 
 document.getElementById("inputSql").value="";
 document.getElementById("outputSql").value="";
-
+lastOperation="query";
 document.getElementById("inputChars").textContent="0";
 document.getElementById("outputChars").textContent="0";
 document.getElementById("lineCount").textContent="0";
