@@ -5,10 +5,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Unit Converter</title>
 
-<meta name="description" content="Convert length, weight, temperature, area, volume and speed units directly in your browser.">
+<meta name="description" content="Free online Unit Converter to convert length, weight, temperature, area, volume and speed units directly in your browser. Fast, private and easy unit conversions.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/unit-converter.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
 <style>
 *{
 margin:0;
@@ -179,7 +181,19 @@ button{width:100%;}
 <p class="subtitle">
 Convert length, weight, temperature, area, volume and speed units instantly.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ All conversions run locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 <label for="favoriteConversion">Favorite Conversions</label>
 <select id="favoriteConversion">
@@ -339,12 +353,21 @@ convertUnits();
 }
 
 });
+inputValue.addEventListener("input",function(){
+
+if(inputValue.value){
+convertUnits();
+}else{
+clearResult();
+}
+
+});
 fromUnit.addEventListener("change",function(){
 
 if(inputValue.value){
 convertUnits();
 }
-
+showToast("Units swapped.","success");
 });
 
 toUnit.addEventListener("change",function(){
@@ -483,7 +506,7 @@ conversionHistory=[];
 lastResultText="";
 
 clearResult();
-
+showToast("Cleared.","success");
 }
 
 function formatNumber(value){
@@ -531,6 +554,12 @@ return;
 const from=fromUnit.value;
 const to=toUnit.value;
 
+if(category.value==="temperature" && from==="kelvin" && value<0){
+setMessage("Kelvin cannot be below 0.","error");
+showToast("Invalid Kelvin value.","error");
+return;
+}
+
 let result=0;
 
 if(category.value==="temperature"){
@@ -541,7 +570,7 @@ result=base/units[category.value][to];
 }
 
 setMessage("Conversion completed.","success");
-
+showToast("Conversion completed.","success");
 lastResultText=
 formatNumber(value) + " " + from + " → " + formatNumber(result) + " " + to;
 
