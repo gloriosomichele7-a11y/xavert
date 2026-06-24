@@ -1055,6 +1055,10 @@ URL.revokeObjectURL(link.href);
 showToast("Download started.","success");
 
 }
+
+showToast("Download started.","success");
+
+}
 function formatFileSize(bytes){
 
 const mb=bytes/(1024*1024);
@@ -1590,7 +1594,7 @@ const bytes=await pdf.save();
 
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
-"XAVERT-Watermarked.pdf"
+"watermarked-document.pdf"
 );
 
 setMessage("watermarkMessage","Watermark added successfully.","success");
@@ -1678,7 +1682,7 @@ const compressedSize=compressedBlob.size;
 const reduction=Math.round((1-(compressedSize/originalSize))*100);
 const reductionText=reduction>0 ? "Reduction: " + reduction + "%" : "No size reduction";
 
-downloadBlob(compressedBlob,"XAVERT-Compressed-PDF.pdf");
+downloadBlob(compressedBlob,"compressed-document.pdf");
 
 setMessage(
 "compressMessage",
@@ -1759,7 +1763,7 @@ const bytes=await newPdf.save();
 
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
-"XAVERT-Reordered-PDF.pdf"
+"reordered-document.pdf"
 );
 
 setMessage("reorderMessage","Pages reordered successfully.","success");
@@ -1837,7 +1841,7 @@ const bytes=await pdf.save();
 
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
-"XAVERT-Page-Numbers.pdf"
+"numbered-document.pdf"
 );
 
 setMessage("numbersMessage","Page numbers added successfully.","success");
@@ -2019,7 +2023,7 @@ const bytes=await pdf.save();
 
 downloadBlob(
 new Blob([bytes],{type:"application/pdf"}),
-"XAVERT-Signed-PDF.pdf"
+"signed-document.pdf"
 );
 
 setMessage("signMessage","PDF signed successfully.","success");
