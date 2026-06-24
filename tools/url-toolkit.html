@@ -6,8 +6,10 @@
 
 <title>XAVERT | URL Toolkit</title>
 
-<meta name="description"
-content="Encode, decode, analyze and build URLs directly in your browser.">
+<meta name="description" content="Free online URL Toolkit to encode, decode, analyze, parse and build URLs with UTM parameters directly in your browser. Fast, private and easy URL tools.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/url-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -215,7 +217,19 @@ width:100%;
 <p class="subtitle">
 Encode, decode, analyze and build URLs directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ URLs are processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="inputUrl">
@@ -335,7 +349,13 @@ const outputText=document.getElementById("outputText");
 const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
+document.addEventListener("keydown",function(e){
 
+if(e.ctrlKey && e.key==="Enter"){
+parseURL();
+}
+
+});
 function showToast(text,type="info"){
 
 toast.textContent=text;
@@ -381,7 +401,7 @@ setMessage(
 "URL encoded successfully.",
 "success"
 );
-
+showToast("URL encoded.","success");
 }catch(error){
 
 setMessage(
@@ -412,7 +432,7 @@ setMessage(
 "URL decoded successfully.",
 "success"
 );
-
+showToast("URL decoded.","success");
 }catch(error){
 
 setMessage(
@@ -465,7 +485,7 @@ setMessage(
 "URL parsed successfully.",
 "success"
 );
-
+showToast("URL parsed.","success");
 }catch(error){
 
 setMessage(
@@ -531,7 +551,7 @@ setMessage(
 "UTM URL created successfully.",
 "success"
 );
-
+showToast("UTM URL created.","success");
 }catch(error){
 
 setMessage(
@@ -605,7 +625,7 @@ resultBox.style.display="none";
 
 message.textContent="";
 message.className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
