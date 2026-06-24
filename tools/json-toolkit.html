@@ -254,7 +254,19 @@ h1{font-size:34px;}
 <p class="subtitle">
 Format, validate, minify, escape, unescape and compare JSON data directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ JSON data is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -622,7 +634,7 @@ jsonOutput.value=result;
 updateStats(result,json);
 
 setMessage(mainMessage,"JSON formatted successfully.","success");
-
+showToast("JSON formatted.","success");
 }
 
 function minifyJson(){
@@ -642,7 +654,7 @@ jsonOutput.value=result;
 updateStats(result,json);
 
 setMessage(mainMessage,"JSON minified successfully.","success");
-
+showToast("JSON minified.","success");
 }
 
 function validateJson(){
@@ -665,7 +677,7 @@ jsonStats.innerHTML=
 "</strong>";
 
 setMessage(mainMessage,"JSON is valid.","success");
-
+showToast("JSON is valid.","success");
 }
 
 function escapeJsonText(){
@@ -680,7 +692,7 @@ return;
 document.getElementById("escapeOutput").value=JSON.stringify(input).slice(1,-1);
 
 setMessage(document.getElementById("escapeMessage"),"Text escaped successfully.","success");
-
+showToast("Text escaped.","success");
 }
 
 function unescapeJsonText(){
@@ -695,6 +707,7 @@ return;
 try{
 document.getElementById("escapeOutput").value=JSON.parse('"' + input.replace(/"/g,'\\"') + '"');
 setMessage(document.getElementById("escapeMessage"),"Text unescaped successfully.","success");
+showToast("Text unescaped.","success");
 }catch(error){
 setMessage(document.getElementById("escapeMessage"),"Invalid escaped text.","error");
 }
@@ -713,7 +726,7 @@ mainMessage.className="message";
 
 jsonStats.innerHTML="";
 jsonStats.style.display="none";
-
+showToast("Cleared.","success");
 }
 
 function clearEscape(){
@@ -722,7 +735,7 @@ document.getElementById("escapeInput").value="";
 document.getElementById("escapeOutput").value="";
 document.getElementById("escapeMessage").textContent="";
 document.getElementById("escapeMessage").className="message";
-
+showToast("Cleared.","success");
 }
 
 function flattenObject(obj,prefix="",result={}){
@@ -808,7 +821,7 @@ html;
 }
 
 setMessage(compareMessage,"JSON comparison completed.","success");
-
+showToast("JSON comparison completed.","success");
 }catch(error){
 compareResult.style.display="none";
 setMessage(compareMessage,"Invalid JSON in one or both inputs.","error");
