@@ -240,7 +240,22 @@ width:100%;
 <p class="subtitle">
 Merge, split, compress, convert, sign and manage PDF files directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ All PDF processing happens locally in your browser. Files are never uploaded to XAVERT servers.
+</div>
+<div style="text-align:center;margin-bottom:24px;color:#047857;font-size:14px;font-weight:700;">
+✓ PDF files are processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -645,6 +660,10 @@ Clear
 
 <p class="info">
 Add a handwritten signature to your PDF using a drawn signature or an uploaded PNG/JPG image.
+<br><br>
+<strong style="color:#047857;">
+✓ Your PDF and signature stay on your device.
+</strong>
 </p>
 
 <div class="drop-zone" data-input="signPdfFile">
@@ -852,21 +871,6 @@ document.getElementById("pdfJpgCount").textContent="No file selected";
 }
 }
  
-if(inputId==="pdfJpgFile"){
-if(files.length){
-getPDFPageCount(files[0]).then(count=>{
-document.getElementById("pdfJpgCount").textContent=
-files[0].name + " • " +
-formatFileSize(files[0].size) +
-" • " +
-count +
-" pages";
-});
-}else{
-document.getElementById("pdfJpgCount").textContent="No file selected";
-}
-}
- 
 if(inputId==="extractFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
@@ -899,17 +903,6 @@ document.getElementById("pngCount").textContent="No file selected";
 }
 }
 
-if(inputId==="watermarkFile"){
-if(files.length){
-getPDFPageCount(files[0]).then(count=>{
-document.getElementById("watermarkCount").textContent=
-files[0].name + " • " + formatFileSize(files[0].size) + " • " + count + " pages";
-});
-}else{
-document.getElementById("watermarkCount").textContent="No file selected";
-}
-}
- 
 if(inputId==="watermarkFile"){
 if(files.length){
 getPDFPageCount(files[0]).then(count=>{
@@ -993,6 +986,8 @@ if(message){
 message.textContent="";
 message.className="message";
 }
+
+showToast("Cleared.","success");
 }
 
 function clearFileTextTool(fileInputId,countId,textInputId,messageId,defaultText){
@@ -1011,7 +1006,9 @@ clearFileTool("signatureImageFile","signatureImageCount","signMessage","No signa
 
 document.getElementById("signaturePage").value="1";
 document.getElementById("signaturePosition").value="bottom-right";
-
+document.getElementById("signMethod").value="draw";
+document.getElementById("drawSignatureArea").style.display="block";
+document.getElementById("uploadSignatureArea").style.display="none";
 clearSignature();
 }
 function clearWatermarkTool(){
@@ -1050,8 +1047,15 @@ link.click();
 URL.revokeObjectURL(link.href);
 }
 function formatFileSize(bytes){
+
 const mb=bytes/(1024*1024);
+
+if(mb>=1){
 return mb.toFixed(2) + " MB";
+}
+
+return (bytes/1024).toFixed(1) + " KB";
+
 }
 async function mergePDF(){
 const files=document.getElementById("mergeFiles").files;
