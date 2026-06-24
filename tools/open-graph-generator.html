@@ -6,7 +6,10 @@
 
 <title>XAVERT | Open Graph Generator</title>
 
-<meta name="description" content="Create Open Graph meta tags, Twitter Card tags and social sharing previews directly in your browser.">
+<meta name="description" content="Free online Open Graph Generator to create Open Graph meta tags, Twitter Card tags and social sharing previews directly in your browser. Generate social media preview tags instantly.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/open-graph-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -263,6 +266,11 @@ Create Open Graph and Twitter Card tags for better social media sharing.
 <div>
 
 <label for="pageTitle">OG Title</label>
+
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+<a href="#" onclick="loadSampleOg();return false;">Load Sample Open Graph</a>
+</div>
+
 <input id="pageTitle" type="text" placeholder="Example: XAVERT | Free Online Tools">
 <div id="titleCounter" class="counter">0 characters</div>
 
@@ -462,7 +470,24 @@ updateCounter("titleCounter",title.length,"title");
 updateCounter("descriptionCounter",description.length,"description");
 
 }
+function loadSampleOg(){
 
+titleInput.value="XAVERT | Privacy-First Browser Tools";
+descriptionInput.value="Use professional online tools that run directly in your browser. No uploads, no accounts and privacy-first processing.";
+urlInput.value="https://xavert.com";
+imageInput.value="https://xavert.com/og-image.jpg";
+siteNameInput.value="XAVERT";
+ogTypeInput.value="website";
+twitterCardInput.value="summary_large_image";
+
+output.value="";
+
+updatePreview();
+
+setMessage("Sample Open Graph data loaded.","success");
+showToast("Sample Open Graph data loaded.","success");
+
+}
 function generateTags(){
 
 const title=titleInput.value.trim();
@@ -517,7 +542,7 @@ setMessage(
 "Open Graph tags generated successfully.",
 "success"
 );
-
+showToast("Open Graph tags generated.","success");
 }
 
 function copyText(text){
@@ -549,7 +574,7 @@ type:"text/html;charset=utf-8"
 
 const link=document.createElement("a");
 link.href=URL.createObjectURL(blob);
-link.download="xavert-open-graph-tags.html";
+link.download="xavert-open-graph-snippet.html";
 
 document.body.appendChild(link);
 link.click();
@@ -576,6 +601,8 @@ document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
 
 updatePreview();
+
+showToast("Cleared.","success");
 
 }
 
