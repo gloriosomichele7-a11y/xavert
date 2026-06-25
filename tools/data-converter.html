@@ -214,7 +214,19 @@ button{width:100%;}
 <p class="subtitle">
 Convert spreadsheets and structured data directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Data is processed locally in your browser. Files are never uploaded or stored.
+</div>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -741,17 +753,7 @@ return mb.toFixed(2) + " MB";
 return (bytes/1024).toFixed(1) + " KB";
 
 }
- function formatFileSize(bytes){
 
-const mb=bytes/(1024*1024);
-
-if(mb>=1){
-return mb.toFixed(2) + " MB";
-}
-
-return (bytes/1024).toFixed(1) + " KB";
-
-}
 function updateFileCount(inputId){
 const files=document.getElementById(inputId).files;
 
@@ -759,14 +761,14 @@ if(inputId==="csvXlsxFile"){
 document.getElementById("csvXlsxCount").textContent=
 files.length
 ? files[0].name + " • " +
-(files[0].size/1024/1024).toFixed(2) + " MB"
+formatFileSize(files[0].size)
 : "No file selected";
 }
 if(inputId==="xlsxCsvFile"){
 document.getElementById("xlsxCsvCount").textContent=
 files.length
 ? files[0].name + " • " +
-(files[0].size/1024/1024).toFixed(2) + " MB"
+formatFileSize(files[0].size)
 : "No file selected";
 }
 
@@ -774,14 +776,14 @@ if(inputId==="xlsxJsonFile"){
 document.getElementById("xlsxJsonCount").textContent=
 files.length
 ? files[0].name + " • " +
-(files[0].size/1024/1024).toFixed(2) + " MB"
+formatFileSize(files[0].size)
 : "No file selected";
 }
   if(inputId==="csvJsonFile"){
 document.getElementById("csvJsonCount").textContent=
 files.length
 ? files[0].name + " • " +
-(files[0].size/1024/1024).toFixed(2) + " MB"
+formatFileSize(files[0].size)
 : "No file selected";
 }
 }
@@ -1105,7 +1107,7 @@ document.getElementById("jsonFormatOutput").value=
 JSON.stringify(json,null,2);
 
 setMessage("jsonFormatMessage","JSON formatted successfully.","success");
-
+showToast("JSON formatted.","success");
 }catch(error){
 console.error(error);
 setMessage("jsonFormatMessage","Invalid JSON.","error");
@@ -1183,7 +1185,7 @@ document.getElementById("jsonMinifyOutput").value=
 JSON.stringify(json);
 
 setMessage("jsonMinifyMessage","JSON minified successfully.","success");
-
+showToast("JSON minified.","success");
 }catch(error){
 console.error(error);
 setMessage("jsonMinifyMessage","Invalid JSON.","error");
@@ -1208,7 +1210,7 @@ setMessage(
 "Valid JSON",
 "success"
 );
-
+showToast("Valid JSON.","success");
 }catch(error){
 
 setMessage(
@@ -1382,6 +1384,8 @@ if(message){
 message.textContent="";
 message.className="message";
 }
+
+showToast("Cleared.","success");
 }
 
 function clearFileTool(fileInputId,countId,messageId){
@@ -1401,6 +1405,8 @@ if(message){
 message.textContent="";
 message.className="message";
 }
+
+showToast("Cleared.","success");
 }
 
 function enableCtrlEnter(textareaId,callback){
@@ -1470,7 +1476,7 @@ indent++;
 document.getElementById("xmlFormatOutput").value=formatted.trim();
 
 setMessage("xmlFormatMessage","XML formatted successfully.","success");
-
+showToast("XML formatted.","success");
 }catch(error){
 console.error(error);
 setMessage("xmlFormatMessage","Unable to format XML.","error");
@@ -1506,7 +1512,7 @@ xml=xml
 document.getElementById("xmlMinifyOutput").value=xml;
 
 setMessage("xmlMinifyMessage","XML minified successfully.","success");
-
+showToast("XML minified.","success");
 }catch(error){
 console.error(error);
 setMessage("xmlMinifyMessage","Unable to minify XML.","error");
@@ -1531,7 +1537,7 @@ return;
 }
 
 setMessage("xmlValidateMessage","Valid XML","success");
-
+showToast("Valid XML.","success");
 }catch(error){
 console.error(error);
 setMessage("xmlValidateMessage","Invalid XML","error");
