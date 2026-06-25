@@ -367,7 +367,7 @@ fromUnit.addEventListener("change",function(){
 if(inputValue.value){
 convertUnits();
 }
-showToast("Units swapped.","success");
+
 });
 
 toUnit.addEventListener("change",function(){
@@ -487,6 +487,8 @@ if(inputValue.value){
 convertUnits();
 }
 
+showToast("Units swapped.","success");
+
 }
 function clearConverter(){
 
@@ -548,6 +550,7 @@ const value=parseFloat(inputValue.value);
 
 if(isNaN(value)){
 setMessage("Please enter a valid number.","error");
+showToast("Please enter a valid number.","error");
 return;
 }
 
