@@ -190,7 +190,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 
 body{
@@ -232,7 +242,19 @@ width:100%;
 <p class="subtitle">
 Compare two texts, source code, JSON files or documents and instantly identify differences line by line.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Text comparison runs locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -300,17 +322,18 @@ const stats=document.getElementById("stats");
 const message=document.getElementById("message");
 const toast=document.getElementById("toast");
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
-
 function setMessage(text,type){
 
 message.textContent=text;
@@ -338,7 +361,7 @@ textB.value=`Hello
 World
 Orange`;
 
-showToast("Example loaded.");
+showToast("Example loaded.","success");
 
 }
 function compareTexts(){
@@ -451,8 +474,7 @@ navigator.clipboard.writeText(
 result.innerText
 );
 
-showToast("Copied.");
-
+showToast("Copied.","success");
 }
 
 function downloadResult(){
@@ -484,7 +506,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(url);
 
-showToast("Download started.");
+showToast("Download started.","success");
 
 }
 
@@ -502,6 +524,8 @@ stats.innerHTML=
 
 message.textContent="";
 message.className="message";
+
+showToast("Cleared.","success");
 
 }
 
