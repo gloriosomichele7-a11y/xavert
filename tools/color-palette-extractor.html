@@ -182,7 +182,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 
 body{
@@ -228,7 +238,19 @@ font-size:34px;
 <p class="subtitle">
 Extract dominant colors from images and generate beautiful palettes instantly.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Images are processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="controls">
@@ -321,15 +343,17 @@ fileInput.addEventListener("change",(e)=>{
 loadImage(e.target.files[0]);
 });
 
-function showToast(text){
+function showToast(text,type="info"){
 
 const toast=document.getElementById("toast");
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(()=>{
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -357,8 +381,11 @@ previewImage.src=e.target.result;
 previewImage.style.display="block";
 imageLoaded=true;
 extractedColors=[];
-document.getElementById("palette").innerHTML="";
 
+document.getElementById("palette").innerHTML="";
+document.getElementById("paletteSize").value="5";
+
+showToast("Image loaded.","success");
 };
 
 reader.readAsDataURL(file);
@@ -429,7 +456,7 @@ function extractColors(){
 
 if(!imageLoaded){
 
-showToast("Upload an image first");
+showToast("Upload an image first.","error");
 return;
 
 }
@@ -526,28 +553,30 @@ card.innerHTML=`
 
 card.querySelector(".copy-hex").addEventListener("click",()=>{
 navigator.clipboard.writeText(hex);
-showToast("HEX copied");
+showToast("HEX copied.","success");
 });
 
 card.querySelector(".copy-rgb").addEventListener("click",()=>{
 navigator.clipboard.writeText(`rgb(${rgb.join(", ")})`);
-showToast("RGB copied");
+showToast("RGB copied.","success");
 });
 
 card.querySelector(".copy-hsl").addEventListener("click",()=>{
 navigator.clipboard.writeText(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`);
-showToast("HSL copied");
+showToast("HSL copied.","success");
 });
 
 palette.appendChild(card);
 
 });
 
+showToast("Palette extracted.","success");
+
 }
 function copyPalette(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first");
+showToast("Generate a palette first.","error");
 return;
 }
 
@@ -557,8 +586,7 @@ const content=extractedColors
 
 navigator.clipboard.writeText(content);
 
-showToast("Palette copied");
-
+showToast("Palette copied.","success");
 }
 function downloadTXT(){
 
@@ -688,7 +716,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
