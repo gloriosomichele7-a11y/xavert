@@ -224,7 +224,19 @@ button{width:100%;}
 <p class="subtitle">
 Resize, compress, convert, rotate and export images directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Images are processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="toolSelector">Select Tool</label>
@@ -496,7 +508,10 @@ document.getElementById("cropWidth").value="";
 document.getElementById("cropHeight").value="";
 document.getElementById("watermarkText").value="";
 document.getElementById("watermarkSize").value="40";
+
 resetOutput();
+
+showToast("Cleared.","success");
 }
 
 function loadImage(file){
@@ -545,6 +560,7 @@ const file=imageFile.files[0];
 
 if(!file){
 setMessage("Please select one image.","error");
+showToast("Please select one image.","error");
 return;
 }
 
@@ -566,6 +582,7 @@ let height=parseInt(document.getElementById("resizeHeight").value,10);
 
 if(!width && !height){
 setMessage("Please enter at least width or height.","error");
+showToast("Please enter at least width or height.","error");
 return;
 }
 
@@ -593,6 +610,7 @@ const q=parseInt(document.getElementById("compressQuality").value,10);
 
 if(isNaN(q) || q<10 || q>100){
 setMessage("Quality must be between 10 and 100.","error");
+showToast("Quality must be between 10 and 100.","error");
 return;
 }
 
@@ -653,11 +671,13 @@ const cropHeight=parseInt(document.getElementById("cropHeight").value,10);
 
 if(!cropWidth || !cropHeight){
 setMessage("Please enter crop width and height.","error");
+showToast("Please enter crop width and height.","error");
 return;
 }
 
 if(cropWidth>img.width || cropHeight>img.height){
 setMessage("Crop size cannot be larger than original image.","error");
+showToast("Crop size cannot be larger than original image.","error");
 return;
 }
 
@@ -688,6 +708,7 @@ const watermarkSize=parseInt(document.getElementById("watermarkSize").value,10) 
 
 if(!watermarkText){
 setMessage("Please enter watermark text.","error");
+showToast("Please enter watermark text.","error");
 return;
 }
 
