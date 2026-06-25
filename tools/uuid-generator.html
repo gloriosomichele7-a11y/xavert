@@ -311,13 +311,14 @@ message.textContent=text;
 message.className="message " + type;
 
 }
+
 function generateSingleUUID(){
 
 document.getElementById("quantity").value=1;
-document.getElementById("uuidVersion").value="v4";
 generateUUIDs();
 
 }
+  
 function generateUUIDv7(){
 
 const timestamp=Date.now().toString(16).padStart(12,"0");
@@ -408,20 +409,20 @@ quantity + " " + versionLabel + " UUIDs generated successfully.",
 }
 function copyAllUUIDs(){
 if(!uuidOutput.value){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
 navigator.clipboard.writeText(uuidOutput.value);
 
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
 function downloadUUIDs(){
 
 if(!uuidOutput.value){
-showToast("Nothing to download.");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -442,7 +443,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started.");
+showToast("Download started.","success");
 
 }
 function downloadUUIDsCSV(){
