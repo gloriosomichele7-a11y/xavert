@@ -253,9 +253,6 @@ color:#047857;
 ">
 ✓ All PDF processing happens locally in your browser. Files are never uploaded to XAVERT servers.
 </div>
-<div style="text-align:center;margin-bottom:24px;color:#047857;font-size:14px;font-weight:700;">
-✓ PDF files are processed locally in your browser. Nothing is uploaded or stored.
-</div>
 <div class="card">
 <label for="toolSelector">Select Tool</label>
 <select id="toolSelector">
@@ -1055,10 +1052,7 @@ URL.revokeObjectURL(link.href);
 showToast("Download started.","success");
 
 }
-
-showToast("Download started.","success");
-
-}
+ 
 function formatFileSize(bytes){
 
 const mb=bytes/(1024*1024);
@@ -1292,7 +1286,7 @@ const zipBlob=await zip.generateAsync({type:"blob"});
 downloadBlob(zipBlob,"pdf-to-jpg.zip");
 
 setMessage("pdfJpgMessage","PDF converted to JPG successfully.","success");
-showToast("PDF converted to JPG.");
+showToast("PDF converted to JPG.","success");
 
 }catch(error){
 console.error(error);
@@ -1405,8 +1399,8 @@ const zipBlob=await zip.generateAsync({type:"blob"});
 downloadBlob(zipBlob,"extracted-pages.zip");
 
 setMessage("extractMessage","Pages extracted successfully.","success");
+showToast("Pages extracted successfully.","success");
 
-showToast("Pages extracted successfully.");
 
 }catch(error){
 
@@ -1544,7 +1538,7 @@ const zipBlob=await zip.generateAsync({type:"blob"});
 downloadBlob(zipBlob,"pdf-to-png.zip");
 
 setMessage("pngMessage","PDF converted successfully.","success");
-showToast("PDF converted to PNG.");
+showToast("PDF converted to PNG.","success");
 
 }catch(error){
 console.error(error);
@@ -1598,7 +1592,7 @@ new Blob([bytes],{type:"application/pdf"}),
 );
 
 setMessage("watermarkMessage","Watermark added successfully.","success");
-showToast("Watermark added.");
+showToast("Watermark added.","success");
 
 }catch(error){
 console.error(error);
@@ -1692,7 +1686,7 @@ setMessage(
 "success"
 );
 
-showToast("PDF compressed successfully.");
+showToast("PDF compressed successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -2027,7 +2021,7 @@ new Blob([bytes],{type:"application/pdf"}),
 );
 
 setMessage("signMessage","PDF signed successfully.","success");
-showToast("PDF signed successfully.");
+showToast("PDF signed successfully.","success");
 
 }catch(error){
 console.error(error);
