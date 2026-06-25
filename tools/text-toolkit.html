@@ -685,6 +685,13 @@ lines.reverse();
 }
 
 document.getElementById("sortOutput").value=lines.join("\n");
+
+setMessage(
+"sortMessage",
+"Lines sorted successfully.",
+"success"
+);
+
 showToast("Completed.","success");
 }
 
@@ -695,6 +702,13 @@ const replace=document.getElementById("replaceText").value;
 
 document.getElementById("findReplaceOutput").value=
 text.split(find).join(replace);
+
+setMessage(
+"findReplaceMessage",
+"Text replaced successfully.",
+"success"
+);
+
 showToast("Completed.","success");
 }
 
@@ -719,6 +733,13 @@ document.getElementById("slugOutput").value=text
 .replace(/[\u0300-\u036f]/g,"")
 .replace(/[^a-z0-9]+/g,"-")
 .replace(/^-+|-+$/g,"");
+
+setMessage(
+"slugMessage",
+"Slug generated successfully.",
+"success"
+);
+
 showToast("Completed.","success");
 }
 
