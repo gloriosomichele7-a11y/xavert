@@ -178,7 +178,17 @@ display:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 body{
 padding:24px 14px;
@@ -244,7 +254,29 @@ color:#047857;
 <option value="contact">Contact / vCard</option>
 <option value="event">Event</option>
 </select>
+<label for="qrForeground">QR Color</label>
+<input
+type="color"
+id="qrForeground"
+value="#000000">
 
+<label for="qrBackground">Background Color</label>
+<input
+type="color"
+id="qrBackground"
+value="#ffffff">
+
+<div class="checkbox-row" style="margin-top:14px;">
+<input
+type="checkbox"
+id="transparentBackground">
+
+<label
+for="transparentBackground"
+style="display:inline;font-weight:700;">
+Transparent Background
+</label>
+</div>
 <div id="section-text" class="form-section active">
 <label for="textInput">Text or URL</label>
 <textarea id="textInput" placeholder="Enter URL, text, or any content..."></textarea>
@@ -396,7 +428,7 @@ qrType.addEventListener("change",function(){
 Object.values(sections).forEach(section=>section.classList.remove("active"));
 sections[qrType.value].classList.add("active");
 resetOutput();
-showToast("Cleared.");
+showToast("Cleared.","success");
 });
 
 document.addEventListener("keydown",function(e){
@@ -444,17 +476,23 @@ section.classList.remove("active");
 });
 
 sections.text.classList.add("active");
-
+document.getElementById("qrForeground").value="#000000";
+document.getElementById("qrBackground").value="#ffffff";
+document.getElementById("transparentBackground").checked=false;
 resetOutput();
 }
-function showToast(message){
+  
+function showToast(message,type="info"){
 toast.textContent=message;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 }
+  
 function registerDownload(){
 
 totalDownloads++;
@@ -709,10 +747,18 @@ showToast("Large QR code: some scanners may take longer to read.");
 const qrDiv=document.getElementById("qrcode");
 qrDiv.innerHTML="";
 
+const foregroundColor=document.getElementById("qrForeground").value;
+const backgroundColor=document.getElementById("qrBackground").value;
+const useTransparentBackground=document.getElementById("transparentBackground").checked;
+
 QRCode.toCanvas(data,{
 width:350,
 margin:5,
-errorCorrectionLevel:"H"
+errorCorrectionLevel:"H",
+color:{
+dark:foregroundColor,
+light:useTransparentBackground ? "#00000000" : backgroundColor
+}
 },function(error,canvas){
 if(error){
 console.error(error);
@@ -737,7 +783,7 @@ detected.replace("Detected type: ","QR Type: ") +
 qrStats.style.display="block";
 
 downloadButtons.style.display="block";
-showToast("QR code generated.");
+showToast("QR code generated.","success");
 });
 }
 
@@ -745,7 +791,7 @@ function downloadPNG(){
 const canvas=document.querySelector("#qrcode canvas");
 
 if(!canvas){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
 
@@ -754,20 +800,28 @@ link.download="QR-" + getFileName() + ".png";
 link.href=canvas.toDataURL("image/png");
 link.click();
 
-showToast("Download started.");
+showToast("Download started.","success");
 registerDownload();
 }
 
 function downloadPNGHD(){
 if(!currentQRData){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
+
+const foregroundColor=document.getElementById("qrForeground").value;
+const backgroundColor=document.getElementById("qrBackground").value;
+const useTransparentBackground=document.getElementById("transparentBackground").checked;
 
 QRCode.toCanvas(currentQRData,{
 width:2000,
 margin:4,
-errorCorrectionLevel:"H"
+errorCorrectionLevel:"H",
+color:{
+dark:foregroundColor,
+light:useTransparentBackground ? "#00000000" : backgroundColor
+}
 },function(error,canvas){
 if(error){
 console.error(error);
@@ -778,22 +832,30 @@ const link=document.createElement("a");
 link.download="QR-" + getFileName() + "-HD.png";
 link.href=canvas.toDataURL("image/png");
 link.click();
-showToast("Download started.");
+showToast("Download started.","success");
 registerDownload();
 });
 }
 
 function downloadSVG(){
 if(!currentQRData){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
+
+const foregroundColor=document.getElementById("qrForeground").value;
+const backgroundColor=document.getElementById("qrBackground").value;
+const useTransparentBackground=document.getElementById("transparentBackground").checked;
 
 QRCode.toString(currentQRData,{
 type:"svg",
 width:350,
 margin:4,
-errorCorrectionLevel:"H"
+errorCorrectionLevel:"H",
+color:{
+dark:foregroundColor,
+light:useTransparentBackground ? "#00000000" : backgroundColor
+}
 },function(error,svg){
 if(error){
 console.error(error);
@@ -809,14 +871,14 @@ link.click();
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started.");
+showToast("Download started.","success");
 registerDownload();
 });
 }
 function downloadTXT(){
 
 if(!currentQRData){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
 
@@ -838,23 +900,31 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started.");
+showToast("Download started.","success");
 registerDownload();
 
 }
 function createPDF(size){
 if(!currentQRData){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
 
 const qrSize=size==="hd" ? 3000 : 1600;
 const fileSuffix=size==="hd" ? "-HD" : "";
 
+const foregroundColor=document.getElementById("qrForeground").value;
+const backgroundColor=document.getElementById("qrBackground").value;
+const useTransparentBackground=document.getElementById("transparentBackground").checked;
+
 QRCode.toCanvas(currentQRData,{
 width:qrSize,
 margin:4,
-errorCorrectionLevel:"H"
+errorCorrectionLevel:"H",
+color:{
+dark:foregroundColor,
+light:useTransparentBackground ? "#00000000" : backgroundColor
+}
 },function(error,canvas){
 if(error){
 console.error(error);
@@ -891,7 +961,7 @@ pdf.setTextColor(120,120,120);
 pdf.text("Generated by XAVERT",105,164,{align:"center"});
 
 pdf.save("QR-" + getFileName() + fileSuffix + ".pdf");
-showToast("Download started.");
+showToast("Download started.","success");
 registerDownload();
 });
 }
@@ -906,13 +976,13 @@ createPDF("hd");
 function copyQRData(){
 
 if(!currentQRData){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
 
 navigator.clipboard.writeText(currentQRData);
 
-showToast("QR data copied.");
+showToast("QR data copied.","success");
 
 }
 async function copyQR(){
@@ -920,7 +990,7 @@ async function copyQR(){
 const canvas=document.querySelector("#qrcode canvas");
 
 if(!canvas){
-showToast("Generate a QR code first.");
+showToast("Generate a QR code first.","error");
 return;
 }
 
@@ -930,9 +1000,9 @@ await navigator.clipboard.write([
 new ClipboardItem({"image/png":blob})
 ]);
 
-showToast("QR image copied to clipboard.");
+showToast("QR image copied to clipboard.","success");
 }catch(error){
-showToast("Copy is not supported by this browser.");
+showToast("Copy is not supported by this browser.","error");
 }
 });
 }
