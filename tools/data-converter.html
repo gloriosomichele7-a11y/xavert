@@ -830,7 +830,7 @@ toast.className="";
 function copyText(text){
 
 if(!text){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -904,10 +904,11 @@ new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadshee
 );
 
 setMessage("csvXlsxMessage","CSV converted successfully.","success");
-
+showToast("CSV converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("csvXlsxMessage","Unable to convert CSV.","error");
+showToast("Unable to convert CSV.","error");
 }
 }
 
@@ -946,10 +947,11 @@ new Blob([csv],{type:"text/csv;charset=utf-8"}),
 );
 
 setMessage("xlsxCsvMessage","XLSX converted successfully.","success");
-
+showToast("XLSX converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("xlsxCsvMessage","Unable to convert XLSX.","error");
+showToast("Unable to convert XLSX.","error");
 }
 }
 async function xlsxToJson(){
@@ -978,10 +980,11 @@ new Blob([JSON.stringify(json,null,2)],{type:"application/json;charset=utf-8"}),
 );
 
 setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
-
+setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
 }catch(error){
 console.error(error);
 setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
+showToast("Unable to convert XLSX.","error");
 }
 }  
 function jsonToXlsx(){
@@ -1020,10 +1023,11 @@ type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 );
 
 setMessage("jsonXlsxMessage","JSON converted successfully.","success");
-
+showToast("JSON converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("jsonXlsxMessage","Invalid JSON or unable to convert.","error");
+showToast("Invalid JSON or unable to convert.","error");
 }
 }
 function jsonToCsv(){
@@ -1066,7 +1070,7 @@ new Blob([csv],{type:"text/csv;charset=utf-8"}),
 );
 
 setMessage("jsonCsvMessage","JSON converted successfully.","success");
-
+showToast("JSON converted successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -1076,7 +1080,7 @@ setMessage(
 "Invalid JSON or unable to convert.",
 "error"
 );
-
+showToast("Invalid JSON or unable to convert.","error");
 }
 
 }
@@ -1156,7 +1160,7 @@ new Blob(
 );
 
 setMessage("csvJsonMessage","CSV converted successfully.","success");
-
+showToast("CSV converted successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -1166,7 +1170,7 @@ setMessage(
 "Unable to convert CSV.",
 "error"
 );
-
+showToast("Unable to convert CSV.","error");
 }
 }
 function minifyJson(){
