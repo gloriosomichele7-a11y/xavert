@@ -507,6 +507,7 @@ setMessage(
 "error"
 );
 
+showToast("Please select both dates.","error");
 return;
 
 }
@@ -561,6 +562,7 @@ setMessage(
 "error"
 );
 
+showToast("Please select a birth date.","error");
 return;
 
 }
@@ -574,6 +576,9 @@ setMessage(
 "Birth date cannot be in the future.",
 "error"
 );
+
+showToast("Birth date cannot be in the future.","error");
+return;
 
 return;
 
@@ -651,6 +656,7 @@ setMessage(
 "error"
 );
 
+showToast("Please select a future date and time.","error");
 return;
 
 }
@@ -666,6 +672,7 @@ setMessage(
 "error"
 );
 
+showToast("Countdown date must be in the future.","error");
 return;
 
 }
@@ -716,6 +723,7 @@ setMessage(
 "error"
 );
 
+showToast("Please enter a date and number of days.","error");
 return;
 
 }
@@ -786,6 +794,7 @@ setMessage(
 "error"
 );
 
+showToast("Please enter a timestamp.","error");
 return;
 
 }
@@ -800,6 +809,7 @@ setMessage(
 "error"
 );
 
+showToast("Invalid timestamp.","error");
 return;
 
 }
@@ -818,6 +828,7 @@ setMessage(
 "error"
 );
 
+showToast("Invalid timestamp.","error");
 return;
 
 }
