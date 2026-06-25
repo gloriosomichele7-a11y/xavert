@@ -161,7 +161,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 .grid{
 grid-template-columns:1fr;
@@ -209,7 +219,19 @@ font-size:34px;
 <p class="subtitle">
 Create cron schedules and understand task timing instantly.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Cron expressions are generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -309,13 +331,15 @@ generateCron();
 
 });
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -430,7 +454,7 @@ if(
 !monthValue ||
 !weekdayValue
 ){
-showToast("All fields are required");
+showToast("All fields are required.","error");
 return;
 }
 const minute=document.getElementById("minute").value.trim();
@@ -455,9 +479,7 @@ if(
 value!=="*" &&
 !cronRegex.test(value)
 ){
-showToast(
-"Invalid cron value detected"
-);
+showToast("Invalid cron value detected.","error");
 return;
 }
 
@@ -526,6 +548,7 @@ description="Runs once a year on January 1st.";
 
 document.getElementById("cronDescription").innerHTML=
 description;
+showToast("Cron expression generated.","success");
 }
 
 function copyCron(){
