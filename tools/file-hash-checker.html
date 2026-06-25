@@ -432,6 +432,7 @@ const file=fileInput.files[0];
 
 if(!file){
 setMessage("Please select a file.","error");
+showToast("Please select a file.","error");
 return;
 }
 
@@ -511,6 +512,7 @@ showToast("Hash generated successfully.","success");
 
 console.error(error);
 setMessage("Unable to generate hash.","error");
+showToast("Unable to generate hash.","error");
 
 }
 
