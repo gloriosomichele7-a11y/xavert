@@ -179,7 +179,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -233,7 +243,19 @@ font-size:34px;
 <p class="subtitle">
 Decode and inspect JSON Web Tokens directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ JWT tokens are decoded locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="jwtInput">JWT Token</label>
@@ -369,15 +391,15 @@ decodeJWT();
 
 });
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
-
 toast.style.display="none";
-
+toast.className="";
 },2200);
 
 }
@@ -418,7 +440,7 @@ document.getElementById("jwtInput").value=
 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IlhBVkVSVCBVc2VyIiwiaWF0IjoxNzEwMDAwMDAwLCJleHAiOjQxMDI0NDQ4MDB9.sample-signature";
 
 setMessage("Sample JWT loaded.","success");
-showToast("Sample JWT loaded.");
+showToast("Sample JWT loaded.","success");
 
 }
 function decodeJWT(){
@@ -513,7 +535,7 @@ setMessage(
 "JWT decoded successfully.",
 "success"
 );
-
+showToast("JWT decoded successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -530,13 +552,13 @@ setMessage(
 function copyText(text){
 
 if(!text){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 function copyToken(){
@@ -567,7 +589,7 @@ const header=document.getElementById("headerOutput").value;
 const payload=document.getElementById("payloadOutput").value;
 
 if(!header || !payload){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -585,7 +607,7 @@ const header=document.getElementById("headerOutput").value;
 const payload=document.getElementById("payloadOutput").value;
 
 if(!header || !payload){
-showToast("Nothing to download.");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -612,7 +634,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started.");
+showToast("Download started.","success");
 
 }
 function clearAll(){
@@ -627,7 +649,7 @@ document.getElementById("iatValue").textContent="-";
 document.getElementById("statusValue").textContent="-";
 document.getElementById("lengthValue").textContent="-";
 document.getElementById("message").textContent="";
-
+showToast("Cleared.","success");
 }
 
 </script>
