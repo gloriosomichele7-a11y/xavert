@@ -639,7 +639,14 @@ output=text.split("").map((c,i)=>i%2?c.toUpperCase():c.toLowerCase()).join("");
 }
 
 document.getElementById("caseOutput").value=output;
-showToast("Completed.","success");  
+
+setMessage(
+"caseMessage",
+"Text converted successfully.",
+"success"
+);
+
+showToast("Completed.","success"); 
 }
   
 
@@ -647,6 +654,11 @@ function removeExtraSpaces(){
 const text=document.getElementById("spacesInput").value;
 document.getElementById("spacesOutput").value=
 text.replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
+setMessage(
+"spacesMessage",
+"Text cleaned successfully.",
+"success"
+);
 showToast("Completed.","success");
 }
 
@@ -654,6 +666,11 @@ function removeDuplicateLines(){
 const text=document.getElementById("duplicatesInput").value;
 const unique=[...new Set(text.split(/\r?\n/))];
 document.getElementById("duplicatesOutput").value=unique.join("\n");
+setMessage(
+"duplicatesMessage",
+"Duplicate lines removed successfully.",
+"success"
+);
 showToast("Completed.","success");
 }
 
@@ -686,6 +703,11 @@ document.getElementById("findReplaceInput").value="";
 document.getElementById("findText").value="";
 document.getElementById("replaceText").value="";
 document.getElementById("findReplaceOutput").value="";
+
+document.getElementById("findReplaceMessage").textContent="";
+document.getElementById("findReplaceMessage").className="message";
+
+showToast("Cleared.","success");
 }
 
 function textToSlug(){
@@ -715,16 +737,33 @@ function processBase64(){
 const text=document.getElementById("base64Input").value;
 const mode=document.getElementById("base64Mode").value;
 
+if(!text){
+setMessage(
+"base64Message",
+"Please enter text.",
+"error"
+);
+
+showToast("Please enter text.","error");
+return;
+}
+
 try{
 
 document.getElementById("base64Output").value=
 mode==="encode"
-? btoa(text)
-: atob(text);
+? btoa(unescape(encodeURIComponent(text)))
+: decodeURIComponent(escape(atob(text)));
+
+setMessage(
+"base64Message",
+"Completed.",
+"success"
+);
 
 showToast("Completed.","success");
 
-}catch{
+}catch(error){
 
 setMessage(
 "base64Message",
@@ -735,7 +774,6 @@ setMessage(
 showToast("Invalid Base64.","error");
 
 }
-showToast("Completed.","success");
 }
 </script>
 
