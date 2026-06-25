@@ -137,7 +137,17 @@ border-radius:10px;
 display:none;
 z-index:9999;
 }
+.toast-success{
+background:#047857 !important;
+}
 
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -187,7 +197,19 @@ font-size:34px;
 <p class="subtitle">
 Generate environment configuration files directly in your browser. Nothing is uploaded to a server.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ .ENV files are generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -281,13 +303,15 @@ Powered by XAVERT
 
 const toast=document.getElementById("toast");
 
-function showToast(text){
+function showToast(text,type="info"){
 
 toast.textContent=text;
+toast.className="toast-" + type;
 toast.style.display="block";
 
 setTimeout(function(){
 toast.style.display="none";
+toast.className="";
 },2200);
 
 }
@@ -313,7 +337,7 @@ key+=getSecureRandomChar(chars);
 
 document.getElementById("appKey").value=key;
 
-showToast("APP_KEY generated");
+showToast("APP_KEY generated.","success");
 
 }
 function generateDbPassword(){
@@ -329,7 +353,7 @@ password+=getSecureRandomChar(chars);
 
 document.getElementById("dbPassword").value=password;
 
-showToast("Database password generated");
+showToast("Database password generated.","success");
 
 }
 function generateEnv(){
@@ -349,7 +373,7 @@ DB_PASSWORD=${document.getElementById("dbPassword").value}`;
 
 document.getElementById("output").value=env;
 
-showToast(".ENV generated");
+showToast(".ENV generated.","success");
 
 }
 
@@ -364,7 +388,7 @@ return;
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -392,8 +416,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
-
+showToast("Download started.","success");
 }
 
 function clearAll(){
@@ -411,7 +434,7 @@ document.getElementById("dbPassword").value="";
 document.getElementById("appKey").value="";
 document.getElementById("output").value="";
 
-showToast("Cleared");
+showToast("Cleared.","success");
 
 }
 document.addEventListener("keydown",function(e){
