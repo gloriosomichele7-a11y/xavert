@@ -5,7 +5,10 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Color Toolkit</title>
 
-<meta name="description" content="Convert HEX and RGB colors, generate palettes, check contrast ratios and create random colors directly in your browser.">
+<meta name="description" content="Free online Color Toolkit to convert HEX, RGB and HSL colors, generate random colors, create color palettes and check contrast ratios directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/tools/color-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
@@ -200,7 +203,19 @@ button{width:100%;}
 <p class="subtitle">
 Convert, generate and analyze colors directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Color tools run locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="toolSelector">Select Tool</label>
@@ -470,6 +485,8 @@ document.getElementById("savedPalettes").style.display="none";
 
 savedPalettes=[];
 currentPalette=[];
+
+showToast("Cleared.","success");
 }
 
 
@@ -609,7 +626,7 @@ setMessage(
 "Conversion completed.",
 "success"
 );
-
+showToast("Color converted.","success");
 }
 
 function generateRandomColor(){
@@ -656,7 +673,7 @@ setMessage(
 "Color generated successfully.",
 "success"
 );
-
+showToast("Color generated.","success");
 }
 function generatePalette(){
 
