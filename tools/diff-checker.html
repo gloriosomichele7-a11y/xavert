@@ -371,6 +371,7 @@ const b=textB.value;
 
 if(!a && !b){
 setMessage("Please enter text to compare.","error");
+showToast("Please enter text to compare.","error");
 return;
 }
 
@@ -454,11 +455,13 @@ resultBox.style.display="block";
 
 if(differences===0){
 setMessage("Texts are identical.","success");
+showToast("Texts are identical.","success");
 }else{
 setMessage(
 differences + " difference(s) found.",
 "success"
 );
+showToast(differences + " difference(s) found.","success");
 }
 
 }
@@ -466,7 +469,7 @@ differences + " difference(s) found.",
 function copyResult(){
 
 if(!result.innerText.trim()){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -480,7 +483,7 @@ showToast("Copied.","success");
 function downloadResult(){
 
 if(!result.innerText.trim()){
-showToast("Nothing to download.");
+showToast("Nothing to download.","error");
 return;
 }
 
