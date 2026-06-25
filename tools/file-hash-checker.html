@@ -223,7 +223,19 @@ word-break:break-all;
 <p class="subtitle">
 Generate and verify file hashes directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Files are hashed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <h2>Hash Generator</h2>
@@ -371,6 +383,8 @@ message.className="message";
 resultBox.innerHTML="";
 resultBox.style.display="none";
 
+showToast("Cleared.","success");
+
 }
 function downloadHashReport(){
 
@@ -403,7 +417,7 @@ showToast("Report downloaded.","success");
 function copyText(text){
 
 if(!text){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -492,7 +506,7 @@ hashHex.toUpperCase() +
 '<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex + '\')">Copy Lowercase</button> ' +
 '<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex.toUpperCase() + '\')">Copy Uppercase</button>';
 setMessage("Hash generated successfully.","success");
-
+showToast("Hash generated successfully.","success");
 }catch(error){
 
 console.error(error);
