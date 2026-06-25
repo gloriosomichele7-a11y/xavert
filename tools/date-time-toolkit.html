@@ -188,7 +188,19 @@ button{width:100%;}
 <p class="subtitle">
 Calculate dates, timestamps, ages and time differences instantly.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Date and time calculations run locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <label for="toolSelector">Select Tool</label>
@@ -471,6 +483,8 @@ box.style.display="none";
 dateHistory=[];
 lastResultText="";
 
+showToast("Cleared.","success");
+
 }
 function loadDateExample(){
 
@@ -524,7 +538,7 @@ setMessage(
 "Date difference calculated.",
 "success"
 );
-
+showToast("Date difference calculated.","success");
 setResult(
 "differenceResult",
 "<strong>" + lastResultText + "</strong><br>" +
@@ -593,7 +607,7 @@ setMessage(
 "Age calculated.",
 "success"
 );
-
+showToast("Age calculated.","success");
 setResult(
 "ageResult",
 "<strong>" + lastResultText + "</strong><br>" +
@@ -616,7 +630,7 @@ setMessage(
 "Current timestamp generated.",
 "success"
 );
-
+showToast("Current timestamp generated.","success");
 setResult(
 "timestampResult",
 "<strong>" + lastResultText + "</strong><br><br>" +
