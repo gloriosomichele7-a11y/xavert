@@ -182,7 +182,9 @@ background:#047857 !important;
 .toast-error{
 background:#dc2626 !important;
 }
-
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -240,7 +242,19 @@ grid-template-columns:1fr;
 <p class="subtitle">
 Minify and beautify CSS code directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ CSS code is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -411,7 +425,7 @@ document.getElementById("inputCss").value=
   margin: auto;
 }`;
 
-showToast("Sample CSS loaded");
+showToast("Sample CSS loaded.","success");
 
 }
 function minifyCss(){
@@ -441,7 +455,7 @@ setMessage(
 "CSS minified successfully.",
 "success"
 );
-showToast("CSS minified successfully");
+showToast("CSS minified successfully.","success");
 }
 
 function beautifyCss(){
@@ -467,7 +481,7 @@ setMessage(
 "CSS beautified successfully.",
 "success"
 );
-showToast("CSS beautified successfully");
+showToast("CSS beautified successfully.","success");
 }
 
 function copyOutput(){
@@ -481,7 +495,7 @@ return;
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -517,8 +531,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
-
+showToast("Download started.","success");
 }
 function swapCss(){
 
@@ -537,7 +550,7 @@ input.value,
 output.value
 );
 
-showToast("Output moved to input");
+showToast("Output moved to input.","success");
 
 }
 function clearAll(){
@@ -553,7 +566,7 @@ document.getElementById("lineCount").textContent="0";
 document.getElementById("operationType").textContent="-";
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
