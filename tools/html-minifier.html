@@ -182,7 +182,9 @@ background:#047857 !important;
 .toast-error{
 background:#dc2626 !important;
 }
-
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -240,7 +242,19 @@ grid-template-columns:1fr;
 <p class="subtitle">
 Minify and beautify HTML code directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ HTML is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -395,7 +409,7 @@ document.getElementById("inputHtml").value=
   </body>
 </html>`;
 
-showToast("Sample HTML loaded");
+showToast("Sample HTML loaded.","success");
 
 }
 function minifyHtml(){
@@ -404,6 +418,7 @@ const input=document.getElementById("inputHtml").value;
 
 if(!input.trim()){
 setMessage("Please enter HTML code.","error");
+showToast("Please enter HTML code.","error");
 return;
 }
 
@@ -422,7 +437,7 @@ setMessage(
 "HTML minified successfully.",
 "success"
 );
-showToast("HTML minified successfully");
+showToast("HTML minified successfully.","success");
 }
 
 function beautifyHtml(){
@@ -431,6 +446,7 @@ const input=document.getElementById("inputHtml").value;
 
 if(!input.trim()){
 setMessage("Please enter HTML code.","error");
+showToast("Please enter HTML code.","error");
 return;
 }
 
@@ -445,7 +461,7 @@ setMessage(
 "HTML beautified successfully.",
 "success"
 );
-showToast("HTML beautified successfully");
+showToast("HTML beautified successfully.","success");
 }
 
 function copyOutput(){
@@ -458,7 +474,7 @@ return;
 }
 
 navigator.clipboard.writeText(text);
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -494,7 +510,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 function swapHtml(){
@@ -516,7 +532,7 @@ output.value,
 operation
 );
 
-showToast("Output moved to input");
+showToast("Output moved to input.","success");
 
 }
 function clearAll(){
@@ -533,7 +549,7 @@ document.getElementById("operationType").textContent="-";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
