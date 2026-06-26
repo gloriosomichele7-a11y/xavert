@@ -258,7 +258,19 @@ h1{font-size:34px;}
 <p class="subtitle">
 Create Open Graph and Twitter Card tags for better social media sharing.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Open Graph tags are generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -505,6 +517,7 @@ setMessage(
 "error"
 );
 
+showToast("Please enter title, description and page URL.","error");
 return;
 
 }
