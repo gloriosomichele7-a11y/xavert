@@ -344,7 +344,7 @@ toast.className="";
 
 }
 function loadExample(expression){
-
+document.getElementById("cronPreset").value="";
 const parts=expression.split(" ");
 
 minute.value=parts[0];
@@ -556,13 +556,13 @@ function copyCron(){
 const text=document.getElementById("cronOutput").value;
 
 if(!text){
-showToast("Nothing to copy");
+showToast("Nothing to copy.","error");
 return;
 }
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -571,7 +571,7 @@ function downloadCron(){
 const text=document.getElementById("cronOutput").value;
 
 if(!text){
-showToast("Nothing to download");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -590,7 +590,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
@@ -610,8 +610,14 @@ document.getElementById("nextRun").textContent=
 document.getElementById("cronDescription").innerHTML=
 "Waiting for cron generation...";
 
-}
+showToast("Cleared.","success");
 
+}
+[minute,hour,day,month,weekday].forEach(function(field){
+
+field.addEventListener("input",generateCron);
+
+});
 </script>
 
 </body>
