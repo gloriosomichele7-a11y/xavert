@@ -357,7 +357,9 @@ showToast("Database password generated.","success");
 
 }
 function generateEnv(){
-
+if(!document.getElementById("appKey").value){
+    generateAppKey();
+}
 const env=
 `APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
 APP_ENV=${document.getElementById("appEnv").value}
@@ -382,7 +384,7 @@ function copyOutput(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to copy");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -397,7 +399,7 @@ function downloadOutput(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to download");
+showToast("Nothing to download.","error");
 return;
 }
 
