@@ -213,21 +213,30 @@ font-size:34px;
 <p class="subtitle">
 Create robots.txt files for search engines and website crawling control.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ robots.txt files are generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
 
 <div>
-<title>XAVERT | Robots.txt Generator</title>
 
-<meta name="description" content="Free online Robots.txt Generator to create SEO-friendly robots.txt files for search engines and website crawling control directly in your browser.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/robots-generator.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <label>User-Agent</label>
+<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
+Example:
+<a href="#" onclick="loadSampleRobots();return false;">Load Sample robots.txt</a>
+</div>
 <select id="userAgent">
 <option value="*">*</option>
 <option value="Googlebot">Googlebot</option>
@@ -346,6 +355,7 @@ const sitemap=document.getElementById("sitemap").value.trim();
 
 if(crawlDelay && Number(crawlDelay)<0){
 setMessage("Crawl delay cannot be negative.","error");
+showToast("Crawl delay cannot be negative.","error");
 return;
 }
 
@@ -367,6 +377,7 @@ robots += "Crawl-delay: " + crawlDelay + "\n";
 }
 if(sitemap && !/^https?:\/\/.+/i.test(sitemap)){
 setMessage("Please enter a valid Sitemap URL.","error");
+showToast("Please enter a valid Sitemap URL.","error");
 return;
 }
 if(sitemap){
@@ -387,13 +398,13 @@ function copyOutput(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to copy","error");
+showToast("Nothing to copy.","error");
 return;
 }
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -402,7 +413,7 @@ function downloadRobots(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to download","error");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -421,7 +432,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
