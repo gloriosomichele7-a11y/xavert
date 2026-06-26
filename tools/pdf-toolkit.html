@@ -55,6 +55,8 @@ height:auto;
 h1{
 text-align:center;
 margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
 }
 
 .subtitle{
@@ -765,7 +767,10 @@ toolSelector.addEventListener("change",function(){
 document.querySelectorAll(".tool-section").forEach(section=>{
 section.classList.remove("active");
 });
-
+document.querySelectorAll(".message").forEach(function(msg){
+msg.textContent="";
+msg.className="message";
+});
 document.getElementById(toolSelector.value + "Tool").classList.add("active");
 });
 
@@ -950,6 +955,23 @@ files.length ? files[0].name : "No signature image selected";
 }
 function showToast(message,type="info"){
 
+if(!message){
+return;
+}
+
+toast.textContent=message;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(function(){
+toast.style.display="none";
+toast.className="";
+},2200);
+
+}
+
 toast.textContent=message;
 toast.className="toast-" + type;
 toast.style.display="block";
@@ -963,8 +985,17 @@ toast.className="";
 
 function setMessage(id,text,type){
 const element=document.getElementById(id);
+
+if(!element){
+return;
+}
+
 element.textContent=text;
 element.className="message " + type;
+
+if(type==="error"){
+showToast(text,"error");
+}
 }
 function clearFileTool(fileInputId,countId,messageId,defaultText){
 const fileInput=document.getElementById(fileInputId);
@@ -1320,7 +1351,7 @@ const blob=new Blob([bytes],{type:"application/pdf"});
 downloadBlob(blob,"rotated-document.pdf");
 
 setMessage("rotateMessage","PDF rotated successfully.","success");
-showToast("PDF rotated successfully.");
+showToast("PDF rotated successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -1487,7 +1518,7 @@ new Blob([bytes],{type:"application/pdf"}),
 );
 
 setMessage("deleteMessage","Pages deleted successfully.","success");
-showToast("Pages deleted successfully.");
+showToast("Pages deleted successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -1761,7 +1792,7 @@ new Blob([bytes],{type:"application/pdf"}),
 );
 
 setMessage("reorderMessage","Pages reordered successfully.","success");
-showToast("Pages reordered successfully.");
+showToast("Pages reordered successfully.","success");
 
 }catch(error){
 console.error(error);
@@ -1839,7 +1870,7 @@ new Blob([bytes],{type:"application/pdf"}),
 );
 
 setMessage("numbersMessage","Page numbers added successfully.","success");
-showToast("Page numbers added successfully.");
+showToast("Page numbers added successfully.","success");
 
 }catch(error){
 console.error(error);
