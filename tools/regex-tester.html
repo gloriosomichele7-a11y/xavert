@@ -400,12 +400,14 @@ preview.innerHTML="";
 if(!regexValue){
 resultBox.style.display="none";
 setMessage("Please enter a regular expression.","error");
+showToast("Please enter a regular expression.","error");
 return;
 }
 
 if(!textValue){
 resultBox.style.display="none";
 setMessage("Please enter text to test.","error");
+showToast("Please enter text to test.","error");
 return;
 }
 
@@ -457,6 +459,7 @@ matchInfo.innerHTML=
 if(found.length===0){
 matches.innerHTML="<li>No matches found.</li>";
 setMessage("No matches found.","error");
+showToast("No matches found.","error");
 return;
 }
 
@@ -471,6 +474,7 @@ showToast("Regex tested successfully.","success");
 }catch(error){
 resultBox.style.display="none";
 setMessage("Invalid regular expression: " + error.message,"error");
+showToast("Invalid regular expression.","error");
 }
 }
 
@@ -483,7 +487,7 @@ if(
 items.length===0 ||
 items[0].includes("No matches")
 ){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
@@ -492,7 +496,7 @@ return item.replace(/^\d+\.\s/,"");
 }).join("\n");
 
 navigator.clipboard.writeText(cleanItems);
-showToast("Matches copied.");
+showToast("Matches copied.","success");
 }
 function downloadMatches(){
 
@@ -506,7 +510,7 @@ if(
 items.length===0 ||
 items[0].includes("No matches")
 ){
-showToast("Nothing to download.");
+showToast("Nothing to download.","error");
 return;
 }
 
@@ -532,7 +536,7 @@ document.body.removeChild(a);
 
 URL.revokeObjectURL(url);
 
-showToast("Download started.");
+showToast("Download started.","success");
 
 }
 function clearAll(){
