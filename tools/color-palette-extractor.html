@@ -276,6 +276,7 @@ Palette Size
 
 <div class="actions">
 <button onclick="extractColors()">Extract Palette</button>
+<button onclick="clearAll()">Clear</button>
 </div>
 </div>
 
@@ -482,9 +483,9 @@ const buckets={};
 
 for(let i=0;i<data.length;i+=40){
 
-const r=Math.round(data[i]/32)*32;
-const g=Math.round(data[i+1]/32)*32;
-const b=Math.round(data[i+2]/32)*32;
+const r=Math.min(255,Math.round(data[i]/32)*32);
+const g=Math.min(255,Math.round(data[i+1]/32)*32);
+const b=Math.min(255,Math.round(data[i+2]/32)*32);
 
 const key=`${r},${g},${b}`;
 
@@ -589,9 +590,9 @@ navigator.clipboard.writeText(content);
 showToast("Palette copied.","success");
 }
 function downloadTXT(){
-
+showToast("Generate a palette first.","error");
 if(!extractedColors.length){
-showToast("Generate a palette first");
+
 return;
 }
 
@@ -610,7 +611,7 @@ content,
 function downloadJSON(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first");
+showToast("Generate a palette first.","error");
 return;
 }
 
@@ -625,7 +626,7 @@ JSON.stringify(extractedColors,null,2),
 function downloadCSS(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first");
+showToast("Generate a palette first.","error");
 return;
 }
 
@@ -647,7 +648,7 @@ content,
 function downloadASE(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first");
+showToast("Generate a palette first.","error");
 return;
 }
 
@@ -719,7 +720,24 @@ URL.revokeObjectURL(link.href);
 showToast("Download started.","success");
 
 }
+function clearAll(){
 
+fileInput.value="";
+previewImage.src="";
+previewImage.style.display="none";
+
+imageInfo.style.display="none";
+imageInfo.textContent="";
+
+document.getElementById("palette").innerHTML="";
+document.getElementById("paletteSize").value="5";
+
+imageLoaded=false;
+extractedColors=[];
+
+showToast("Cleared.","success");
+
+}
 </script>
 
 </body>
