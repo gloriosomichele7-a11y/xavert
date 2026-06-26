@@ -294,7 +294,12 @@ utfInfo.style.display="block";
 utfInfo.textContent="Decoded as UTF-8 text";
 
 }catch(error){
-// ignora Base64 non valida
+
+outputText.value="";
+resultBox.style.display="none";
+utfInfo.style.display="none";
+conversionStats.style.display="none";
+
 }
 
 }else{
@@ -372,7 +377,7 @@ outputText.value="";
 resultBox.style.display="none";
 
 setMessage(
-"Invalid Base64 data. Please check the input and try again.",
+"Unable to encode this text.",
 "error"
 );
 
@@ -420,7 +425,8 @@ showToast("Base64 decoded successfully.","success");
 
 console.error(error);
 setMessage("Invalid Base64 data.","error");
-
+outputText.value="";
+resultBox.style.display="none";
 }
 
 }
@@ -433,7 +439,7 @@ return;
 }
 
 navigator.clipboard.writeText(outputText.value);
-showToast("Copied.");
+showToast("Copied.","success");
 
 }
 
