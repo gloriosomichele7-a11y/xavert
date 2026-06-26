@@ -301,7 +301,19 @@ h1{font-size:34px;}
 <p class="subtitle">
 Write, preview, convert and export Markdown documents directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Markdown is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="editor-grid">
@@ -756,6 +768,7 @@ updateStats(text);
 
 if(showMessage){
 setMessage("Preview updated successfully.","success");
+showToast("Preview updated.","success");
 }
 
 }
