@@ -181,7 +181,9 @@ background:#047857 !important;
 .toast-error{
 background:#dc2626 !important;
 }
-
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -239,7 +241,19 @@ grid-template-columns:1fr;
 <p class="subtitle">
 Format and beautify SQL queries directly in your browser.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ SQL is processed locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -385,7 +399,7 @@ document.getElementById("inputSql").value=sample;
 document.getElementById("outputSql").value="";
 
 setMessage("Sample SQL loaded.","success");
-showToast("Sample SQL loaded");
+showToast("Sample SQL loaded.","success");
 
 }
 function formatSql(){
@@ -394,6 +408,7 @@ let sql=document.getElementById("inputSql").value;
 
 if(!sql.trim()){
 setMessage("Please enter SQL code.","error");
+showToast("Please enter SQL code.","error");
 return;
 }
 
@@ -430,7 +445,7 @@ setMessage(
 "SQL formatted successfully.",
 "success"
 );
-showToast("SQL formatted successfully");
+showToast("SQL formatted successfully.","success");
 }
 function minifySql(){
 
@@ -438,6 +453,7 @@ const sql=document.getElementById("inputSql").value;
 
 if(!sql.trim()){
 setMessage("Please enter SQL code.","error");
+showToast("Please enter SQL code.","error");
 return;
 }
 
@@ -453,7 +469,7 @@ lastOperation="minified";
 updateStats(sql,minified);
 
 setMessage("SQL minified successfully.","success");
-showToast("SQL minified successfully");
+showToast("SQL minified successfully.","success");
 
 }
 function swapSql(){
@@ -470,7 +486,7 @@ input.value=output.value;
 
 updateStats(input.value,output.value);
 
-showToast("Output moved to input");
+showToast("Output moved to input.","success");
 
 }
 function updateStats(input,output){
@@ -507,7 +523,7 @@ return;
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -538,7 +554,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
@@ -554,7 +570,7 @@ document.getElementById("keywordCount").textContent="0";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-
+showToast("Cleared.","success");
 }
 
 </script>
