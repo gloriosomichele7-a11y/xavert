@@ -565,6 +565,7 @@ const text=jsonInput.value.trim();
 
 if(!text){
 setMessage(mainMessage,"Please enter JSON data.","error");
+showToast("Please enter JSON data.","error");
 return null;
 }
 
@@ -572,6 +573,7 @@ try{
 return JSON.parse(text);
 }catch(error){
 setMessage(mainMessage,"Invalid JSON: " + error.message,"error");
+showToast("Invalid JSON.","error");
 return null;
 }
 
@@ -686,6 +688,7 @@ const input=document.getElementById("escapeInput").value;
 
 if(!input){
 setMessage(document.getElementById("escapeMessage"),"Please enter text to escape.","error");
+showToast("Please enter text to escape.","error");
 return;
 }
 
@@ -701,6 +704,7 @@ const input=document.getElementById("escapeInput").value;
 
 if(!input){
 setMessage(document.getElementById("escapeMessage"),"Please enter text to unescape.","error");
+showToast("Please enter text to unescape.","error");
 return;
 }
 
@@ -782,6 +786,7 @@ const compareResult=document.getElementById("compareResult");
 
 if(!aText || !bText){
 setMessage(compareMessage,"Please enter both JSON values.","error");
+showToast("Please enter both JSON values.","error");
 return;
 }
 
@@ -825,6 +830,7 @@ showToast("JSON comparison completed.","success");
 }catch(error){
 compareResult.style.display="none";
 setMessage(compareMessage,"Invalid JSON in one or both inputs.","error");
+showToast("Invalid JSON in one or both inputs.","error");
 }
 
 }
