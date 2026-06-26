@@ -424,7 +424,8 @@ document.getElementById("inputCss").value=
   max-width: 1200px;
   margin: auto;
 }`;
-
+document.getElementById("outputCss").value="";
+updateStats(document.getElementById("inputCss").value,"","-");
 showToast("Sample CSS loaded.","success");
 
 }
@@ -434,6 +435,7 @@ const input=document.getElementById("inputCss").value;
 
 if(!input.trim()){
 setMessage("Please enter CSS code.","error");
+showToast("Please enter CSS code.","error");
 return;
 }
 
@@ -464,6 +466,7 @@ const input=document.getElementById("inputCss").value;
 
 if(!input.trim()){
 setMessage("Please enter CSS code.","error");
+showToast("Please enter CSS code.","error");
 return;
 }
 
@@ -489,7 +492,7 @@ function copyOutput(){
 const text=document.getElementById("outputCss").value;
 
 if(!text){
-showToast("Nothing to copy","error");
+showToast("Nothing to download","error");
 return;
 }
 
@@ -539,15 +542,17 @@ const input=document.getElementById("inputCss");
 const output=document.getElementById("outputCss");
 
 if(!output.value){
-showToast("Nothing to swap","error");
+showToast("Nothing to swap.","error");
 return;
 }
 
 input.value=output.value;
+output.value="";
 
 updateStats(
 input.value,
-output.value
+"",
+"-"
 );
 
 showToast("Output moved to input.","success");
