@@ -281,11 +281,11 @@ escape(atob(value))
 outputText.value=decoded;
 outputInfo.textContent=
 "Characters: " + decoded.length;
-const diff=text.length-decoded.length;
+const diff=value.length-decoded.length;
 
 conversionStats.style.display="block";
 conversionStats.textContent=
-"Input: " + text.length +
+"Input: " + value.length +
 " • Output: " + decoded.length +
 " • Saved: " + diff + " characters";
 outputLabel.textContent="Decoded Output";
@@ -306,11 +306,17 @@ inputType.textContent="Detected: Plain Text";
 });
 function showToast(text,type="info"){
 
+if(!text){
+return;
+}
+
 toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
 
-setTimeout(function(){
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(function(){
 toast.style.display="none";
 toast.className="";
 },2200);
@@ -321,6 +327,10 @@ function setMessage(text,type){
 
 message.textContent=text;
 message.className="message " + type;
+
+if(type==="error"){
+showToast(text,"error");
+}
 
 }
 
@@ -418,7 +428,7 @@ setMessage("Invalid Base64 data.","error");
 function copyResult(){
 
 if(!outputText.value){
-showToast("Nothing to copy.");
+showToast("Nothing to copy.","error");
 return;
 }
 
