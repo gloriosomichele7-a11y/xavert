@@ -198,7 +198,9 @@ background:#047857 !important;
 .toast-error{
 background:#dc2626 !important;
 }
-
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -252,7 +254,19 @@ font-size:34px;
 <p class="subtitle">
 Create XML sitemaps for websites and improve search engine indexing.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Sitemaps are generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -418,7 +432,7 @@ https://xavert.com/tools
 https://xavert.com/privacy-first
 https://xavert.com/contact`;
 
-showToast("Sample URLs loaded");
+showToast("Sample URLs loaded.","success");
 
 }
 function generateSitemap(){
@@ -432,6 +446,7 @@ setMessage(
 "error"
 );
 
+showToast("Please enter at least one URL.","error");
 return;
 
 }
@@ -454,6 +469,7 @@ setMessage(
 "error"
 );
 
+showToast("No valid URLs found.","error");
 return;
 
 }
@@ -501,7 +517,7 @@ setMessage(
 "Sitemap generated successfully.",
 "success"
 );
-showToast("Sitemap generated");
+showToast("Sitemap generated.","success");
 }
 
 function copyOutput(){
@@ -515,7 +531,7 @@ return;
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -546,7 +562,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
@@ -562,7 +578,7 @@ document.getElementById("xmlSize").textContent="0";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-showToast("Cleared");
+showToast("Cleared.","success");
 }
 
 </script>
