@@ -364,14 +364,15 @@ const env=
 `APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
 APP_ENV=${document.getElementById("appEnv").value}
 APP_DEBUG=${document.getElementById("appDebug").value}
-APP_URL=${document.getElementById("appUrl").value}
+APP_URL=${document.getElementById("appUrl").value || "http://localhost"}
 APP_KEY=${document.getElementById("appKey").value}
 
 DB_HOST=${document.getElementById("dbHost").value || "localhost"}
 DB_PORT=${document.getElementById("dbPort").value || "3306"}
-DB_NAME=${document.getElementById("dbName").value}
-DB_USER=${document.getElementById("dbUser").value}
-DB_PASSWORD=${document.getElementById("dbPassword").value}`;
+DB_NAME=${document.getElementById("dbName").value || "database"}
+DB_USER=${document.getElementById("dbUser").value || "root"}
+DB_PASSWORD=${document.getElementById("dbPassword").value}
+
 
 document.getElementById("output").value=env;
 
