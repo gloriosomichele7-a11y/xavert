@@ -189,7 +189,9 @@ background:#047857 !important;
 .toast-error{
 background:#dc2626 !important;
 }
-
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:900px){
 
 .grid{
@@ -243,7 +245,19 @@ font-size:34px;
 <p class="subtitle">
 Generate placeholder text for websites, applications, layouts and design projects.
 </p>
-
+<div style="
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+">
+✓ Placeholder text is generated locally in your browser. Nothing is uploaded or stored.
+</div>
 <div class="card">
 
 <div class="grid">
@@ -427,7 +441,7 @@ document.getElementById("startLorem").checked=true;
 
 generateLorem();
 
-showToast("Sample generated");
+showToast("Sample generated.","success");
 
 }
 function generateLorem(){
@@ -442,6 +456,7 @@ setMessage(
 "error"
 );
 
+showToast("Quantity must be between 1 and 100.","error");
 return;
 
 }
@@ -496,7 +511,7 @@ setMessage(
 "Lorem Ipsum generated successfully.",
 "success"
 );
-showToast("Lorem Ipsum generated");
+showToast("Lorem Ipsum generated.","success");
 }
 
 function updateStats(text){
@@ -529,7 +544,7 @@ return;
 
 navigator.clipboard.writeText(text);
 
-showToast("Copied");
+showToast("Copied.","success");
 
 }
 
@@ -563,7 +578,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
@@ -579,7 +594,7 @@ document.getElementById("paragraphCount").textContent="0";
 
 document.getElementById("message").textContent="";
 document.getElementById("message").className="message";
-showToast("Cleared");
+showToast("Cleared.","success");
 }
 
 </script>
