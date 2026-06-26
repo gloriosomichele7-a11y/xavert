@@ -51,6 +51,8 @@ height:auto;
 h1{
 text-align:center;
 margin-bottom:10px;
+font-size:42px;
+line-height:1.1;
 }
 
 .subtitle{
@@ -544,11 +546,17 @@ document.getElementById(toolSelector.value + "Tool").classList.add("active");
 });
 function showToast(text,type="info"){
 
+if(!text){
+return;
+}
+
 toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
 
-setTimeout(function(){
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(function(){
 toast.style.display="none";
 toast.className="";
 },2200);
@@ -556,9 +564,17 @@ toast.className="";
 }
 function setMessage(id,text,type){
 const el=document.getElementById(id);
-if(!el) return;
+
+if(!el){
+return;
+}
+
 el.textContent=text;
 el.className="message " + type;
+
+if(type==="error"){
+showToast(text,"error");
+}
 }
 
 function setResult(id,html){
@@ -744,14 +760,40 @@ showToast("Completed.","success");
 }
 
 function processUrl(){
+
 const text=document.getElementById("urlInput").value;
 const mode=document.getElementById("urlMode").value;
+
+if(!text){
+setMessage("urlMessage","Please enter text.","error");
+return;
+}
+
+try{
 
 document.getElementById("urlOutput").value=
 mode==="encode"
 ? encodeURIComponent(text)
 : decodeURIComponent(text);
+
+setMessage(
+"urlMessage",
+"URL processed successfully.",
+"success"
+);
+
 showToast("Completed.","success");
+
+}catch(error){
+
+setMessage(
+"urlMessage",
+"Invalid encoded URL.",
+"error"
+);
+
+}
+
 }
 
 function processBase64(){
