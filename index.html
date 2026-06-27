@@ -4,6 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>XAVERT | Free Online Tools for Developers, Productivity and Data Conversion</title>
+<meta name="description" content="XAVERT offers free browser-based tools for developers, SEO, PDF, images, colors, data conversion, productivity and web workflows. Fast, private and easy to use.">
+
+<meta name="robots" content="index, follow">
+<link rel="canonical" href="https://xavert.com/">
 <link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 *{
@@ -89,6 +93,131 @@ border-radius:999px;
 font-size:12px;
 font-weight:700;
 color:#374151;
+}
+.search-box{
+max-width:620px;
+margin:22px auto 0;
+}
+
+.search-box input{
+width:100%;
+padding:16px 18px;
+border:1px solid #d1d5db;
+border-radius:14px;
+font-size:15px;
+background:white;
+box-shadow:0 10px 28px rgba(0,0,0,.05);
+}
+
+.search-box input:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+.featured{
+padding:22px 6% 10px;
+}
+
+.featured-header{
+text-align:center;
+margin-bottom:22px;
+}
+
+.featured-header h2{
+font-size:30px;
+font-weight:800;
+letter-spacing:-.5px;
+margin-bottom:8px;
+}
+
+.featured-header p{
+font-size:15px;
+color:#6b7280;
+line-height:1.6;
+max-width:680px;
+margin:0 auto;
+}
+
+.featured-grid{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:16px;
+}
+
+.featured-card{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:20px;
+text-decoration:none;
+color:#111827;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+transition:all .25s ease;
+position:relative;
+overflow:hidden;
+}
+
+.featured-card:hover{
+border-color:#dc2626;
+transform:translateY(-5px);
+box-shadow:0 20px 40px rgba(0,0,0,.08);
+}
+
+.featured-card span{
+display:inline-block;
+font-size:12px;
+font-weight:800;
+color:#dc2626;
+background:#fef2f2;
+padding:6px 10px;
+border-radius:999px;
+margin-bottom:12px;
+}
+
+.featured-card h3{
+font-size:20px;
+margin-bottom:8px;
+}
+
+.featured-card p{
+font-size:14px;
+color:#4b5563;
+line-height:1.5;
+}
+.ecosystem-stats{
+padding:20px 6% 14px;
+}
+
+.stats-grid{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:16px;
+max-width:1000px;
+margin:0 auto;
+}
+
+.stat-card{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:22px 18px;
+text-align:center;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.stat-card strong{
+display:block;
+font-size:30px;
+font-weight:900;
+letter-spacing:-.6px;
+color:#111827;
+margin-bottom:6px;
+}
+
+.stat-card span{
+font-size:13px;
+font-weight:700;
+color:#6b7280;
 }
 .services{
 padding:24px 6% 45px;
@@ -231,9 +360,31 @@ grid-template-columns:repeat(3,1fr);
 .grid{
 grid-template-columns:repeat(2,1fr);
 }
+
+.featured-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
+.stats-grid{
+grid-template-columns:repeat(2,1fr);
+}
+
 }
 @media(max-width:768px){
+.featured{
+padding:16px 20px 8px;
+}
 
+.featured-grid{
+grid-template-columns:1fr;
+}
+.ecosystem-stats{
+padding:14px 20px 8px;
+}
+
+.stats-grid{
+grid-template-columns:1fr;
+}
 .intro h1{
 font-size:34px;
 }
@@ -264,17 +415,100 @@ width:145px;
 
 <img src="logo-hero.svg" alt="XAVERT">
 
-<h1>30 Free Online Tools</h1>
+<h1>Free Browser-Based Tools for Developers, Creators and Everyday Work</h1>
 
 <p>
-Tools for developers, SEO, design, productivity, PDF, images and data conversion.
+A privacy-first collection of fast online tools for code, SEO, PDF, images, colors, data conversion and productivity. No sign-up, no uploads, no friction.
 </p>
 <div class="hero-stats">
 <span>100% Browser-Based</span>
+<span>Privacy First</span>
 <span>No Sign-Up Required</span>
+<span>Free to Use</span>
 </div>
 
 <a href="#services" class="hero-button">Explore Tools</a>
+<div class="search-box">
+<input type="text" id="toolSearch" placeholder="Search tools: PDF, JSON, QR, colors, SEO...">
+</div>
+</section>
+<section class="featured" id="featured">
+
+<div class="featured-header">
+<h2>Featured Tools</h2>
+<p>
+Start with the most used XAVERT tools for documents, code, images, QR codes, security and data conversion.
+</p>
+</div>
+
+<div class="featured-grid">
+
+<a href="tools/pdf-toolkit.html" class="featured-card">
+<span>Popular</span>
+<h3>PDF Toolkit</h3>
+<p>Merge, split, compress, rotate, convert and manage PDF files directly in your browser.</p>
+</a>
+
+<a href="tools/json-toolkit.html" class="featured-card">
+<span>Developer</span>
+<h3>JSON Toolkit</h3>
+<p>Format, validate, minify, escape, unescape and compare JSON data privately.</p>
+</a>
+
+<a href="tools/image-toolkit.html" class="featured-card">
+<span>Image</span>
+<h3>Image Toolkit</h3>
+<p>Resize, compress, convert, crop, rotate and export images without uploads.</p>
+</a>
+
+<a href="tools/qr-generator.html" class="featured-card">
+<span>Utility</span>
+<h3>QR Code Generator</h3>
+<p>Create QR codes for URLs, Wi-Fi, contacts, email, SMS, events and text.</p>
+</a>
+
+<a href="tools/password-toolkit.html" class="featured-card">
+<span>Security</span>
+<h3>Password Toolkit</h3>
+<p>Generate strong passwords, passphrases and secure hashes in your browser.</p>
+</a>
+
+<a href="tools/data-converter.html" class="featured-card">
+<span>Data</span>
+<h3>Data Converter</h3>
+<p>Convert CSV, XLSX, JSON and XML files with browser-side processing.</p>
+</a>
+
+</div>
+
+</section>
+
+<section class="ecosystem-stats">
+
+<div class="stats-grid">
+
+<div class="stat-card">
+<strong>30+</strong>
+<span>Online Tools</span>
+</div>
+
+<div class="stat-card">
+<strong>100%</strong>
+<span>Browser-Based</span>
+</div>
+
+<div class="stat-card">
+<strong>0</strong>
+<span>Uploads Required</span>
+</div>
+
+<div class="stat-card">
+<strong>Free</strong>
+<span>No Sign-Up Needed</span>
+</div>
+
+</div>
+
 </section>
 
 <section class="services" id="services">
@@ -569,7 +803,7 @@ Tools for developers, technical workflows, testing, encoding, identifiers and st
 </div>
 </a>
 
-<a href="tools/cron-generator.html" class="card-link">
+<a href="tools/cron-expression-generator.html" class="card-link">
 <div class="card">
 
 <h3>Cron Expression Generator</h3>
@@ -1040,6 +1274,27 @@ Convert structured data files and formats without uploading data to external ser
 <br>
 <p>&copy; 2026 XAVERT. All rights reserved.</p>
 </footer>
+<script>
+const toolSearch=document.getElementById("toolSearch");
 
+if(toolSearch){
+
+toolSearch.addEventListener("input",function(){
+
+const query=toolSearch.value.toLowerCase().trim();
+
+document.querySelectorAll(".card-link").forEach(function(cardLink){
+
+const text=cardLink.innerText.toLowerCase();
+
+cardLink.style.display=
+text.includes(query) ? "block" : "none";
+
+});
+
+});
+
+}
+</script>
 </body>
 </html>
