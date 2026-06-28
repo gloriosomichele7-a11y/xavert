@@ -432,6 +432,65 @@ text-align:center;
 font-size:13px;
 color:#6b7280;
 }
+.browse{
+padding:18px 6% 22px;
+}
+
+.browse-inner{
+max-width:1200px;
+margin:0 auto;
+}
+
+.browse h2{
+text-align:center;
+font-size:30px;
+font-weight:800;
+margin-bottom:12px;
+letter-spacing:-.5px;
+}
+
+.browse>div>p{
+text-align:center;
+max-width:760px;
+margin:0 auto 28px;
+color:#6b7280;
+line-height:1.7;
+font-size:15px;
+}
+
+.browse-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:16px;
+}
+
+.browse-card{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:22px;
+text-decoration:none;
+color:#111827;
+transition:.25s;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.browse-card:hover{
+border-color:#dc2626;
+transform:translateY(-4px);
+box-shadow:0 18px 36px rgba(0,0,0,.08);
+}
+
+.browse-card h3{
+font-size:18px;
+margin-bottom:8px;
+}
+
+.browse-card p{
+font-size:14px;
+line-height:1.6;
+color:#6b7280;
+}
 .faq{
 padding:10px 6% 50px;
 }
@@ -488,7 +547,9 @@ grid-template-columns:repeat(2,1fr);
 .stats-grid{
 grid-template-columns:repeat(2,1fr);
 }
-
+.browse-grid{
+grid-template-columns:repeat(2,1fr);
+}
 }
 @media(max-width:768px){
 .featured{
@@ -660,7 +721,9 @@ Explore some of the most popular XAVERT tools for documents, development, design
 <section class="services" id="services">
 
 <div class="tool-category">
-<h2 class="category-title">Developer Tools</h2>
+<h2 class="category-title" id="developer-tools">
+Developer Tools
+</h2>
 <p class="category-description">
 Build, format, test and manage code-related workflows with practical tools for developers, SEO tasks, structured data and web projects.
 </p>
@@ -1155,8 +1218,9 @@ Build, format, test and manage code-related workflows with practical tools for d
 </div>
 </div>
 
-<div class="tool-category">
-<h2 class="category-title">Documents</h2>
+<h2 class="category-title" id="document-tools">
+Document Tools
+</h2>
 <p class="category-description">
 Organize, convert and prepare documents with PDF utilities designed for everyday file management and professional workflows.
 </p>
@@ -1187,7 +1251,9 @@ Organize, convert and prepare documents with PDF utilities designed for everyday
 </div>
 
 <div class="tool-category">
-<h2 class="category-title">Images & Design</h2>
+<h2 class="category-title" id="image-tools">
+Image & Design Tools
+</h2>
 <p class="category-description">
 Create, optimize and analyze visual assets with image, color and palette tools for design, content and web projects.
 </p>
@@ -1259,7 +1325,9 @@ Create, optimize and analyze visual assets with image, color and palette tools f
 </div>
 
 <div class="tool-category">
-<h2 class="category-title">Utilities</h2>
+<h2 class="category-title" id="utility-tools">
+Utility Tools
+</h2>
 <p class="category-description">
 Handle common daily tasks faster with calculators, generators, converters and text utilities built for quick results.
 </p>
@@ -1380,7 +1448,9 @@ Handle common daily tasks faster with calculators, generators, converters and te
 </div>
 
 <div class="tool-category">
-<h2 class="category-title">Data & Conversion</h2>
+<h2 class="category-title" id="data-tools">
+Data Conversion Tools
+</h2>
 <p class="category-description">
 Transform CSV, XLSX, JSON and XML files into cleaner, more useful formats for analysis, development and reporting.
 </p>
@@ -1526,12 +1596,13 @@ XAVERT is a privacy-first collection of browser-based tools for developers, crea
 
 <div>
 <h3>Categories</h3>
+
 <div class="footer-links">
-<a href="#services">Developer Tools</a>
-<a href="#services">Documents</a>
-<a href="#services">Images & Design</a>
-<a href="#services">Utilities</a>
-<a href="#services">Data Conversion</a>
+<a href="#developer-tools">Developer Tools</a>
+<a href="#document-tools">Document Tools</a>
+<a href="#image-tools">Image & Design Tools</a>
+<a href="#utility-tools">Utility Tools</a>
+<a href="#data-tools">Data Conversion Tools</a>
 </div>
 </div>
 
