@@ -141,7 +141,20 @@ outline:none;
 border-color:#dc2626;
 box-shadow:0 0 0 3px rgba(220,38,38,.12);
 }
-
+.search-results{
+margin-top:14px;
+font-size:14px;
+font-weight:700;
+color:#6b7280;
+min-height:20px;
+}
+mark{
+background:#fee2e2;
+color:#b91c1c;
+padding:1px 3px;
+border-radius:4px;
+font-weight:700;
+}
 .services{
 padding:24px 6% 45px;
 }
@@ -517,7 +530,7 @@ autocomplete="off"
 spellcheck="false"
 aria-label="Search XAVERT tools">
 </div>
-
+<div id="searchResults" class="search-results"></div>
 <div class="hero-mini-stats">
 <span><strong>Privacy</strong> Local processing</span>
 <span><strong>100%</strong> Browser-based</span>
@@ -1481,15 +1494,27 @@ toolSearch.addEventListener("input",function(){
 
 const query=toolSearch.value.toLowerCase().trim();
 
-document.querySelectorAll(".card-link").forEach(function(cardLink){
+document.querySelectorAll(".tool-category").forEach(function(category){
 
-const text=cardLink.innerText.toLowerCase();
+let hasResults=false;
+let results=0;
+category.querySelectorAll(".card-link").forEach(function(cardLink){
 
-cardLink.style.display=
-text.includes(query) ? "block" : "none";
+const text=cardLink.textContent.toLowerCase();
+const match=text.includes(query);
+
+cardLink.style.display=match ? "block" : "none";
+
+if(match){
+hasResults=true;
+results++;
+}
 
 });
 
+category.style.display=hasResults ? "block" : "none";
+
+});
 });
 
 }
