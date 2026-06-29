@@ -250,17 +250,21 @@ border-color .25s ease;
 .card-link:hover .card,
 .card:hover{
 border-color:#dc2626;
-border-top:4px solid #dc2626;
+border-top-color:#dc2626;
 transform:translateY(-8px) scale(1.015);
 box-shadow:0 24px 48px rgba(15,23,42,.10);
 }
 .card h3{
-font-size:20px;
-font-weight:700;
-line-height:1.25;
+font-size:21px;
+font-weight:800;
+line-height:1.3;
+letter-spacing:-0.4px;
 margin-bottom:14px;
 padding-bottom:10px;
 position:relative;
+min-height:56px;
+display:flex;
+align-items:flex-end;
 }
 
 .card h3::after{
@@ -275,12 +279,12 @@ border-radius:999px;
 }
 
 .card p{
-font-size:13.5px;
+font-size:14px;
 color:#4b5563;
-margin-bottom:16px;
-line-height:1.45;
+margin-bottom:18px;
+line-height:1.65;
+min-height:72px;
 }
-
 .card h4{
 font-size:12px;
 margin:16px 0 7px;
@@ -303,11 +307,11 @@ margin-bottom:10px;
 
 .card li{
 position:relative;
-padding-left:16px;
-margin:6px 0;
-font-size:13px;
+padding-left:18px;
+margin:7px 0;
+font-size:13.5px;
 color:#374151;
-line-height:1.45;
+line-height:1.55;
 }
 
 .card li::before{
