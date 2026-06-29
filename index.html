@@ -67,15 +67,15 @@ margin:0 auto 4px;
 .intro h1{
 font-size:32px;
 line-height:1.08;
-margin:8px 0 10px;
+margin:10px 0 18px;
 font-weight:800;
 letter-spacing:-1px;
 }
 .intro p{
-font-size:17px;
-line-height:1.6;
+font-size:18px;
+line-height:1.75;
 color:#4b5563;
-max-width:720px;
+max-width:780px;
 margin:0 auto;
 }
 .hero-button{
@@ -88,7 +88,12 @@ font-weight:700;
 padding:14px 24px;
 border-radius:12px;
 box-shadow:0 10px 24px rgba(220,38,38,.18);
-transition:all .25s ease;
+transition:
+background-color .25s ease,
+color .25s ease,
+transform .25s ease,
+box-shadow .25s ease,
+border-color .25s ease;
 }
 
 .hero-button:hover{
@@ -157,6 +162,8 @@ font-weight:700;
 }
 .services{
 padding:24px 6% 45px;
+max-width:1400px;
+margin:0 auto;
 }
 
 .tool-category{
@@ -170,12 +177,20 @@ padding-top:0;
 }
 
 .category-title{
-font-size:32px;
+font-size:34px;
 font-weight:800;
-margin-bottom:10px;
-letter-spacing:-.8px;
-}  
+margin-bottom:12px;
+letter-spacing:-1px;
+line-height:1.15;
+color:#111827;
+}
+cursor:pointer;
+display:inline-block;
+transition:.25s;
+}
 
+.category-title:hover{
+color:#dc2626;
 .category-description{
 font-size:15px;
 color:#6b7280;
@@ -208,7 +223,7 @@ transform:translateY(-2px);
 .grid{
 display:grid;
 grid-template-columns:repeat(4,1fr);
-gap:16px;
+gap:22px;
 align-items:stretch;
 }
 .card-link{
@@ -220,19 +235,22 @@ height:100%;
 
 .card{
 background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:18px;
+border:1px solid #eceff3;
+border-radius:20px;
+padding:22px;
 height:100%;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-transition:all .25s ease;
+box-shadow:0 8px 24px rgba(15,23,42,.05);
+transition:
+transform .25s ease,
+box-shadow .25s ease,
+border-color .25s ease;
 }
 
 .card-link:hover .card,
 .card:hover{
 border-color:#dc2626;
-transform:translateY(-6px);
-box-shadow:0 20px 40px rgba(0,0,0,.08);
+transform:translateY(-8px) scale(1.015);
+box-shadow:0 24px 48px rgba(15,23,42,.10);
 }
 .card h3{
 font-size:20px;
@@ -451,7 +469,18 @@ grid-template-columns:repeat(2,1fr);
 }
 
 @media(max-width:768px){
+.hero-mini-stats{
+grid-template-columns:repeat(2,1fr);
+max-width:420px;
+}
 
+.hero-mini-stats span{
+padding:10px 8px;
+}
+
+.hero-mini-stats strong{
+font-size:16px;
+}
 .faq{
 padding:8px 20px 38px;
 }
@@ -1487,17 +1516,22 @@ Most XAVERT tools run directly in your browser, helping you process files, text 
 </footer>
 <script>
 const toolSearch=document.getElementById("toolSearch");
+const searchResults=document.getElementById("searchResults");
 
 if(toolSearch){
 
 toolSearch.addEventListener("input",function(){
 
 const query=toolSearch.value.toLowerCase().trim();
+let totalResults=0;
 
 document.querySelectorAll(".tool-category").forEach(function(category){
 
 let hasResults=false;
-let results=0;
+const categoryButton=category.querySelector(".category-footer");
+document.querySelectorAll(".tool-category").forEach(function(cat){
+cat.classList.remove("focused");
+});
 category.querySelectorAll(".card-link").forEach(function(cardLink){
 
 const text=cardLink.textContent.toLowerCase();
@@ -1507,14 +1541,54 @@ cardLink.style.display=match ? "block" : "none";
 
 if(match){
 hasResults=true;
-results++;
+totalResults++;
 }
 
 });
 
 category.style.display=hasResults ? "block" : "none";
 
+if(query!=="" && hasResults && !document.querySelector(".tool-category.focused")){
+category.classList.add("focused");
+category.scrollIntoView({
+behavior:"smooth",
+block:"start"
 });
+}
+
+if(categoryButton){
+categoryButton.style.display=query ? "none" : "block";
+}
+
+});
+
+if(!searchResults){
+return;
+}
+
+if(query===""){
+searchResults.textContent="";
+
+document.querySelectorAll(".tool-category").forEach(function(category){
+
+const cards=category.querySelectorAll(".card-link");
+const button=category.querySelector(".category-button");
+
+category.classList.remove("expanded");
+
+cards.forEach(function(card,index){
+card.style.display=index<4 ? "block" : "none";
+});
+
+if(button){
+button.textContent=button.textContent.includes("Show Less") ? "Show All " + category.querySelector(".category-title").textContent.trim() : button.textContent;
+}
+
+});
+
+}else{
+searchResults.textContent=totalResults + " tool" + (totalResults!==1 ? "s" : "") + " found";
+}
 });
 
 }
@@ -1549,6 +1623,18 @@ card.style.display=isExpanded ? "block" : "none";
 });
 
 button.textContent=isExpanded ? "Show Less" : originalButtonText;
+
+});
+
+});
+document.querySelectorAll(".category-title").forEach(function(title){
+
+title.addEventListener("click",function(){
+
+this.scrollIntoView({
+behavior:"smooth",
+block:"start"
+});
 
 });
 
