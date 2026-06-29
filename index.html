@@ -153,13 +153,7 @@ font-weight:700;
 color:#6b7280;
 min-height:20px;
 }
-mark{
-background:#fee2e2;
-color:#b91c1c;
-padding:1px 3px;
-border-radius:4px;
-font-weight:700;
-}
+  
 .services{
 padding:24px 6% 45px;
 max-width:1400px;
@@ -250,6 +244,8 @@ border-top:4px solid transparent;
 border-radius:20px;
 padding:22px;
 height:100%;
+display:flex;
+flex-direction:column;
 box-shadow:0 8px 24px rgba(15,23,42,.05);
 transition:
 transform .25s ease,
@@ -261,8 +257,8 @@ border-color .25s ease;
 .card:hover{
 border-color:#dc2626;
 border-top-color:#dc2626;
-transform:translateY(-8px) scale(1.015);
-box-shadow:0 24px 48px rgba(15,23,42,.10);
+transform:translateY(-6px);
+box-shadow:0 20px 40px rgba(15,23,42,.10);
 }
 .card h3{
 font-size:21px;
@@ -293,14 +289,15 @@ font-size:14px;
 color:#4b5563;
 margin-bottom:18px;
 line-height:1.65;
-min-height:72px;
+min-height:76px;
+flex-shrink:0;
 }
 .card h4{
 font-size:12px;
 margin:16px 0 7px;
 color:#dc2626;
 text-transform:uppercase;
-letter-spacing:.6px;
+letter-spacing:.1px;
 font-weight:800;
 }
 
@@ -312,7 +309,7 @@ padding-top:18px;
 .card ul{
 list-style:none;
 padding-left:0;
-margin-bottom:10px;
+margin-bottom:18px;
 }
 
 .card li{
@@ -321,7 +318,7 @@ padding-left:18px;
 margin:7px 0;
 font-size:13.5px;
 color:#374151;
-line-height:1.55;
+line-height:1.6;
 }
 
 .card li::before{
@@ -366,10 +363,20 @@ gap:18px;
 
 .why-card{
 background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:22px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
+border:1px solid #eceff3;
+border-radius:20px;
+padding:24px;
+box-shadow:0 8px 24px rgba(15,23,42,.05);
+transition:
+transform .25s ease,
+box-shadow .25s ease,
+border-color .25s ease;
+}
+
+.why-card:hover{
+transform:translateY(-6px);
+border-color:#dc2626;
+box-shadow:0 20px 40px rgba(15,23,42,.10);
 }
 
 .why-card h3{
@@ -485,11 +492,7 @@ grid-template-columns:repeat(2,1fr);
 .footer-grid{
 grid-template-columns:1fr 1fr;
 }
-.stats-grid{
-grid-template-columns:repeat(2,1fr);
 }
-}
-
 @media(max-width:768px){
 .hero-mini-stats{
 grid-template-columns:repeat(2,1fr);
@@ -522,7 +525,10 @@ width:180px;
 .services{
 padding:14px 20px 38px;
 }
-
+.tool-category{
+padding:22px;
+border-radius:18px;
+}
 .grid{
 grid-template-columns:1fr;
 }
