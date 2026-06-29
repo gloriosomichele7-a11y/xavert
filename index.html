@@ -96,22 +96,30 @@ background:#b91c1c;
 transform:translateY(-2px);
 box-shadow:0 16px 32px rgba(220,38,38,.22);
 }
-.hero-stats{
-display:flex;
-justify-content:center;
+.hero-mini-stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
 gap:12px;
-flex-wrap:wrap;
-margin-top:18px;
+max-width:760px;
+margin:18px auto 0;
 }
 
-.hero-stats span{
+.hero-mini-stats span{
 background:#ffffff;
 border:1px solid #e5e7eb;
-padding:8px 14px;
-border-radius:999px;
+border-radius:14px;
+padding:12px 10px;
 font-size:12px;
 font-weight:700;
-color:#374151;
+color:#6b7280;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.hero-mini-stats strong{
+display:block;
+font-size:18px;
+color:#111827;
+margin-bottom:3px;
 }
 .search-box{
 max-width:620px;
@@ -562,7 +570,9 @@ grid-template-columns:1fr 1fr;
 .featured-grid{
 grid-template-columns:repeat(2,1fr);
 }
-
+.hero-mini-stats{
+grid-template-columns:repeat(2,1fr);
+}
 .stats-grid{
 grid-template-columns:repeat(2,1fr);
 }
@@ -652,12 +662,6 @@ decoding="async">
 <p>
 Discover a growing collection of free online tools for development, SEO, PDF, images, colors, data conversion and everyday productivity. Fast, private and designed to work directly in your browser.
 </p>
-<div class="hero-stats">
-<span>100% Browser-Based</span>
-<span>No Account Required</span>
-<span>Private Processing</span>
-<span>Always Free</span>
-</div>
 
 <a href="#services" class="hero-button" aria-label="Browse all XAVERT online tools">
 Explore Tools
@@ -671,55 +675,13 @@ autocomplete="off"
 spellcheck="false"
 aria-label="Search XAVERT tools">
 </div>
+<div class="hero-mini-stats">
+<span><strong>Privacy</strong> Local processing</span>
+<span><strong>100%</strong> Browser-based</span>
+<span><strong>0</strong> Server uploads</span>
+<span><strong>Free</strong> No sign-up</span>
+</div>
 </section>
-<section class="featured" id="featured">
-
-<div class="featured-header">
-<h2>Explore Popular Tools</h2>
-<p>
-Explore some of the most popular XAVERT tools for documents, development, design, security and everyday productivity.
-</p>
-</div>
-
-<div class="featured-grid">
-
-<a href="tools/pdf-toolkit.html" class="featured-card">
-<span>Most Used</span>
-<h3>PDF Toolkit</h3>
-<p>Merge, split, compress, rotate, convert and manage PDF files directly in your browser.</p>
-</a>
-
-<a href="tools/json-toolkit.html" class="featured-card">
-<span>Development</span>
-<h3>JSON Toolkit</h3>
-<p>Work with JSON faster using formatting, validation, minification, escaping and comparison tools.</p>
-</a>
-
-<a href="tools/image-toolkit.html" class="featured-card">
-<span>Design</span>
-<h3>Image Toolkit</h3>
-<p>Resize, compress, convert, crop and optimize images with fast local processing and broad format support.</p>
-</a>
-
-<a href="tools/qr-generator.html" class="featured-card">
-<span>Productivity</span>
-<h3>QR Code Generator</h3>
-<p>Create QR codes for URLs, Wi-Fi, contacts, email, SMS, events and text.</p>
-</a>
-
-<a href="tools/password-toolkit.html" class="featured-card">
-<span>Privacy</span>
-<h3>Password Toolkit</h3>
-<p>Generate strong passwords, passphrases and secure hashes in your browser.</p>
-</a>
-
-<a href="tools/data-converter.html" class="featured-card">
-<span>Conversion</span>
-<h3>Data Converter</h3>
-<p>Convert CSV, XLSX, JSON and XML files between popular formats with fast local processing.</p>
-</a>
-
-</div>
 
 </section>
 
