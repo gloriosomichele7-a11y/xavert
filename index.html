@@ -1029,7 +1029,7 @@ Build, format, test and manage code-related workflows with practical tools for d
 </div>
 
 <div class="category-footer">
-<button class="category-button">
+<button class="category-button" type="button">
 Show All Developer Tools
 </button>
 </div>
@@ -1069,7 +1069,7 @@ Organize, convert and prepare documents with PDF utilities designed for everyday
 </div>
 
 <div class="category-footer">
-<button class="category-button">
+<button class="category-button" type="button">
 Show All Document Tools
 </button>
 </div>
@@ -1148,6 +1148,13 @@ Create, optimize and analyze visual assets with image, color and palette tools f
 </a>  
 
 </div>
+
+<div class="category-footer">
+<button class="category-button" type="button">
+Show All Image & Design Tools
+</button>
+</div>
+
 </div>
 
 <div class="tool-category">
@@ -1273,7 +1280,7 @@ Handle common daily tasks faster with calculators, generators, converters and te
 </div>
 
 <div class="category-footer">
-<button class="category-button">
+<button class="category-button" type="button">
 Show All Utility Tools
 </button>
 </div>
@@ -1314,7 +1321,7 @@ Transform CSV, XLSX, JSON and XML files into cleaner, more useful formats for an
 </div>
 
 <div class="category-footer">
-<button class="category-button">
+<button class="category-button" type="button">
 Show All Data Conversion Tools
 </button>
 </div>
@@ -1486,7 +1493,41 @@ text.includes(query) ? "block" : "none";
 });
 
 }
+document.querySelectorAll(".tool-category").forEach(function(category){
 
+const cards=category.querySelectorAll(".card-link");
+const button=category.querySelector(".category-button");
+
+if(!button || cards.length<=4){
+if(button){
+button.style.display="none";
+}
+return;
+}
+
+cards.forEach(function(card,index){
+if(index>=4){
+card.style.display="none";
+}
+});
+
+const originalButtonText=button.textContent.trim();
+
+button.addEventListener("click",function(){
+
+const isExpanded=category.classList.toggle("expanded");
+
+cards.forEach(function(card,index){
+if(index>=4){
+card.style.display=isExpanded ? "block" : "none";
+}
+});
+
+button.textContent=isExpanded ? "Show Less" : originalButtonText;
+
+});
+
+});
 </script>
 </body>
 </html>
