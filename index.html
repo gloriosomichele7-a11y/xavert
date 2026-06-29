@@ -141,125 +141,27 @@ outline:none;
 border-color:#dc2626;
 box-shadow:0 0 0 3px rgba(220,38,38,.12);
 }
-.featured{
-padding:22px 6% 10px;
-}
 
-.featured-header{
-text-align:center;
-margin-bottom:22px;
-}
-
-.featured-header h2{
-font-size:30px;
-font-weight:800;
-letter-spacing:-.5px;
-margin-bottom:8px;
-}
-
-.featured-header p{
-font-size:15px;
-color:#6b7280;
-line-height:1.6;
-max-width:680px;
-margin:0 auto;
-}
-
-.featured-grid{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:16px;
-}
-
-.featured-card{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:20px;
-text-decoration:none;
-color:#111827;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-transition:all .25s ease;
-position:relative;
-overflow:hidden;
-}
-
-.featured-card:hover{
-border-color:#dc2626;
-transform:translateY(-5px);
-box-shadow:0 20px 40px rgba(0,0,0,.08);
-}
-
-.featured-card span{
-display:inline-block;
-font-size:12px;
-font-weight:800;
-color:#dc2626;
-background:#fef2f2;
-padding:6px 10px;
-border-radius:999px;
-margin-bottom:12px;
-}
-
-.featured-card h3{
-font-size:20px;
-margin-bottom:8px;
-}
-
-.featured-card p{
-font-size:14px;
-color:#4b5563;
-line-height:1.5;
-}
-.ecosystem-stats{
-padding:20px 6% 14px;
-}
-
-.stats-grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:16px;
-max-width:1000px;
-margin:0 auto;
-}
-
-.stat-card{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:22px 18px;
-text-align:center;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.stat-card strong{
-display:block;
-font-size:30px;
-font-weight:900;
-letter-spacing:-.6px;
-color:#111827;
-margin-bottom:6px;
-}
-
-.stat-card span{
-font-size:13px;
-font-weight:700;
-color:#6b7280;
-}
 .services{
 padding:24px 6% 45px;
 }
 
 .tool-category{
-margin-bottom:10px;
+padding:42px 0;
+border-top:1px solid #e5e7eb;
+}
+
+.tool-category:first-child{
+border-top:none;
+padding-top:0;
 }
 
 .category-title{
-font-size:26px;
+font-size:32px;
 font-weight:800;
-margin-bottom:8px;
-letter-spacing:-.4px;
-}
+margin-bottom:10px;
+letter-spacing:-.8px;
+}  
 
 .category-description{
 font-size:15px;
@@ -509,24 +411,13 @@ grid-template-columns:repeat(2,1fr);
 .footer-grid{
 grid-template-columns:1fr 1fr;
 }
-.featured-grid{
-grid-template-columns:repeat(2,1fr);
-}
-.hero-mini-stats{
-grid-template-columns:repeat(2,1fr);
-}
 .stats-grid{
 grid-template-columns:repeat(2,1fr);
 }
 }
-@media(max-width:768px){
-.featured{
-padding:16px 20px 8px;
-}
 
-.featured-grid{
-grid-template-columns:1fr;
-}
+@media(max-width:768px){
+
 .faq{
 padding:8px 20px 38px;
 }
@@ -534,13 +425,7 @@ padding:8px 20px 38px;
 .faq h2{
 font-size:26px;
 }
-.ecosystem-stats{
-padding:14px 20px 8px;
-}
 
-.stats-grid{
-grid-template-columns:1fr;
-}
 .intro h1{
 font-size:34px;
 }
@@ -579,7 +464,28 @@ grid-template-columns:1fr;
 width:145px;
 }
 }
+.show-more-wrapper{
+text-align:center;
+margin-top:36px;
+}
 
+.show-more-btn{
+background:#dc2626;
+color:#fff;
+border:none;
+padding:15px 34px;
+font-size:16px;
+font-weight:700;
+border-radius:12px;
+cursor:pointer;
+transition:.25s;
+box-shadow:0 10px 24px rgba(220,38,38,.18);
+}
+
+.show-more-btn:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
 </style>
 </head>
 
@@ -602,9 +508,6 @@ decoding="async">
 Discover a growing collection of free online tools for development, SEO, PDF, images, colors, data conversion and everyday productivity. Fast, private and designed to work directly in your browser.
 </p>
 
-<a href="#services" class="hero-button" aria-label="Browse all XAVERT online tools">
-Explore Tools
-</a>
 <div class="search-box">
 <input
 type="search"
@@ -614,14 +517,23 @@ autocomplete="off"
 spellcheck="false"
 aria-label="Search XAVERT tools">
 </div>
+
 <div class="hero-mini-stats">
 <span><strong>Privacy</strong> Local processing</span>
 <span><strong>100%</strong> Browser-based</span>
 <span><strong>0</strong> Server uploads</span>
 <span><strong>Free</strong> No sign-up</span>
 </div>
-</section>
 
+<a href="#services" class="hero-button" aria-label="Browse all XAVERT online tools">
+Explore Tools
+</a>
+</section>
+<div class="show-more-wrapper">
+<button id="showMoreTools" class="show-more-btn">
+Show All Tools
+</button>
+</div>
 <section class="services" id="services">
 
 <div class="tool-category">
@@ -1119,7 +1031,15 @@ Build, format, test and manage code-related workflows with practical tools for d
 </a>
 
 </div>
+
+<div class="category-footer">
+<button class="category-button">
+Show All Developer Tools
+</button>
 </div>
+
+</div>
+
 <div class="tool-category">
 <h2 class="category-title" id="document-tools">
 Document Tools
@@ -1495,7 +1415,6 @@ XAVERT is a privacy-first collection of browser-based tools for developers, crea
 <div>
 <h3>Tools</h3>
 <div class="footer-links">
-<a href="#featured">Featured Tools</a>
 <a href="#services">All Tools</a>
 <a href="tools/pdf-toolkit.html">PDF Toolkit</a>
 <a href="tools/json-toolkit.html">JSON Toolkit</a>
@@ -1546,6 +1465,32 @@ cardLink.style.display=
 text.includes(query) ? "block" : "none";
 
 });
+
+});
+
+}
+const allTools=document.querySelectorAll(".card-link");
+const showMoreBtn=document.getElementById("showMoreTools");
+
+const visibleTools=8;
+
+allTools.forEach(function(card,index){
+
+if(index>=visibleTools){
+card.style.display="none";
+}
+
+});
+
+if(showMoreBtn){
+
+showMoreBtn.addEventListener("click",function(){
+
+allTools.forEach(function(card){
+card.style.display="block";
+});
+
+showMoreBtn.style.display="none";
 
 });
 
