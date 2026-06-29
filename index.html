@@ -485,28 +485,7 @@ grid-template-columns:1fr;
 width:145px;
 }
 }
-.show-more-wrapper{
-text-align:center;
-margin-top:36px;
-}
 
-.show-more-btn{
-background:#dc2626;
-color:#fff;
-border:none;
-padding:15px 34px;
-font-size:16px;
-font-weight:700;
-border-radius:12px;
-cursor:pointer;
-transition:.25s;
-box-shadow:0 10px 24px rgba(220,38,38,.18);
-}
-
-.show-more-btn:hover{
-background:#b91c1c;
-transform:translateY(-2px);
-}
 </style>
 </head>
 
@@ -550,11 +529,7 @@ aria-label="Search XAVERT tools">
 Explore Tools
 </a>
 </section>
-<div class="show-more-wrapper">
-<button id="showMoreTools" class="show-more-btn">
-Show All Tools
-</button>
-</div>
+
 <section class="services" id="services">
 
 <div class="tool-category">
@@ -1511,32 +1486,7 @@ text.includes(query) ? "block" : "none";
 });
 
 }
-const allTools=document.querySelectorAll(".card-link");
-const showMoreBtn=document.getElementById("showMoreTools");
 
-const visibleTools=8;
-
-allTools.forEach(function(card,index){
-
-if(index>=visibleTools){
-card.style.display="none";
-}
-
-});
-
-if(showMoreBtn){
-
-showMoreBtn.addEventListener("click",function(){
-
-allTools.forEach(function(card){
-card.style.display="block";
-});
-
-showMoreBtn.style.display="none";
-
-});
-
-}
 </script>
 </body>
 </html>
