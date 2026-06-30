@@ -317,7 +317,7 @@ Barcode value
 <input
 type="text"
 id="barcodeValue"
-placeholder="Enter barcode value, for example: XAVERT-123456">
+placeholder="Example: XAVERT-123456">
 </div>
 
 <div>
@@ -473,7 +473,44 @@ const formatStat=document.getElementById("formatStat");
 const lengthStat=document.getElementById("lengthStat");
 const widthStat=document.getElementById("widthStat");
 const heightStat=document.getElementById("heightStat");
+function updatePlaceholder(){
 
+switch(barcodeFormat.value){
+
+case "CODE128":
+barcodeValue.placeholder="Example: XAVERT-123456";
+break;
+
+case "CODE39":
+barcodeValue.placeholder="Example: ABC-123";
+break;
+
+case "EAN13":
+barcodeValue.placeholder="Example: 5901234123457";
+break;
+
+case "EAN8":
+barcodeValue.placeholder="Example: 96385074";
+break;
+
+case "UPC":
+barcodeValue.placeholder="Example: 036000291452";
+break;
+
+case "ITF14":
+barcodeValue.placeholder="Example: 12345678901231";
+break;
+
+case "codabar":
+barcodeValue.placeholder="Example: A123456A";
+break;
+
+default:
+barcodeValue.placeholder="Enter barcode value";
+
+}
+
+}
 function showMessage(text,type){
 message.textContent=text;
 message.style.color=type==="error" ? "#dc2626" : "#6b7280";
@@ -694,9 +731,13 @@ showMessage("");
 });
 
 barcodeFormat.addEventListener("change",function(){
+
+updatePlaceholder();
+
 if(barcodeValue.value.trim()){
 generateBarcode();
 }
+
 });
 
 barcodeWidth.addEventListener("change",function(){
@@ -727,13 +768,7 @@ generateBarcode();
 }
 
 });
-window.addEventListener("load",function(){
-
-barcodeValue.value="XAVERT-123456";
-
-generateBarcode();
-
-});
+updatePlaceholder();
 </script>
 
 </body>
