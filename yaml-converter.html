@@ -374,6 +374,7 @@ YAML and JSON are widely used configuration formats for APIs, Docker, Kubernetes
 </section>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script> 
 <script>
 const inputText=document.getElementById("inputText");
 const yamlToJsonBtn=document.getElementById("yamlToJsonBtn");
@@ -426,48 +427,9 @@ return value;
 }
 
 function simpleYamlToJson(yaml){
-const lines=yaml.split(/\r\n|\r|\n/).filter(function(line){
-return line.trim()!=="" && !line.trim().startsWith("#");
-});
 
-const output={};
-let currentKey=null;
+return jsyaml.load(yaml);
 
-lines.forEach(function(line){
-const trimmed=line.trim();
-
-if(trimmed.startsWith("- ")){
-if(!currentKey){
-throw new Error("Invalid YAML list structure.");
-}
-
-if(!Array.isArray(output[currentKey])){
-output[currentKey]=[];
-}
-
-output[currentKey].push(parseValue(trimmed.slice(2)));
-return;
-}
-
-const index=trimmed.indexOf(":");
-
-if(index===-1){
-throw new Error("Invalid YAML syntax near: "+trimmed);
-}
-
-const key=trimmed.slice(0,index).trim();
-const value=trimmed.slice(index+1).trim();
-
-if(value===""){
-output[key]=[];
-currentKey=key;
-}else{
-output[key]=parseValue(value);
-currentKey=key;
-}
-});
-
-return output;
 }
 
 function jsonToYamlValue(value,indent){
@@ -489,25 +451,14 @@ return jsonToYaml(value,indent);
 return String(value);
 }
 
-function jsonToYaml(obj,indent){
-let yaml="";
-const spaces=" ".repeat(indent || 0);
+function jsonToYaml(obj){
 
-Object.keys(obj).forEach(function(key){
-const value=obj[key];
-
-if(Array.isArray(value)){
-yaml+=spaces+key+":\n";
-yaml+=jsonToYamlValue(value,(indent || 0)+2)+"\n";
-}else if(typeof value==="object" && value!==null){
-yaml+=spaces+key+":\n";
-yaml+=jsonToYaml(value,(indent || 0)+2);
-}else{
-yaml+=spaces+key+": "+value+"\n";
-}
+return jsyaml.dump(obj,{
+indent:2,
+lineWidth:-1,
+noRefs:true
 });
 
-return yaml;
 }
 
 function renderOutput(text,status,type){
@@ -529,56 +480,120 @@ return text;
 }
 
 function handleYamlToJson(){
+
 const input=getInput();
 if(!input) return;
 
 try{
-const parsed=simpleYamlToJson(input);
-const output=JSON.stringify(parsed,null,2);
+
+const parsed=jsyaml.load(input);
+
+const output=JSON.stringify(parsed,null,4);
+
 renderOutput(output,"Valid","json");
-showMessage("YAML converted to JSON.","success");
+
+showMessage("YAML converted successfully.","success");
+
 }catch(error){
-renderOutput(error.message,"Error","txt");
-showMessage("Invalid YAML detected.","error");
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage(
+"YAML error at line "+(error.mark ? error.mark.line+1 : "?"),
+"error"
+);
+
 }
-}
+
+} 
 
 function handleJsonToYaml(){
+
 const input=getInput();
 if(!input) return;
 
 try{
+
 const parsed=JSON.parse(input);
-const output=jsonToYaml(parsed,0).trim();
+
+const output=jsyaml.dump(parsed,{
+indent:2,
+lineWidth:-1,
+noRefs:true,
+sortKeys:false
+});
+
 renderOutput(output,"Valid","yaml");
-showMessage("JSON converted to YAML.","success");
+
+showMessage("JSON converted successfully.","success");
+
 }catch(error){
-renderOutput(error.message,"Error","txt");
-showMessage("Invalid JSON detected.","error");
-}
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage("Invalid JSON.","error");
+
 }
 
+}
+ 
 function handleValidate(){
+
 const input=getInput();
 if(!input) return;
 
 try{
+
 JSON.parse(input);
-renderOutput("Valid JSON.","Valid","txt");
-showMessage("JSON is valid.","success");
+
+renderOutput(
+"✔ Valid JSON",
+"Valid",
+"txt"
+);
+
+showMessage("Valid JSON document.","success");
 return;
-}catch(error){}
+
+}catch(e){}
 
 try{
-simpleYamlToJson(input);
-renderOutput("Valid YAML.","Valid","txt");
-showMessage("YAML is valid.","success");
+
+jsyaml.load(input);
+
+renderOutput(
+"✔ Valid YAML",
+"Valid",
+"txt"
+);
+
+showMessage("Valid YAML document.","success");
+
 }catch(error){
-renderOutput(error.message,"Error","txt");
-showMessage("Invalid YAML or JSON detected.","error");
-}
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage(
+"Syntax error at line "+(error.mark ? error.mark.line+1 : "?"),
+"error"
+);
+
 }
 
+}
+ 
 async function copyResult(){
 if(!result.textContent.trim()){
 showMessage("Nothing to copy.","error");
