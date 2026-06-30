@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | XML Formatter & Validator</title>
+
+<meta name="description" content="Format, beautify, minify and validate XML online directly in your browser. Free XML formatter with syntax validation.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/xml-formatter-validator.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
+color:#dc2626;
+text-decoration:none;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+font-weight:700;
+}
+
+textarea{
+width:100%;
+min-height:240px;
+padding:16px;
+resize:vertical;
+border:1px solid #d1d5db;
+border-radius:14px;
+font-size:15px;
+line-height:1.7;
+background:white;
+margin-bottom:18px;
+font-family:Consolas,monospace;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:12px;
+margin-bottom:24px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:white;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:white;
+border:1px solid #dc2626;
+color:#dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:white;
+}
+
+.output-box{
+display:none;
+margin-top:20px;
+}
+
+.output-box h2{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.result{
+background:#111827;
+color:#f9fafb;
+padding:18px;
+border-radius:16px;
+white-space:pre-wrap;
+word-break:break-word;
+font-family:Consolas,monospace;
+font-size:14px;
+line-height:1.7;
+min-height:160px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+.stat{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.message{
+margin-top:18px;
+font-size:14px;
+font-weight:700;
+min-height:20px;
+color:#6b7280;
+}
+
+.info{
+margin-top:36px;
+background:white;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+line-height:1.8;
+margin-bottom:14px;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back-link">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>XML Formatter & Validator</h1>
+
+<p>
+Format, beautify, minify and validate XML documents instantly. Everything runs locally in your browser with no uploads.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<label for="xmlInput">
+XML Input
+</label>
+
+<textarea
+id="xmlInput"
+placeholder="Paste your XML here..."></textarea>
+
+<div class="button-grid">
+
+<button id="formatBtn" class="primary">
+Format
+</button>
+
+<button id="minifyBtn" class="primary">
+Minify
+</button>
+
+<button id="validateBtn" class="primary">
+Validate
+</button>
+
+<button id="copyBtn" class="secondary">
+Copy
+</button>
+
+<button id="downloadBtn" class="secondary">
+Download
+</button>
+
+<button id="clearBtn" class="secondary">
+Clear
+</button>
+
+</div>
+
+<div
+class="output-box"
+id="outputBox">
+
+<h2>Result</h2>
+
+<div
+class="result"
+id="result"></div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="lineCount">0</strong>
+<span>Lines</span>
+</div>
+
+<div class="stat">
+<strong id="charCount">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat">
+<strong id="sizeCount">0</strong>
+<span>Bytes</span>
+</div>
+
+<div class="stat">
+<strong id="statusCount">OK</strong>
+<span>Status</span>
+</div>
+
+</div>
+
+</div>
+
+<div
+class="message"
+id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About XML Formatting</h2>
+
+<p>
+XML formatting improves readability by indenting nested elements, while validation helps identify malformed XML before it reaches production.
+</p>
+
+<ul>
+
+<li>Beautify XML with automatic indentation.</li>
+
+<li>Minify XML by removing unnecessary whitespace.</li>
+
+<li>Validate XML syntax instantly.</li>
+
+<li>Copy or download formatted XML.</li>
+
+<li>Everything runs locally in your browser.</li>
+
+</ul>
+
+</section>
+
+</div>
+<script>
+const xmlInput=document.getElementById("xmlInput");
+const formatBtn=document.getElementById("formatBtn");
+const minifyBtn=document.getElementById("minifyBtn");
+const validateBtn=document.getElementById("validateBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const clearBtn=document.getElementById("clearBtn");
+
+const outputBox=document.getElementById("outputBox");
+const result=document.getElementById("result");
+const message=document.getElementById("message");
+
+const lineCount=document.getElementById("lineCount");
+const charCount=document.getElementById("charCount");
+const sizeCount=document.getElementById("sizeCount");
+const statusCount=document.getElementById("statusCount");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function validateXml(xml){
+const parser=new DOMParser();
+const doc=parser.parseFromString(xml,"application/xml");
+const parserError=doc.querySelector("parsererror");
+
+if(parserError){
+return {
+valid:false,
+error:parserError.textContent.trim()
+};
+}
+
+return {
+valid:true,
+error:""
+};
+}
+
+function formatXml(xml){
+let formatted="";
+let indent="";
+const tab="  ";
+
+xml=xml.replace(/>\s*</g,"><");
+const nodes=xml.split(/(?=<)|(?<=>)/g).filter(function(item){
+return item.trim()!=="";
+});
+
+nodes.forEach(function(node){
+
+if(node.match(/^<\/\w/)){
+indent=indent.substring(tab.length);
+}
+
+formatted+=indent+node.trim()+"\n";
+
+if(
+node.match(/^<[^!?/][^>]*[^/]>/) &&
+!node.match(/^<[^>]+>.*<\/[^>]+>$/)
+){
+indent+=tab;
+}
+
+});
+
+return formatted.trim();
+}
+
+function minifyXml(xml){
+return xml
+.replace(/>\s+</g,"><")
+.replace(/\s+/g," ")
+.trim();
+}
+
+function updateStats(text,isValid){
+const lines=text ? text.split(/\r\n|\r|\n/).length : 0;
+const chars=text.length;
+const bytes=new TextEncoder().encode(text).length;
+
+lineCount.textContent=lines;
+charCount.textContent=chars;
+sizeCount.textContent=bytes;
+statusCount.textContent=isValid ? "OK" : "Error";
+statusCount.style.color=isValid ? "#16a34a" : "#dc2626";
+}
+
+function renderOutput(text,isValid){
+result.textContent=text;
+outputBox.style.display="block";
+updateStats(text,isValid);
+}
+
+function getInput(){
+const xml=xmlInput.value.trim();
+
+if(!xml){
+showMessage("Paste XML first.","error");
+return "";
+}
+
+return xml;
+}
+
+function handleFormat(){
+const xml=getInput();
+if(!xml) return;
+
+const validation=validateXml(xml);
+
+if(!validation.valid){
+renderOutput(validation.error,false);
+showMessage("Invalid XML detected.","error");
+return;
+}
+
+const formatted=formatXml(xml);
+renderOutput(formatted,true);
+showMessage("XML formatted successfully.","success");
+}
+
+function handleMinify(){
+const xml=getInput();
+if(!xml) return;
+
+const validation=validateXml(xml);
+
+if(!validation.valid){
+renderOutput(validation.error,false);
+showMessage("Invalid XML detected.","error");
+return;
+}
+
+const minified=minifyXml(xml);
+renderOutput(minified,true);
+showMessage("XML minified successfully.","success");
+}
+
+function handleValidate(){
+const xml=getInput();
+if(!xml) return;
+
+const validation=validateXml(xml);
+
+if(validation.valid){
+renderOutput("Valid XML.",true);
+showMessage("XML is valid.","success");
+}else{
+renderOutput(validation.error,false);
+showMessage("Invalid XML detected.","error");
+}
+}
+
+async function copyResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to copy.","error");
+return;
+}
+
+try{
+await navigator.clipboard.writeText(result.textContent);
+showMessage("Result copied.","success");
+}catch(error){
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function downloadResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([result.textContent],{type:"application/xml"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-xml-result.xml";
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+showMessage("Download started.","success");
+}
+
+function clearTool(){
+xmlInput.value="";
+result.textContent="";
+outputBox.style.display="none";
+lineCount.textContent="0";
+charCount.textContent="0";
+sizeCount.textContent="0";
+statusCount.textContent="OK";
+statusCount.style.color="";
+showMessage("");
+}
+
+formatBtn.addEventListener("click",handleFormat);
+minifyBtn.addEventListener("click",handleMinify);
+validateBtn.addEventListener("click",handleValidate);
+copyBtn.addEventListener("click",copyResult);
+downloadBtn.addEventListener("click",downloadResult);
+clearBtn.addEventListener("click",clearTool);
+</script>
+
+</body>
+</html>
