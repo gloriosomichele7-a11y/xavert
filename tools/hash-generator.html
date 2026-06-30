@@ -1,1 +1,750 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>XAVERT | Hash Generator</title>
+<meta name="description" content="Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text directly in your browser. Free, fast and private online hash generator.">
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+<link rel="canonical" href="https://xavert.com/tools/hash-generator.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.tool-page{
+max-width:1100px;
+margin:0 auto;
+padding:34px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:22px;
+color:#dc2626;
+text-decoration:none;
+font-size:14px;
+font-weight:700;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.tool-header{
+text-align:center;
+margin-bottom:28px;
+}
+
+.tool-header h1{
+font-size:38px;
+line-height:1.15;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.tool-header p{
+max-width:760px;
+margin:0 auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+.tool-grid{
+display:grid;
+grid-template-columns:1fr;
+gap:18px;
+}
+
+label{
+display:block;
+font-size:14px;
+font-weight:800;
+margin-bottom:8px;
+color:#111827;
+}
+
+textarea,
+select{
+width:100%;
+border:1px solid #d1d5db;
+border-radius:14px;
+background:#ffffff;
+font-size:15px;
+color:#111827;
+padding:14px 16px;
+}
+
+textarea{
+min-height:210px;
+resize:vertical;
+line-height:1.6;
+}
+
+textarea:focus,
+select:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.options-row{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.button-row{
+display:flex;
+flex-wrap:wrap;
+gap:12px;
+margin-top:18px;
+}
+
+button{
+border:none;
+cursor:pointer;
+font-weight:800;
+border-radius:12px;
+padding:13px 18px;
+font-size:14px;
+transition:
+background-color .25s ease,
+color .25s ease,
+transform .25s ease,
+box-shadow .25s ease,
+border-color .25s ease;
+}
+
+.primary-btn{
+background:#dc2626;
+color:#ffffff;
+box-shadow:0 10px 24px rgba(220,38,38,.18);
+}
+
+.primary-btn:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary-btn{
+background:#ffffff;
+color:#dc2626;
+border:1px solid #dc2626;
+}
+
+.secondary-btn:hover{
+background:#dc2626;
+color:#ffffff;
+transform:translateY(-2px);
+}
+
+.ghost-btn{
+background:#f3f4f6;
+color:#374151;
+}
+
+.ghost-btn:hover{
+background:#e5e7eb;
+transform:translateY(-2px);
+}
+
+.result-section{
+margin-top:24px;
+display:none;
+}
+
+.result-header{
+display:flex;
+justify-content:space-between;
+gap:14px;
+align-items:center;
+margin-bottom:12px;
+}
+
+.result-header h2{
+font-size:22px;
+font-weight:800;
+letter-spacing:-.4px;
+}
+
+.hash-output{
+background:#111827;
+color:#f9fafb;
+border-radius:16px;
+padding:18px;
+font-family:Consolas, Monaco, monospace;
+font-size:14px;
+line-height:1.7;
+word-break:break-all;
+white-space:pre-wrap;
+min-height:80px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:18px;
+}
+
+.stat{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.message{
+margin-top:16px;
+font-size:14px;
+font-weight:700;
+color:#6b7280;
+min-height:20px;
+}
+
+.info-section{
+margin-top:34px;
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.info-section h2{
+font-size:26px;
+font-weight:800;
+margin-bottom:12px;
+letter-spacing:-.5px;
+}
+
+.info-section p{
+color:#4b5563;
+line-height:1.75;
+font-size:15px;
+margin-bottom:14px;
+}
+
+.info-section ul{
+list-style:none;
+padding-left:0;
+}
+
+.info-section li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+color:#374151;
+font-size:14px;
+line-height:1.6;
+}
+
+.info-section li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:800;
+}
+
+@media(max-width:768px){
+.tool-page{
+padding:24px 16px 46px;
+}
+
+.tool-header h1{
+font-size:32px;
+}
+
+.tool-card,
+.info-section{
+padding:20px;
+border-radius:18px;
+}
+
+.options-row{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.button-row{
+flex-direction:column;
+}
+
+button{
+width:100%;
+}
+}
+</style>
+</head>
+
+<body>
+
+<main class="tool-page">
+
+<a href="../index.html" class="back-link">← Back to XAVERT</a>
+
+<header class="tool-header">
+<h1>Hash Generator</h1>
+<p>
+Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text directly in your browser. Fast, private and no upload required.
+</p>
+</header>
+
+<section class="tool-card">
+
+<div class="tool-grid">
+
+<div>
+<label for="inputText">Text to hash</label>
+<textarea id="inputText" placeholder="Enter or paste text here..."></textarea>
+</div>
+
+<div class="options-row">
+
+<div>
+<label for="hashAlgorithm">Hash algorithm</label>
+<select id="hashAlgorithm">
+<option value="all">All Algorithms</option>
+<option value="md5">MD5</option>
+<option value="sha1">SHA-1</option>
+<option value="sha256">SHA-256</option>
+<option value="sha384">SHA-384</option>
+<option value="sha512">SHA-512</option>
+</select>
+</div>
+
+<div>
+<label for="outputFormat">Output format</label>
+<select id="outputFormat">
+<option value="plain">Plain Text</option>
+<option value="json">JSON</option>
+</select>
+</div>
+
+</div>
+
+<div class="button-row">
+<button class="primary-btn" id="generateBtn" type="button">Generate Hash</button>
+<button class="secondary-btn" id="copyBtn" type="button">Copy Result</button>
+<button class="secondary-btn" id="downloadTxtBtn" type="button">Download TXT</button>
+<button class="secondary-btn" id="downloadJsonBtn" type="button">Download JSON</button>
+<button class="ghost-btn" id="clearBtn" type="button">Clear</button>
+</div>
+
+</div>
+
+<div class="result-section" id="resultSection">
+
+<div class="result-header">
+<h2>Hash Result</h2>
+</div>
+
+<div class="hash-output" id="hashOutput"></div>
+
+<div class="stats">
+<div class="stat">
+<strong id="charCount">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat">
+<strong id="byteCount">0</strong>
+<span>Bytes</span>
+</div>
+
+<div class="stat">
+<strong id="algorithmCount">0</strong>
+<span>Algorithms</span>
+</div>
+
+<div class="stat">
+<strong id="hashLength">0</strong>
+<span>Hash Length</span>
+</div>
+</div>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</section>
+
+<section class="info-section">
+<h2>What is a hash generator?</h2>
+<p>
+A hash generator converts text into a fixed-length fingerprint using algorithms such as MD5, SHA-1, SHA-256, SHA-384 and SHA-512.
+</p>
+<ul>
+<li>Use hashes to compare text, verify integrity or generate unique fingerprints.</li>
+<li>All processing happens directly in your browser.</li>
+<li>No text is uploaded to a server.</li>
+<li>SHA-256 and SHA-512 are preferred for modern security workflows.</li>
+</ul>
+</section>
+</main>
+
+<script>
+const inputText=document.getElementById("inputText");
+const hashAlgorithm=document.getElementById("hashAlgorithm");
+const outputFormat=document.getElementById("outputFormat");
+const generateBtn=document.getElementById("generateBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadTxtBtn=document.getElementById("downloadTxtBtn");
+const downloadJsonBtn=document.getElementById("downloadJsonBtn");
+const clearBtn=document.getElementById("clearBtn");
+const resultSection=document.getElementById("resultSection");
+const hashOutput=document.getElementById("hashOutput");
+const message=document.getElementById("message");
+
+const charCount=document.getElementById("charCount");
+const byteCount=document.getElementById("byteCount");
+const algorithmCount=document.getElementById("algorithmCount");
+const hashLength=document.getElementById("hashLength");
+
+let currentResults={};
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function bytesToHex(buffer){
+return Array.from(new Uint8Array(buffer)).map(function(byte){
+return byte.toString(16).padStart(2,"0");
+}).join("");
+}
+
+async function cryptoHash(text,algorithm){
+const encoded=new TextEncoder().encode(text);
+const buffer=await crypto.subtle.digest(algorithm,encoded);
+return bytesToHex(buffer);
+}
+
+function md5Hash(input){
+function rotateLeft(value,shift){
+return (value<<shift) | (value>>>(32-shift));
+}
+
+function addUnsigned(x,y){
+const x4=x & 0x40000000;
+const y4=y & 0x40000000;
+const x8=x & 0x80000000;
+const y8=y & 0x80000000;
+const result=(x & 0x3fffffff)+(y & 0x3fffffff);
+if(x4 & y4) return result ^ 0x80000000 ^ x8 ^ y8;
+if(x4 | y4){
+if(result & 0x40000000) return result ^ 0xc0000000 ^ x8 ^ y8;
+return result ^ 0x40000000 ^ x8 ^ y8;
+}
+return result ^ x8 ^ y8;
+}
+
+function f(x,y,z){return (x & y) | ((~x) & z);}
+function g(x,y,z){return (x & z) | (y & (~z));}
+function h(x,y,z){return x ^ y ^ z;}
+function i(x,y,z){return y ^ (x | (~z));}
+
+function ff(a,b,c,d,x,s,ac){
+a=addUnsigned(a,addUnsigned(addUnsigned(f(b,c,d),x),ac));
+return addUnsigned(rotateLeft(a,s),b);
+}
+
+function gg(a,b,c,d,x,s,ac){
+a=addUnsigned(a,addUnsigned(addUnsigned(g(b,c,d),x),ac));
+return addUnsigned(rotateLeft(a,s),b);
+}
+
+function hh(a,b,c,d,x,s,ac){
+a=addUnsigned(a,addUnsigned(addUnsigned(h(b,c,d),x),ac));
+return addUnsigned(rotateLeft(a,s),b);
+}
+
+function ii(a,b,c,d,x,s,ac){
+a=addUnsigned(a,addUnsigned(addUnsigned(i(b,c,d),x),ac));
+return addUnsigned(rotateLeft(a,s),b);
+}
+
+function convertToWordArray(str){
+const messageLength=str.length;
+const numberOfWordsTemp1=messageLength+8;
+const numberOfWordsTemp2=(numberOfWordsTemp1-(numberOfWordsTemp1%64))/64;
+const numberOfWords=(numberOfWordsTemp2+1)*16;
+const wordArray=new Array(numberOfWords-1);
+let bytePosition=0;
+let byteCount=0;
+
+while(byteCount<messageLength){
+const wordCount=(byteCount-(byteCount%4))/4;
+bytePosition=(byteCount%4)*8;
+wordArray[wordCount]=wordArray[wordCount] | (str.charCodeAt(byteCount)<<bytePosition);
+byteCount++;
+}
+
+const wordCount=(byteCount-(byteCount%4))/4;
+bytePosition=(byteCount%4)*8;
+wordArray[wordCount]=wordArray[wordCount] | (0x80<<bytePosition);
+wordArray[numberOfWords-2]=messageLength<<3;
+wordArray[numberOfWords-1]=messageLength>>>29;
+return wordArray;
+}
+
+function wordToHex(value){
+let output="";
+for(let count=0;count<=3;count++){
+const byte=(value>>>(count*8)) & 255;
+output+=("0"+byte.toString(16)).slice(-2);
+}
+return output;
+}
+
+input=unescape(encodeURIComponent(input));
+const x=convertToWordArray(input);
+
+let a=0x67452301;
+let b=0xefcdab89;
+let c=0x98badcfe;
+let d=0x10325476;
+
+for(let k=0;k<x.length;k+=16){
+const aa=a;
+const bb=b;
+const cc=c;
+const dd=d;
+
+a=ff(a,b,c,d,x[k+0],7,0xd76aa478);
+d=ff(d,a,b,c,x[k+1],12,0xe8c7b756);
+c=ff(c,d,a,b,x[k+2],17,0x242070db);
+b=ff(b,c,d,a,x[k+3],22,0xc1bdceee);
+a=ff(a,b,c,d,x[k+4],7,0xf57c0faf);
+d=ff(d,a,b,c,x[k+5],12,0x4787c62a);
+c=ff(c,d,a,b,x[k+6],17,0xa8304613);
+b=ff(b,c,d,a,x[k+7],22,0xfd469501);
+a=ff(a,b,c,d,x[k+8],7,0x698098d8);
+d=ff(d,a,b,c,x[k+9],12,0x8b44f7af);
+c=ff(c,d,a,b,x[k+10],17,0xffff5bb1);
+b=ff(b,c,d,a,x[k+11],22,0x895cd7be);
+a=ff(a,b,c,d,x[k+12],7,0x6b901122);
+d=ff(d,a,b,c,x[k+13],12,0xfd987193);
+c=ff(c,d,a,b,x[k+14],17,0xa679438e);
+b=ff(b,c,d,a,x[k+15],22,0x49b40821);
+
+a=gg(a,b,c,d,x[k+1],5,0xf61e2562);
+d=gg(d,a,b,c,x[k+6],9,0xc040b340);
+c=gg(c,d,a,b,x[k+11],14,0x265e5a51);
+b=gg(b,c,d,a,x[k+0],20,0xe9b6c7aa);
+a=gg(a,b,c,d,x[k+5],5,0xd62f105d);
+d=gg(d,a,b,c,x[k+10],9,0x02441453);
+c=gg(c,d,a,b,x[k+15],14,0xd8a1e681);
+b=gg(b,c,d,a,x[k+4],20,0xe7d3fbc8);
+a=gg(a,b,c,d,x[k+9],5,0x21e1cde6);
+d=gg(d,a,b,c,x[k+14],9,0xc33707d6);
+c=gg(c,d,a,b,x[k+3],14,0xf4d50d87);
+b=gg(b,c,d,a,x[k+8],20,0x455a14ed);
+a=gg(a,b,c,d,x[k+13],5,0xa9e3e905);
+d=gg(d,a,b,c,x[k+2],9,0xfcefa3f8);
+c=gg(c,d,a,b,x[k+7],14,0x676f02d9);
+b=gg(b,c,d,a,x[k+12],20,0x8d2a4c8a);
+
+a=hh(a,b,c,d,x[k+5],4,0xfffa3942);
+d=hh(d,a,b,c,x[k+8],11,0x8771f681);
+c=hh(c,d,a,b,x[k+11],16,0x6d9d6122);
+b=hh(b,c,d,a,x[k+14],23,0xfde5380c);
+a=hh(a,b,c,d,x[k+1],4,0xa4beea44);
+d=hh(d,a,b,c,x[k+4],11,0x4bdecfa9);
+c=hh(c,d,a,b,x[k+7],16,0xf6bb4b60);
+b=hh(b,c,d,a,x[k+10],23,0xbebfbc70);
+a=hh(a,b,c,d,x[k+13],4,0x289b7ec6);
+d=hh(d,a,b,c,x[k+0],11,0xeaa127fa);
+c=hh(c,d,a,b,x[k+3],16,0xd4ef3085);
+b=hh(b,c,d,a,x[k+6],23,0x04881d05);
+a=hh(a,b,c,d,x[k+9],4,0xd9d4d039);
+d=hh(d,a,b,c,x[k+12],11,0xe6db99e5);
+c=hh(c,d,a,b,x[k+15],16,0x1fa27cf8);
+b=hh(b,c,d,a,x[k+2],23,0xc4ac5665);
+
+a=ii(a,b,c,d,x[k+0],6,0xf4292244);
+d=ii(d,a,b,c,x[k+7],10,0x432aff97);
+c=ii(c,d,a,b,x[k+14],15,0xab9423a7);
+b=ii(b,c,d,a,x[k+5],21,0xfc93a039);
+a=ii(a,b,c,d,x[k+12],6,0x655b59c3);
+d=ii(d,a,b,c,x[k+3],10,0x8f0ccc92);
+c=ii(c,d,a,b,x[k+10],15,0xffeff47d);
+b=ii(b,c,d,a,x[k+1],21,0x85845dd1);
+a=ii(a,b,c,d,x[k+8],6,0x6fa87e4f);
+d=ii(d,a,b,c,x[k+15],10,0xfe2ce6e0);
+c=ii(c,d,a,b,x[k+6],15,0xa3014314);
+b=ii(b,c,d,a,x[k+13],21,0x4e0811a1);
+a=ii(a,b,c,d,x[k+4],6,0xf7537e82);
+d=ii(d,a,b,c,x[k+11],10,0xbd3af235);
+c=ii(c,d,a,b,x[k+2],15,0x2ad7d2bb);
+b=ii(b,c,d,a,x[k+9],21,0xeb86d391);
+
+a=addUnsigned(a,aa);
+b=addUnsigned(b,bb);
+c=addUnsigned(c,cc);
+d=addUnsigned(d,dd);
+}
+
+return (wordToHex(a)+wordToHex(b)+wordToHex(c)+wordToHex(d)).toLowerCase();
+}
+
+async function generateHashes(){
+const text=inputText.value;
+
+if(!text.trim()){
+showMessage("Enter some text first.","error");
+return;
+}
+
+const selected=hashAlgorithm.value;
+const results={};
+
+if(selected==="all" || selected==="md5"){
+results["MD5"]=md5Hash(text);
+}
+
+if(selected==="all" || selected==="sha1"){
+results["SHA-1"]=await cryptoHash(text,"SHA-1");
+}
+
+if(selected==="all" || selected==="sha256"){
+results["SHA-256"]=await cryptoHash(text,"SHA-256");
+}
+
+if(selected==="all" || selected==="sha384"){
+results["SHA-384"]=await cryptoHash(text,"SHA-384");
+}
+
+if(selected==="all" || selected==="sha512"){
+results["SHA-512"]=await cryptoHash(text,"SHA-512");
+}
+
+currentResults=results;
+renderResults(text,results);
+showMessage("Hash generated successfully.","success");
+}
+
+function renderResults(text,results){
+const format=outputFormat.value;
+
+if(format==="json"){
+hashOutput.textContent=JSON.stringify(results,null,2);
+}else{
+hashOutput.textContent=Object.entries(results).map(function(entry){
+return entry[0]+":\n"+entry[1];
+}).join("\n\n");
+}
+
+const encoded=new TextEncoder().encode(text);
+
+charCount.textContent=text.length;
+byteCount.textContent=encoded.length;
+algorithmCount.textContent=Object.keys(results).length;
+hashLength.textContent=Object.values(results)[0] ? Object.values(results)[0].length : 0;
+
+resultSection.style.display="block";
+}
+
+async function copyResult(){
+if(!hashOutput.textContent.trim()){
+showMessage("Nothing to copy.","error");
+return;
+}
+
+try{
+await navigator.clipboard.writeText(hashOutput.textContent);
+showMessage("Result copied.","success");
+}catch(error){
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function downloadFile(filename,content,type){
+const blob=new Blob([content],{type:type});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+a.href=url;
+a.download=filename;
+document.body.appendChild(a);
+a.click();
+a.remove();
+URL.revokeObjectURL(url);
+showMessage("Download started.","success");
+}
+
+function downloadTxt(){
+if(!hashOutput.textContent.trim()){
+showMessage("Nothing to download.","error");
+return;
+}
+downloadFile("xavert-hash-result.txt",hashOutput.textContent,"text/plain");
+}
+
+function downloadJson(){
+if(!Object.keys(currentResults).length){
+showMessage("Nothing to download.","error");
+return;
+}
+downloadFile("xavert-hash-result.json",JSON.stringify(currentResults,null,2),"application/json");
+}
+
+function clearTool(){
+inputText.value="";
+hashOutput.textContent="";
+currentResults={};
+resultSection.style.display="none";
+charCount.textContent="0";
+byteCount.textContent="0";
+algorithmCount.textContent="0";
+hashLength.textContent="0";
+showMessage("");
+}
+
+generateBtn.addEventListener("click",generateHashes);
+copyBtn.addEventListener("click",copyResult);
+downloadTxtBtn.addEventListener("click",downloadTxt);
+downloadJsonBtn.addEventListener("click",downloadJson);
+clearBtn.addEventListener("click",clearTool);
+</script>
+
+</body>
+</html>
