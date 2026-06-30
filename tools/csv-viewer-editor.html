@@ -453,6 +453,7 @@ const fileSize=document.getElementById("fileSize");
 
 let csvData=[];
 let sortDirection=1;
+let sortedColumn=-1;
 
 function showMessage(text,type){
 message.textContent=text;
@@ -572,7 +573,13 @@ const headerRow=document.createElement("tr");
 data[0].forEach(function(header,index){
 
 const th=document.createElement("th");
-th.textContent=header || "Column "+(index+1);
+const columnName=header || "Column "+(index+1);
+
+if(index===sortedColumn){
+th.textContent=columnName+(sortDirection===1 ? " ▲" : " ▼");
+}else{
+th.textContent=columnName;
+}
 
 th.addEventListener("click",function(){
 sortByColumn(index);
@@ -692,6 +699,7 @@ return (an-bn)*sortDirection;
 return av.localeCompare(bv)*sortDirection;
 });
 
+sortedColumn=index;
 sortDirection*=-1;
 csvData=[header].concat(rows);
 renderTable(csvData);
