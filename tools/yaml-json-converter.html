@@ -1,1 +1,656 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
 
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | YAML ↔ JSON Converter</title>
+
+<meta name="description" content="Convert YAML to JSON and JSON to YAML online. Validate, format and transform configuration files directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/yaml-json-converter.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
+text-decoration:none;
+color:#dc2626;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+label{
+display:block;
+margin-bottom:8px;
+font-size:14px;
+font-weight:700;
+}
+
+textarea{
+width:100%;
+min-height:240px;
+padding:16px;
+resize:vertical;
+border:1px solid #d1d5db;
+border-radius:14px;
+background:#ffffff;
+font-family:Consolas,monospace;
+font-size:15px;
+line-height:1.7;
+margin-bottom:18px;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(6,1fr);
+gap:12px;
+margin-bottom:24px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:#ffffff;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:#ffffff;
+border:1px solid #dc2626;
+color:#dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:#ffffff;
+}
+
+.output-box{
+display:none;
+margin-top:20px;
+}
+
+.output-box h2{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.result{
+background:#111827;
+color:#f9fafb;
+padding:18px;
+border-radius:16px;
+white-space:pre-wrap;
+word-break:break-word;
+font-family:Consolas,monospace;
+font-size:14px;
+line-height:1.7;
+min-height:170px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+.stat{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.message{
+margin-top:18px;
+font-size:14px;
+font-weight:700;
+min-height:20px;
+color:#6b7280;
+}
+
+.info{
+margin-top:36px;
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+margin-bottom:14px;
+line-height:1.8;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back-link">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>YAML ↔ JSON Converter</h1>
+
+<p>
+Convert YAML to JSON and JSON to YAML, validate content and export results directly in your browser.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<label for="inputText">
+Input
+</label>
+
+<textarea
+id="inputText"
+placeholder="Paste YAML or JSON here..."></textarea>
+
+<div class="button-grid">
+
+<button id="yamlToJsonBtn" class="primary">
+YAML → JSON
+</button>
+
+<button id="jsonToYamlBtn" class="primary">
+JSON → YAML
+</button>
+
+<button id="validateBtn" class="primary">
+Validate
+</button>
+
+<button id="copyBtn" class="secondary">
+Copy
+</button>
+
+<button id="downloadBtn" class="secondary">
+Download
+</button>
+
+<button id="clearBtn" class="secondary">
+Clear
+</button>
+
+</div>
+
+<div class="output-box" id="outputBox">
+
+<h2>Result</h2>
+
+<div class="result" id="result"></div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="lineCount">0</strong>
+<span>Lines</span>
+</div>
+
+<div class="stat">
+<strong id="charCount">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat">
+<strong id="sizeCount">0</strong>
+<span>Bytes</span>
+</div>
+
+<div class="stat">
+<strong id="statusCount">Ready</strong>
+<span>Status</span>
+</div>
+
+</div>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About YAML & JSON</h2>
+
+<p>
+YAML and JSON are widely used configuration formats for APIs, Docker, Kubernetes, CI/CD pipelines and modern applications.
+</p>
+
+<ul>
+<li>Convert YAML to JSON.</li>
+<li>Convert JSON to YAML.</li>
+<li>Validate configuration files.</li>
+<li>Copy or download the converted result.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/js-yaml@4.1.0/dist/js-yaml.min.js"></script> 
+<script>
+const inputText=document.getElementById("inputText");
+const yamlToJsonBtn=document.getElementById("yamlToJsonBtn");
+const jsonToYamlBtn=document.getElementById("jsonToYamlBtn");
+const validateBtn=document.getElementById("validateBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const clearBtn=document.getElementById("clearBtn");
+
+const outputBox=document.getElementById("outputBox");
+const result=document.getElementById("result");
+const message=document.getElementById("message");
+
+const lineCount=document.getElementById("lineCount");
+const charCount=document.getElementById("charCount");
+const sizeCount=document.getElementById("sizeCount");
+const statusCount=document.getElementById("statusCount");
+
+let currentType="txt";
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function updateStats(text,status){
+lineCount.textContent=text ? text.split(/\r\n|\r|\n/).length : 0;
+charCount.textContent=text.length;
+sizeCount.textContent=new TextEncoder().encode(text).length;
+statusCount.textContent=status;
+statusCount.style.color=status==="Error" ? "#dc2626" : "#16a34a";
+}
+
+function parseValue(value){
+value=value.trim();
+
+if(value==="true") return true;
+if(value==="false") return false;
+if(value==="null") return null;
+if(!isNaN(value) && value!=="") return Number(value);
+
+if(
+(value.startsWith('"') && value.endsWith('"')) ||
+(value.startsWith("'") && value.endsWith("'"))
+){
+return value.slice(1,-1);
+}
+
+return value;
+}
+
+function simpleYamlToJson(yaml){
+
+return jsyaml.load(yaml);
+
+}
+
+function jsonToYamlValue(value,indent){
+const spaces=" ".repeat(indent);
+
+ if(Array.isArray(value)){
+return value.map(function(item){
+if(typeof item==="object" && item!==null){
+return spaces+"- "+JSON.stringify(item);
+}
+return spaces+"- "+item;
+}).join("\n");
+}
+
+if(typeof value==="object" && value!==null){
+return jsonToYaml(value,indent);
+}
+
+return String(value);
+}
+
+function jsonToYaml(obj){
+
+return jsyaml.dump(obj,{
+indent:2,
+lineWidth:-1,
+noRefs:true
+});
+
+}
+
+function renderOutput(text,status,type){
+result.textContent=text;
+outputBox.style.display="block";
+currentType=type;
+updateStats(text,status);
+}
+
+function getInput(){
+const text=inputText.value.trim();
+
+if(!text){
+showMessage("Paste YAML or JSON first.","error");
+return "";
+}
+
+return text;
+}
+
+function handleYamlToJson(){
+
+const input=getInput();
+if(!input) return;
+
+try{
+
+const parsed=jsyaml.load(input);
+
+const output=JSON.stringify(parsed,null,4);
+
+renderOutput(output,"Valid","json");
+
+showMessage("YAML converted successfully.","success");
+
+}catch(error){
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage(
+"YAML error at line "+(error.mark ? error.mark.line+1 : "?"),
+"error"
+);
+
+}
+
+} 
+
+function handleJsonToYaml(){
+
+const input=getInput();
+if(!input) return;
+
+try{
+
+const parsed=JSON.parse(input);
+
+const output=jsyaml.dump(parsed,{
+indent:2,
+lineWidth:-1,
+noRefs:true,
+sortKeys:false
+});
+
+renderOutput(output,"Valid","yaml");
+
+showMessage("JSON converted successfully.","success");
+
+}catch(error){
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage("Invalid JSON.","error");
+
+}
+
+}
+ 
+function handleValidate(){
+
+const input=getInput();
+if(!input) return;
+
+try{
+
+JSON.parse(input);
+
+renderOutput(
+"✔ Valid JSON",
+"Valid",
+"txt"
+);
+
+showMessage("Valid JSON document.","success");
+return;
+
+}catch(e){}
+
+try{
+
+jsyaml.load(input);
+
+renderOutput(
+"✔ Valid YAML",
+"Valid",
+"txt"
+);
+
+showMessage("Valid YAML document.","success");
+
+}catch(error){
+
+renderOutput(
+error.message,
+"Error",
+"txt"
+);
+
+showMessage(
+"Syntax error at line "+(error.mark ? error.mark.line+1 : "?"),
+"error"
+);
+
+}
+
+}
+ 
+async function copyResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to copy.","error");
+return;
+}
+
+try{
+await navigator.clipboard.writeText(result.textContent);
+showMessage("Result copied.","success");
+}catch(error){
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function downloadResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to download.","error");
+return;
+}
+
+const extension=currentType==="json" ? "json" : currentType==="yaml" ? "yaml" : "txt";
+const mime=currentType==="json" ? "application/json" : "text/plain";
+
+const blob=new Blob([result.textContent],{type:mime});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-yaml-json-result."+extension;
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+showMessage("Download started.","success");
+}
+
+function clearTool(){
+inputText.value="";
+result.textContent="";
+outputBox.style.display="none";
+lineCount.textContent="0";
+charCount.textContent="0";
+sizeCount.textContent="0";
+statusCount.textContent="Ready";
+statusCount.style.color="";
+currentType="txt";
+showMessage("");
+}
+
+yamlToJsonBtn.addEventListener("click",handleYamlToJson);
+jsonToYamlBtn.addEventListener("click",handleJsonToYaml);
+validateBtn.addEventListener("click",handleValidate);
+copyBtn.addEventListener("click",copyResult);
+downloadBtn.addEventListener("click",downloadResult);
+clearBtn.addEventListener("click",clearTool);
+</script>
+
+</body>
+</html>
