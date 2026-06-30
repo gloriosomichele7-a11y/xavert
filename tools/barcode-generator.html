@@ -734,9 +734,12 @@ barcodeFormat.addEventListener("change",function(){
 
 updatePlaceholder();
 
-if(barcodeValue.value.trim()){
-generateBarcode();
-}
+barcodeValue.value="";
+
+barcodeSvg.innerHTML="";
+previewBox.style.display="none";
+
+showMessage("");
 
 });
 
