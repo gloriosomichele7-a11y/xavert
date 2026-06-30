@@ -682,9 +682,15 @@ downloadPngBtn.addEventListener("click",downloadPng);
 copySvgBtn.addEventListener("click",copySvg);
 clearBtn.addEventListener("click",clearTool);
 barcodeValue.addEventListener("input",function(){
+
 if(barcodeValue.value.trim()){
 generateBarcode();
+}else{
+barcodeSvg.innerHTML="";
+previewBox.style.display="none";
+showMessage("");
 }
+
 });
 
 barcodeFormat.addEventListener("change",function(){
@@ -719,6 +725,13 @@ event.preventDefault();
 generateBarcode();
 
 }
+
+});
+window.addEventListener("load",function(){
+
+barcodeValue.value="XAVERT-123456";
+
+generateBarcode();
 
 });
 </script>
