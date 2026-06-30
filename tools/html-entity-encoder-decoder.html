@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | HTML Entity Encoder / Decoder</title>
+
+<meta name="description" content="Encode and decode HTML entities online. Convert special characters into HTML entities and decode entities back into readable text directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/html-entity-encoder-decoder.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1100px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+color:#dc2626;
+text-decoration:none;
+font-weight:700;
+font-size:14px;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+label{
+display:block;
+font-size:14px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+textarea{
+width:100%;
+min-height:220px;
+resize:vertical;
+padding:16px;
+font-size:15px;
+line-height:1.7;
+border:1px solid #d1d5db;
+border-radius:14px;
+background:#ffffff;
+margin-bottom:18px;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-bottom:24px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:white;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:white;
+color:#dc2626;
+border:1px solid #dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:white;
+}
+
+.output-box{
+display:none;
+margin-top:18px;
+}
+
+.output-box h2{
+font-size:22px;
+margin-bottom:12px;
+}
+
+.result{
+background:#111827;
+color:#f9fafb;
+border-radius:16px;
+padding:18px;
+font-family:Consolas,monospace;
+font-size:14px;
+line-height:1.7;
+word-break:break-word;
+white-space:pre-wrap;
+min-height:100px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:20px;
+}
+
+.stat{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.message{
+margin-top:16px;
+font-weight:700;
+font-size:14px;
+min-height:20px;
+color:#6b7280;
+}
+
+.info{
+margin-top:36px;
+background:white;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+line-height:1.8;
+margin-bottom:14px;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+padding-left:18px;
+position:relative;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a class="back-link" href="../index.html">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>HTML Entity Encoder / Decoder</h1>
+
+<p>
+Encode special characters into HTML entities or decode HTML entities back into readable text directly in your browser.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<label for="inputText">
+Input
+</label>
+
+<textarea
+id="inputText"
+placeholder="Paste your HTML or text here..."></textarea>
+
+<div class="button-grid">
+
+<button
+id="encodeBtn"
+class="primary">
+Encode
+</button>
+
+<button
+id="decodeBtn"
+class="primary">
+Decode
+</button>
+
+<button
+id="copyBtn"
+class="secondary">
+Copy
+</button>
+
+<button
+id="downloadBtn"
+class="secondary">
+Download
+</button>
+
+<button
+id="clearBtn"
+class="secondary">
+Clear
+</button>
+
+</div>
+
+<div
+class="output-box"
+id="outputBox">
+
+<h2>Result</h2>
+
+<div
+class="result"
+id="result"></div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="charCount">0</strong>
+<span>Characters</span>
+</div>
+
+<div class="stat">
+<strong id="entityCount">0</strong>
+<span>Entities</span>
+</div>
+
+<div class="stat">
+<strong id="lineCount">0</strong>
+<span>Lines</span>
+</div>
+
+<div class="stat">
+<strong id="sizeCount">0</strong>
+<span>Bytes</span>
+</div>
+
+</div>
+
+</div>
+
+<div
+class="message"
+id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About HTML Entities</h2>
+
+<p>
+HTML entities represent reserved or special characters that cannot always be written directly inside HTML documents.
+</p>
+
+<ul>
+
+<li>Encode special characters safely.</li>
+
+<li>Decode HTML entities instantly.</li>
+
+<li>Supports named and numeric entities.</li>
+
+<li>Everything runs locally in your browser.</li>
+
+<li>No uploads or external servers.</li>
+
+</ul>
+
+</section>
+
+</div>
+<script>
+const inputText=document.getElementById("inputText");
+const encodeBtn=document.getElementById("encodeBtn");
+const decodeBtn=document.getElementById("decodeBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const clearBtn=document.getElementById("clearBtn");
+const outputBox=document.getElementById("outputBox");
+const result=document.getElementById("result");
+const message=document.getElementById("message");
+
+const charCount=document.getElementById("charCount");
+const entityCount=document.getElementById("entityCount");
+const lineCount=document.getElementById("lineCount");
+const sizeCount=document.getElementById("sizeCount");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function encodeEntities(text){
+return text
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&#39;")
+.replace(/©/g,"&copy;")
+.replace(/®/g,"&reg;")
+.replace(/™/g,"&trade;")
+.replace(/€/g,"&euro;")
+.replace(/£/g,"&pound;")
+.replace(/¥/g,"&yen;")
+.replace(/¢/g,"&cent;")
+.replace(/§/g,"&sect;")
+.replace(/¶/g,"&para;")
+.replace(/•/g,"&bull;")
+.replace(/–/g,"&ndash;")
+.replace(/—/g,"&mdash;")
+.replace(/…/g,"&hellip;")
+.replace(/×/g,"&times;")
+.replace(/÷/g,"&divide;");
+}
+
+function decodeEntities(text){
+const textarea=document.createElement("textarea");
+textarea.innerHTML=text;
+return textarea.value;
+}
+
+function countEntities(text){
+const matches=text.match(/&[a-zA-Z0-9#]+;/g);
+return matches ? matches.length : 0;
+}
+
+function updateStats(original,output){
+charCount.textContent=output.length;
+entityCount.textContent=countEntities(output);
+lineCount.textContent=output.split(/\r\n|\r|\n/).length;
+sizeCount.textContent=new TextEncoder().encode(output).length;
+}
+
+function renderOutput(text,action){
+result.textContent=text;
+outputBox.style.display="block";
+updateStats(inputText.value,text);
+showMessage(action+" completed.","success");
+}
+
+function encodeText(){
+const text=inputText.value;
+
+if(!text.trim()){
+showMessage("Enter text first.","error");
+return;
+}
+
+renderOutput(encodeEntities(text),"Encoding");
+}
+
+function decodeText(){
+const text=inputText.value;
+
+if(!text.trim()){
+showMessage("Enter text first.","error");
+return;
+}
+
+renderOutput(decodeEntities(text),"Decoding");
+}
+
+async function copyResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to copy.","error");
+return;
+}
+
+try{
+await navigator.clipboard.writeText(result.textContent);
+showMessage("Result copied.","success");
+}catch(error){
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function downloadResult(){
+if(!result.textContent.trim()){
+showMessage("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([result.textContent],{type:"text/plain"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-html-entity-result.txt";
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+showMessage("Download started.","success");
+}
+
+function clearTool(){
+inputText.value="";
+result.textContent="";
+outputBox.style.display="none";
+charCount.textContent="0";
+entityCount.textContent="0";
+lineCount.textContent="0";
+sizeCount.textContent="0";
+showMessage("");
+}
+
+encodeBtn.addEventListener("click",encodeText);
+decodeBtn.addEventListener("click",decodeText);
+copyBtn.addEventListener("click",copyResult);
+downloadBtn.addEventListener("click",downloadResult);
+clearBtn.addEventListener("click",clearTool);
+</script>
+
+</body>
+</html>
