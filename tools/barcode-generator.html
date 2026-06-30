@@ -452,3 +452,276 @@ Barcodes are used for products, inventory, logistics, retail labels, warehouse s
 </section>
 
 </div>
+<script>
+const barcodeValue=document.getElementById("barcodeValue");
+const barcodeFormat=document.getElementById("barcodeFormat");
+const barcodeWidth=document.getElementById("barcodeWidth");
+const barcodeHeight=document.getElementById("barcodeHeight");
+const displayValue=document.getElementById("displayValue");
+
+const generateBtn=document.getElementById("generateBtn");
+const downloadSvgBtn=document.getElementById("downloadSvgBtn");
+const downloadPngBtn=document.getElementById("downloadPngBtn");
+const copySvgBtn=document.getElementById("copySvgBtn");
+const clearBtn=document.getElementById("clearBtn");
+
+const previewBox=document.getElementById("previewBox");
+const barcodeSvg=document.getElementById("barcodeSvg");
+const message=document.getElementById("message");
+
+const formatStat=document.getElementById("formatStat");
+const lengthStat=document.getElementById("lengthStat");
+const widthStat=document.getElementById("widthStat");
+const heightStat=document.getElementById("heightStat");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function validateBarcodeValue(value,format){
+if(!value.trim()){
+return "Enter a barcode value first.";
+}
+
+if(format==="EAN13" && !/^\d{12,13}$/.test(value)){
+return "EAN-13 requires 12 or 13 digits.";
+}
+
+if(format==="EAN8" && !/^\d{7,8}$/.test(value)){
+return "EAN-8 requires 7 or 8 digits.";
+}
+
+if(format==="UPC" && !/^\d{11,12}$/.test(value)){
+return "UPC-A requires 11 or 12 digits.";
+}
+
+if(format==="ITF14" && !/^\d{13,14}$/.test(value)){
+return "ITF-14 requires 13 or 14 digits.";
+}
+
+if(format==="CODE39" && !/^[0-9A-Z\-\.\ \$\/\+\%]+$/.test(value)){
+return "Code 39 supports uppercase letters, numbers, spaces and - . $ / + %";
+}
+
+if(format==="codabar" && !/^[A-Da-d][0-9\-\$:\/\.\+]+[A-Da-d]$/.test(value)){
+return "Codabar must start and end with A, B, C or D.";
+}
+
+return "";
+}
+
+function generateBarcode(){
+const value=barcodeValue.value.trim();
+const format=barcodeFormat.value;
+const width=Number(barcodeWidth.value);
+const height=Number(barcodeHeight.value);
+const showText=displayValue.value==="true";
+
+const validationError=validateBarcodeValue(value,format);
+
+if(validationError){
+showMessage(validationError,"error");
+return;
+}
+
+try{
+barcodeSvg.innerHTML="";
+
+JsBarcode(barcodeSvg,value,{
+format:format,
+width:width,
+height:height,
+displayValue:showText,
+lineColor:"#111827",
+background:"#ffffff",
+margin:12,
+fontSize:16
+});
+
+previewBox.style.display="block";
+
+formatStat.textContent=barcodeFormat.options[barcodeFormat.selectedIndex].text;
+lengthStat.textContent=value.length;
+widthStat.textContent=width;
+heightStat.textContent=height;
+
+showMessage("Barcode generated successfully.","success");
+
+}catch(error){
+showMessage("Could not generate barcode. Check the value and format.","error");
+}
+}
+
+function getSvgContent(){
+if(!barcodeSvg.innerHTML.trim()){
+showMessage("Generate a barcode first.","error");
+return "";
+}
+
+const clone=barcodeSvg.cloneNode(true);
+clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
+
+try{
+const box=barcodeSvg.getBBox();
+
+clone.setAttribute("viewBox",box.x+" "+box.y+" "+box.width+" "+box.height);
+clone.setAttribute("width",box.width);
+clone.setAttribute("height",box.height);
+}catch(error){}
+
+return new XMLSerializer().serializeToString(clone);
+}
+
+function downloadFile(filename,content,type){
+const blob=new Blob([content],{type:type});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download=filename;
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+showMessage("Download started.","success");
+}
+
+function downloadSvg(){
+const svgContent=getSvgContent();
+
+if(!svgContent){
+return;
+}
+
+downloadFile("xavert-barcode.svg",svgContent,"image/svg+xml");
+}
+
+function downloadPng(){
+const svgContent=getSvgContent();
+
+if(!svgContent){
+return;
+}
+
+const svgBlob=new Blob([svgContent],{type:"image/svg+xml;charset=utf-8"});
+const url=URL.createObjectURL(svgBlob);
+const image=new Image();
+
+image.onload=function(){
+const canvas=document.createElement("canvas");
+canvas.width=image.width * 2;
+canvas.height=image.height * 2;
+
+const ctx=canvas.getContext("2d");
+ctx.fillStyle="#ffffff";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+ctx.drawImage(image,0,0,canvas.width,canvas.height);
+
+canvas.toBlob(function(blob){
+const pngUrl=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=pngUrl;
+a.download="xavert-barcode.png";
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(pngUrl);
+URL.revokeObjectURL(url);
+showMessage("PNG download started.","success");
+},"image/png");
+};
+
+image.onerror=function(){
+URL.revokeObjectURL(url);
+showMessage("PNG export failed.","error");
+};
+
+image.src=url;
+}
+
+async function copySvg(){
+const svgContent=getSvgContent();
+
+if(!svgContent){
+return;
+}
+
+try{
+await navigator.clipboard.writeText(svgContent);
+showMessage("SVG copied.","success");
+}catch(error){
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function clearTool(){
+barcodeValue.value="";
+barcodeFormat.value="CODE128";
+barcodeWidth.value="2";
+barcodeHeight.value="90";
+displayValue.value="true";
+
+barcodeSvg.innerHTML="";
+previewBox.style.display="none";
+
+formatStat.textContent="-";
+lengthStat.textContent="0";
+widthStat.textContent="0";
+heightStat.textContent="0";
+
+showMessage("");
+}
+
+generateBtn.addEventListener("click",generateBarcode);
+downloadSvgBtn.addEventListener("click",downloadSvg);
+downloadPngBtn.addEventListener("click",downloadPng);
+copySvgBtn.addEventListener("click",copySvg);
+clearBtn.addEventListener("click",clearTool);
+barcodeValue.addEventListener("input",function(){
+if(barcodeValue.value.trim()){
+generateBarcode();
+}
+});
+
+barcodeFormat.addEventListener("change",function(){
+if(barcodeValue.value.trim()){
+generateBarcode();
+}
+});
+
+barcodeWidth.addEventListener("change",function(){
+if(barcodeValue.value.trim()){
+generateBarcode();
+}
+});
+
+barcodeHeight.addEventListener("change",function(){
+if(barcodeValue.value.trim()){
+generateBarcode();
+}
+});
+
+displayValue.addEventListener("change",function(){
+if(barcodeValue.value.trim()){
+generateBarcode();
+}
+});
+barcodeValue.addEventListener("keydown",function(event){
+
+if(event.key==="Enter"){
+
+event.preventDefault();
+
+generateBarcode();
+
+}
+
+});
+</script>
+
+</body>
+</html>
