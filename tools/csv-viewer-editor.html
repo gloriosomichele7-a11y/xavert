@@ -274,7 +274,21 @@ position:absolute;
 left:0;
 color:#dc2626;
 }
+.delete-row-btn{
+padding:8px;
+margin:4px;
+background:#dc2626;
+color:#fff;
+border:none;
+border-radius:8px;
+cursor:pointer;
+transition:.2s;
+}
 
+.delete-row-btn:hover{
+background:#b91c1c;
+transform:scale(1.05);
+}
 @media(max-width:768px){
 
 .hero h1{
@@ -369,7 +383,7 @@ Load Sample
 </button>
 
 <button id="deleteRowBtn" class="secondary" type="button">
-Delete Last Row
+
 </button>
 
 </div>
@@ -440,7 +454,7 @@ const downloadBtn=document.getElementById("downloadBtn");
 const copyBtn=document.getElementById("copyBtn");
 const clearBtn=document.getElementById("clearBtn");
 const sampleBtn=document.getElementById("sampleBtn");
-const deleteRowBtn=document.getElementById("deleteRowBtn");
+
 
 const tableContainer=document.getElementById("tableContainer");
 const csvTable=document.getElementById("csvTable");
@@ -624,13 +638,7 @@ deleteButton.type="button";
 deleteButton.textContent="🗑";
 deleteButton.title="Delete row";
 
-deleteButton.style.padding="8px";
-deleteButton.style.margin="4px";
-deleteButton.style.background="#dc2626";
-deleteButton.style.color="#fff";
-deleteButton.style.border="none";
-deleteButton.style.borderRadius="8px";
-deleteButton.style.cursor="pointer";
+deleteButton.className="delete-row-btn";
 
 deleteButton.addEventListener("click",function(){
 
@@ -710,16 +718,23 @@ const query=searchInput.value.toLowerCase().trim();
 
 if(!query){
 renderTable(csvData);
+showMessage("");
 return;
 }
 
-const header=csvData[0] ? [csvData[0]] : [];
-const filtered=csvData.slice(1).filter(function(row){
-return row.join(" ").toLowerCase().includes(query);
+document.querySelectorAll("#csvTable tbody tr").forEach(function(row){
+
+const text=row.textContent.toLowerCase();
+
+row.style.display=text.includes(query) ? "" : "none";
+
 });
 
-renderTable(header.concat(filtered));
-showMessage(filtered.length+" row"+(filtered.length!==1 ? "s" : "")+" found.","success");
+const found=Array.from(document.querySelectorAll("#csvTable tbody tr")).filter(function(row){
+return row.style.display!=="none";
+}).length;
+
+showMessage(found+" row"+(found!==1 ? "s" : "")+" found.","success");
 }
 
 function addRow(){
@@ -735,16 +750,6 @@ renderTable(csvData);
 showMessage("Row added.","success");
 }
 
-function deleteLastRow(){
-if(csvData.length<=1){
-showMessage("No data row to delete.","error");
-return;
-}
-
-csvData.pop();
-renderTable(csvData);
-showMessage("Last row deleted.","success");
-}
 
 function downloadCSV(){
 if(!csvData.length){
@@ -822,7 +827,6 @@ reader.readAsText(file);
 
 searchInput.addEventListener("input",filterRows);
 addRowBtn.addEventListener("click",addRow);
-deleteRowBtn.addEventListener("click",deleteLastRow);
 downloadBtn.addEventListener("click",downloadCSV);
 copyBtn.addEventListener("click",copyTable);
 clearBtn.addEventListener("click",clearTool);
@@ -847,7 +851,7 @@ event.preventDefault();
 dropZone.classList.remove("dragover");
 
 const file=event.dataTransfer.files[0];
-
+csvFile.files=event.dataTransfer.files;
 if(!file){
 return;
 }
