@@ -1,0 +1,659 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | SQL Minifier</title>
+
+<meta name="description" content="Minify SQL queries online by removing comments, blank lines and unnecessary spaces directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/sql-minifier.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
+text-decoration:none;
+color:#dc2626;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+.editor-grid{
+display:grid;
+grid-template-columns:1fr 1fr;
+gap:18px;
+}
+
+label{
+display:block;
+font-size:14px;
+font-weight:800;
+margin-bottom:8px;
+}
+
+textarea{
+width:100%;
+min-height:320px;
+padding:16px;
+border:1px solid #d1d5db;
+border-radius:14px;
+font-size:15px;
+line-height:1.6;
+resize:vertical;
+font-family:Consolas,monospace;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:800;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:#fff;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:#fff;
+border:1px solid #dc2626;
+color:#dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:#fff;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+.stat{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:18px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.message{
+margin-top:18px;
+font-size:14px;
+font-weight:700;
+min-height:20px;
+color:#6b7280;
+}
+
+.info{
+margin-top:36px;
+background:#fff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+margin-bottom:14px;
+line-height:1.8;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.editor-grid{
+grid-template-columns:1fr;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back-link">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>SQL Minifier</h1>
+
+<p>
+Remove comments, blank lines and unnecessary spaces from SQL queries directly in your browser.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<div class="editor-grid">
+
+<div>
+
+<label for="inputSql">
+SQL Input
+</label>
+
+<textarea
+id="inputSql"
+placeholder="Example: SELECT * FROM users WHERE status = 'active';"></textarea>
+
+</div>
+
+<div>
+
+<label for="outputSql">
+Minified SQL
+</label>
+
+<textarea
+id="outputSql"
+placeholder="Minified SQL will appear here..."
+readonly></textarea>
+
+</div>
+
+</div>
+
+<div class="button-grid">
+
+<button id="minifyBtn" class="primary" type="button">
+Minify SQL
+</button>
+
+<button id="copyBtn" class="secondary" type="button">
+Copy
+</button>
+
+<button id="downloadBtn" class="secondary" type="button">
+Download
+</button>
+
+<button id="clearBtn" class="secondary" type="button">
+Clear
+</button>
+
+<button id="sampleBtn" class="secondary" type="button">
+Load Sample
+</button>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="inputChars">0</strong>
+<span>Input Chars</span>
+</div>
+
+<div class="stat">
+<strong id="outputChars">0</strong>
+<span>Output Chars</span>
+</div>
+
+<div class="stat">
+<strong id="savedChars">0</strong>
+<span>Characters Saved</span>
+</div>
+
+<div class="stat">
+<strong id="savedPercent">0%</strong>
+<span>Compression</span>
+</div>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About SQL Minifier</h2>
+
+<p>
+SQL Minifier compresses SQL queries by removing comments, extra spaces and blank lines while preserving the query logic.
+</p>
+
+<ul>
+<li>Remove SQL comments.</li>
+<li>Compress whitespace.</li>
+<li>Reduce query size.</li>
+<li>Copy or download the result.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+</div>
+<script>
+const inputSql=document.getElementById("inputSql");
+const outputSql=document.getElementById("outputSql");
+
+const minifyBtn=document.getElementById("minifyBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const clearBtn=document.getElementById("clearBtn");
+const sampleBtn=document.getElementById("sampleBtn");
+
+const inputChars=document.getElementById("inputChars");
+const outputChars=document.getElementById("outputChars");
+const savedChars=document.getElementById("savedChars");
+const savedPercent=document.getElementById("savedPercent");
+const message=document.getElementById("message");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function removeSqlComments(sql){
+let result="";
+let inSingleQuote=false;
+let inDoubleQuote=false;
+let inLineComment=false;
+let inBlockComment=false;
+
+for(let i=0;i<sql.length;i++){
+const char=sql[i];
+const next=sql[i+1];
+
+if(inLineComment){
+if(char==="\n"){
+inLineComment=false;
+result+=" ";
+}
+continue;
+}
+
+if(inBlockComment){
+if(char==="*" && next==="/"){
+inBlockComment=false;
+i++;
+}
+continue;
+}
+
+if(char==="'" && !inDoubleQuote){
+inSingleQuote=!inSingleQuote;
+result+=char;
+continue;
+}
+
+if(char==='"' && !inSingleQuote){
+inDoubleQuote=!inDoubleQuote;
+result+=char;
+continue;
+}
+
+if(!inSingleQuote && !inDoubleQuote && char==="-" && next==="-"){
+inLineComment=true;
+i++;
+continue;
+}
+
+if(!inSingleQuote && !inDoubleQuote && char==="/" && next==="*"){
+inBlockComment=true;
+i++;
+continue;
+}
+
+result+=char;
+}
+
+return result;
+}
+
+function minifySQL(sql){
+
+sql=removeSqlComments(sql);
+
+let result="";
+
+let inSingleQuote=false;
+let inDoubleQuote=false;
+let previousSpace=false;
+
+for(let i=0;i<sql.length;i++){
+
+const char=sql[i];
+
+if(char==="'" && !inDoubleQuote){
+
+inSingleQuote=!inSingleQuote;
+
+result+=char;
+
+previousSpace=false;
+
+continue;
+
+}
+
+if(char==="'" && !inDoubleQuote){
+
+result+=char;
+
+if(inSingleQuote && sql[i+1]==="'"){
+
+result+=sql[i+1];
+
+i++;
+
+continue;
+
+}
+
+inSingleQuote=!inSingleQuote;
+
+previousSpace=false;
+
+continue;
+
+}
+
+}
+
+if(inSingleQuote || inDoubleQuote){
+
+result+=char;
+
+continue;
+
+}
+
+if(/\s/.test(char)){
+
+if(!previousSpace){
+
+result+=" ";
+
+previousSpace=true;
+
+}
+
+continue;
+
+}
+
+previousSpace=false;
+
+result+=char;
+
+}
+
+result=result
+.replace(/\s*,\s*/g,",")
+.replace(/\s*;\s*/g,";")
+.replace(/\s*\(\s*/g,"(")
+.replace(/\s*\)\s*/g,")")
+.replace(/\s*=\s*/g,"=")
+.replace(/\s+</g,"<")
+.replace(/<\s+/g,"<")
+.replace(/\s+>/g,">")
+.replace(/>\s+/g,">")
+.replace(/\s+\+/g,"+")
+.replace(/\+\s+/g,"+")
+.replace(/\s+-/g,"-")
+.replace(/-\s+/g,"-")
+.replace(/\s+\*/g,"*")
+.replace(/\*\s+/g,"*")
+.replace(/\s+\//g,"/")
+.replace(/\/\s+/g,"/")
+.trim();
+
+return result;
+
+}
+
+function updateStats(){
+const input=inputSql.value;
+const output=outputSql.value;
+const saved=Math.max(input.length-output.length,0);
+const percent=input.length ? Math.round((saved/input.length)*100) : 0;
+
+inputChars.textContent=input.length;
+outputChars.textContent=output.length;
+savedChars.textContent=saved;
+savedPercent.textContent=percent+"%";
+}
+
+function handleMinify(){
+const sql=inputSql.value;
+
+if(!sql.trim()){
+showMessage("Enter SQL first.","error");
+return;
+}
+
+const minified=minifySQL(sql);
+
+outputSql.value=minified;
+updateStats();
+showMessage("SQL minified successfully.","success");
+}
+
+async function copyOutput(){
+if(!outputSql.value.trim()){
+showMessage("Nothing to copy.","error");
+return;
+}
+
+try{
+await navigator.clipboard.writeText(outputSql.value);
+showMessage("Copied.","success");
+}catch{
+showMessage("Copy failed. Select and copy manually.","error");
+}
+}
+
+function downloadOutput(){
+if(!outputSql.value.trim()){
+showMessage("Nothing to download.","error");
+return;
+}
+
+const blob=new Blob([outputSql.value],{type:"text/plain"});
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-minified.sql";
+
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+
+showMessage("Download started.","success");
+}
+
+function clearTool(){
+inputSql.value="";
+outputSql.value="";
+updateStats();
+showMessage("");
+}
+
+function loadSample(){
+inputSql.value=`-- Get active users
+SELECT 
+    id,
+    name,
+    email
+FROM 
+    users
+WHERE 
+    status = 'active'
+    AND deleted_at IS NULL
+ORDER BY 
+    created_at DESC;
+
+/* Count orders */
+SELECT 
+    COUNT(*) 
+FROM 
+    orders 
+WHERE 
+    total >= 100;`;
+
+outputSql.value="";
+updateStats();
+showMessage("Sample loaded.","success");
+}
+
+minifyBtn.addEventListener("click",handleMinify);
+copyBtn.addEventListener("click",copyOutput);
+downloadBtn.addEventListener("click",downloadOutput);
+clearBtn.addEventListener("click",clearTool);
+sampleBtn.addEventListener("click",loadSample);
+
+inputSql.addEventListener("input",updateStats);
+
+updateStats();
+</script>
+
+</body>
+</html>
