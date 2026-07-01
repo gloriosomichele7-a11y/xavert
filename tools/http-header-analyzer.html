@@ -292,7 +292,7 @@ placeholder="Example:
 HTTP/1.1 200 OK
 Server: nginx
 Content-Type: text/html
-Cache-Control: max-age=3600"
+Cache-Control: max-age=3600"></textarea>
 
 <div class="button-grid">
 
@@ -494,16 +494,17 @@ const descriptions={
 
 "x-frame-options":"Protects against clickjacking attacks.",
 
-"referrer-policy":"Controls which referrer information is sent."
+"referrer-policy":"Controls which referrer information is sent.",
 
-};
 "permissions-policy":"Controls access to browser features such as camera, microphone and geolocation.",
 
 "cross-origin-opener-policy":"Protects against cross-origin attacks by isolating browsing contexts.",
 
 "cross-origin-embedder-policy":"Controls which cross-origin resources can be embedded.",
 
-"cross-origin-resource-policy":"Restricts which websites can load this resource.",
+"cross-origin-resource-policy":"Restricts which websites can load this resource."
+
+};
 missing.forEach(function(item){
 
 report.push("✗ "+item);
