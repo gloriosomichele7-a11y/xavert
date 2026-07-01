@@ -421,11 +421,68 @@ function xmlNodeToObject(node){
 
 const obj={};
 
-if(node.children.length===0){
-return node.textContent;
+if(node.attributes && node.attributes.length){
+
+obj["@attributes"]={};
+
+Array.from(node.attributes).forEach(function(attribute){
+
+obj["@attributes"][attribute.name]=attribute.value;
+
+});
+
 }
 
-Array.from(node.children).forEach(function(child){
+const comments=[];
+
+Array.from(node.childNodes).forEach(function(child){
+
+if(child.nodeType===Node.COMMENT_NODE){
+
+const comment=child.nodeValue.trim();
+
+if(comment!==""){
+comments.push(comment);
+}
+
+}
+
+});
+
+const children=Array.from(node.children);
+
+const textContent=Array.from(node.childNodes)
+.filter(function(child){
+return child.nodeType===Node.TEXT_NODE || child.nodeType===Node.CDATA_SECTION_NODE;
+})
+.map(function(child){
+return child.nodeValue;
+})
+.join("")
+.trim();
+
+if(comments.length){
+
+obj["@comments"]=comments;
+
+}
+if(children.length===0){
+
+if(Object.keys(obj).length){
+
+if(textContent!==""){
+obj["#text"]=textContent;
+}
+
+return obj;
+
+}
+
+return textContent;
+
+}
+
+children.forEach(function(child){
 
 const value=xmlNodeToObject(child);
 
@@ -488,6 +545,17 @@ statusText.textContent="Error";
 
 }
 
+function escapeXml(value){
+
+return String(value)
+.replace(/&/g,"&amp;")
+.replace(/</g,"&lt;")
+.replace(/>/g,"&gt;")
+.replace(/"/g,"&quot;")
+.replace(/'/g,"&apos;");
+
+}
+  
 function objectToXml(name,value){
 
 if(Array.isArray(value)){
@@ -500,11 +568,35 @@ return objectToXml(name,item);
 
 if(typeof value==="object" && value!==null){
 
-let xml="<"+name+">";
+let attributes="";
+
+if(value["@attributes"]){
+
+Object.keys(value["@attributes"]).forEach(function(attr){
+
+attributes+=" "+attr+"=\""+escapeXml(value["@attributes"][attr])+"\"";
+
+});
+
+}
+
+let xml="<"+name+attributes+">";
 
 Object.keys(value).forEach(function(key){
 
+if(key==="@attributes"){
+return;
+}
+
+if(key==="#text"){
+
+xml+=escapeXml(value[key]);
+
+}else{
+
 xml+=objectToXml(key,value[key]);
+
+}
 
 });
 
@@ -514,7 +606,7 @@ return xml;
 
 }
 
-return "<"+name+">"+String(value)+"</"+name+">";
+return "<"+name+">"+escapeXml(String(value))+"</"+name+">";
 
 }
 
