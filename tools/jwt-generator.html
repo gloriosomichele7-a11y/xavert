@@ -423,18 +423,48 @@ Clear
 <div class="token-parts">
 
 <div class="part">
+
 <strong>Header</strong>
+
 <span id="headerPart">-</span>
+
+<button
+id="copyHeaderBtn"
+class="secondary"
+type="button">
+Copy Header
+</button>
+
 </div>
 
 <div class="part">
+
 <strong>Payload</strong>
+
 <span id="payloadPart">-</span>
+
+<button
+id="copyPayloadBtn"
+class="secondary"
+type="button">
+Copy Payload
+</button>
+
 </div>
 
 <div class="part">
+
 <strong>Signature</strong>
+
 <span id="signaturePart">-</span>
+
+<button
+id="copySignatureBtn"
+class="secondary"
+type="button">
+Copy Signature
+</button>
+
 </div>
 
 </div>
@@ -506,6 +536,10 @@ const headerPart=document.getElementById("headerPart");
 const payloadPart=document.getElementById("payloadPart");
 const signaturePart=document.getElementById("signaturePart");
 
+const copyHeaderBtn=document.getElementById("copyHeaderBtn");
+const copyPayloadBtn=document.getElementById("copyPayloadBtn");
+const copySignatureBtn=document.getElementById("copySignatureBtn");
+
 const tokenLength=document.getElementById("tokenLength");
 const headerSize=document.getElementById("headerSize");
 const payloadSize=document.getElementById("payloadSize");
@@ -550,9 +584,22 @@ jwtPayload.value.length+" characters";
 
 function updateGenerateButton(){
 
+let headerValid=false;
+let payloadValid=false;
+
+try{
+JSON.parse(jwtHeader.value);
+headerValid=true;
+}catch{}
+
+try{
+JSON.parse(jwtPayload.value);
+payloadValid=true;
+}catch{}
+
 const enabled =
-jwtHeader.value.trim()!=="" &&
-jwtPayload.value.trim()!=="" &&
+headerValid &&
+payloadValid &&
 jwtSecret.value.trim()!=="";
 
 generateBtn.disabled=!enabled;
@@ -723,6 +770,30 @@ showMessage("Token copied.","success");
 
 }
 
+async function copyPart(element,name){
+
+if(element.textContent==="-" || element.textContent===""){
+
+showMessage("Nothing to copy.","error");
+
+return;
+
+}
+
+try{
+
+await navigator.clipboard.writeText(element.textContent);
+
+showMessage(name+" copied.","success");
+
+}catch{
+
+showMessage("Copy failed.","error");
+
+}
+
+}
+  
 function downloadToken(){
 
 if(jwtOutput.textContent===""){
@@ -771,6 +842,12 @@ algorithmStat.textContent="HS256";
 
 outputBox.style.display="none";
 
+jwtHeader.classList.remove("valid-json","invalid-json");
+jwtPayload.classList.remove("valid-json","invalid-json");
+
+updateCounters();
+updateGenerateButton();
+
 showMessage("");
 
 }
@@ -780,6 +857,17 @@ copyBtn.addEventListener("click",copyToken);
 downloadBtn.addEventListener("click",downloadToken);
 formatBtn.addEventListener("click",formatJSON);
 clearBtn.addEventListener("click",clearTool);
+copyHeaderBtn.addEventListener("click",function(){
+copyPart(headerPart,"Header");
+});
+
+copyPayloadBtn.addEventListener("click",function(){
+copyPart(payloadPart,"Payload");
+});
+
+copySignatureBtn.addEventListener("click",function(){
+copyPart(signaturePart,"Signature");
+});
 jwtHeader.addEventListener("input",function(){
 
 validateJSONField(jwtHeader);
