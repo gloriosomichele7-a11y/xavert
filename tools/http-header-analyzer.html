@@ -343,7 +343,11 @@ Clear
 <strong id="cacheStatus">-</strong>
 <span>Cache</span>
 </div>
-
+  
+<div class="stat">
+<strong id="securityRating">-</strong>
+<span>Rating</span>
+</div>
 </div>
 
 <div
@@ -392,7 +396,7 @@ const headerCount=document.getElementById("headerCount");
 const securityScore=document.getElementById("securityScore");
 const missingCount=document.getElementById("missingCount");
 const cacheStatus=document.getElementById("cacheStatus");
-
+const securityRating=document.getElementById("securityRating");
 const message=document.getElementById("message");
 
 function showMessage(text,type){
@@ -558,6 +562,7 @@ report.push("");
 report.push("Security Rating");
 report.push("--------------------");
 report.push(rating);
+securityRating.textContent=rating;
 missingCount.textContent=missing.length;
 
 reportOutput.textContent=report.join("\n");
@@ -628,7 +633,7 @@ headerCount.textContent="0";
 securityScore.textContent="0%";
 missingCount.textContent="0";
 cacheStatus.textContent="-";
-
+securityRating.textContent="-";
 showMessage("");
 
 }
