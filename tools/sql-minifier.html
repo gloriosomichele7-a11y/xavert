@@ -295,7 +295,13 @@ readonly></textarea>
 </div>
 
 </div>
-
+<div style="margin-top:18px;">
+<label for="compressionMode">Compression Mode</label>
+<select id="compressionMode" style="width:100%;padding:14px 16px;border:1px solid #d1d5db;border-radius:14px;font-size:15px;">
+<option value="safe" selected>Safe Minify</option>
+<option value="max">Maximum Compression</option>
+</select>
+</div>
 <div class="button-grid">
 
 <button id="minifyBtn" class="primary" type="button">
@@ -370,7 +376,7 @@ SQL Minifier compresses SQL queries by removing comments, extra spaces and blank
 <script>
 const inputSql=document.getElementById("inputSql");
 const outputSql=document.getElementById("outputSql");
-
+const compressionMode=document.getElementById("compressionMode");
 const minifyBtn=document.getElementById("minifyBtn");
 const copyBtn=document.getElementById("copyBtn");
 const downloadBtn=document.getElementById("downloadBtn");
@@ -505,8 +511,7 @@ result+=char;
 }
 
 result=result
-.replace(/\s*,\s*/g,",")
-.replace(/\s*;\s*/g,";")
+.replace(/\s*,\s*/g,compressionMode.value==="safe" ? ", " : ",")
 .replace(/\s*\(\s*/g,"(")
 .replace(/\s*\)\s*/g,")")
 .replace(/\s*=\s*/g,"=")
@@ -645,7 +650,15 @@ showMessage("");
 }
 
 });
+compressionMode.addEventListener("change",function(){
 
+if(inputSql.value.trim()){
+
+handleMinify(false);
+
+}
+
+});
 updateStats();
 </script>
 
