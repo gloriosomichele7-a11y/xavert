@@ -249,7 +249,14 @@ font-size:12px;
 font-weight:700;
 color:#6b7280;
 }
-
+  
+.field-counter{
+margin-top:8px;
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+  
 .message{
 margin-top:18px;
 font-size:14px;
@@ -355,6 +362,7 @@ Create HS256 JSON Web Tokens with custom headers, payloads and secret keys direc
 <textarea
 id="jwtHeader"
 placeholder='Example: {"alg":"HS256","typ":"JWT"}'></textarea>
+<div class="field-counter" id="headerCounter">0 characters</div>
 </div>
 
 <div>
@@ -669,7 +677,10 @@ jwtHeader.value=JSON.stringify(JSON.parse(jwtHeader.value),null,2);
 if(jwtPayload.value.trim()!==""){
 jwtPayload.value=JSON.stringify(JSON.parse(jwtPayload.value),null,2);
 }
+updateCounters();
 
+validateJSONField(jwtHeader);
+validateJSONField(jwtPayload);
 showMessage("JSON formatted.","success");
 
 }catch{
@@ -766,6 +777,17 @@ updateCounters();
 
 });
 updateCounters();
+jwtSecret.addEventListener("keydown",function(event){
+
+if(event.key==="Enter"){
+
+event.preventDefault();
+
+generateJWT();
+
+}
+
+});
 </script>
 
 </body>
