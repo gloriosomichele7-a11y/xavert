@@ -450,7 +450,6 @@ function minifySQL(sql){
 sql=removeSqlComments(sql);
 
 let result="";
-
 let inSingleQuote=false;
 let inDoubleQuote=false;
 let previousSpace=false;
@@ -464,41 +463,36 @@ if(char==="'" && !inDoubleQuote){
 result+=char;
 
 if(inSingleQuote && sql[i+1]==="'"){
-
 result+=sql[i+1];
-
 i++;
-
 continue;
-
 }
 
 inSingleQuote=!inSingleQuote;
-
 previousSpace=false;
-
 continue;
 
 }
+
+if(char==='"' && !inSingleQuote){
+
+result+=char;
+inDoubleQuote=!inDoubleQuote;
+previousSpace=false;
+continue;
 
 }
 
 if(inSingleQuote || inDoubleQuote){
-
 result+=char;
-
 continue;
-
 }
 
 if(/\s/.test(char)){
 
 if(!previousSpace){
-
 result+=" ";
-
 previousSpace=true;
-
 }
 
 continue;
@@ -506,7 +500,6 @@ continue;
 }
 
 previousSpace=false;
-
 result+=char;
 
 }
@@ -517,18 +510,6 @@ result=result
 .replace(/\s*\(\s*/g,"(")
 .replace(/\s*\)\s*/g,")")
 .replace(/\s*=\s*/g,"=")
-.replace(/\s+</g,"<")
-.replace(/<\s+/g,"<")
-.replace(/\s+>/g,">")
-.replace(/>\s+/g,">")
-.replace(/\s+\+/g,"+")
-.replace(/\+\s+/g,"+")
-.replace(/\s+-/g,"-")
-.replace(/-\s+/g,"-")
-.replace(/\s+\*/g,"*")
-.replace(/\*\s+/g,"*")
-.replace(/\s+\//g,"/")
-.replace(/\/\s+/g,"/")
 .replace(/\s*>=\s*/g,">=")
 .replace(/\s*<=\s*/g,"<=")
 .replace(/\s*<>\s*/g,"<>")
@@ -540,7 +521,6 @@ result=result
 return result;
 
 }
-
 function updateStats(){
 const input=inputSql.value;
 const output=outputSql.value;
