@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | User-Agent Parser</title>
+
+<meta name="description" content="Parse and analyze User-Agent strings online. Detect browser, operating system, rendering engine, device type and bots directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/user-agent-parser.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
+text-decoration:none;
+color:#dc2626;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+label{
+display:block;
+font-size:14px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+textarea{
+width:100%;
+min-height:180px;
+padding:16px;
+border:1px solid #d1d5db;
+border-radius:14px;
+font-size:14px;
+font-family:Consolas,monospace;
+line-height:1.6;
+resize:vertical;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:#fff;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:#fff;
+border:1px solid #dc2626;
+color:#dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:#fff;
+}
+
+.result-box{
+display:none;
+margin-top:24px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:22px;
+}
+
+.result-box h2{
+font-size:22px;
+margin-bottom:18px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:18px;
+}
+
+.stat{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:20px;
+margin-bottom:4px;
+word-break:break-word;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.report{
+margin-top:20px;
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:18px;
+font-size:14px;
+line-height:1.8;
+white-space:pre-wrap;
+font-family:Consolas,monospace;
+}
+
+.message{
+margin-top:18px;
+font-size:14px;
+font-weight:700;
+min-height:20px;
+color:#6b7280;
+}
+
+.info{
+margin-top:36px;
+background:#fff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+margin-bottom:14px;
+line-height:1.8;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back-link">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>User-Agent Parser</h1>
+
+<p>
+Analyze User-Agent strings to detect browser, operating system, rendering engine, device type and bots directly in your browser.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<label for="userAgentInput">
+User-Agent String
+</label>
+
+<textarea
+id="userAgentInput"
+placeholder="Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"></textarea>
+
+<div class="button-grid">
+
+<button id="parseBtn" class="primary" type="button">
+Parse User-Agent
+</button>
+
+<button id="copyBtn" class="secondary" type="button">
+Copy Report
+</button>
+
+<button id="downloadBtn" class="secondary" type="button">
+Download
+</button>
+
+<button id="sampleBtn" class="secondary" type="button">
+Load Sample
+</button>
+
+<button id="clearBtn" class="secondary" type="button">
+Clear
+</button>
+
+</div>
+
+<div class="result-box" id="resultBox">
+
+<h2>Parsed Result</h2>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="browserStat">-</strong>
+<span>Browser</span>
+</div>
+
+<div class="stat">
+<strong id="osStat">-</strong>
+<span>Operating System</span>
+</div>
+
+<div class="stat">
+<strong id="deviceStat">-</strong>
+<span>Device Type</span>
+</div>
+
+<div class="stat">
+<strong id="botStat">No</strong>
+<span>Bot / Crawler</span>
+</div>
+
+</div>
+
+<div class="report" id="reportOutput"></div>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About User-Agent Parser</h2>
+
+<p>
+A User-Agent string helps identify the browser, operating system, device type and sometimes automated crawlers or bots.
+</p>
+
+<ul>
+<li>Detect common browsers and versions.</li>
+<li>Identify operating systems and devices.</li>
+<li>Detect bots and crawlers.</li>
+<li>Copy or download the analysis report.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+</div>
+<script>
+const userAgentInput=document.getElementById("userAgentInput");
+
+const parseBtn=document.getElementById("parseBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const sampleBtn=document.getElementById("sampleBtn");
+const clearBtn=document.getElementById("clearBtn");
+
+const resultBox=document.getElementById("resultBox");
+const reportOutput=document.getElementById("reportOutput");
+
+const browserStat=document.getElementById("browserStat");
+const osStat=document.getElementById("osStat");
+const deviceStat=document.getElementById("deviceStat");
+const botStat=document.getElementById("botStat");
+
+const message=document.getElementById("message");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function getMatch(text,regex){
+const match=text.match(regex);
+return match ? match[1] : "";
+}
+
+function detectBrowser(ua){
+
+if(/Edg\/([\d.]+)/.test(ua)){
+return {name:"Microsoft Edge",version:getMatch(ua,/Edg\/([\d.]+)/),engine:"Blink"};
+}
+
+if(/OPR\/([\d.]+)/.test(ua)){
+return {name:"Opera",version:getMatch(ua,/OPR\/([\d.]+)/),engine:"Blink"};
+}
+
+if(/Chrome\/([\d.]+)/.test(ua) && !/Chromium/.test(ua)){
+return {name:"Google Chrome",version:getMatch(ua,/Chrome\/([\d.]+)/),engine:"Blink"};
+}
+
+if(/Firefox\/([\d.]+)/.test(ua)){
+return {name:"Mozilla Firefox",version:getMatch(ua,/Firefox\/([\d.]+)/),engine:"Gecko"};
+}
+
+if(/Version\/([\d.]+).*Safari/.test(ua) && !/Chrome/.test(ua)){
+return {name:"Safari",version:getMatch(ua,/Version\/([\d.]+)/),engine:"WebKit"};
+}
+
+if(/Safari\/([\d.]+)/.test(ua)){
+return {name:"Safari",version:getMatch(ua,/Safari\/([\d.]+)/),engine:"WebKit"};
+}
+
+return {name:"Unknown",version:"Unknown",engine:"Unknown"};
+
+}
+
+function detectOS(ua){
+
+if(/Windows NT 10\.0/.test(ua)) return "Windows 10 / 11";
+if(/Windows NT 6\.3/.test(ua)) return "Windows 8.1";
+if(/Windows NT 6\.2/.test(ua)) return "Windows 8";
+if(/Windows NT 6\.1/.test(ua)) return "Windows 7";
+
+if(/Android ([\d.]+)/.test(ua)){
+return "Android "+getMatch(ua,/Android ([\d.]+)/);
+}
+
+if(/iPhone OS ([\d_]+)/.test(ua)){
+return "iOS "+getMatch(ua,/iPhone OS ([\d_]+)/).replace(/_/g,".");
+}
+
+if(/CPU OS ([\d_]+)/.test(ua)){
+return "iPadOS "+getMatch(ua,/CPU OS ([\d_]+)/).replace(/_/g,".");
+}
+
+if(/Mac OS X ([\d_]+)/.test(ua)){
+return "macOS "+getMatch(ua,/Mac OS X ([\d_]+)/).replace(/_/g,".");
+}
+
+if(/Linux/.test(ua)) return "Linux";
+
+return "Unknown";
+
+}
+
+function detectDevice(ua){
+
+if(/bot|crawler|spider|slurp|bingpreview/i.test(ua)){
+return "Bot";
+}
+
+if(/iPad|Tablet/i.test(ua)){
+return "Tablet";
+}
+
+if(/Mobi|iPhone|Android/i.test(ua)){
+return "Mobile";
+}
+
+return "Desktop";
+
+}
+
+function detectBot(ua){
+
+const bots=[
+"Googlebot",
+"Bingbot",
+"DuckDuckBot",
+"YandexBot",
+"Baiduspider",
+"Slurp",
+"facebookexternalhit",
+"Twitterbot",
+"LinkedInBot",
+"Applebot"
+];
+
+const found=bots.find(function(bot){
+return ua.toLowerCase().includes(bot.toLowerCase());
+});
+
+return found || "";
+
+}
+
+function detectArchitecture(ua){
+
+if(/Win64|x64|x86_64|amd64/i.test(ua)){
+return "64-bit";
+}
+
+if(/WOW64/i.test(ua)){
+return "32-bit app on 64-bit Windows";
+}
+
+if(/arm|aarch64/i.test(ua)){
+return "ARM";
+}
+
+return "Unknown";
+
+}
+
+function parseUserAgent(){
+
+const ua=userAgentInput.value.trim();
+
+if(!ua){
+
+showMessage("Paste a User-Agent string first.","error");
+return;
+
+}
+
+const browser=detectBrowser(ua);
+const os=detectOS(ua);
+const device=detectDevice(ua);
+const bot=detectBot(ua);
+const architecture=detectArchitecture(ua);
+
+browserStat.textContent=browser.name;
+osStat.textContent=os;
+deviceStat.textContent=device;
+botStat.textContent=bot ? "Yes" : "No";
+
+const report=[];
+
+report.push("USER-AGENT ANALYSIS");
+report.push("");
+report.push("Browser");
+report.push("--------------------");
+report.push("Name: "+browser.name);
+report.push("Version: "+browser.version);
+report.push("Rendering Engine: "+browser.engine);
+report.push("");
+
+report.push("Operating System");
+report.push("--------------------");
+report.push(os);
+report.push("");
+
+report.push("Device");
+report.push("--------------------");
+report.push("Type: "+device);
+report.push("Architecture: "+architecture);
+report.push("");
+
+report.push("Bot / Crawler");
+report.push("--------------------");
+report.push(bot ? "Detected: "+bot : "No known bot detected");
+report.push("");
+
+report.push("Original User-Agent");
+report.push("--------------------");
+report.push(ua);
+
+reportOutput.textContent=report.join("\n");
+resultBox.style.display="block";
+
+showMessage("User-Agent parsed successfully.","success");
+
+}
+
+async function copyReport(){
+
+if(!reportOutput.textContent){
+
+showMessage("Nothing to copy.","error");
+return;
+
+}
+
+try{
+await navigator.clipboard.writeText(reportOutput.textContent);
+showMessage("Report copied.","success");
+}catch{
+showMessage("Copy failed. Select and copy manually.","error");
+}
+
+}
+
+function downloadReport(){
+
+if(!reportOutput.textContent){
+
+showMessage("Nothing to download.","error");
+return;
+
+}
+
+const blob=new Blob(
+[reportOutput.textContent],
+{type:"text/plain"}
+);
+
+const url=URL.createObjectURL(blob);
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-user-agent-report.txt";
+
+document.body.appendChild(a);
+a.click();
+a.remove();
+
+URL.revokeObjectURL(url);
+
+showMessage("Download started.","success");
+
+}
+
+function clearTool(){
+
+userAgentInput.value="";
+reportOutput.textContent="";
+resultBox.style.display="none";
+
+browserStat.textContent="-";
+osStat.textContent="-";
+deviceStat.textContent="-";
+botStat.textContent="No";
+
+showMessage("");
+
+}
+
+function loadSample(){
+
+userAgentInput.value="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36";
+
+parseUserAgent();
+
+}
+
+parseBtn.addEventListener("click",parseUserAgent);
+copyBtn.addEventListener("click",copyReport);
+downloadBtn.addEventListener("click",downloadReport);
+clearBtn.addEventListener("click",clearTool);
+sampleBtn.addEventListener("click",loadSample);
+
+userAgentInput.addEventListener("input",function(){
+
+if(userAgentInput.value.trim()){
+parseUserAgent();
+}else{
+clearTool();
+}
+
+});
+
+</script>
+
+</body>
+</html>
