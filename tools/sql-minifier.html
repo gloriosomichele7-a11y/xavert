@@ -461,18 +461,6 @@ const char=sql[i];
 
 if(char==="'" && !inDoubleQuote){
 
-inSingleQuote=!inSingleQuote;
-
-result+=char;
-
-previousSpace=false;
-
-continue;
-
-}
-
-if(char==="'" && !inDoubleQuote){
-
 result+=char;
 
 if(inSingleQuote && sql[i+1]==="'"){
@@ -565,7 +553,7 @@ savedChars.textContent=saved;
 savedPercent.textContent=percent+"%";
 }
 
-function handleMinify(){
+function handleMinify(showSuccess=true){
 const sql=inputSql.value;
 
 if(!sql.trim()){
@@ -664,7 +652,7 @@ updateStats();
 
 if(inputSql.value.trim()){
 
-handleMinify();
+handleMinify(false);
 
 }else{
 
