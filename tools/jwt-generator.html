@@ -159,6 +159,13 @@ background:#b91c1c;
 transform:translateY(-2px);
 }
 
+button:disabled{
+opacity:.5;
+cursor:not-allowed;
+transform:none !important;
+box-shadow:none !important;
+}
+  
 .secondary{
 background:#ffffff;
 border:1px solid #dc2626;
@@ -540,6 +547,18 @@ payloadCounter.textContent=
 jwtPayload.value.length+" characters";
 
 }
+
+function updateGenerateButton(){
+
+const enabled =
+jwtHeader.value.trim()!=="" &&
+jwtPayload.value.trim()!=="" &&
+jwtSecret.value.trim()!=="";
+
+generateBtn.disabled=!enabled;
+
+}
+  
 function base64UrlEncode(text){
 const bytes=new TextEncoder().encode(text);
 
@@ -767,6 +786,8 @@ validateJSONField(jwtHeader);
 
 updateCounters();
 
+updateGenerateButton();
+
 });
 
 jwtPayload.addEventListener("input",function(){
@@ -775,8 +796,14 @@ validateJSONField(jwtPayload);
 
 updateCounters();
 
+updateGenerateButton();
+
 });
-updateCounters();
+jwtSecret.addEventListener("input",function(){
+
+updateGenerateButton();
+
+});
 jwtSecret.addEventListener("keydown",function(event){
 
 if(event.key==="Enter"){
@@ -788,6 +815,9 @@ generateJWT();
 }
 
 });
+updateCounters();
+
+updateGenerateButton();
 </script>
 
 </body>
