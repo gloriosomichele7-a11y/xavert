@@ -541,6 +541,12 @@ result=result
 .replace(/\*\s+/g,"*")
 .replace(/\s+\//g,"/")
 .replace(/\/\s+/g,"/")
+.replace(/\s*>=\s*/g,">=")
+.replace(/\s*<=\s*/g,"<=")
+.replace(/\s*<>\s*/g,"<>")
+.replace(/\s*!=\s*/g,"!=")
+.replace(/\s*:=\s*/g,":=")
+.replace(/\s*\|\|\s*/g,"||")
 .trim();
 
 return result;
@@ -571,7 +577,9 @@ const minified=minifySQL(sql);
 
 outputSql.value=minified;
 updateStats();
+if(showSuccess){
 showMessage("SQL minified successfully.","success");
+}
 }
 
 async function copyOutput(){
@@ -650,7 +658,25 @@ downloadBtn.addEventListener("click",downloadOutput);
 clearBtn.addEventListener("click",clearTool);
 sampleBtn.addEventListener("click",loadSample);
 
-inputSql.addEventListener("input",updateStats);
+inputSql.addEventListener("input",function(){
+
+updateStats();
+
+if(inputSql.value.trim()){
+
+handleMinify();
+
+}else{
+
+outputSql.value="";
+
+updateStats();
+
+showMessage("");
+
+}
+
+});
 
 updateStats();
 </script>
