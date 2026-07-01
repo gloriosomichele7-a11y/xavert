@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>XAVERT | HTTP Header Analyzer</title>
+
+<meta name="description" content="Analyze HTTP request and response headers online. Check security headers, caching, server information and best practices directly in your browser.">
+
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<link rel="canonical" href="https://xavert.com/tools/http-header-analyzer.html">
+<link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+background:#f7f8fb;
+color:#111827;
+}
+
+.container{
+max-width:1200px;
+margin:auto;
+padding:36px 20px 60px;
+}
+
+.back-link{
+display:inline-block;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
+text-decoration:none;
+color:#dc2626;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
+text-align:center;
+margin-bottom:30px;
+}
+
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+margin-bottom:12px;
+}
+
+.hero p{
+max-width:760px;
+margin:auto;
+font-size:17px;
+line-height:1.7;
+color:#4b5563;
+}
+
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.05);
+}
+
+label{
+display:block;
+font-size:14px;
+font-weight:700;
+margin-bottom:8px;
+}
+
+textarea{
+width:100%;
+min-height:320px;
+padding:16px;
+border:1px solid #d1d5db;
+border-radius:14px;
+font-size:14px;
+font-family:Consolas,monospace;
+line-height:1.6;
+resize:vertical;
+}
+
+textarea:focus{
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+}
+
+.button-grid{
+display:grid;
+grid-template-columns:repeat(5,1fr);
+gap:12px;
+margin-top:22px;
+}
+
+button{
+padding:14px;
+border:none;
+border-radius:12px;
+font-size:14px;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+}
+
+.primary{
+background:#dc2626;
+color:#fff;
+}
+
+.primary:hover{
+background:#b91c1c;
+transform:translateY(-2px);
+}
+
+.secondary{
+background:#fff;
+border:1px solid #dc2626;
+color:#dc2626;
+}
+
+.secondary:hover{
+background:#dc2626;
+color:#fff;
+}
+
+.result-box{
+display:none;
+margin-top:24px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:22px;
+}
+
+.result-box h2{
+font-size:22px;
+margin-bottom:18px;
+}
+
+.stats{
+display:grid;
+grid-template-columns:repeat(4,1fr);
+gap:12px;
+margin-top:18px;
+}
+
+.stat{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:14px;
+}
+
+.stat strong{
+display:block;
+font-size:20px;
+margin-bottom:4px;
+}
+
+.stat span{
+font-size:12px;
+font-weight:700;
+color:#6b7280;
+}
+
+.report{
+margin-top:20px;
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:14px;
+padding:18px;
+font-size:14px;
+line-height:1.8;
+white-space:pre-wrap;
+font-family:Consolas,monospace;
+}
+
+.message{
+margin-top:18px;
+font-size:14px;
+font-weight:700;
+min-height:20px;
+}
+
+.info{
+margin-top:36px;
+background:#fff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+margin-bottom:14px;
+line-height:1.8;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:32px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.stats{
+grid-template-columns:1fr 1fr;
+}
+
+.tool-card,
+.info{
+padding:20px;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<a href="../index.html" class="back-link">
+← Back to XAVERT
+</a>
+
+<section class="hero">
+
+<h1>HTTP Header Analyzer</h1>
+
+<p>
+Analyze HTTP request and response headers to identify security issues, caching policies and server information directly in your browser.
+</p>
+
+</section>
+
+<section class="tool-card">
+
+<label for="headerInput">
+HTTP Headers
+</label>
+
+<textarea
+id="headerInput"
+placeholder="Example:
+HTTP/1.1 200 OK
+Server: nginx
+Content-Type: text/html
+Cache-Control: max-age=3600"
+
+<div class="button-grid">
+
+<button id="analyzeBtn" class="primary" type="button">
+Analyze Headers
+</button>
+
+<button id="copyBtn" class="secondary" type="button">
+Copy Report
+</button>
+
+<button id="downloadBtn" class="secondary" type="button">
+Download
+</button>
+
+<button id="sampleBtn" class="secondary" type="button">
+Load Sample
+</button>
+
+<button id="clearBtn" class="secondary" type="button">
+Clear
+</button>
+
+</div>
+
+<div class="result-box" id="resultBox">
+
+<h2>Analysis Report</h2>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="headerCount">0</strong>
+<span>Headers</span>
+</div>
+
+<div class="stat">
+<strong id="securityScore">0%</strong>
+<span>Security Score</span>
+</div>
+
+<div class="stat">
+<strong id="missingCount">0</strong>
+<span>Missing Security Headers</span>
+</div>
+
+<div class="stat">
+<strong id="cacheStatus">-</strong>
+<span>Cache</span>
+</div>
+
+</div>
+
+<div
+class="report"
+id="reportOutput"></div>
+
+</div>
+
+<div class="message" id="message"></div>
+
+</section>
+
+<section class="info">
+
+<h2>About HTTP Header Analyzer</h2>
+
+<p>
+Analyze HTTP headers, identify missing security headers, inspect caching policies and review server configuration without sending data to any server.
+</p>
+
+<ul>
+<li>Security header analysis.</li>
+<li>Cache policy inspection.</li>
+<li>Server information detection.</li>
+<li>Copy or download the report.</li>
+<li>100% browser-side processing.</li>
+</ul>
+
+</section>
+
+</div>
+<script>
+
+const headerInput=document.getElementById("headerInput");
+
+const analyzeBtn=document.getElementById("analyzeBtn");
+const copyBtn=document.getElementById("copyBtn");
+const downloadBtn=document.getElementById("downloadBtn");
+const sampleBtn=document.getElementById("sampleBtn");
+const clearBtn=document.getElementById("clearBtn");
+
+const resultBox=document.getElementById("resultBox");
+const reportOutput=document.getElementById("reportOutput");
+
+const headerCount=document.getElementById("headerCount");
+const securityScore=document.getElementById("securityScore");
+const missingCount=document.getElementById("missingCount");
+const cacheStatus=document.getElementById("cacheStatus");
+
+const message=document.getElementById("message");
+
+function showMessage(text,type){
+message.textContent=text;
+message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+}
+
+function analyzeHeaders(){
+
+const text=headerInput.value.trim();
+
+if(!text){
+
+showMessage("Paste HTTP headers first.","error");
+return;
+
+}
+
+const lines=text.split(/\r?\n/);
+
+const headers={};
+
+lines.forEach(function(line){
+
+const index=line.indexOf(":");
+
+if(index>0){
+
+const key=line.substring(0,index).trim().toLowerCase();
+const value=line.substring(index+1).trim();
+
+headers[key]=value;
+
+}
+
+});
+
+const required=[
+"content-security-policy",
+"strict-transport-security",
+"x-content-type-options",
+"x-frame-options",
+"referrer-policy",
+"permissions-policy",
+"cross-origin-opener-policy",
+"cross-origin-embedder-policy",
+"cross-origin-resource-policy"
+];
+
+let score=0;
+let missing=[];
+
+required.forEach(function(item){
+
+if(headers[item]){
+score++;
+}else{
+missing.push(item);
+}
+
+});
+
+const report=[];
+
+report.push("HTTP HEADER SECURITY AUDIT");
+report.push("");
+
+report.push("━━━━━━━━━━━━━━━━━━━━━━━━━━");
+report.push("");
+
+report.push("Overall Security Score: "+
+Math.round(score/required.length*100)+"%");
+
+report.push("");
+
+report.push("Headers Found");
+report.push("--------------------");
+
+Object.keys(headers).forEach(function(name){
+
+report.push("✓ "+name+": "+headers[name]);
+
+});
+
+report.push("");
+
+report.push("Missing Security Headers");
+report.push("--------------------");
+
+if(missing.length){
+
+const descriptions={
+
+"content-security-policy":"Protects against XSS and code injection attacks.",
+
+"strict-transport-security":"Forces HTTPS connections for improved transport security.",
+
+"x-content-type-options":"Prevents MIME type sniffing.",
+
+"x-frame-options":"Protects against clickjacking attacks.",
+
+"referrer-policy":"Controls which referrer information is sent."
+
+};
+"permissions-policy":"Controls access to browser features such as camera, microphone and geolocation.",
+
+"cross-origin-opener-policy":"Protects against cross-origin attacks by isolating browsing contexts.",
+
+"cross-origin-embedder-policy":"Controls which cross-origin resources can be embedded.",
+
+"cross-origin-resource-policy":"Restricts which websites can load this resource.",
+missing.forEach(function(item){
+
+report.push("✗ "+item);
+
+report.push("   → "+descriptions[item]);
+
+report.push("");
+
+});
+
+}else{
+
+report.push("None");
+
+}
+
+report.push("");
+
+report.push("Server Information");
+report.push("--------------------");
+
+report.push("Server: "+(headers.server || "Unknown"));
+
+report.push("Content-Type: "+(headers["content-type"] || "Unknown"));
+
+report.push("Cache-Control: "+(headers["cache-control"] || "Not specified"));
+
+headerCount.textContent=Object.keys(headers).length;
+
+securityScore.textContent=
+Math.round(score/required.length*100)+"%";
+const percentage=Math.round(score/required.length*100);
+
+let rating="Poor";
+
+if(percentage>=90){
+
+rating="Excellent";
+
+}else if(percentage>=75){
+
+rating="Good";
+
+}else if(percentage>=50){
+
+rating="Fair";
+
+}
+
+report.push("");
+report.push("Security Rating");
+report.push("--------------------");
+report.push(rating);
+missingCount.textContent=missing.length;
+
+reportOutput.textContent=report.join("\n");
+
+resultBox.style.display="block";
+
+showMessage("Analysis completed.","success");
+
+}
+
+async function copyReport(){
+
+if(!reportOutput.textContent){
+
+showMessage("Nothing to copy.","error");
+return;
+
+}
+
+await navigator.clipboard.writeText(reportOutput.textContent);
+
+showMessage("Report copied.","success");
+
+}
+
+function downloadReport(){
+
+if(!reportOutput.textContent){
+
+showMessage("Nothing to download.","error");
+return;
+
+}
+
+const blob=new Blob(
+[reportOutput.textContent],
+{type:"text/plain"}
+);
+
+const url=URL.createObjectURL(blob);
+
+const a=document.createElement("a");
+
+a.href=url;
+a.download="xavert-http-header-report.txt";
+
+document.body.appendChild(a);
+
+a.click();
+
+a.remove();
+
+URL.revokeObjectURL(url);
+
+showMessage("Download started.","success");
+
+}
+
+function clearTool(){
+
+headerInput.value="";
+
+reportOutput.textContent="";
+
+resultBox.style.display="none";
+
+headerCount.textContent="0";
+securityScore.textContent="0%";
+missingCount.textContent="0";
+cacheStatus.textContent="-";
+
+showMessage("");
+
+}
+
+function loadSample(){
+
+headerInput.value=`HTTP/1.1 200 OK
+Server: nginx
+Content-Type: text/html; charset=UTF-8
+Cache-Control: public, max-age=3600
+Content-Security-Policy: default-src 'self'
+Strict-Transport-Security: max-age=31536000
+X-Content-Type-Options: nosniff
+Referrer-Policy: strict-origin-when-cross-origin`;
+
+showMessage("Sample loaded.","success");
+
+}
+
+analyzeBtn.addEventListener("click",analyzeHeaders);
+copyBtn.addEventListener("click",copyReport);
+downloadBtn.addEventListener("click",downloadReport);
+clearBtn.addEventListener("click",clearTool);
+sampleBtn.addEventListener("click",loadSample);
+
+headerInput.addEventListener("keydown",function(event){
+
+if(event.key==="Enter" && event.ctrlKey){
+
+event.preventDefault();
+
+analyzeHeaders();
+
+}
+
+});
+headerInput.addEventListener("input",function(){
+
+if(headerInput.value.trim()){
+
+analyzeHeaders();
+
+}else{
+
+clearTool();
+
+}
+
+});
+</script>
+
+</body>
+</html>
