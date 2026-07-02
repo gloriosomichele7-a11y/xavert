@@ -341,7 +341,11 @@ Clear
 <strong id="botStat">No</strong>
 <span>Bot / Crawler</span>
 </div>
-
+  
+<div class="stat">
+<strong id="engineStat">-</strong>
+<span>Rendering Engine</span>
+</div>
 </div>
 
 <div class="report" id="reportOutput"></div>
@@ -387,7 +391,7 @@ const browserStat=document.getElementById("browserStat");
 const osStat=document.getElementById("osStat");
 const deviceStat=document.getElementById("deviceStat");
 const botStat=document.getElementById("botStat");
-
+const engineStat=document.getElementById("engineStat");
 const message=document.getElementById("message");
 
 function showMessage(text,type){
@@ -536,6 +540,7 @@ const bot=detectBot(ua);
 const architecture=detectArchitecture(ua);
 
 browserStat.textContent=browser.name;
+engineStat.textContent=browser.engine;
 osStat.textContent=os;
 deviceStat.textContent=device;
 botStat.textContent=bot ? "Yes" : "No";
@@ -636,7 +641,7 @@ browserStat.textContent="-";
 osStat.textContent="-";
 deviceStat.textContent="-";
 botStat.textContent="No";
-
+engineStat.textContent="-";
 showMessage("");
 
 }
