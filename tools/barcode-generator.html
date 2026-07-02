@@ -15,7 +15,35 @@
 
 <link rel="canonical" href="https://xavert.com/tools/barcode-generator.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Barcode Generator">
+<meta property="og:description" content="Generate professional barcodes online for products, inventory, logistics and retail directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/barcode-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/og-image.png">
+<meta property="og:site_name" content="XAVERT">
 
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Barcode Generator">
+<meta name="twitter:description" content="Generate professional barcodes online directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/og-image.png">
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Barcode Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/barcode-generator.html",
+  "description":"Generate professional Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 <style>
@@ -392,7 +420,9 @@ Copy SVG
 <button id="clearBtn" class="secondary" type="button">
 Clear
 </button>
-
+<button id="sampleBtn" class="secondary" type="button">
+Load Sample
+</button>
 </div>
 
 <div class="preview-box" id="previewBox">
@@ -432,7 +462,8 @@ Clear
 <div class="message" id="message"></div>
 
 </section>
-
+<section class="related-tools" id="relatedTools">
+</section>
 <section class="info">
 
 <h2>About Barcode Generator</h2>
@@ -464,7 +495,7 @@ const downloadSvgBtn=document.getElementById("downloadSvgBtn");
 const downloadPngBtn=document.getElementById("downloadPngBtn");
 const copySvgBtn=document.getElementById("copySvgBtn");
 const clearBtn=document.getElementById("clearBtn");
-
+const sampleBtn=document.getElementById("sampleBtn");
 const previewBox=document.getElementById("previewBox");
 const barcodeSvg=document.getElementById("barcodeSvg");
 const message=document.getElementById("message");
@@ -713,11 +744,28 @@ heightStat.textContent="0";
 showMessage("");
 }
 
+function loadSample(){
+
+barcodeFormat.value="CODE128";
+barcodeWidth.value="2";
+barcodeHeight.value="90";
+displayValue.value="true";
+
+updatePlaceholder();
+
+barcodeValue.value="XAVERT-123456";
+
+generateBarcode();
+
+showMessage("Sample loaded.","success");
+
+}
 generateBtn.addEventListener("click",generateBarcode);
 downloadSvgBtn.addEventListener("click",downloadSvg);
 downloadPngBtn.addEventListener("click",downloadPng);
 copySvgBtn.addEventListener("click",copySvg);
 clearBtn.addEventListener("click",clearTool);
+sampleBtn.addEventListener("click",loadSample);
 barcodeValue.addEventListener("input",function(){
 
 if(barcodeValue.value.trim()){
