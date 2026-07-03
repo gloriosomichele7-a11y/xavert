@@ -48,7 +48,46 @@
   }
 }
 </script>
-
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Which barcode formats are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"XAVERT supports Code 128, Code 39, EAN-13, EAN-8, UPC-A, ITF-14 and Codabar."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I download the barcode?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can download the generated barcode as SVG or PNG."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is my data uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All barcode generation happens locally in your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I use these barcodes for products and inventory?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The generated barcodes are suitable for products, inventory, logistics and retail workflows."
+      }
+    }
+  ]
+}
+</script>
 <style>
 
 *{
@@ -515,7 +554,22 @@ Barcodes are used for products, inventory, logistics, retail labels, warehouse s
 </ul>
 
 </section>
+<section class="info">
 
+<h2>Barcode Generator FAQ</h2>
+
+<p>
+Here are the most common questions about generating barcodes online with XAVERT.
+</p>
+
+<ul>
+<li><strong>Which barcode formats are supported?</strong> Code 128, Code 39, EAN-13, EAN-8, UPC-A, ITF-14 and Codabar.</li>
+<li><strong>Can I download the barcode?</strong> Yes, you can download it as SVG or PNG.</li>
+<li><strong>Is my barcode data uploaded?</strong> No, everything runs directly in your browser.</li>
+<li><strong>Can I use it for product labels?</strong> Yes, it can be used for product, inventory, logistics and retail workflows.</li>
+</ul>
+
+</section>
 </div>
 <script>
 const barcodeValue=document.getElementById("barcodeValue");
