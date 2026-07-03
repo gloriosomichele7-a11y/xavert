@@ -48,7 +48,6 @@
   }
 }
 </script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
 <style>
 
@@ -149,7 +148,7 @@ box-shadow:0 0 0 3px rgba(220,38,38,.12);
 
 .button-grid{
 display:grid;
-grid-template-columns:repeat(5,1fr);
+grid-template-columns:repeat(6,1fr);
 gap:12px;
 margin:22px 0;
 }
@@ -434,7 +433,7 @@ Load Sample
 <h2>Barcode Preview</h2>
 
 <div class="barcode-wrap">
-<svg id="barcodeSvg"></svg>
+<svg id="barcodeSvg" role="img" aria-label="Generated barcode preview"></svg>
 </div>
 
 <div class="stats">
@@ -463,7 +462,7 @@ Load Sample
 
 </div>
 
-<div class="message" id="message"></div>
+<div class="message" id="message" aria-live="polite"></div>
 
 </section>
 <section class="related-tools">
