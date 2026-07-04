@@ -51,6 +51,46 @@
   }
 }
 </script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"What does Base64 do?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Base64 converts data into a text-safe encoded format."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I decode Base64 text?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can decode valid Base64 data back into readable text."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is my data uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All Base64 encoding and decoding happens locally in your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I download the result?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can download the encoded or decoded result as a text file."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -205,12 +245,12 @@ button{width:100%;}
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT Logo">
 </div>
 
 <h1>Base64 Toolkit</h1>
@@ -234,7 +274,12 @@ color:#047857;
 <div class="card">
 
 <label for="inputText">Input Text</label>
-<textarea id="inputText" placeholder="Paste text or Base64 data here"></textarea>
+<textarea
+id="inputText"
+placeholder="Paste text or Base64 data here"
+spellcheck="false"
+autocomplete="off"
+autocapitalize="off"></textarea>
 <div id="inputInfo" style="margin-top:8px;color:#6b7280;font-size:13px;">
 Characters: 0
 </div>
@@ -254,10 +299,12 @@ Base64 Decode
 <button onclick="clearAll()">
 Clear
 </button>
-
+<button onclick="loadSample()">
+Load Sample
+</button>
 </div>
 
-<div id="message" class="message"></div>
+<div id="message" class="message" aria-live="polite"></div>
 
 <div id="resultBox" class="result-box">
 
@@ -279,9 +326,75 @@ Characters: 0
 
 </div>
 
+</main>
+<section class="info">
+
+<h2>About Base64 Toolkit</h2>
+
+<p>
+Base64 is commonly used to encode text, configuration data, tokens and other content into a safe text format.
+</p>
+
+<ul>
+<li>Encode plain text into Base64.</li>
+<li>Decode Base64 back into readable text.</li>
+<li>Copy or download the result instantly.</li>
+<li>Everything runs locally in your browser.</li>
+<li>No data is uploaded to a server.</li>
+</ul>
+
+</section>
+
+<section class="info">
+
+<h2>Base64 Toolkit FAQ</h2>
+
+<p>
+Here are the most common questions about encoding and decoding Base64 online with XAVERT.
+</p>
+
+<ul>
+<li><strong>What does Base64 do?</strong> Base64 converts data into a text-safe encoded format.</li>
+<li><strong>Can I decode Base64 text?</strong> Yes, you can decode valid Base64 data back into readable text.</li>
+<li><strong>Is my data uploaded?</strong> No, all processing happens directly in your browser.</li>
+<li><strong>Can I download the result?</strong> Yes, you can download the encoded or decoded result as a text file.</li>
+</ul>
+
+</section>  
+<section class="related-tools">
+
+<h2>Related Tools</h2>
+
+<div class="related-grid">
+
+<div class="related-card">
+<h3>Barcode Generator</h3>
+<p>Create professional product and inventory barcodes.</p>
+<a href="barcode-generator.html">Open Tool</a>
 </div>
 
-<div id="toast"></div>
+<div class="related-card">
+<h3>QR Generator</h3>
+<p>Create QR codes for links, text and contact information.</p>
+<a href="qr-generator.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>URL Toolkit</h3>
+<p>Encode, decode and inspect URLs.</p>
+<a href="url-toolkit.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>UUID Generator</h3>
+<p>Generate secure UUID identifiers instantly.</p>
+<a href="uuid-generator.html">Open Tool</a>
+</div>
+
+</div>
+
+</section>
+<div id="toast" role="status" aria-live="polite"></div>
 <script>
 
 const inputText=document.getElementById("inputText");
@@ -525,7 +638,18 @@ message.textContent="";
 message.className="message";
 showToast("Cleared.","success");
 }
+function loadSample(){
 
+inputText.value="XAVERT makes browser-side tools simple, fast and private.";
+
+inputInfo.textContent="Characters: " + inputText.value.length;
+inputType.textContent="Detected: Plain Text";
+
+encodeBase64();
+
+showToast("Sample loaded.","success");
+
+}
 </script>
 
 </body>
