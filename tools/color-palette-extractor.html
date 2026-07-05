@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,89 @@
 <meta name="description" content="Free online Color Palette Extractor to extract dominant colors from images and generate HEX and RGB color palettes directly in your browser. Copy and download palettes instantly.">
 
 <meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 <link rel="canonical" href="https://xavert.com/tools/color-palette-extractor.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Color Palette Extractor">
+<meta property="og:description" content="Extract dominant colors from images online. Generate HEX, RGB and HSL color palettes directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/color-palette-extractor.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Color Palette Extractor">
+<meta name="twitter:description" content="Extract beautiful color palettes from images directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Color Palette Extractor",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/color-palette-extractor.html",
+  "description":"Extract dominant colors from images and generate HEX, RGB and HSL palettes directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Which image formats are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Any image format supported by your browser can be used, including JPG, PNG, WebP and GIF."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is my image uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. Images are processed entirely inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I download the palette?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can export the extracted color palette as TXT, JSON, CSS or SVG."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I copy individual colors?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. Each extracted color can be copied in HEX, RGB or HSL format."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -225,12 +305,12 @@ font-size:34px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT Logo">
 </div>
 
 <h1>Color Palette Extractor</h1>
@@ -259,7 +339,12 @@ color:#047857;
 <div class="dropzone" id="dropzone">
 <p><strong>Drop image here</strong></p>
 <p>or click to upload</p>
-<input type="file" id="fileInput" accept="image/*" hidden>
+<input
+type="file"
+id="fileInput"
+accept="image/*"
+hidden
+aria-label="Upload image">
 </div>
 </div>
 
@@ -284,7 +369,10 @@ Palette Size
 <div id="imageInfo" style="display:none;text-align:center;color:#6b7280;font-size:14px;margin-top:16px;">
 </div>
 <div class="preview">
-<img id="previewImage" style="display:none;">
+<img
+id="previewImage"
+style="display:none;"
+alt="Uploaded image preview">
 </div>
 
 <div class="actions">
@@ -299,8 +387,78 @@ Palette Size
 <div id="palette" class="palette"></div>
 
 </div>
+<section class="info">
+
+<h2>About Color Palette Extractor</h2>
+
+<p>
+Color Palette Extractor analyzes an image and identifies its dominant colors. It is useful for graphic design, branding, UI design, web development and digital art.
+</p>
+
+<ul>
+<li>Extract dominant colors from any image.</li>
+<li>Generate HEX, RGB and HSL color values.</li>
+<li>Copy individual colors or the entire palette.</li>
+<li>Download palettes as TXT, JSON, CSS or SVG.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+<section class="info">
+
+<h2>Color Palette Extractor FAQ</h2>
+
+<p>
+Here are the most common questions about extracting color palettes online with XAVERT.
+</p>
+
+<ul>
+<li><strong>Which image formats are supported?</strong> Any image format supported by your browser, including JPG, PNG, WebP and GIF.</li>
+
+<li><strong>Is my image uploaded?</strong> No. Images are processed entirely inside your browser.</li>
+
+<li><strong>Can I download the palette?</strong> Yes. You can export it as TXT, JSON, CSS or SVG.</li>
+
+<li><strong>Can I copy individual colors?</strong> Yes. Each extracted color can be copied in HEX, RGB or HSL format.</li>
+
+</ul>
+
+</section>
+<section class="related-tools">
+
+<h2>Related Tools</h2>
+
+<div class="related-grid">
+
+<div class="related-card">
+<h3>Color Converter</h3>
+<p>Convert colors between HEX, RGB, HSL and other formats.</p>
+<a href="color-converter.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Image Toolkit</h3>
+<p>Edit, optimize and convert images directly in your browser.</p>
+<a href="image-toolkit.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>QR Generator</h3>
+<p>Create QR codes for links, text and contact information.</p>
+<a href="qr-generator.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Barcode Generator</h3>
+<p>Create professional product and inventory barcodes.</p>
+<a href="barcode-generator.html">Open Tool</a>
+</div>
 
 </div>
+
+</section>
+</main>
 
 <canvas id="canvas" hidden></canvas>
 
@@ -308,7 +466,7 @@ Palette Size
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 
@@ -590,10 +748,12 @@ navigator.clipboard.writeText(content);
 showToast("Palette copied.","success");
 }
 function downloadTXT(){
-showToast("Generate a palette first.","error");
+
 if(!extractedColors.length){
 
+showToast("Generate a palette first.","error");
 return;
+
 }
 
 const content=extractedColors
