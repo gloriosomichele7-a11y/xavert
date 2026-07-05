@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,11 +8,42 @@
 <meta name="description" content="Free online Color Toolkit to convert HEX, RGB and HSL colors, generate random colors, create color palettes and check contrast ratios directly in your browser.">
 
 <meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 <link rel="canonical" href="https://xavert.com/tools/color-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Color Toolkit">
+<meta property="og:description" content="Convert HEX, RGB and HSL colors, generate random colors, create palettes and check accessibility contrast directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/color-toolkit.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
 
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Color Toolkit">
+<meta name="twitter:description" content="Convert, generate and analyze colors directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
 <style>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Color Toolkit",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/color-toolkit.html",
+  "description":"Convert HEX, RGB and HSL colors, generate random colors, create palettes and check color contrast directly in your browser.",
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 *{
 margin:0;
 padding:0;
@@ -190,12 +221,12 @@ button{width:100%;}
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT Logo">
 </div>
 
 <h1>Color Toolkit</h1>
@@ -214,7 +245,7 @@ font-size:14px;
 font-weight:700;
 color:#047857;
 ">
-✓ Color tools run locally in your browser. Nothing is uploaded or stored.
+✓ All color conversions and analysis are performed locally in your browser. Your data is never uploaded or stored.
 </div>
 <div class="card">
 
@@ -234,7 +265,13 @@ color:#047857;
 <h2>HEX / RGB Converter</h2>
 
 <label for="hexInput">HEX Color</label>
-<input type="text" id="hexInput" placeholder="#FF5733">
+<input
+type="text"
+id="hexInput"
+placeholder="#FF5733"
+spellcheck="false"
+autocomplete="off"
+autocapitalize="off">
 <div class="button-group">
 
 <button onclick="convertHex()">
@@ -248,7 +285,7 @@ Clear
 </div>
 
 
-<div id="converterMessage" class="message"></div>
+<div id="converterMessage" class="message" aria-live="polite"></div>
 <div id="converterResult" class="result-box"></div>
 
 <div id="converterPreview" class="color-preview"></div>
@@ -271,7 +308,7 @@ Clear
 
 </div>
 
-<div id="generatorMessage" class="message"></div>
+<div id="generatorMessage" class="message" aria-live="polite"></div>
 <div id="generatorResult" class="result-box"></div>
 
 <div id="generatorPreview" class="color-preview"></div>
@@ -300,7 +337,7 @@ Clear
 
 </div>
 
-<div id="contrastMessage" class="message"></div>
+<div id="contrastMessage" class="message" aria-live="polite"></div>
 <div id="contrastResult" class="result-box"></div>
 
 <div id="contrastPreview" class="result-box" style="font-size:20px;font-weight:700;text-align:center;">
@@ -327,12 +364,122 @@ Clear
 
 </div>
 
-<div id="paletteMessage" class="message"></div>
+<div id="paletteMessage" class="message" aria-live="polite"></div>
 <div id="paletteResult" class="result-box"></div>
 <div id="savedPalettes" class="result-box"></div>
 </div>
+<section class="info">
+
+<h2>About Color Toolkit</h2>
+
+<p>
+Color Toolkit provides a collection of color utilities for designers, developers and digital creators. Convert color formats, generate palettes, analyze accessibility and create random colors directly in your browser.
+</p>
+
+<ul>
+<li>Convert HEX, RGB and HSL color formats.</li>
+<li>Generate random colors instantly.</li>
+<li>Create matching color palettes.</li>
+<li>Check WCAG color contrast ratios.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+<section class="info">
+
+<h2>Color Toolkit FAQ</h2>
+
+<p>
+Common questions about using the XAVERT Color Toolkit.
+</p>
+
+<ul>
+
+<li><strong>Which color formats are supported?</strong> HEX, RGB and HSL.</li>
+
+<li><strong>Does this tool upload my colors?</strong> No. Everything is processed locally.</li>
+
+<li><strong>Can I check accessibility?</strong> Yes. The Contrast Checker evaluates WCAG AA and AAA compliance.</li>
+
+<li><strong>Can I generate color palettes?</strong> Yes. The toolkit can generate and save palettes directly in your browser.</li>
+
+</ul>
+
+</section>
+<section class="related-tools">
+
+<h2>Related Tools</h2>
+
+<div class="related-grid">
+
+<div class="related-card">
+<h3>Color Palette Extractor</h3>
+<p>Extract dominant colors from any image.</p>
+<a href="color-palette-extractor.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Image Toolkit</h3>
+<p>Edit and optimize images directly in your browser.</p>
+<a href="image-toolkit.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>QR Generator</h3>
+<p>Create QR codes for websites, text and contacts.</p>
+<a href="qr-generator.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Barcode Generator</h3>
+<p>Create professional product and inventory barcodes.</p>
+<a href="barcode-generator.html">Open Tool</a>
+</div>
 
 </div>
+
+</section>
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Which color formats are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The toolkit supports HEX, RGB and HSL color formats."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is my data uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All color processing happens locally in your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I check WCAG accessibility?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The Contrast Checker evaluates WCAG AA and AAA color contrast compliance."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I generate color palettes?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The toolkit can generate, save and download color palettes."
+      }
+    }
+  ]
+}
+</script>
+</main>
 
 <div style="
 text-align:center;
@@ -343,12 +490,22 @@ margin-top:28px;
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 
 const toolSelector=document.getElementById("toolSelector");
 const toast=document.getElementById("toast");
+document.getElementById("hexInput").addEventListener("keydown",function(event){
+
+if(event.key==="Enter"){
+
+event.preventDefault();
+convertHex();
+
+}
+
+});
 let colorHistory=[];
 let savedPalettes=[];
 let currentPalette=[];
@@ -392,9 +549,13 @@ toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
 
-setTimeout(function(){
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(function(){
+
 toast.style.display="none";
 toast.className="";
+
 },2200);
 
 }
@@ -438,8 +599,17 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
+navigator.clipboard.writeText(text)
+.then(function(){
+
 showToast("Copied.","success");
+
+})
+.catch(function(){
+
+showToast("Copy failed.","error");
+
+});
 
 }
 
