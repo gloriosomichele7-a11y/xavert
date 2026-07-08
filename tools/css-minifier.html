@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,9 +9,55 @@
 <meta name="description" content="Free online CSS Minifier and Beautifier to minify, format, clean and optimize CSS code directly in your browser. Reduce file size, improve readability and download CSS instantly.">
 
 <meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 <link rel="canonical" href="https://xavert.com/tools/css-minifier.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | CSS Minifier & Beautifier">
+<meta property="og:description" content="Minify, beautify, clean and optimize CSS code directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/css-minifier.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | CSS Minifier & Beautifier">
+<meta name="twitter:description" content="Minify and beautify CSS code directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"CSS Minifier & Beautifier",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/css-minifier.html",
+  "description":"Minify, format, clean and optimize CSS code directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 <style>
 *{
 margin:0;
@@ -229,7 +275,7 @@ grid-template-columns:1fr;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -338,6 +384,75 @@ placeholder="Processed CSS will appear here..."
 </div>
 
 </div>
+<section class="info">
+
+<h2>About CSS Minifier & Beautifier</h2>
+
+<p>
+CSS Minifier & Beautifier helps you compress, clean and format CSS code directly in your browser. It is useful for web developers, designers and anyone who works with stylesheets.
+</p>
+
+<ul>
+<li>Minify CSS to reduce file size.</li>
+<li>Beautify CSS to improve readability.</li>
+<li>Copy or download the processed CSS instantly.</li>
+<li>View character, line and compression statistics.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+<section class="info">
+
+<h2>CSS Minifier & Beautifier FAQ</h2>
+
+<p>
+Common questions about minifying and beautifying CSS online with XAVERT.
+</p>
+
+<ul>
+<li><strong>What does CSS minification do?</strong> It removes unnecessary spaces, comments and formatting to reduce file size.</li>
+<li><strong>Can I beautify CSS?</strong> Yes, the tool can format CSS to make it easier to read.</li>
+<li><strong>Is my CSS uploaded?</strong> No, all processing happens directly in your browser.</li>
+<li><strong>Can I download the result?</strong> Yes, you can download the processed CSS as a .css file.</li>
+</ul>
+
+</section>
+
+<section class="related-tools">
+
+<h2>Related Tools</h2>
+
+<div class="related-grid">
+
+<div class="related-card">
+<h3>HTML Minifier</h3>
+<p>Minify and clean HTML code directly in your browser.</p>
+<a href="html-minifier.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>JavaScript Minifier</h3>
+<p>Compress and format JavaScript code quickly.</p>
+<a href="javascript-minifier.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>JSON Toolkit</h3>
+<p>Format, validate and inspect JSON data.</p>
+<a href="json-toolkit.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Regex Tester</h3>
+<p>Test and validate regular expressions online.</p>
+<a href="regex-tester.html">Open Tool</a>
+</div>
+
+</div>
+
+</section>
+</main>
 
 <div style="
 text-align:center;
@@ -348,10 +463,9 @@ margin-top:28px;
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
-
 const toast=document.getElementById("toast");
 const inputCss=document.getElementById("inputCss");
 const outputCss=document.getElementById("outputCss");
