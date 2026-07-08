@@ -1,4 +1,5 @@
 /* XAVERT Global Styles */
+
 /* Info / About / FAQ Sections */
 .info{
 margin-top:36px;
@@ -39,6 +40,7 @@ left:0;
 color:#dc2626;
 font-weight:700;
 }
+
 /* Related Tools */
 .related-tools{
 margin-top:36px;
@@ -103,15 +105,29 @@ transition:.25s;
 background:#b91c1c;
 }
 
+/* Utility */
+.xavert-footer-note{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+}
+
+/* Mobile */
 @media(max-width:768px){
+
+.info,
+.related-tools{
+padding:20px;
+}
 
 .related-grid{
 grid-template-columns:1fr;
 }
 
-.info,
-.related-tools{
-padding:20px;
+.info h2,
+.related-tools h2{
+font-size:24px;
 }
 
 }
