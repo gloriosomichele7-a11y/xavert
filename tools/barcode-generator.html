@@ -16,6 +16,12 @@
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
 <link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
 
   
@@ -41,8 +47,15 @@
   "operatingSystem":"Any",
   "browserRequirements":"Requires JavaScript",
   "url":"https://xavert.com/tools/barcode-generator.html",
-  "description":"Generate professional Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
-  "publisher":{
+"description":"Generate professional Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
+"inLanguage":"en",
+"isAccessibleForFree":true,
+"offers":{
+  "@type":"Offer",
+  "price":"0",
+  "priceCurrency":"USD"
+},
+"publisher":{
     "@type":"Organization",
     "name":"XAVERT"
   }
@@ -360,10 +373,10 @@ padding:20px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back-link">
-← Back to XAVERT
+← Home
 </a>
 
 <section class="hero">
@@ -570,7 +583,7 @@ Here are the most common questions about generating barcodes online with XAVERT.
 </ul>
 
 </section>
-</div>
+</main>
 <script>
 const barcodeValue=document.getElementById("barcodeValue");
 const barcodeFormat=document.getElementById("barcodeFormat");
