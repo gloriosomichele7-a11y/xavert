@@ -1,0 +1,121 @@
+/* =====================================
+   XAVERT Responsive Styles
+===================================== */
+
+@media (max-width:1200px){
+
+.container{
+max-width:960px;
+padding:0 20px;
+}
+
+}
+
+@media (max-width:992px){
+
+.container{
+max-width:100%;
+padding:0 18px;
+}
+
+.related-grid{
+grid-template-columns:1fr 1fr;
+gap:16px;
+}
+
+.button-group{
+flex-wrap:wrap;
+}
+
+}
+
+@media (max-width:768px){
+
+body{
+padding:20px 14px;
+}
+
+.logo img{
+width:150px;
+}
+
+.card,
+.info,
+.related-tools{
+padding:20px;
+}
+
+.related-grid{
+grid-template-columns:1fr;
+}
+
+.button-group{
+display:flex;
+flex-direction:column;
+gap:10px;
+}
+
+button,
+.small-button{
+width:100%;
+margin:0;
+}
+
+input,
+select,
+textarea{
+font-size:16px;
+}
+
+.color-preview{
+height:90px;
+}
+
+h1{
+font-size:32px;
+}
+
+h2{
+font-size:24px;
+}
+
+}
+
+@media (max-width:576px){
+
+.container{
+padding:0 10px;
+}
+
+.card,
+.info,
+.related-tools{
+padding:16px;
+border-radius:16px;
+}
+
+.related-card{
+padding:16px;
+}
+
+.related-card h3{
+font-size:16px;
+}
+
+.related-card p{
+font-size:14px;
+}
+
+.result-box{
+font-size:14px;
+}
+
+.back{
+font-size:14px;
+}
+
+.subtitle{
+font-size:15px;
+}
+
+}
