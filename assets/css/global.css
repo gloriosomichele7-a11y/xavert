@@ -1,0 +1,117 @@
+/* XAVERT Global Styles */
+/* Info / About / FAQ Sections */
+.info{
+margin-top:36px;
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.info h2{
+font-size:28px;
+margin-bottom:14px;
+}
+
+.info p{
+margin-bottom:14px;
+line-height:1.8;
+color:#4b5563;
+}
+
+.info ul{
+list-style:none;
+}
+
+.info li{
+position:relative;
+padding-left:18px;
+margin:8px 0;
+line-height:1.7;
+color:#4b5563;
+}
+
+.info li::before{
+content:"•";
+position:absolute;
+left:0;
+color:#dc2626;
+font-weight:700;
+}
+/* Related Tools */
+.related-tools{
+margin-top:36px;
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
+padding:26px;
+box-shadow:0 10px 28px rgba(15,23,42,.04);
+}
+
+.related-tools h2{
+font-size:28px;
+margin-bottom:18px;
+}
+
+.related-grid{
+display:grid;
+grid-template-columns:repeat(2,1fr);
+gap:16px;
+}
+
+.related-card{
+border:1px solid #e5e7eb;
+border-radius:16px;
+padding:18px;
+transition:.25s;
+background:#ffffff;
+}
+
+.related-card:hover{
+transform:translateY(-3px);
+box-shadow:0 10px 24px rgba(15,23,42,.08);
+border-color:#dc2626;
+}
+
+.related-card h3{
+font-size:17px;
+margin-bottom:8px;
+color:#111827;
+}
+
+.related-card p{
+font-size:14px;
+line-height:1.6;
+color:#6b7280;
+margin-bottom:14px;
+}
+
+.related-card a{
+display:inline-block;
+padding:10px 18px;
+border-radius:10px;
+background:#dc2626;
+color:#ffffff;
+text-decoration:none;
+font-size:13px;
+font-weight:700;
+transition:.25s;
+}
+
+.related-card a:hover{
+background:#b91c1c;
+}
+
+@media(max-width:768px){
+
+.related-grid{
+grid-template-columns:1fr;
+}
+
+.info,
+.related-tools{
+padding:20px;
+}
+
+}
