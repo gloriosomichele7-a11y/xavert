@@ -1,0 +1,65 @@
+/* XAVERT Components */
+
+/* Buttons */
+
+.btn{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+padding:12px 20px;
+border:none;
+border-radius:10px;
+background:#dc2626;
+color:#fff;
+font-weight:700;
+cursor:pointer;
+transition:.25s;
+text-decoration:none;
+}
+
+.btn:hover{
+background:#b91c1c;
+}
+
+/* Cards */
+
+.card{
+background:#fff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:24px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+/* Result boxes */
+
+.result-box{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:14px;
+}
+
+/* Inputs */
+
+input,
+select,
+textarea{
+
+width:100%;
+padding:14px;
+border:1px solid #d1d5db;
+border-radius:10px;
+font-size:15px;
+
+}
+
+input:focus,
+select:focus,
+textarea:focus{
+
+outline:none;
+border-color:#dc2626;
+box-shadow:0 0 0 3px rgba(220,38,38,.12);
+
+}
