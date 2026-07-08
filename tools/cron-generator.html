@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,10 +9,55 @@
 <meta name="description" content="Free online Cron Expression Generator to create, understand and export cron schedules directly in your browser. Generate cron jobs for Linux, Unix and server automation.">
 
 <meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 <link rel="canonical" href="https://xavert.com/tools/cron-expression-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Cron Expression Generator">
+<meta property="og:description" content="Create, understand and export cron expressions directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/cron-expression-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Cron Expression Generator">
+<meta name="twitter:description" content="Generate cron expressions for Linux, Unix and server automation.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Cron Expression Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/cron-expression-generator.html",
+  "description":"Create, understand and export cron schedules directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 <style>
 *{
 margin:0;
@@ -206,12 +251,12 @@ font-size:34px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
+<img src="../logo-hero.svg" alt="XAVERT Logo">
 </div>
 
 <h1>Cron Expression Generator</h1>
@@ -277,6 +322,7 @@ color:#047857;
 id="cronOutput"
 rows="2"
 readonly
+aria-label="Generated cron expression"
 placeholder="Cron expression will appear here..."
 ></textarea>
 <div id="cronStats" style="margin-top:10px;color:#6b7280;font-size:13px;">
@@ -306,14 +352,81 @@ Popular Examples:
 </div>
 
 </div>
+<section class="info">
+
+<h2>About Cron Expression Generator</h2>
+
+<p>
+Cron Expression Generator helps you create, understand and export cron schedules for Linux, Unix, servers, automation tasks and recurring jobs.
+</p>
+
+<ul>
+<li>Create cron expressions from presets or custom values.</li>
+<li>Preview the generated cron expression instantly.</li>
+<li>Understand what the schedule means in plain language.</li>
+<li>Copy or download the cron expression as a TXT file.</li>
+<li>Everything runs locally in your browser.</li>
+</ul>
+
+</section>
+
+<section class="info">
+
+<h2>Cron Expression Generator FAQ</h2>
+
+<p>
+Common questions about creating cron expressions online with XAVERT.
+</p>
+
+<ul>
+<li><strong>What is a cron expression?</strong> A cron expression defines when a scheduled task should run.</li>
+<li><strong>Can I use this for Linux cron jobs?</strong> Yes, the generated expressions follow the common five-field cron format.</li>
+<li><strong>Is my cron data uploaded?</strong> No, everything is generated directly in your browser.</li>
+<li><strong>Can I download the cron expression?</strong> Yes, you can download it as a TXT file.</li>
+</ul>
+
+</section>
+
+<section class="related-tools">
+
+<h2>Related Tools</h2>
+
+<div class="related-grid">
+
+<div class="related-card">
+<h3>Regex Tester</h3>
+<p>Test and validate regular expressions directly in your browser.</p>
+<a href="regex-tester.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>UUID Generator</h3>
+<p>Generate unique identifiers instantly.</p>
+<a href="uuid-generator.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>JSON Toolkit</h3>
+<p>Format, validate and inspect JSON data.</p>
+<a href="json-toolkit.html">Open Tool</a>
+</div>
+
+<div class="related-card">
+<h3>Base64 Toolkit</h3>
+<p>Encode and decode Base64 text securely.</p>
+<a href="base64-toolkit.html">Open Tool</a>
+</div>
 
 </div>
+
+</section>
+</main>
 
 <div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 
@@ -337,9 +450,13 @@ toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
 
-setTimeout(function(){
+clearTimeout(window.toastTimer);
+
+window.toastTimer=setTimeout(function(){
+
 toast.style.display="none";
 toast.className="";
+
 },2200);
 
 }
@@ -560,9 +677,13 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
-
+navigator.clipboard.writeText(text)
+.then(function(){
 showToast("Copied.","success");
+})
+.catch(function(){
+showToast("Copy failed.","error");
+});
 
 }
 
