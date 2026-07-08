@@ -14,6 +14,12 @@
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="XAVERT | Base64 Toolkit">
@@ -314,7 +320,7 @@ Load Sample
 Characters: 0
 </div>
 
-<textarea id="outputText" readonly></textarea>
+<textarea id="outputText" readonly aria-label="Base64 output result"></textarea>
 <div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;">
 <div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;">
 </div>
@@ -326,7 +332,6 @@ Characters: 0
 
 </div>
 
-</main>
 <section class="info">
 
 <h2>About Base64 Toolkit</h2>
@@ -394,6 +399,9 @@ Here are the most common questions about encoding and decoding Base64 online wit
 </div>
 
 </section>
+
+</main>
+
 <div id="toast" role="status" aria-live="polite"></div>
 <script>
 
@@ -590,8 +598,13 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(outputText.value);
+navigator.clipboard.writeText(outputText.value)
+.then(function(){
 showToast("Copied.","success");
+})
+.catch(function(){
+showToast("Copy failed.","error");
+});
 
 }
 
