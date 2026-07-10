@@ -15,7 +15,50 @@
 
 <link rel="canonical" href="https://xavert.com/tools/csv-viewer-editor.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | CSV Viewer & Editor">
+<meta property="og:description" content="Open, edit, search, sort and export CSV files securely in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/csv-viewer-editor.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | CSV Viewer & Editor">
+<meta name="twitter:description" content="Open, edit, search, sort and export CSV files directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"CSV Viewer & Editor",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/csv-viewer-editor.html",
+  "description":"Open, edit, search, sort and export CSV files directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 <style>
 
 *{
@@ -125,7 +168,7 @@ box-shadow:0 0 0 3px rgba(220,38,38,.12);
 
 .button-grid{
 display:grid;
-grid-template-columns:repeat(6,1fr);
+grid-template-columns:repeat(5,1fr);
 gap:12px;
 margin-bottom:22px;
 }
@@ -320,7 +363,7 @@ padding:20px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back-link">
 ← Back to XAVERT
@@ -382,10 +425,6 @@ Clear
 Load Sample
 </button>
 
-<button id="deleteRowBtn" class="secondary" type="button">
-
-</button>
-
 </div>
 
 <div
@@ -422,7 +461,8 @@ id="tableContainer">
 
 <div
 class="message"
-id="message"></div>
+id="message"
+aria-live="polite"></div>
 
 </section>
 
@@ -444,7 +484,7 @@ Open CSV files, edit data, search, sort and export everything directly in your b
 
 </section>
 
-</div>
+</main>
 <script>
 const csvFile=document.getElementById("csvFile");
 const dropZone=document.getElementById("dropZone");
@@ -590,7 +630,7 @@ const th=document.createElement("th");
 const columnName=header || "Column "+(index+1);
 
 if(index===sortedColumn){
-th.textContent=columnName+(sortDirection===1 ? " ▲" : " ▼");
+th.textContent=columnName+(sortDirection===-1 ? " ▲" : " ▼");
 }else{
 th.textContent=columnName;
 }
@@ -724,7 +764,12 @@ return;
 
 document.querySelectorAll("#csvTable tbody tr").forEach(function(row){
 
-const text=row.textContent.toLowerCase();
+const text=Array.from(row.querySelectorAll("input"))
+.map(function(input){
+return input.value;
+})
+.join(" ")
+.toLowerCase();
 
 row.style.display=text.includes(query) ? "" : "none";
 
@@ -851,7 +896,7 @@ event.preventDefault();
 dropZone.classList.remove("dragover");
 
 const file=event.dataTransfer.files[0];
-csvFile.files=event.dataTransfer.files;
+
 if(!file){
 return;
 }
