@@ -58,6 +58,40 @@
   }
 }
 </script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Are my files uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All files and data are processed locally in your browser and are never uploaded to any server."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which file formats are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool supports CSV, XLSX, JSON and XML for conversion, formatting, validation and minification."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is Data Converter free to use?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The Data Converter is completely free and requires no registration."
+      }
+    }
+  ]
+}
+</script>
+
 <style>
 *{
 margin:0;
@@ -293,7 +327,9 @@ color:#047857;
 </div>
 <div class="card tool-section active" id="csvxlsxTool">
 <h2>CSV to XLSX</h2>
-<p tool-description">Convert a CSV file into an Excel XLSX spreadsheet.</p>
+<p class="tool-description">
+Convert a CSV file into an Excel XLSX spreadsheet.
+</p>
 
 <div class="drop-zone" data-input="csvXlsxFile">Click or drag CSV file here</div>
 <input type="file" id="csvXlsxFile" accept=".csv,text/csv" hidden>
@@ -586,7 +622,7 @@ Download
 
 <h2>JSON to XML</h2>
 
-<p class="">
+<p class="tool-description">
 Convert JSON data into XML.
 </p>
 
@@ -778,6 +814,7 @@ font-size:13px;
 margin-top:28px;
 ">
 Powered by XAVERT
+</div>
 </main>
 
 <div
