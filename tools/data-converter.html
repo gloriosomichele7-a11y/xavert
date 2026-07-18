@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,12 +8,56 @@
 <meta name="description" content="Free online Data Converter to convert CSV, XLSX, JSON and XML files directly in your browser. Format, minify, validate and export structured data instantly.">
 
 <meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 <link rel="canonical" href="https://xavert.com/tools/data-converter.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Data Converter">
+<meta property="og:description" content="Convert CSV, XLSX, JSON and XML files directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/data-converter.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
 
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Data Converter">
+<meta name="twitter:description" content="Convert CSV, XLSX, JSON and XML files directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Data Converter",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/data-converter.html",
+  "description":"Convert CSV, XLSX, JSON and XML files directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
 <style>
 *{
 margin:0;
@@ -128,9 +172,10 @@ display:none;
 display:block;
 }
 
-.info{
+.tool-description{
 color:#4b5563;
 font-size:14px;
+line-height:1.7;
 margin:8px 0 16px;
 }
 
@@ -201,7 +246,7 @@ button{width:100%;}
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -248,7 +293,7 @@ color:#047857;
 </div>
 <div class="card tool-section active" id="csvxlsxTool">
 <h2>CSV to XLSX</h2>
-<p class="info">Convert a CSV file into an Excel XLSX spreadsheet.</p>
+<p tool-description">Convert a CSV file into an Excel XLSX spreadsheet.</p>
 
 <div class="drop-zone" data-input="csvXlsxFile">Click or drag CSV file here</div>
 <input type="file" id="csvXlsxFile" accept=".csv,text/csv" hidden>
@@ -270,7 +315,7 @@ Clear
 </div>
 <div class="card tool-section" id="xlsxcsvTool">
 <h2>XLSX to CSV</h2>
-<p class="info">Convert an Excel XLSX spreadsheet into a CSV file.</p>
+<p class="tool-description">Convert an Excel XLSX spreadsheet into a CSV file.</p>
 
 <div class="drop-zone" data-input="xlsxCsvFile">Click or drag XLSX file here</div>
 <input type="file" id="xlsxCsvFile" accept=".xlsx,.xls" hidden>
@@ -292,7 +337,7 @@ Clear
 </div>
 <div class="card tool-section" id="xlsxjsonTool">
 <h2>XLSX to JSON</h2>
-<p class="info">Convert an Excel XLSX spreadsheet into a JSON file.</p>
+<p class="tool-description">Convert an Excel XLSX spreadsheet into a JSON file.</p>
 
 <div class="drop-zone" data-input="xlsxJsonFile">Click or drag XLSX file here</div>
 <input type="file" id="xlsxJsonFile" accept=".xlsx,.xls" hidden>
@@ -314,7 +359,7 @@ Clear
 </div>
 <div class="card tool-section" id="jsonxlsxTool">
 <h2>JSON to XLSX</h2>
-<p class="info">Convert JSON data into an Excel XLSX spreadsheet.</p>
+<p class="tool-description">Convert JSON data into an Excel XLSX spreadsheet.</p>
 
 <label for="jsonXlsxInput">JSON Input</label>
 <textarea id="jsonXlsxInput" placeholder="Paste JSON data here"></textarea>
@@ -338,8 +383,7 @@ Clear
 
 <h2>JSON to CSV</h2>
 
-<p class="info">
-Convert JSON data into a CSV file.
+<p class="tool-description">Convert JSON data into a CSV file.
 </p>
 
 <label for="jsonCsvInput">JSON Input</label>
@@ -364,7 +408,7 @@ Clear
 <div class="card tool-section" id="csvjsonTool">
 <h2>CSV to JSON</h2>
 
-<p class="info">
+<p class="tool-description">
 Convert a CSV file into a JSON file.
 </p>
 
@@ -395,8 +439,8 @@ Clear
 <div class="card tool-section" id="jsonformatTool">
 <h2>JSON Formatter</h2>
 
-<p class="info">
-Format and beautify JSON data.
+<p class="tool-description">
+ Format and beautify JSON data.
 </p>
 
 <label for="jsonFormatInput">JSON Input</label>
@@ -438,7 +482,7 @@ Download
 
 <h2>JSON Minifier</h2>
 
-<p class="info">
+<p class="tool-description">
 Minify JSON data by removing unnecessary spaces and line breaks.
 </p>
 
@@ -479,7 +523,7 @@ Download
 
 <h2>JSON Validator</h2>
 
-<p class="info">
+<p class="tool-description">
 Validate JSON syntax.
 </p>
 
@@ -504,7 +548,7 @@ Clear
   <div class="card tool-section" id="xmljsonTool">
 <h2>XML to JSON</h2>
 
-<p class="info">
+<p class="tool-description">
 Convert XML data into JSON.
 </p>
 
@@ -542,7 +586,7 @@ Download
 
 <h2>JSON to XML</h2>
 
-<p class="info">
+<p class="">
 Convert JSON data into XML.
 </p>
 
@@ -581,7 +625,7 @@ Download
 
 <h2>XML Formatter</h2>
 
-<p class="info">
+<p class="tool-description">
 Format and beautify XML data.
 </p>
 
@@ -627,7 +671,7 @@ Download
 
 <h2>XML Minifier</h2>
 
-<p class="info">
+<p class="tool-description">
 Minify XML data by removing unnecessary spaces and line breaks.
 </p>
 
@@ -666,7 +710,7 @@ Download
 
 <h2>XML Validator</h2>
 
-<p class="info">
+<p class="tool-description">
 Validate XML syntax.
 </p>
 
@@ -689,6 +733,44 @@ Clear
 <div id="xmlValidateMessage" class="message"></div>
 
 </div>
+<section class="info">
+<h2>About Data Converter</h2>
+
+<p>
+Data Converter lets you convert and process CSV, XLSX, JSON and XML files directly in your browser. No data is uploaded to external servers.
+</p>
+
+<ul>
+<li>CSV ↔ XLSX</li>
+<li>CSV ↔ JSON</li>
+<li>JSON ↔ XML</li>
+<li>JSON formatting, minifying and validation</li>
+<li>XML formatting, minifying and validation</li>
+<li>Local browser processing for better privacy</li>
+</ul>
+</section>
+<section class="info">
+<h2>FAQ</h2>
+
+<h3>Are my files uploaded?</h3>
+<p>No. Everything is processed locally in your browser.</p>
+
+<h3>Which formats are supported?</h3>
+<p>CSV, XLSX, JSON and XML.</p>
+
+<h3>Can I use it for free?</h3>
+<p>Yes. All XAVERT tools are free to use.</p>
+</section>
+<section class="info">
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="csv-viewer-editor.html">CSV Viewer &amp; Editor</a></li>
+<li><a href="json-toolkit.html">JSON Toolkit</a></li>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="text-diff-checker.html">Text Diff Checker</a></li>
+</ul>
+</section>
 <div style="
 text-align:center;
 color:#6b7280;
@@ -696,9 +778,13 @@ font-size:13px;
 margin-top:28px;
 ">
 Powered by XAVERT
-</div>
+</main>
 
-<div id="toast"></div>
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 const toolSelector=document.getElementById("toolSelector");
@@ -734,7 +820,10 @@ zone.classList.remove("dragover");
 zone.addEventListener("drop",function(e){
 e.preventDefault();
 zone.classList.remove("dragover");
-input.files=e.dataTransfer.files;
+const dt=new DataTransfer();
+dt.items.add(e.dataTransfer.files[0]);
+input.files=dt.files;
+
 updateFileCount(input.id);
 });
 
@@ -834,8 +923,13 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
+navigator.clipboard.writeText(text)
+.then(function(){
 showToast("Copied.","success");
+})
+.catch(function(){
+showToast("Copy failed.","error");
+});
 
 }
 function downloadBlob(blob,fileName){
@@ -980,7 +1074,7 @@ new Blob([JSON.stringify(json,null,2)],{type:"application/json;charset=utf-8"}),
 );
 
 setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
-setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
+showToast("XLSX converted successfully.","success");
 }catch(error){
 console.error(error);
 setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
