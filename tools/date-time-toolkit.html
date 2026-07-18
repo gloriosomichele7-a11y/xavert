@@ -207,6 +207,44 @@ border-radius:12px;
 line-height:1.7;
 }
 
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .message{
 margin-top:14px;
 font-size:14px;
@@ -594,7 +632,7 @@ dateHistory=[];
 document.querySelectorAll(".result-box").forEach(box=>{
 box.innerHTML=box.innerHTML.split("<br><strong>History</strong><br>")[0];
 });
-
+lastResultText="";
 }
 
 function clearAll(){
