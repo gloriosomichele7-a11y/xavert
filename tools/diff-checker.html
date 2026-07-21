@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,6 +10,85 @@
 <meta name="robots" content="index, follow">
 <link rel="canonical" href="https://xavert.com/tools/diff-checker.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Diff Checker">
+<meta property="og:description" content="Compare two texts, detect line-by-line differences and calculate similarity directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/diff-checker.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Diff Checker">
+<meta name="twitter:description" content="Compare two texts, detect line-by-line differences and calculate similarity directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Diff Checker",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/diff-checker.html",
+  "description":"Compare two texts, detect line-by-line differences and calculate similarity directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Are my texts uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. Text comparison is performed locally in your browser and nothing is uploaded."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I compare source code?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can compare source code, JSON, plain text and other line-based content."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Is Diff Checker free?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. All XAVERT tools are completely free."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -130,6 +209,44 @@ border:1px solid #e5e7eb;
 border-radius:12px;
 }
 
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .stats{
 margin-bottom:16px;
 font-size:14px;
@@ -229,7 +346,7 @@ width:100%;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -309,9 +426,63 @@ Characters A: 0 | Characters B: 0
 
 </div>
 
+<section class="info">
+<h2>About Diff Checker</h2>
+
+<p>
+Diff Checker compares two texts line by line directly in your browser. It highlights changed lines, counts differences and calculates a similarity percentage without uploading your content.
+</p>
+
+<ul>
+<li>Line-by-line text comparison</li>
+<li>Difference highlighting</li>
+<li>Character and line statistics</li>
+<li>Similarity percentage</li>
+<li>Copy and download results</li>
+<li>Local browser processing</li>
+</ul>
+</section>
+
+<section class="info">
+<h2>FAQ</h2>
+
+<h3>Are my texts uploaded?</h3>
+<p>No. All comparisons are performed locally in your browser.</p>
+
+<h3>Can I compare source code?</h3>
+<p>Yes. You can compare source code, JSON, plain text and other line-based content.</p>
+
+<h3>Is Diff Checker free?</h3>
+<p>Yes. All XAVERT tools are free to use.</p>
+</section>
+
+<section class="info">
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="text-toolkit.html">Text Toolkit</a></li>
+<li><a href="json-toolkit.html">JSON Toolkit</a></li>
+<li><a href="data-converter.html">Data Converter</a></li>
+<li><a href="regex-tester.html">Regex Tester</a></li>
+</ul>
+</section>
+
+<div style="
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+">
+Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 const textA=document.getElementById("textA");
@@ -473,11 +644,14 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(
-result.innerText
-);
-
+navigator.clipboard.writeText(result.innerText)
+.then(function(){
 showToast("Copied.","success");
+})
+.catch(function(){
+showToast("Copy failed.","error");
+});
+
 }
 
 function downloadResult(){
