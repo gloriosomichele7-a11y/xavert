@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,7 +11,85 @@
 <link rel="canonical" href="https://xavert.com/tools/file-hash-checker.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | File Hash Checker">
+<meta property="og:description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file checksums directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/file-hash-checker.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | File Hash Checker">
+<meta name="twitter:description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file checksums directly in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"File Hash Checker",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/file-hash-checker.html",
+  "description":"Generate and verify SHA-256, SHA-384 and SHA-512 file checksums locally in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Are my files uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. Files are processed locally in your browser and are never uploaded."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which hash algorithms are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool supports SHA-256, SHA-384 and SHA-512."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I verify a downloaded file?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. Paste the expected checksum and generate the file hash to check whether they match."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -155,6 +233,44 @@ word-break:break-all;
 overflow-wrap:anywhere;
 }
 
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .message{
 margin-top:14px;
 font-size:14px;
@@ -210,7 +326,7 @@ word-break:break-all;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -280,7 +396,45 @@ Clear
 
 </div>
 
-</div>
+<section class="info">
+<h2>About File Hash Checker</h2>
+
+<p>
+Generate and verify SHA-256, SHA-384 and SHA-512 file hashes directly in your browser. Files never leave your device, making the verification process private and secure.
+</p>
+
+<ul>
+<li>SHA-256, SHA-384 and SHA-512 support</li>
+<li>Drag & drop file upload</li>
+<li>Hash verification against expected checksums</li>
+<li>Downloadable hash report</li>
+<li>Local browser processing</li>
+</ul>
+</section>
+
+<section class="info">
+<h2>FAQ</h2>
+
+<h3>Are my files uploaded?</h3>
+<p>No. Files are processed entirely inside your browser.</p>
+
+<h3>Which algorithms are supported?</h3>
+<p>SHA-256, SHA-384 and SHA-512.</p>
+
+<h3>Can I verify a downloaded file?</h3>
+<p>Yes. Paste the expected checksum and compare it with the generated hash.</p>
+</section>
+
+<section class="info">
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="password-toolkit.html">Password Toolkit</a></li>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="env-generator.html">.ENV Generator</a></li>
+<li><a href="uuid-generator.html">UUID Generator</a></li>
+</ul>
+</section>
 
 <div style="
 text-align:center;
@@ -291,7 +445,13 @@ margin-top:28px;
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 
@@ -382,7 +542,8 @@ message.className="message";
 
 resultBox.innerHTML="";
 resultBox.style.display="none";
-
+resultBox.scrollTop=0;
+dropZone.classList.remove("dragover");
 showToast("Cleared.","success");
 
 }
@@ -421,8 +582,13 @@ showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
+navigator.clipboard.writeText(text)
+.then(function(){
 showToast("Copied.","success");
+})
+.catch(function(){
+showToast("Copy failed.","error");
+});
 
 }
 
