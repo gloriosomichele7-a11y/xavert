@@ -15,7 +15,82 @@
 
 <link rel="canonical" href="https://xavert.com/tools/http-header-analyzer.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | HTTP Header Analyzer">
+<meta property="og:description" content="Analyze HTTP request and response headers, inspect security headers, caching policies and server information directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/http-header-analyzer.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | HTTP Header Analyzer">
+<meta name="twitter:description" content="Analyze HTTP headers locally in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"HTTP Header Analyzer",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/http-header-analyzer.html",
+  "description":"Analyze HTTP request and response headers locally in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Is my data uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. Header analysis is performed entirely inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which security headers are checked?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool checks common HTTP security headers including Content-Security-Policy, Strict-Transport-Security, X-Frame-Options, Referrer-Policy and others."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I analyze both request and response headers?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can paste any HTTP header block for analysis."
+      }
+    }
+  ]
+}
+</script>
 <style>
 
 *{
@@ -156,7 +231,7 @@ margin-bottom:18px;
 
 .stats{
 display:grid;
-grid-template-columns:repeat(4,1fr);
+grid-template-columns:repeat(5,1fr);
 gap:12px;
 margin-top:18px;
 }
@@ -212,6 +287,21 @@ font-size:28px;
 margin-bottom:14px;
 }
 
+.info h3{
+margin:18px 0 8px;
+font-size:18px;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:700;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .info p{
 margin-bottom:14px;
 line-height:1.8;
@@ -236,7 +326,30 @@ left:0;
 color:#dc2626;
 font-weight:700;
 }
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:#ffffff;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
 
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 
 .hero h1{
@@ -264,10 +377,10 @@ padding:20px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back-link">
-← Back to XAVERT
+← Back to Home
 </a>
 
 <section class="hero">
@@ -378,7 +491,46 @@ Analyze HTTP headers, identify missing security headers, inspect caching policie
 
 </section>
 
+<section class="info">
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Is my data uploaded?</h3>
+<p>No. All HTTP header analysis is performed locally inside your browser.</p>
+
+<h3>Which headers are analyzed?</h3>
+<p>The tool checks common HTTP security headers, caching headers and server information.</p>
+
+<h3>Can I analyze request and response headers?</h3>
+<p>Yes. You can paste any valid HTTP header block for analysis.</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="hash-generator.html">Hash Generator</a></li>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="json-toolkit.html">JSON Toolkit</a></li>
+<li><a href="regex-tester.html">Regex Tester</a></li>
+</ul>
+
+</section>
+
+<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+Powered by XAVERT
 </div>
+
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
+
 <script>
 
 const headerInput=document.getElementById("headerInput");
@@ -398,10 +550,41 @@ const missingCount=document.getElementById("missingCount");
 const cacheStatus=document.getElementById("cacheStatus");
 const securityRating=document.getElementById("securityRating");
 const message=document.getElementById("message");
+const toast=document.getElementById("toast");
 
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+toast.className="";
+
+},2200);
+
+}
 function showMessage(text,type){
+
 message.textContent=text;
-message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+
+switch(type){
+
+case "success":
+message.style.color="#047857";
+break;
+
+case "error":
+message.style.color="#dc2626";
+break;
+
+default:
+message.style.color="#6b7280";
+
+}
+
 }
 
 function analyzeHeaders(){
@@ -411,11 +594,16 @@ const text=headerInput.value.trim();
 if(!text){
 
 showMessage("Paste HTTP headers first.","error");
+showToast("Paste HTTP headers first.","error");
 return;
 
 }
 
-const lines=text.split(/\r?\n/);
+const lines=text
+.split(/\r?\n/)
+.filter(function(line){
+return line.trim()!=="";
+});
 
 const headers={};
 
@@ -570,21 +758,32 @@ reportOutput.textContent=report.join("\n");
 resultBox.style.display="block";
 
 showMessage("Analysis completed.","success");
-
+showToast("Analysis completed.","success");
 }
 
-async function copyReport(){
+function copyReport(){
 
-if(!reportOutput.textContent){
+if(!reportOutput.textContent.trim()){
 
 showMessage("Nothing to copy.","error");
+showToast("Nothing to copy.","error");
 return;
 
 }
 
-await navigator.clipboard.writeText(reportOutput.textContent);
+navigator.clipboard.writeText(reportOutput.textContent)
+.then(function(){
 
 showMessage("Report copied.","success");
+showToast("Report copied.","success");
+
+})
+.catch(function(){
+
+showMessage("Copy failed. Select and copy manually.","error");
+showToast("Copy failed.","error");
+
+});
 
 }
 
@@ -593,6 +792,7 @@ function downloadReport(){
 if(!reportOutput.textContent){
 
 showMessage("Nothing to download.","error");
+showToast("Nothing to download.","error");
 return;
 
 }
@@ -618,7 +818,7 @@ a.remove();
 URL.revokeObjectURL(url);
 
 showMessage("Download started.","success");
-
+showToast("Download started.","success");
 }
 
 function clearTool(){
@@ -650,7 +850,7 @@ X-Content-Type-Options: nosniff
 Referrer-Policy: strict-origin-when-cross-origin`;
 
 showMessage("Sample loaded.","success");
-
+showToast("Sample loaded.","success");
 }
 
 analyzeBtn.addEventListener("click",analyzeHeaders);
