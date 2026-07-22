@@ -12,7 +12,85 @@
 <link rel="canonical" href="https://xavert.com/tools/htaccess-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | HTACCESS Generator">
+<meta property="og:description" content="Generate .htaccess rules for HTTPS redirects, WWW redirects, 301 redirects and basic security headers directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/htaccess-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | HTACCESS Generator">
+<meta name="twitter:description" content="Generate .htaccess rules locally in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"HTACCESS Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/htaccess-generator.html",
+  "description":"Generate common .htaccess rules locally in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Are my rules generated locally?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. All .htaccess rules are generated locally in your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which configurations are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool can generate HTTPS redirects, WWW redirects, non-WWW redirects, 301 redirects and basic security headers."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Do I need Apache?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The generated .htaccess rules are intended for Apache web servers with mod_rewrite enabled where applicable."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -69,6 +147,18 @@ padding:26px;
 box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+padding:14px;
+border-radius:12px;
+text-align:center;
+margin-bottom:20px;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+  
 label{
 display:block;
 margin:14px 0 8px;
@@ -143,6 +233,43 @@ background:#dc2626 !important;
 .toast-info{
 background:#111827 !important;
 }
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-top:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
 @media(max-width:768px){
 
 body{
@@ -171,7 +298,7 @@ font-size:34px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -184,17 +311,7 @@ font-size:34px;
 <p class="subtitle">
 Generate common .htaccess rules for redirects, HTTPS and security.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
+<div class="success-banner">
 ✓ .htaccess rules are generated locally in your browser. Nothing is uploaded or stored.
 </div>
 <div class="card">
@@ -244,7 +361,49 @@ placeholder=".htaccess code will appear here..."
 
 </div>
 
-</div>
+<section class="info">
+
+<h2>About HTACCESS Generator</h2>
+
+<p>
+This tool generates common Apache <code>.htaccess</code> rules directly in your browser. It helps create HTTPS redirects, WWW redirects, 301 redirects and basic security headers without manually writing Apache directives.
+</p>
+
+<p>
+All generated rules remain on your device and are never uploaded to any server.
+</p>
+
+</section>
+
+<section class="info">
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Are the rules generated locally?</h3>
+<p>Yes. Everything is generated directly inside your browser.</p>
+
+<h3>Which configurations are supported?</h3>
+<p>The generator supports HTTPS redirects, WWW redirects, non-WWW redirects, 301 redirects and basic security headers.</p>
+
+<h3>Can I use it with every web server?</h3>
+<p>No. The generated rules are intended for Apache web servers that support <code>.htaccess</code>.</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="hash-generator.html">Hash Generator</a></li>
+<li><a href="env-generator.html">ENV Generator</a></li>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="file-hash-checker.html">File Hash Checker</a></li>
+</ul>
+
+</section>
+
+</main>
 
 <div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
 Powered by XAVERT
@@ -273,7 +432,7 @@ function loadExample(){
 document.getElementById("domain").value="example.com";
 document.getElementById("configType").value="https";
 
-showToast("Example loaded");
+showToast("Example loaded.","success");
 
 }
 function generateHtaccess(){
@@ -350,13 +509,21 @@ function copyOutput(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to copy");
+showToast("Nothing to copy","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
+navigator.clipboard.writeText(text)
+.then(function(){
 
-showToast("Copied");
+showToast("Copied.","success");
+
+})
+.catch(function(){
+
+showToast("Copy failed.","error");
+
+});
 
 }
 
@@ -365,7 +532,7 @@ function downloadOutput(){
 const text=document.getElementById("output").value;
 
 if(!text){
-showToast("Nothing to download");
+showToast("Nothing to download","error");
 return;
 }
 
@@ -384,7 +551,7 @@ document.body.removeChild(link);
 
 URL.revokeObjectURL(link.href);
 
-showToast("Download started");
+showToast("Download started.","success");
 
 }
 
