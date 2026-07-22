@@ -14,7 +14,82 @@
 
 <link rel="canonical" href="https://xavert.com/tools/html-entity-encoder-decoder.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | HTML Entity Encoder / Decoder">
+<meta property="og:description" content="Encode and decode HTML entities directly in your browser. Convert special characters into HTML entities or decode entities back into readable text.">
+<meta property="og:url" content="https://xavert.com/tools/html-entity-encoder-decoder.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | HTML Entity Encoder / Decoder">
+<meta name="twitter:description" content="Encode and decode HTML entities locally in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"HTML Entity Encoder / Decoder",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/html-entity-encoder-decoder.html",
+  "description":"Encode and decode HTML entities directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Is my text uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. Encoding and decoding are performed entirely inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which entities are supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool supports common HTML named entities and numeric entities."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I decode HTML entities back into normal text?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The decoder converts HTML entities back into readable characters instantly."
+      }
+    }
+  ]
+}
+</script>
 <style>
 
 *{
@@ -211,6 +286,21 @@ font-size:28px;
 margin-bottom:14px;
 }
 
+.info h3{
+margin:18px 0 8px;
+font-size:18px;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:700;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .info p{
 line-height:1.8;
 margin-bottom:14px;
@@ -235,7 +325,30 @@ left:0;
 color:#dc2626;
 font-weight:700;
 }
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:#ffffff;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+z-index:9999;
+}
 
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 
 .hero h1{
@@ -263,10 +376,10 @@ padding:20px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a class="back-link" href="../index.html">
-← Back to XAVERT
+← Back to Home
 </a>
 
 <section class="hero">
@@ -389,7 +502,46 @@ HTML entities represent reserved or special characters that cannot always be wri
 
 </section>
 
+<section class="info">
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Is my text uploaded?</h3>
+<p>No. All encoding and decoding are performed locally in your browser.</p>
+
+<h3>Which entities are supported?</h3>
+<p>The tool supports common HTML named entities and numeric entities.</p>
+
+<h3>Can I decode HTML entities back into normal text?</h3>
+<p>Yes. The decoder instantly converts HTML entities back into readable text.</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="json-toolkit.html">JSON Toolkit</a></li>
+<li><a href="url-encoder-decoder.html">URL Encoder / Decoder</a></li>
+<li><a href="regex-tester.html">Regex Tester</a></li>
+</ul>
+
+</section>
+
+<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+Powered by XAVERT
 </div>
+
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
+
 <script>
 const inputText=document.getElementById("inputText");
 const encodeBtn=document.getElementById("encodeBtn");
@@ -405,10 +557,41 @@ const charCount=document.getElementById("charCount");
 const entityCount=document.getElementById("entityCount");
 const lineCount=document.getElementById("lineCount");
 const sizeCount=document.getElementById("sizeCount");
+const toast=document.getElementById("toast");
 
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+toast.className="";
+
+},2200);
+
+}
 function showMessage(text,type){
+
 message.textContent=text;
-message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+
+switch(type){
+
+case "success":
+message.style.color="#047857";
+break;
+
+case "error":
+message.style.color="#dc2626";
+break;
+
+default:
+message.style.color="#6b7280";
+
+}
+
 }
 
 function encodeEntities(text){
@@ -458,6 +641,7 @@ result.textContent=text;
 outputBox.style.display="block";
 updateStats(inputText.value,text);
 showMessage(action+" completed.","success");
+showToast(action+" completed.","success");
 }
 
 function encodeText(){
@@ -482,18 +666,28 @@ return;
 renderOutput(decodeEntities(text),"Decoding");
 }
 
-async function copyResult(){
+function copyResult(){
+
 if(!result.textContent.trim()){
 showMessage("Nothing to copy.","error");
+showToast("Nothing to copy.","error");
 return;
 }
 
-try{
-await navigator.clipboard.writeText(result.textContent);
+navigator.clipboard.writeText(result.textContent)
+.then(function(){
+
 showMessage("Result copied.","success");
-}catch(error){
+showToast("Result copied.","success");
+
+})
+.catch(function(){
+
 showMessage("Copy failed. Select and copy manually.","error");
-}
+showToast("Copy failed.","error");
+
+});
+
 }
 
 function downloadResult(){
@@ -514,6 +708,7 @@ a.remove();
 
 URL.revokeObjectURL(url);
 showMessage("Download started.","success");
+showToast("Download started.","success");
 }
 
 function clearTool(){
