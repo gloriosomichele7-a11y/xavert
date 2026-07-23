@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,85 @@
 <link rel="canonical" href="https://xavert.com/tools/meta-tag-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Meta Tag Generator">
+<meta property="og:description" content="Create SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots directives directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/meta-tag-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Meta Tag Generator">
+<meta name="twitter:description" content="Generate SEO, Open Graph and Twitter Card meta tags locally in your browser.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Meta Tag Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/meta-tag-generator.html",
+  "description":"Generate SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots directives directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Are my meta tags uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All meta tags are generated locally inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which tags can this tool generate?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The tool generates title, description, robots, author, keywords, canonical, Open Graph and Twitter Card tags."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I copy or download the generated tags?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can copy the generated HTML or download it as an HTML snippet."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -181,6 +259,58 @@ font-size:14px;
 font-weight:600;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+
+.footer-note{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+}
+  
 .success{color:#047857;}
 .error{color:#dc2626;}
 
@@ -190,12 +320,12 @@ bottom:22px;
 left:50%;
 transform:translateX(-50%);
 background:#111827;
-color:white;
+color:#ffffff;
 padding:12px 20px;
 border-radius:10px;
 display:none;
+pointer-events:none;
 z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
 
 .toast-success{
@@ -228,7 +358,7 @@ h1{font-size:34px;}
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -241,17 +371,7 @@ h1{font-size:34px;}
 <p class="subtitle">
 Create SEO meta tags, Open Graph tags and Twitter Card tags directly in your browser.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
+<div class="success-banner">
 ✓ Meta tags are generated locally in your browser. Nothing is uploaded or stored.
 </div>
 <div class="card">
@@ -330,18 +450,38 @@ color:#047857;
 
 </div>
 
-</div>
+<section class="info">
 
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
+<h2>Frequently Asked Questions</h2>
+
+<h3>Are my meta tags uploaded?</h3>
+<p>No. Everything is generated locally inside your browser.</p>
+
+<h3>Which meta tags are supported?</h3>
+<p>The generator creates title, description, robots, keywords, author, canonical, Open Graph and Twitter Card tags.</p>
+
+<h3>Can I use the generated code on any website?</h3>
+<p>Yes. The generated HTML can be copied or downloaded and used on any website.</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<div id="related-tools"></div>
+
+</section>
+</main>
+<div class="footer-note">
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 const titleInput=document.getElementById("siteTitle");
@@ -384,6 +524,8 @@ const message=document.getElementById("message");
 
 message.textContent=text;
 message.className="message " + type;
+
+showToast(text,type);
 
 }
 
@@ -453,7 +595,6 @@ output.value="";
 updatePreview();
 
 setMessage("Sample meta data loaded.","success");
-showToast("Sample meta data loaded.","success");
 
 }
 function generateTags(){
@@ -473,7 +614,6 @@ setMessage(
 "error"
 );
 
-showToast("Please enter at least a title and description.","error");
 return;
 
 }
@@ -532,12 +672,23 @@ showToast("Meta tags generated.","success");
 function copyText(text){
 
 if(!text){
-showToast("Nothing to copy.","error");
+
+setMessage("Nothing to copy.","error");
 return;
+
 }
 
-navigator.clipboard.writeText(text);
-showToast("Copied.","success");
+navigator.clipboard.writeText(text)
+.then(function(){
+
+setMessage("Copied.","success");
+
+})
+.catch(function(){
+
+setMessage("Copy failed.","error");
+
+});
 
 }
 
@@ -556,23 +707,28 @@ const blob=new Blob([output.value],{
 type:"text/html;charset=utf-8"
 });
 
+const url=URL.createObjectURL(blob);
+
 const link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
+link.href=url;
 link.download="xavert-meta-tags-snippet.html";
 
 document.body.appendChild(link);
 link.click();
 document.body.removeChild(link);
 
-URL.revokeObjectURL(link.href);
+setTimeout(function(){
+URL.revokeObjectURL(url);
+},1000);
 
-showToast("Download started.","success");
+setMessage("Download started.","success");
 
 }
 
 function clearAll(){
 
 titleInput.value="";
+titleInput.focus();
 descriptionInput.value="";
 keywordsInput.value="";
 canonicalInput.value="";
@@ -590,8 +746,7 @@ authorInput.value="";
 keywordsInput.value="";
 
 updatePreview();
-
-showToast("Cleared.","success");
+setMessage("Editor cleared.","success");
 
 }
 </script>
