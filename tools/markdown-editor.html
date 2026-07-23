@@ -476,7 +476,10 @@ Write your Markdown here...
 
 <div>
 <label>Live Preview</label>
-<div id="previewBox" class="preview-box"></div>
+<div
+id="previewBox"
+class="preview-box"
+aria-live="polite"></div>
 
 <div class="button-group">
 <button onclick="copyMarkdown()">Copy Markdown</button>
@@ -545,7 +548,7 @@ Write your Markdown here...
 </main>
 
 <div class="footer-note">
-Powered by XAVERT
+Powered by <strong>XAVERT</strong>
 </div>
 
 <div
@@ -979,7 +982,7 @@ copyText(previewBox.innerHTML);
 function downloadText(text,fileName,type){
 
 if(!text){
-showToast("Nothing to download.","error");
+setMessage("Nothing to download.","error");
 return;
 }
 
