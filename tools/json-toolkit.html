@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,85 @@
 <link rel="canonical" href="https://xavert.com/tools/json-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | JSON Toolkit Pro">
+<meta property="og:description" content="Format, validate, minify, escape, unescape and compare JSON data directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/json-toolkit.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | JSON Toolkit Pro">
+<meta name="twitter:description" content="Process JSON locally in your browser without uploading data.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"JSON Toolkit Pro",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/json-toolkit.html",
+  "description":"Format, validate, minify, escape, unescape and compare JSON data directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Is my JSON uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All JSON processing happens locally inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I validate JSON?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The toolkit validates JSON syntax and reports parsing errors."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I compare two JSON files?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. The comparison tool highlights added, removed and modified values."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -72,6 +150,18 @@ box-shadow:0 6px 18px rgba(0,0,0,.04);
 margin-bottom:20px;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+  
 label{
 display:block;
 margin:14px 0 8px;
@@ -156,6 +246,44 @@ line-height:1.7;
 word-break:break-word;
 }
 
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+  
 .drop-zone{
 border:2px dashed #d1d5db;
 border-radius:16px;
@@ -209,10 +337,11 @@ bottom:22px;
 left:50%;
 transform:translateX(-50%);
 background:#111827;
-color:white;
+color:#ffffff;
 padding:12px 20px;
 border-radius:10px;
 display:none;
+pointer-events:none;
 z-index:9999;
 box-shadow:0 4px 12px rgba(0,0,0,.2);
 }
@@ -229,6 +358,13 @@ background:#dc2626 !important;
 background:#111827 !important;
 }
 
+.footer-note{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+}
+  
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -241,7 +377,7 @@ h1{font-size:34px;}
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -254,17 +390,7 @@ h1{font-size:34px;}
 <p class="subtitle">
 Format, validate, minify, escape, unescape and compare JSON data directly in your browser.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
+<div class="success-banner">
 ✓ JSON data is processed locally in your browser. Nothing is uploaded or stored.
 </div>
 <div class="card">
@@ -376,18 +502,45 @@ Click or drag a JSON file here
 <div id="compareResult" class="result-box"></div>
 </div>
 
-</div>
+<section class="info">
 
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
+<h2>Frequently Asked Questions</h2>
+
+<h3>Is my JSON uploaded?</h3>
+<p>No. All JSON processing happens locally inside your browser.</p>
+
+<h3>Can I validate JSON?</h3>
+<p>Yes. The validator checks JSON syntax and reports parsing errors.</p>
+
+<h3>Can I compare two JSON documents?</h3>
+<p>Yes. The compare tool highlights added, removed and modified values.</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<ul>
+<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
+<li><a href="regex-tester.html">Regex Tester</a></li>
+<li><a href="diff-checker.html">Diff Checker</a></li>
+<li><a href="data-converter.html">Data Converter</a></li>
+</ul>
+
+</section>
+
+</main>
+
+<div class="footer-note">
 Powered by XAVERT
 </div>
 
-<div id="toast"></div>
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 const toolSelector=document.getElementById("toolSelector");
@@ -477,15 +630,24 @@ element.textContent=text;
 element.className="message " + type;
 }
 
-function copyText(text){
+async function copyText(text){
 
 if(!text){
 showToast("Nothing to copy.","error");
 return;
 }
 
-navigator.clipboard.writeText(text);
+try{
+
+await navigator.clipboard.writeText(text);
+
 showToast("Copied.","success");
+
+}catch(error){
+
+showToast("Copy failed.","error");
+
+}
 
 }
 
@@ -504,18 +666,26 @@ const blob=new Blob([text],{
 type:"text/plain;charset=utf-8"
 });
 
+const url=URL.createObjectURL(blob);
+
 const link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
+
+link.href=url;
 link.download=fileName;
 
 document.body.appendChild(link);
+
 link.click();
+
 document.body.removeChild(link);
 
-URL.revokeObjectURL(link.href);
+setTimeout(function(){
+
+URL.revokeObjectURL(url);
+
+},1000);
 
 showToast("Download started.","success");
-
 }
 
 function downloadResult(){
@@ -551,8 +721,23 @@ fileCount.textContent=
 file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB";
 
 try{
-jsonInput.value=await file.text();
-setMessage(mainMessage,"JSON file loaded successfully. You can now format, minify or validate it.","success");
+const text=await file.text();
+
+if(!text.trim()){
+
+throw new Error("Empty file.");
+
+}
+
+jsonInput.value=text;
+
+setMessage(
+mainMessage,
+"JSON file loaded successfully. You can now format, minify or validate it.",
+"success"
+);
+
+showToast("JSON file loaded.","success");
 }catch(error){
 setMessage(mainMessage,"Unable to read file.","error");
 }
@@ -580,6 +765,8 @@ return null;
 }
 
 function updateStats(text,json=null){
+
+text=text || "";
 
 const lines=text ? text.split(/\r?\n/).length : 0;
 const characters=text.length;
@@ -750,8 +937,13 @@ return result;
 }
 
 Object.keys(obj).forEach(key=>{
-const path=prefix ? prefix + "." + key : key;
+
+const path=Array.isArray(obj)
+? (prefix ? prefix + "[" + key + "]" : "[" + key + "]")
+: (prefix ? prefix + "." + key : key);
+
 flattenObject(obj[key],path,result);
+
 });
 
 return result;
@@ -845,6 +1037,7 @@ document.getElementById("compareResult").innerHTML="";
 document.getElementById("compareResult").style.display="none";
 showToast("Compare cleared.","success");
 }
+toolSelector.dispatchEvent(new Event("change"));  
 </script>
 
 </body>
