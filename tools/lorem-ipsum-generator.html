@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +12,85 @@
 <link rel="canonical" href="https://xavert.com/tools/lorem-ipsum-generator.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Lorem Ipsum Generator">
+<meta property="og:description" content="Generate placeholder text for websites, applications, layouts and design projects directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/lorem-ipsum-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Lorem Ipsum Generator">
+<meta name="twitter:description" content="Generate placeholder text instantly for websites, applications and design projects.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"Lorem Ipsum Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript",
+  "url":"https://xavert.com/tools/lorem-ipsum-generator.html",
+  "description":"Generate Lorem Ipsum placeholder text locally in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Is the generated text uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. All placeholder text is generated locally inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I generate words, sentences and paragraphs?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can generate Lorem Ipsum as words, sentences or paragraphs."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I copy or download the generated text?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can copy the generated text to the clipboard or download it as a TXT file."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -161,6 +239,18 @@ font-size:14px;
 font-weight:600;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+  
 .success{
 color:#047857;
 }
@@ -175,10 +265,11 @@ bottom:22px;
 left:50%;
 transform:translateX(-50%);
 background:#111827;
-color:white;
+color:#ffffff;
 padding:12px 20px;
 border-radius:10px;
 display:none;
+pointer-events:none;
 z-index:9999;
 }
 
@@ -191,6 +282,59 @@ background:#dc2626 !important;
 }
 .toast-info{
 background:#111827 !important;
+}
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+.footer-note{
+margin-top:30px;
+text-align:center;
+font-size:14px;
+color:#6b7280;
+}
+
+.footer-note a{
+color:#dc2626;
+font-weight:700;
+text-decoration:none;
+}
+
+.footer-note a:hover{
+text-decoration:underline;
 }
 @media(max-width:900px){
 
@@ -232,7 +376,7 @@ font-size:34px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
@@ -245,18 +389,8 @@ font-size:34px;
 <p class="subtitle">
 Generate placeholder text for websites, applications, layouts and design projects.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Placeholder text is generated locally in your browser. Nothing is uploaded or stored.
+<div class="success-banner">
+Placeholder text is generated locally in your browser. Nothing is uploaded or stored.
 </div>
 <div class="card">
 
@@ -343,18 +477,46 @@ placeholder="Generated Lorem Ipsum text will appear here..."
 
 </div>
 
-</div>
+<section class="info">
 
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
+<h2>Frequently Asked Questions</h2>
 
-<div id="toast"></div>
+<h3>Is the generated text uploaded?</h3>
+<p>
+No. All Lorem Ipsum text is generated locally in your browser.
+</p>
+
+<h3>Can I generate words, sentences and paragraphs?</h3>
+<p>
+Yes. You can generate placeholder text as words, sentences or paragraphs.
+</p>
+
+<h3>Can I download the generated text?</h3>
+<p>
+Yes. You can copy it to the clipboard or download it as a TXT file.
+</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<div id="relatedTools"></div>
+
+</section>
+
+<p class="footer-note">
+Powered by <a href="../index.html">XAVERT</a>
+</p>
+
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 
@@ -383,15 +545,31 @@ toast.className="";
 
 }
 
-function setMessage(text,type){
+function setMessage(text,type="info"){
 
 const message=document.getElementById("message");
 
 message.textContent=text;
-message.className="message " + type;
+
+message.className="message";
+
+if(type==="success"){
+
+message.classList.add("success");
+
+}else if(type==="error"){
+
+message.classList.add("error");
 
 }
 
+if(text){
+
+showToast(text,type);
+
+}
+
+}
 function randomWord(){
 
 return loremWords[
@@ -440,8 +618,6 @@ document.getElementById("quantity").value="3";
 document.getElementById("startLorem").checked=true;
 
 generateLorem();
-
-showToast("Sample generated.","success");
 
 }
 function generateLorem(){
@@ -511,7 +687,7 @@ setMessage(
 "Lorem Ipsum generated successfully.",
 "success"
 );
-showToast("Lorem Ipsum generated.","success");
+
 }
 
 function updateStats(text){
@@ -533,18 +709,28 @@ type==="paragraphs"
 
 }
 
-function copyOutput(){
+async function copyOutput(){
 
-const text=document.getElementById("output").value;
+const text=document.getElementById("output").value.trim();
 
-if(!text){
-showToast("Nothing to copy","error");
+if(text===""){
+
+setMessage("Nothing to copy.","error");
 return;
+
 }
 
-navigator.clipboard.writeText(text);
+try{
 
-showToast("Copied.","success");
+await navigator.clipboard.writeText(text);
+
+setMessage("Copied.","success");
+
+}catch{
+
+setMessage("Copy failed.","error");
+
+}
 
 }
 
@@ -566,19 +752,28 @@ type:"text/plain;charset=utf-8"
 
 const link=document.createElement("a");
 
-link.href=URL.createObjectURL(blob);
+const url=URL.createObjectURL(blob);
+
+link.href=url;
+
 const type=document.getElementById("type").value;
 
 link.download=
 "xavert-lorem-" + type + ".txt";
 
 document.body.appendChild(link);
+
 link.click();
+
 document.body.removeChild(link);
 
-URL.revokeObjectURL(link.href);
+setTimeout(function(){
 
-showToast("Download started.","success");
+URL.revokeObjectURL(url);
+
+},1000);
+
+setMessage("Download started.","success");
 
 }
 
@@ -591,10 +786,8 @@ document.getElementById("startLorem").checked=true;
 document.getElementById("wordCount").textContent="0";
 document.getElementById("charCount").textContent="0";
 document.getElementById("paragraphCount").textContent="0";
-
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-showToast("Cleared.","success");
+document.getElementById("output").focus();
+setMessage("Tool cleared.","success");
 }
 
 </script>
