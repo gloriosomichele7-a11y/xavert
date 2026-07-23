@@ -324,18 +324,8 @@ font-size:34px;
 <p class="subtitle">
 Extract dominant colors from images and generate beautiful palettes instantly.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Images are processed locally in your browser. Nothing is uploaded or stored.
+<div class="success-banner">
+Images are processed locally in your browser. Nothing is uploaded or stored.
 </div>
 <div class="card">
 
@@ -431,25 +421,13 @@ Here are the most common questions about extracting color palettes online with X
 </ul>
 
 </section>
-<section class="related-tools">
+<section class="info">
 
 <h2>Related Tools</h2>
 
-<div class="related-grid">
+<div id="related-tools"></div>
 
-<div class="related-card">
-<h3>Color Converter</h3>
-<p>Convert colors between HEX, RGB, HSL and other formats.</p>
-<a href="color-converter.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>Image Toolkit</h3>
-<p>Edit, optimize and convert images directly in your browser.</p>
-<a href="image-toolkit.html">Open Tool</a>
-</div>
-
-<div class="related-card">
+</section>
 <h3>QR Generator</h3>
 <p>Create QR codes for links, text and contact information.</p>
 <a href="qr-generator.html">Open Tool</a>
@@ -468,11 +446,15 @@ Here are the most common questions about extracting color palettes online with X
 
 <canvas id="canvas" hidden></canvas>
 
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
+<div class="footer-note">
 Powered by XAVERT
 </div>
 
-<div id="toast" role="status" aria-live="polite"></div>
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <script>
 
@@ -874,14 +856,22 @@ const blob=new Blob([content],{type});
 
 const link=document.createElement("a");
 
-link.href=URL.createObjectURL(blob);
+const url=URL.createObjectURL(blob);
+
+link.href=url;
 link.download=name;
 
 document.body.appendChild(link);
+
 link.click();
+
 document.body.removeChild(link);
 
-URL.revokeObjectURL(link.href);
+setTimeout(function(){
+
+URL.revokeObjectURL(url);
+
+},1000);
 
 showToast("Download started.","success");
 
