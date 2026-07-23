@@ -15,7 +15,82 @@
 
 <link rel="canonical" href="https://xavert.com/tools/jwt-generator.html">
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../assets/css/global.css">
+<link rel="stylesheet" href="../assets/css/components.css">
+<link rel="stylesheet" href="../assets/css/responsive.css">
 
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | JWT Generator">
+<meta property="og:description" content="Generate HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser.">
+<meta property="og:url" content="https://xavert.com/tools/jwt-generator.html">
+<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta property="og:site_name" content="XAVERT">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | JWT Generator">
+<meta name="twitter:description" content="Generate HS256 JWT tokens locally without uploading your data or secret key.">
+<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"WebApplication",
+  "name":"JWT Generator",
+  "applicationCategory":"DeveloperApplication",
+  "operatingSystem":"Any",
+  "browserRequirements":"Requires JavaScript and Web Crypto API",
+  "url":"https://xavert.com/tools/jwt-generator.html",
+  "description":"Generate HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser.",
+  "inLanguage":"en",
+  "isAccessibleForFree":true,
+  "offers":{
+    "@type":"Offer",
+    "price":"0",
+    "priceCurrency":"USD"
+  },
+  "publisher":{
+    "@type":"Organization",
+    "name":"XAVERT"
+  }
+}
+</script>
+
+<script type="application/ld+json">
+{
+  "@context":"https://schema.org",
+  "@type":"FAQPage",
+  "mainEntity":[
+    {
+      "@type":"Question",
+      "name":"Is my JWT secret key uploaded?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"No. JWT generation and signing happen locally inside your browser."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Which signing algorithm is supported?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"The JWT Generator supports HMAC SHA-256, commonly identified as HS256."
+      }
+    },
+    {
+      "@type":"Question",
+      "name":"Can I customize the JWT header and payload?",
+      "acceptedAnswer":{
+        "@type":"Answer",
+        "text":"Yes. You can provide custom JSON objects for both the JWT header and payload."
+      }
+    }
+  ]
+}
+</script>
 <style>
 *{
 margin:0;
@@ -272,45 +347,96 @@ min-height:20px;
 color:#6b7280;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+  
 .info{
-margin-top:36px;
 background:#ffffff;
-border:1px solid #eceff3;
-border-radius:22px;
+border:1px solid #e5e7eb;
+border-radius:18px;
 padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.04);
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
 .info h2{
-font-size:28px;
-margin-bottom:14px;
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
 }
 
 .info p{
-line-height:1.8;
-margin-bottom:14px;
-color:#4b5563;
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
 }
 
 .info ul{
-list-style:none;
+padding-left:20px;
+line-height:1.8;
 }
 
-.info li{
-position:relative;
-padding-left:18px;
-margin:8px 0;
-line-height:1.7;
-}
-
-.info li::before{
-content:"•";
-position:absolute;
-left:0;
+.info a{
 color:#dc2626;
-font-weight:800;
+text-decoration:none;
+font-weight:600;
 }
 
+.info a:hover{
+text-decoration:underline;
+}
+.footer-note{
+margin-top:30px;
+text-align:center;
+font-size:14px;
+color:#6b7280;
+}
+
+.footer-note a{
+color:#dc2626;
+font-weight:700;
+text-decoration:none;
+}
+
+.footer-note a:hover{
+text-decoration:underline;
+}
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:#ffffff;
+padding:12px 20px;
+border-radius:10px;
+display:none;
+pointer-events:none;
+z-index:9999;
+}
+
+.toast-success{
+background:#047857!important;
+}
+
+.toast-error{
+background:#dc2626!important;
+}
+
+.toast-info{
+background:#111827!important;
+}
 @media(max-width:768px){
 .container{
 padding:24px 16px 46px;
@@ -344,10 +470,10 @@ padding:20px;
 
 <body>
 
-<div class="container">
+<main class="container">
 
 <a href="../index.html" class="back-link">
-← Back to XAVERT
+← Back to Home
 </a>
 
 <section class="hero">
@@ -359,7 +485,9 @@ Create HS256 JSON Web Tokens with custom headers, payloads and secret keys direc
 </p>
 
 </section>
-
+<div class="success-banner">
+JWT generation and signing happen locally in your browser. Your secret key is never uploaded.
+</div>
 <section class="tool-card">
 
 <div class="editor-grid">
@@ -517,7 +645,47 @@ A JSON Web Token is a compact token format commonly used for authentication, aut
 
 </section>
 
-</div>
+<section class="info">
+
+<h2>Frequently Asked Questions</h2>
+
+<h3>Is my JWT secret key uploaded?</h3>
+<p>
+No. The secret key, header, payload and generated token remain inside your browser.
+</p>
+
+<h3>Which algorithm does this tool support?</h3>
+<p>
+The generator creates JWT signatures using HMAC SHA-256, also known as HS256.
+</p>
+
+<h3>Does this tool verify generated tokens?</h3>
+<p>
+No. It generates signed tokens but does not verify their validity on an external server.
+</p>
+
+</section>
+
+<section class="info">
+
+<h2>Related Tools</h2>
+
+<div id="relatedTools"></div>
+
+</section>
+
+<p class="footer-note">
+Powered by <a href="../index.html">XAVERT</a>
+</p>
+
+</main>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
+
 <script>
 const jwtHeader=document.getElementById("jwtHeader");
 const jwtPayload=document.getElementById("jwtPayload");
@@ -548,9 +716,47 @@ const algorithmStat=document.getElementById("algorithmStat");
 const message=document.getElementById("message");
 const headerCounter=document.getElementById("headerCounter");
 const payloadCounter=document.getElementById("payloadCounter");
-function showMessage(text,type){
+const toast=document.getElementById("toast");
+
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+toast.className="";
+
+},2200);
+
+}
+
+function showMessage(text,type="info"){
+
 message.textContent=text;
-message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+
+if(type==="error"){
+
+message.style.color="#dc2626";
+
+}else if(type==="success"){
+
+message.style.color="#047857";
+
+}else{
+
+message.style.color="#6b7280";
+
+}
+
+if(text){
+
+showToast(text,type);
+
+}
+
 }
 
 function validateJSONField(field){
@@ -747,6 +953,7 @@ updateCounters();
 
 validateJSONField(jwtHeader);
 validateJSONField(jwtPayload);
+updateGenerateButton();
 showMessage("JSON formatted.","success");
 
 }catch{
@@ -759,14 +966,26 @@ showMessage("Invalid JSON.","error");
 
 async function copyToken(){
 
-if(jwtOutput.textContent===""){
+const token=jwtOutput.textContent.trim();
+
+if(token===""){
+
 showMessage("Nothing to copy.","error");
 return;
+
 }
 
-await navigator.clipboard.writeText(jwtOutput.textContent);
+try{
+
+await navigator.clipboard.writeText(token);
 
 showMessage("Token copied.","success");
+
+}catch{
+
+showMessage("Copy failed.","error");
+
+}
 
 }
 
@@ -814,10 +1033,16 @@ a.href=url;
 a.download="xavert-jwt.txt";
 
 document.body.appendChild(a);
+
 a.click();
-a.remove();
+
+document.body.removeChild(a);
+
+setTimeout(function(){
 
 URL.revokeObjectURL(url);
+
+},1000);
 
 showMessage("Download started.","success");
 
@@ -844,7 +1069,11 @@ outputBox.style.display="none";
 
 jwtHeader.classList.remove("valid-json","invalid-json");
 jwtPayload.classList.remove("valid-json","invalid-json");
+headerCounter.textContent="0 characters";
+payloadCounter.textContent="0 characters";
 
+message.textContent="";
+message.style.color="#6b7280";
 updateCounters();
 updateGenerateButton();
 
@@ -873,8 +1102,9 @@ jwtHeader.addEventListener("input",function(){
 validateJSONField(jwtHeader);
 
 updateCounters();
-
 updateGenerateButton();
+
+showMessage("Tool cleared.","success");
 
 });
 
