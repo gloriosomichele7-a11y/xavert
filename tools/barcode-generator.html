@@ -267,6 +267,10 @@ margin-bottom:20px;
 box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
+.about-card > *{
+max-width:900px;
+}  
+
 .info h2{
 font-size:26px;
 font-weight:800;
@@ -304,19 +308,29 @@ color:#dc2626;
 }
 
 .about-features{
-padding-left:22px;
+list-style:none;
+padding-left:0;
 margin-bottom:28px;
 color:#4b5563;
 }
 
 .about-features li{
-padding-left:5px;
+position:relative;
+padding-left:25px;
 margin-bottom:10px;
 line-height:1.65;
 }
 
-.about-features li::marker{
-color:#dc2626;
+.about-features li::before{
+content:"";
+position:absolute;
+left:2px;
+top:.82em;
+width:5px;
+height:5px;
+border-radius:50%;
+background:#dc2626;
+transform:translateY(-50%);
 }
 
 .about-privacy{
