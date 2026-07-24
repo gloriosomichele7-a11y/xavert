@@ -194,6 +194,51 @@ button:hover{
 background:#b91c1c;
 }
 
+.info{
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:18px;
+padding:26px;
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
+}
+
+.info h2{
+margin-bottom:16px;
+}
+
+.info h3{
+margin:18px 0 8px;
+}
+
+.info p{
+line-height:1.7;
+margin-bottom:12px;
+color:#374151;
+}
+
+.info ul{
+padding-left:20px;
+line-height:1.8;
+}
+
+.info a{
+color:#dc2626;
+text-decoration:none;
+font-weight:600;
+}
+
+.info a:hover{
+text-decoration:underline;
+}
+
+.footer-note{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+}
+  
 .result-box{
 display:none;
 margin-top:20px;
@@ -209,6 +254,18 @@ font-size:14px;
 font-weight:600;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}
+  
 .error{color:#dc2626;}
 .success{color:#047857;}
 .button-group{
@@ -264,18 +321,8 @@ button{width:100%;}
 <p class="subtitle">
 Encode and decode Base64 text directly in your browser.
 </p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ All Base64 encoding and decoding is performed locally in your browser. No data is uploaded or stored.
+<div class="success-banner">
+All Base64 encoding and decoding is performed locally in your browser. No data is uploaded or stored.
 </div>
 <div class="card">
 
@@ -366,43 +413,25 @@ Here are the most common questions about encoding and decoding Base64 online wit
 </ul>
 
 </section>  
-<section class="related-tools">
+<section class="info">
 
 <h2>Related Tools</h2>
 
-<div class="related-grid">
-
-<div class="related-card">
-<h3>Barcode Generator</h3>
-<p>Create professional product and inventory barcodes.</p>
-<a href="barcode-generator.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>QR Generator</h3>
-<p>Create QR codes for links, text and contact information.</p>
-<a href="qr-generator.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>URL Toolkit</h3>
-<p>Encode, decode and inspect URLs.</p>
-<a href="url-toolkit.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>UUID Generator</h3>
-<p>Generate secure UUID identifiers instantly.</p>
-<a href="uuid-generator.html">Open Tool</a>
-</div>
-
-</div>
+<div id="related-tools"></div>
 
 </section>
 
 </main>
 
-<div id="toast" role="status" aria-live="polite"></div>
+<div class="footer-note">
+Powered by XAVERT
+</div>
+
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 <script>
 
 const inputText=document.getElementById("inputText");
@@ -493,9 +522,7 @@ function setMessage(text,type){
 message.textContent=text;
 message.className="message " + type;
 
-if(type==="error"){
-showToast(text,"error");
-}
+showToast(text,type);
 
 }
 
@@ -528,7 +555,6 @@ outputLabel.textContent="Encoded Output";
 resultBox.style.display="block";
 
 setMessage("Text encoded successfully.","success");
-showToast("Text encoded successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -580,7 +606,6 @@ utfInfo.style.display="block";
 utfInfo.textContent="Decoded as UTF-8 text";
 
 setMessage("Base64 decoded successfully.","success");
-showToast("Base64 decoded successfully.","success");
 }catch(error){
 
 console.error(error);
@@ -622,14 +647,23 @@ const blob=new Blob(
 
 const link=document.createElement("a");
 
-link.href=URL.createObjectURL(blob);
+const url=URL.createObjectURL(blob);
+
+link.href=url;
 link.download="xavert-base64-" + lastAction + ".txt";
 
 document.body.appendChild(link);
+
 link.click();
+
 document.body.removeChild(link);
 
-URL.revokeObjectURL(link.href);
+setTimeout(function(){
+
+URL.revokeObjectURL(url);
+
+},1000);
+
 showToast("Download started.","success");
 }
 
