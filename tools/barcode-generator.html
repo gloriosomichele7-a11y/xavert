@@ -299,13 +299,25 @@ min-height:20px;
 color:#6b7280;
 }
 
+.success-banner{
+background:#ecfdf5;
+border:1px solid #a7f3d0;
+border-radius:12px;
+padding:14px;
+margin-bottom:20px;
+text-align:center;
+font-size:14px;
+font-weight:700;
+color:#047857;
+}  
+
 .info{
-margin-top:36px;
 background:#ffffff;
-border:1px solid #eceff3;
-border-radius:22px;
+border:1px solid #e5e7eb;
+border-radius:18px;
 padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.04);
+margin-bottom:20px;
+box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
 .info h2{
@@ -387,6 +399,10 @@ Create professional barcodes for products, inventory, logistics and retail direc
 </p>
 
 </section>
+
+<div class="success-banner">
+Barcodes are generated locally in your browser. No barcode data is uploaded or stored.
+</div>
 
 <section class="tool-card">
 
@@ -516,37 +532,11 @@ Load Sample
 <div class="message" id="message" aria-live="polite"></div>
 
 </section>
-<section class="related-tools">
+<section class="info">
 
 <h2>Related Tools</h2>
 
-<div class="related-grid">
-
-<div class="related-card">
-<h3>QR Generator</h3>
-<p>Create QR codes for links, text and digital content.</p>
-<a href="qr-generator.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>Image Toolkit</h3>
-<p>Edit, optimize and convert images directly in your browser.</p>
-<a href="image-toolkit.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>URL Toolkit</h3>
-<p>Encode, decode and inspect URLs quickly.</p>
-<a href="url-toolkit.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>Base64 Toolkit</h3>
-<p>Encode and decode Base64 data securely in your browser.</p>
-<a href="base64-toolkit.html">Open Tool</a>
-</div>
-
-</div>
+<div id="related-tools"></div>
 
 </section>
 <section class="info">
@@ -583,6 +573,11 @@ Here are the most common questions about generating barcodes online with XAVERT.
 
 </section>
 </main>
+
+<div class="footer-note">
+Powered by XAVERT
+</div>
+
 <script>
 const barcodeValue=document.getElementById("barcodeValue");
 const barcodeFormat=document.getElementById("barcodeFormat");
@@ -742,20 +737,31 @@ return new XMLSerializer().serializeToString(clone);
 }
 
 function downloadFile(filename,content,type){
+
 const blob=new Blob([content],{type:type});
+
 const url=URL.createObjectURL(blob);
+
 const a=document.createElement("a");
 
 a.href=url;
 a.download=filename;
+
 document.body.appendChild(a);
+
 a.click();
-a.remove();
+
+document.body.removeChild(a);
+
+setTimeout(function(){
 
 URL.revokeObjectURL(url);
-showMessage("Download started.","success");
-}
 
+},1000);
+
+showMessage("Download started.","success");
+
+}
 function downloadSvg(){
 const svgContent=getSvgContent();
 
