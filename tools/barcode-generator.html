@@ -759,7 +759,17 @@ heightStat.textContent=height;
 showMessage("Barcode generated successfully.","success");
 
 }catch(error){
+
+barcodeSvg.innerHTML="";
+previewBox.style.display="none";
+
+formatStat.textContent="-";
+lengthStat.textContent="0";
+widthStat.textContent="0";
+heightStat.textContent="0";
+
 showMessage("Could not generate barcode. Check the value and format.","error");
+
 }
 }
 
@@ -931,13 +941,15 @@ clearBtn.addEventListener("click",clearTool);
 sampleBtn.addEventListener("click",loadSample);
 barcodeValue.addEventListener("input",function(){
 
-if(barcodeValue.value.trim()){
-generateBarcode();
-}else{
 barcodeSvg.innerHTML="";
 previewBox.style.display="none";
+
+formatStat.textContent="-";
+lengthStat.textContent="0";
+widthStat.textContent="0";
+heightStat.textContent="0";
+
 showMessage("");
-}
 
 });
 
@@ -955,21 +967,27 @@ showMessage("");
 });
 
 barcodeWidth.addEventListener("change",function(){
-if(barcodeValue.value.trim()){
+
+if(barcodeSvg.innerHTML.trim()){
 generateBarcode();
 }
+
 });
 
 barcodeHeight.addEventListener("change",function(){
-if(barcodeValue.value.trim()){
+
+if(barcodeSvg.innerHTML.trim()){
 generateBarcode();
 }
+
 });
 
 displayValue.addEventListener("change",function(){
-if(barcodeValue.value.trim()){
+
+if(barcodeSvg.innerHTML.trim()){
 generateBarcode();
 }
+
 });
 barcodeValue.addEventListener("keydown",function(event){
 
