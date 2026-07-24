@@ -721,8 +721,18 @@ const showText=displayValue.value==="true";
 const validationError=validateBarcodeValue(value,format);
 
 if(validationError){
+
+barcodeSvg.innerHTML="";
+previewBox.style.display="none";
+
+formatStat.textContent="-";
+lengthStat.textContent="0";
+widthStat.textContent="0";
+heightStat.textContent="0";
+
 showMessage(validationError,"error");
 return;
+
 }
 
 try{
