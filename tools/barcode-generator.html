@@ -863,12 +863,20 @@ const a=document.createElement("a");
 
 a.href=pngUrl;
 a.download="xavert-barcode.png";
+
 document.body.appendChild(a);
+
 a.click();
-a.remove();
+
+document.body.removeChild(a);
+
+setTimeout(function(){
 
 URL.revokeObjectURL(pngUrl);
 URL.revokeObjectURL(url);
+
+},1000);
+
 showMessage("PNG download started.","success");
 },"image/png");
 };
@@ -898,6 +906,8 @@ showMessage("Copy failed. Select and copy manually.","error");
 
 function clearTool(){
 barcodeValue.value="";
+barcodeValue.focus();
+
 barcodeFormat.value="CODE128";
 barcodeWidth.value="2";
 barcodeHeight.value="90";
