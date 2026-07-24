@@ -1525,7 +1525,13 @@ const button=category.querySelector(".category-button");
 category.classList.remove("expanded");
 
 cards.forEach(function(card,index){
-card.style.display=index<4 ? "block" : "none";
+
+if(button && index>=4){
+card.style.display="none";
+}else{
+card.style.display="block";
+}
+
 });
 
 if(button){
