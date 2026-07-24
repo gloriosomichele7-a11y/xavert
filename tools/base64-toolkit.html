@@ -280,10 +280,12 @@ bottom:22px;
 left:50%;
 transform:translateX(-50%);
 background:#111827;
-color:white;
+color:#ffffff;
 padding:12px 20px;
 border-radius:10px;
+font-size:14px;
 display:none;
+pointer-events:none;
 z-index:9999;
 }
 .toast-success{
@@ -681,9 +683,10 @@ utfInfo.style.display="none";
 utfInfo.textContent="";
 inputInfo.textContent="Characters: 0";
 inputType.textContent="Detected: —";
-message.textContent="";
-message.className="message";
-showToast("Cleared.","success");
+
+inputText.focus();
+
+setMessage("Editor cleared.","success");
 }
 function loadSample(){
 
@@ -693,8 +696,6 @@ inputInfo.textContent="Characters: " + inputText.value.length;
 inputType.textContent="Detected: Plain Text";
 
 encodeBase64();
-
-showToast("Sample loaded.","success");
 
 }
 </script>
