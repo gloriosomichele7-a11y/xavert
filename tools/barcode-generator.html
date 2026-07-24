@@ -348,7 +348,38 @@ font-weight:600;
 .info a:hover{
 text-decoration:underline;
 }
+ .footer-note{
+text-align:center;
+color:#6b7280;
+font-size:13px;
+margin-top:28px;
+} 
+#toast{
+position:fixed;
+bottom:22px;
+left:50%;
+transform:translateX(-50%);
+background:#111827;
+color:#ffffff;
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+display:none;
+pointer-events:none;
+z-index:9999;
+}
 
+.toast-success{
+background:#047857 !important;
+}
+
+.toast-error{
+background:#dc2626 !important;
+}
+
+.toast-info{
+background:#111827 !important;
+}
 @media(max-width:768px){
 
 .container{
@@ -578,6 +609,12 @@ Here are the most common questions about generating barcodes online with XAVERT.
 Powered by XAVERT
 </div>
 
+<div
+id="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
+
 <script>
 const barcodeValue=document.getElementById("barcodeValue");
 const barcodeFormat=document.getElementById("barcodeFormat");
@@ -594,7 +631,7 @@ const sampleBtn=document.getElementById("sampleBtn");
 const previewBox=document.getElementById("previewBox");
 const barcodeSvg=document.getElementById("barcodeSvg");
 const message=document.getElementById("message");
-
+const toast=document.getElementById("toast");
 const formatStat=document.getElementById("formatStat");
 const lengthStat=document.getElementById("lengthStat");
 const widthStat=document.getElementById("widthStat");
@@ -637,9 +674,36 @@ barcodeValue.placeholder="Enter barcode value";
 }
 
 }
+function showToast(text,type="info"){
+
+toast.textContent=text;
+toast.className="toast-" + type;
+toast.style.display="block";
+
+setTimeout(function(){
+
+toast.style.display="none";
+toast.className="";
+
+},2200);
+
+}
 function showMessage(text,type){
+
 message.textContent=text;
-message.style.color=type==="error" ? "#dc2626" : "#6b7280";
+
+if(type==="error"){
+message.style.color="#dc2626";
+}else if(type==="success"){
+message.style.color="#047857";
+}else{
+message.style.color="#6b7280";
+}
+
+if(text){
+showToast(text,type || "info");
+}
+
 }
 
 function validateBarcodeValue(value,format){
@@ -847,7 +911,9 @@ lengthStat.textContent="0";
 widthStat.textContent="0";
 heightStat.textContent="0";
 
-showMessage("");
+updatePlaceholder();
+
+showMessage("Editor cleared.","success");
 }
 
 function loadSample(){
