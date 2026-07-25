@@ -1,6 +1,6 @@
 /* XAVERT Global Styles */
 
-/* Info / About / FAQ Sections */
+/* Info / About Sections */
 .info{
 margin-top:36px;
 background:#ffffff;
@@ -41,35 +41,10 @@ color:#dc2626;
 font-weight:700;
 }
 
-.related-card a:hover{
-background:#b91c1c;
-}
-
 /* Utility */
 .xavert-footer-note{
 text-align:center;
 color:#6b7280;
 font-size:13px;
 margin-top:28px;
-}
-
-/* Mobile */
-@media(max-width:768px){
-
-.info{
-padding:20px;
-}
-
-.info h2{
-font-size:24px;
-}
-
-}
-
-@media(max-width:640px){
-
-.related-tools-grid{
-grid-template-columns:1fr;
-}
-
 }
