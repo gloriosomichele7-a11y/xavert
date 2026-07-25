@@ -34,69 +34,6 @@
 <meta name="twitter:description" content="Encode and decode Base64 text directly in your browser.">
 <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Base64 Toolkit",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/base64-toolkit.html",
-  "description":"Encode and decode Base64 text directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"What does Base64 do?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Base64 converts data into a text-safe encoded format."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I decode Base64 text?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can decode valid Base64 data back into readable text."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Is my data uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All Base64 encoding and decoding happens locally in your browser."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I download the result?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can download the encoded or decoded result as a text file."
-      }
-    }
-  ]
-}
-</script>
 <style>
 *{
 margin:0;
@@ -108,51 +45,52 @@ font-family:Arial, Helvetica, sans-serif;
 body{
 background:#f7f8fb;
 color:#111827;
-padding:40px 20px;
 }
 
 .container{
-max-width:900px;
+max-width:1100px;
 margin:auto;
+padding:36px 20px 0;
 }
 
-.back{
+.back-link{
 display:inline-block;
-margin-bottom:20px;
+margin-bottom:24px;
+font-size:14px;
+font-weight:700;
 text-decoration:none;
 color:#dc2626;
-font-weight:700;
 }
 
-.logo{
+.back-link:hover{
+color:#b91c1c;
+}
+
+.hero{
 text-align:center;
-margin-bottom:25px;
+margin-bottom:20px;
 }
 
-.logo img{
-width:180px;
+.tool-logo{
+display:block;
+width:210px;
+max-width:70%;
 height:auto;
+margin:0 auto 18px;
 }
 
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
+.hero h1{
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
 }
 
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
+.tool-card{
+background:#ffffff;
+border:1px solid #eceff3;
+border-radius:22px;
 padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
+box-shadow:0 10px 28px rgba(15,23,42,.05);
 margin-bottom:20px;
 }
 
@@ -198,45 +136,88 @@ background:#b91c1c;
 background:#ffffff;
 border:1px solid #e5e7eb;
 border-radius:18px;
-padding:26px;
+padding:30px;
+margin-top:20px;
 margin-bottom:20px;
 box-shadow:0 6px 18px rgba(0,0,0,.04);
 }
 
-.info h2{
-margin-bottom:16px;
+.about-card > *{
+max-width:900px;
 }
 
-.info h3{
-margin:18px 0 8px;
+.info h2{
+font-size:26px;
+font-weight:800;
+letter-spacing:-.4px;
+margin-bottom:24px;
+}
+
+.info h2::after{
+content:"";
+display:block;
+width:52px;
+height:4px;
+margin-top:10px;
+border-radius:999px;
+background:#dc2626;
 }
 
 .info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
+line-height:1.75;
+color:#4b5563;
 }
 
-.info ul{
-padding-left:20px;
-line-height:1.8;
+.about-intro{
+font-size:16px;
+margin-bottom:26px;
 }
 
-.info a{
+.info h3{
+margin-bottom:14px;
+font-size:14px;
+font-weight:800;
+letter-spacing:.7px;
+text-transform:uppercase;
 color:#dc2626;
-text-decoration:none;
-font-weight:600;
 }
 
-.info a:hover{
-text-decoration:underline;
+.about-features{
+list-style:none;
+padding-left:0;
+margin-bottom:28px;
+color:#4b5563;
+}
+
+.about-features li{
+position:relative;
+padding-left:25px;
+margin-bottom:10px;
+line-height:1.65;
+}
+
+.about-features li::before{
+content:"";
+position:absolute;
+left:2px;
+top:.82em;
+width:5px;
+height:5px;
+border-radius:50%;
+background:#dc2626;
+transform:translateY(-50%);
+}
+
+.about-privacy{
+margin-bottom:0;
 }
 
 .footer-note{
 text-align:center;
-color:#6b7280;
+color:#111827;
 font-size:13px;
-margin-top:28px;
+margin-top:20px;
+padding-bottom:20px;
 }
   
 .result-box{
@@ -312,21 +293,21 @@ button{width:100%;}
 
 <main class="container">
 
-<a href="../index.html" class="back">← Back to Home</a>
+<a href="../index.html" class="back-link">
+← Back to Home
+</a>
 
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT Logo">
-</div>
+<section class="hero">
+
+<img
+src="../logo-hero.svg"
+alt="XAVERT"
+class="tool-logo">
 
 <h1>Base64 Toolkit</h1>
 
-<p class="subtitle">
-Encode and decode Base64 text directly in your browser.
-</p>
-<div class="success-banner">
-All Base64 encoding and decoding is performed locally in your browser. No data is uploaded or stored.
-</div>
-<div class="card">
+</section>
+<div class="tool-card">
 
 <label for="inputText">Input Text</label>
 <textarea
@@ -359,7 +340,12 @@ Load Sample
 </button>
 </div>
 
-<div id="message" class="message" aria-live="polite"></div>
+<div
+id="message"
+class="message"
+role="status"
+aria-live="polite"
+aria-atomic="true"></div>
 
 <div id="resultBox" class="result-box">
 
@@ -374,47 +360,47 @@ Characters: 0
 <div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;">
 </div>
 </div>
-<button onclick="copyResult()">Copy Result</button>
-<button onclick="downloadResult()">Download Result</button>
+<div class="button-group">
+
+<button onclick="copyResult()">
+Copy Result
+</button>
+
+<button onclick="downloadResult()">
+Download Result
+</button>
 
 </div>
 
 </div>
 
-<section class="info">
+</div>
 
-<h2>About Base64 Toolkit</h2>
+<section class="info about-card">
 
-<p>
-Base64 is commonly used to encode text, configuration data, tokens and other content into a safe text format.
+<h2>About</h2>
+
+<p class="about-intro">
+The XAVERT Base64 Toolkit lets you safely encode plain text into Base64 or decode valid Base64 back into readable text directly in your browser. It is useful for developers, APIs, configuration files, tokens and data exchange workflows.
 </p>
 
-<ul>
+<h3>Main Features</h3>
+
+<ul class="about-features">
 <li>Encode plain text into Base64.</li>
-<li>Decode Base64 back into readable text.</li>
-<li>Copy or download the result instantly.</li>
-<li>Everything runs locally in your browser.</li>
-<li>No data is uploaded to a server.</li>
+<li>Decode valid Base64 back into readable text.</li>
+<li>Copy or download encoded and decoded results instantly.</li>
+<li>Everything is processed locally with no server communication.</li>
 </ul>
+
+<h3>Privacy First</h3>
+
+<p class="about-privacy">
+All encoding and decoding happens entirely inside your browser. Your text is never uploaded, transmitted, stored or shared with any server.
+</p>
 
 </section>
-
-<section class="info">
-
-<h2>Base64 Toolkit FAQ</h2>
-
-<p>
-Here are the most common questions about encoding and decoding Base64 online with XAVERT.
-</p>
-
-<ul>
-<li><strong>What does Base64 do?</strong> Base64 converts data into a text-safe encoded format.</li>
-<li><strong>Can I decode Base64 text?</strong> Yes, you can decode valid Base64 data back into readable text.</li>
-<li><strong>Is my data uploaded?</strong> No, all processing happens directly in your browser.</li>
-<li><strong>Can I download the result?</strong> Yes, you can download the encoded or decoded result as a text file.</li>
-</ul>
-
-</section>  
+ 
 <section class="info">
 
 <h2>Related Tools</h2>
