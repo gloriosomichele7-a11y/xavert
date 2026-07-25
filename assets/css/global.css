@@ -63,6 +63,47 @@ color:#dc2626;
 font-weight:700;
 }
 
+/* Standard About Section */
+
+.about-card > *{
+max-width:900px;
+}
+
+.about-intro{
+font-size:16px;
+margin-bottom:26px;
+}
+
+.about-features{
+list-style:none;
+padding-left:0;
+margin-bottom:28px;
+color:#4b5563;
+}
+
+.about-features li{
+position:relative;
+padding-left:25px;
+margin-bottom:10px;
+line-height:1.65;
+}
+
+.about-features li::before{
+content:"";
+position:absolute;
+left:2px;
+top:.82em;
+width:5px;
+height:5px;
+border-radius:50%;
+background:#dc2626;
+transform:translateY(-50%);
+}
+
+.about-privacy{
+margin-bottom:0;
+}
+
 /* Utility */
 .xavert-footer-note{
 text-align:center;
