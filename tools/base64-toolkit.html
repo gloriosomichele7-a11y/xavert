@@ -315,7 +315,7 @@ id="inputText"
 placeholder="Paste text or Base64 data here"
 spellcheck="false"
 autocomplete="off"
-autocapitalize="off"></textarea>
+autocapitalize="off"
 autocorrect="off"></textarea>
 <div id="inputInfo" style="margin-top:8px;color:#6b7280;font-size:13px;">
 Characters: 0
@@ -367,10 +367,9 @@ readonly
 spellcheck="false"
 autocorrect="off"
 aria-label="Base64 output result"></textarea>
-<div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;">
-<div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;">
-</div>
-</div>
+<div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;"></div>
+
+<div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;"></div>
 <div class="button-group">
 
 <button onclick="copyResult()">
@@ -487,6 +486,7 @@ conversionStats.textContent=
 " • Saved: " + diff + " characters";
 outputLabel.textContent="Decoded Output";
 resultBox.style.display="block";
+lastAction="decoded";
 utfInfo.style.display="block";
 utfInfo.textContent="Decoded as UTF-8 text";
 
@@ -622,6 +622,13 @@ const decoded=decodeURIComponent(escape(atob(text)));
 
 outputText.value=decoded;
 outputInfo.textContent="Characters: " + decoded.length;
+const diff = text.length - decoded.length;
+
+conversionStats.style.display = "block";
+conversionStats.textContent =
+"Input: " + text.length +
+" • Output: " + decoded.length +
+" • Saved: " + diff + " characters";
 lastAction="decoded";
 outputLabel.textContent="Decoded Output";
 resultBox.style.display="block";
@@ -635,6 +642,17 @@ console.error(error);
 setMessage("Invalid Base64 data.","error");
 outputText.value="";
 resultBox.style.display="none";
+
+outputLabel.textContent="Output";
+outputInfo.textContent="Characters: 0";
+
+conversionStats.style.display="none";
+conversionStats.textContent="";
+
+utfInfo.style.display="none";
+utfInfo.textContent="";
+
+lastAction="result";
 }
 
 }
