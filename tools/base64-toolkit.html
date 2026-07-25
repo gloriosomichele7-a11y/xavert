@@ -295,18 +295,18 @@ button{width:100%;}
 ← Back to Home
 </a>
 
-<section class="hero">
+<section class="hero" aria-labelledby="tool-title">
 
 <img
 src="../logo-hero.svg"
 alt="XAVERT"
 class="tool-logo"
 width="210"
-height="61">
-width="210"
-height="61">
+height="61"
+fetchpriority="high"
+decoding="async">
 
-<h1>Base64 Toolkit</h1>
+<h1 id="tool-title">Base64 Toolkit</h1>
 
 </section>
 <div class="tool-card">
@@ -423,15 +423,10 @@ All encoding and decoding happens entirely inside your browser. Your text is nev
 
 </main>
 
-<div class="footer-note">
+<footer class="xavert-footer-note">
 Powered by XAVERT
-</div>
+</footer>
 
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
 <script>
 
 const inputText=document.getElementById("inputText");
@@ -444,7 +439,6 @@ const conversionStats=document.getElementById("conversionStats");
 const utfInfo=document.getElementById("utfInfo");
 const resultBox=document.getElementById("resultBox");
 const message=document.getElementById("message");
-const toast=document.getElementById("toast");
 let lastAction="result";
 inputText.addEventListener("input",function(){
 
@@ -515,24 +509,6 @@ inputType.textContent="Detected: Plain Text";
 }
 
 });
-function showToast(text,type="info"){
-
-if(!text){
-return;
-}
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-clearTimeout(window.toastTimer);
-
-window.toastTimer=setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
 
 function setMessage(text,type){
 
@@ -547,7 +523,9 @@ message.style.color="#6b7280";
 }
 
 if(text){
-showToast(text,type || "info");
+if(typeof showMessage==="function"){
+showMessage(text,type || "info");
+}
 }
 
 }
@@ -661,17 +639,16 @@ lastAction="result";
 
 function copyResult(){
 
-if(!outputText.value){
-showToast("Nothing to copy.","error");
+showMessage("Nothing to copy.","error");
 return;
 }
 
 navigator.clipboard.writeText(outputText.value)
 .then(function(){
-showToast("Copied.","success");
+showMessage("Nothing to copy.","error");
 })
 .catch(function(){
-showToast("Copy failed.","error");
+showMessage("Copy failed.","error");
 });
 
 }
@@ -679,7 +656,7 @@ showToast("Copy failed.","error");
 function downloadResult(){
 
 if(!outputText.value){
-showToast("Nothing to download.","error");
+showMessage("Nothing to download.","error");
 return;
 }
 
@@ -707,7 +684,7 @@ URL.revokeObjectURL(url);
 
 },1000);
 
-showToast("Download started.","success");
+showMessage("Download started.","success");
 }
 
 function clearAll(){
