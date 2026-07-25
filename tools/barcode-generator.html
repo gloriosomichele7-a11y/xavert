@@ -660,6 +660,11 @@ return;
 
 }
 
+if(typeof JsBarcode!=="function"){
+showMessage("Barcode library could not be loaded. Refresh the page and try again.","error");
+return;
+}
+  
 try{
 barcodeSvg.innerHTML="";
 
