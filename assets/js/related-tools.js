@@ -255,72 +255,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return link;
     }
 
-    function addRelatedToolsStyles() {
-        if (document.getElementById("related-tools-styles")) {
-            return;
-        }
-
-        const style = document.createElement("style");
-
-        style.id = "related-tools-styles";
-
-        style.textContent = `
-            .related-tools-grid {
-                display: grid;
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-                gap: 14px;
-            }
-
-            .related-tool-card {
-                display: block;
-                padding: 18px;
-                border: 1px solid #e5e7eb;
-                border-radius: 14px;
-                background: #f9fafb;
-                color: #111827;
-                text-decoration: none;
-                transition:
-                    transform 0.2s ease,
-                    border-color 0.2s ease,
-                    box-shadow 0.2s ease;
-            }
-
-            .related-tool-card:hover {
-                transform: translateY(-2px);
-                border-color: #dc2626;
-                box-shadow: 0 8px 20px rgba(15, 23, 42, 0.07);
-            }
-
-            .related-tool-card:focus-visible {
-                outline: 3px solid rgba(220, 38, 38, 0.25);
-                outline-offset: 3px;
-            }
-
-            .related-tool-title {
-                display: block;
-                margin-bottom: 7px;
-                font-size: 16px;
-                font-weight: 800;
-                color: #111827;
-            }
-
-            .related-tool-description {
-                display: block;
-                font-size: 14px;
-                line-height: 1.55;
-                color: #6b7280;
-            }
-
-            @media (max-width: 640px) {
-                .related-tools-grid {
-                    grid-template-columns: 1fr;
-                }
-            }
-        `;
-
-        document.head.appendChild(style);
-    }
-
     function renderRelatedTools() {
         const currentTool = getCurrentTool();
         const relatedIds = relatedTools[currentTool];
@@ -356,7 +290,6 @@ document.addEventListener("DOMContentLoaded", function () {
             section.hidden = false;
         }
 
-        addRelatedToolsStyles();
     }
 
     renderRelatedTools();
