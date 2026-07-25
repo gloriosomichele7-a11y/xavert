@@ -247,8 +247,6 @@ font-weight:700;
 color:#047857;
 }
   
-.error{color:#dc2626;}
-.success{color:#047857;}
 .button-group{
 display:flex;
 gap:10px;
@@ -302,7 +300,9 @@ button{width:100%;}
 <img
 src="../logo-hero.svg"
 alt="XAVERT"
-class="tool-logo">
+class="tool-logo"
+width="210"
+height="61">
 
 <h1>Base64 Toolkit</h1>
 
@@ -316,6 +316,7 @@ placeholder="Paste text or Base64 data here"
 spellcheck="false"
 autocomplete="off"
 autocapitalize="off"></textarea>
+autocorrect="off"></textarea>
 <div id="inputInfo" style="margin-top:8px;color:#6b7280;font-size:13px;">
 Characters: 0
 </div>
@@ -351,11 +352,21 @@ aria-atomic="true"></div>
 
 <label id="outputLabel" for="outputText">Output</label>
 
-<div id="outputInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;">
+<div
+id="outputInfo"
+style="margin-bottom:8px;color:#6b7280;font-size:13px;"
+role="status"
+aria-live="polite"
+aria-atomic="true">
 Characters: 0
 </div>
 
-<textarea id="outputText" readonly aria-label="Base64 output result"></textarea>
+<textarea
+id="outputText"
+readonly
+spellcheck="false"
+autocorrect="off"
+aria-label="Base64 output result"></textarea>
 <div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;">
 <div id="utfInfo" style="margin-top:4px;color:#6b7280;font-size:13px;display:none;">
 </div>
@@ -440,7 +451,16 @@ const value=inputText.value.trim();
 
 inputInfo.textContent=
 "Characters: " + value.length;
-
+resultBox.style.display="none";
+outputText.value="";
+outputLabel.textContent="Output";
+outputInfo.textContent="Characters: 0";
+conversionStats.style.display="none";
+conversionStats.textContent="";
+utfInfo.style.display="none";
+utfInfo.textContent="";
+lastAction="result";
+message.textContent="";
 if(!value){
 
 inputType.textContent="Detected: —";
@@ -474,6 +494,13 @@ utfInfo.textContent="Decoded as UTF-8 text";
 
 outputText.value="";
 resultBox.style.display="none";
+outputLabel.textContent="Output";
+outputInfo.textContent="Characters: 0";
+conversionStats.style.display="none";
+conversionStats.textContent="";
+utfInfo.style.display="none";
+utfInfo.textContent="";
+lastAction="result";
 utfInfo.style.display="none";
 conversionStats.style.display="none";
 
@@ -508,12 +535,20 @@ toast.className="";
 function setMessage(text,type){
 
 message.textContent=text;
-message.className="message " + type;
 
-showToast(text,type);
-
+if(type==="error"){
+message.style.color="#dc2626";
+}else if(type==="success"){
+message.style.color="#047857";
+}else{
+message.style.color="#6b7280";
 }
 
+if(text){
+showToast(text,type || "info");
+}
+
+}
 function encodeBase64(){
 
 const text=inputText.value;
@@ -641,7 +676,7 @@ link.href=url;
 link.download="xavert-base64-" + lastAction + ".txt";
 
 document.body.appendChild(link);
-
+link.setAttribute("aria-hidden","true");
 link.click();
 
 document.body.removeChild(link);
@@ -669,7 +704,7 @@ utfInfo.style.display="none";
 utfInfo.textContent="";
 inputInfo.textContent="Characters: 0";
 inputType.textContent="Detected: —";
-
+message.textContent="";
 inputText.focus();
 
 setMessage("Editor cleared.","success");
