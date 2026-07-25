@@ -98,9 +98,9 @@ document.addEventListener("DOMContentLoaded", function () {
         },
 
         "text-diff-checker": {
-           title: "Text Diff Checker",
-           description: "Compare two text versions and identify their differences.",
-           path: "diff-checker.html"
+            title: "Text Diff Checker",
+            description: "Compare two text versions and identify their differences.",
+            path: "diff-checker.html"
         
         },
 
