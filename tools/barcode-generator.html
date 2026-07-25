@@ -21,6 +21,7 @@
 
 <script src="../assets/js/global.js" defer></script>
 <script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js" defer></script>
 
   
@@ -93,6 +94,12 @@ color:#dc2626;
 color:#b91c1c;
 }
 
+.back-link:focus-visible{
+outline:3px solid rgba(220,38,38,.25);
+outline-offset:3px;
+border-radius:4px;
+}
+  
 .hero{
 text-align:center;
 margin-bottom:20px;
@@ -138,24 +145,6 @@ font-size:14px;
 font-weight:700;
 }
 
-input,
-select{
-width:100%;
-padding:14px 16px;
-border:1px solid #d1d5db;
-border-radius:14px;
-background:#ffffff;
-font-size:15px;
-color:#111827;
-}
-
-input:focus,
-select:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
 .button-grid{
 display:grid;
 grid-template-columns:repeat(6,1fr);
@@ -173,6 +162,11 @@ cursor:pointer;
 transition:.25s;
 }
 
+button:focus-visible{
+outline:3px solid rgba(220,38,38,.25);
+outline-offset:3px;
+}
+  
 .primary{
 background:#dc2626;
 color:#ffffff;
@@ -336,14 +330,7 @@ transform:translateY(-50%);
 .about-privacy{
 margin-bottom:0;
 }
-
-.footer-note{
-text-align:center;
-color:#111827;
-font-size:13px;
-margin-top:20px;
-padding-bottom:20px;
-}
+  
 #toast{
 position:fixed;
 bottom:22px;
@@ -392,8 +379,7 @@ grid-template-columns:1fr;
 grid-template-columns:1fr 1fr;
 }
 
-.tool-card,
-.info{
+.tool-card{
 padding:20px;
 }
 
@@ -403,7 +389,7 @@ padding:20px;
 
 </head>
 
-<body>
+<body data-tool="barcode-generator">
 
 <main class="container">
 
@@ -416,13 +402,17 @@ padding:20px;
 <img
 src="../logo-hero.svg"
 alt="XAVERT"
-class="tool-logo">
+class="tool-logo"
+width="210"
+height="210"
+fetchpriority="high"
+decoding="async">
 
-<h1>Barcode Generator</h1>
+<h1 id="tool-title">Barcode Generator</h1>
 
 </section>
 
-<section class="tool-card">
+<section class="tool-card" aria-labelledby="tool-title">
 
 <div class="form-grid">
 
@@ -580,18 +570,21 @@ Everything is processed locally within your browser. Your barcode data is never 
 </p>
 
 </section>
-
+  
+<section class="info" hidden>
+<h2>Related Tools</h2>
+<div id="related-tools"></div>
+</section>
+  
 </main>
 
-<div class="footer-note">
+<footer class="xavert-footer-note">
 Powered by XAVERT
-</div>
+</footer>
 
 <div
 id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
+aria-hidden="true"></div>
 
 <script>
 const barcodeValue=document.getElementById("barcodeValue");
@@ -652,13 +645,16 @@ barcodeValue.placeholder="Enter barcode value";
 }
 
 }
+
 function showToast(text,type="info"){
+
+clearTimeout(showToast.timer);
 
 toast.textContent=text;
 toast.className="toast-" + type;
 toast.style.display="block";
 
-setTimeout(function(){
+showToast.timer=setTimeout(function(){
 
 toast.style.display="none";
 toast.className="";
@@ -666,6 +662,7 @@ toast.className="";
 },2200);
 
 }
+  
 function showMessage(text,type){
 
 message.textContent=text;
@@ -851,11 +848,25 @@ canvas.width=image.width * 2;
 canvas.height=image.height * 2;
 
 const ctx=canvas.getContext("2d");
+
+if(!ctx){
+URL.revokeObjectURL(url);
+showMessage("PNG export failed.","error");
+return;
+}
+
 ctx.fillStyle="#ffffff";
 ctx.fillRect(0,0,canvas.width,canvas.height);
 ctx.drawImage(image,0,0,canvas.width,canvas.height);
 
 canvas.toBlob(function(blob){
+
+if(!blob){
+URL.revokeObjectURL(url);
+showMessage("PNG export failed.","error");
+return;
+}
+
 const pngUrl=URL.createObjectURL(blob);
 const a=document.createElement("a");
 
@@ -887,19 +898,14 @@ showMessage("PNG export failed.","error");
 image.src=url;
 }
 
-async function copySvg(){
+function copySvg(){
 const svgContent=getSvgContent();
 
 if(!svgContent){
 return;
 }
 
-try{
-await navigator.clipboard.writeText(svgContent);
-showMessage("Copied.","success");
-}catch(error){
-showMessage("Copy failed.","error");
-}
+xavertCopyText(svgContent);
 }
 
 function clearTool(){
