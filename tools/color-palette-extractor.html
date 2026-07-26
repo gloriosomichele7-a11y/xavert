@@ -256,29 +256,6 @@ padding:10px;
 font-size:13px;
 }
 
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
 .success-banner{
 background:#ecfdf5;
 border:1px solid #a7f3d0;
@@ -289,44 +266,6 @@ text-align:center;
 font-size:14px;
 font-weight:700;
 color:#047857;
-}
-
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
 }
 
 .footer-note{
@@ -367,15 +306,19 @@ font-size:34px;
 
 <body>
 
-<main class="container">
+<main class="container" aria-labelledby="tool-title">
 
 <a href="../index.html" class="back">← Back to Home</a>
 
 <div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT Logo">
+<img
+src="../logo-hero.svg"
+alt="XAVERT Logo"
+fetchpriority="high"
+decoding="async">
 </div>
 
-<h1>Color Palette Extractor</h1>
+<h1 id="tool-title">Color Palette Extractor</h1>
 
 <p class="subtitle">
 Extract dominant colors from images and generate beautiful palettes instantly.
@@ -388,7 +331,12 @@ Images are processed locally in your browser. Nothing is uploaded or stored.
 <div class="controls">
 
 <div>
-<div class="dropzone" id="dropzone">
+<div
+class="dropzone"
+id="dropzone"
+role="button"
+tabindex="0"
+aria-label="Upload image by clicking or dragging a file">
 <p><strong>Drop image here</strong></p>
 <p>or click to upload</p>
 <input
@@ -396,7 +344,8 @@ type="file"
 id="fileInput"
 accept="image/*"
 hidden
-aria-label="Upload image">
+aria-label="Upload image"
+autocomplete="off">
 </div>
 </div>
 
@@ -477,7 +426,7 @@ Here are the most common questions about extracting color palettes online with X
 </ul>
 
 </section>
-<section class="info">
+<section class="info" id="related-tools-section" hidden>
 
 <h2>Related Tools</h2>
 
@@ -488,15 +437,9 @@ Here are the most common questions about extracting color palettes online with X
 
 <canvas id="canvas" hidden></canvas>
 
-<div class="footer-note">
+<footer class="xavert-footer-note">
 Powered by XAVERT
-</div>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
+</footer>
 
 <script>
 
@@ -511,6 +454,13 @@ dropzone.addEventListener("click",()=>{
 fileInput.click();
 });
 
+dropzone.addEventListener("keydown",(e)=>{
+if(e.key==="Enter" || e.key===" "){
+e.preventDefault();
+fileInput.click();
+}
+});
+  
 dropzone.addEventListener("dragover",(e)=>{
 e.preventDefault();
 dropzone.classList.add("drag");
@@ -525,31 +475,31 @@ e.preventDefault();
 dropzone.classList.remove("drag");
 
 const file=e.dataTransfer.files[0];
+
+if(file){
 loadImage(file);
+}
+
 });
 
 fileInput.addEventListener("change",(e)=>{
-loadImage(e.target.files[0]);
-});
+const file=e.target.files[0];
 
-function showToast(text,type="info"){
-
-const toast=document.getElementById("toast");
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(()=>{
-toast.style.display="none";
-toast.className="";
-},2200);
-
+if(file){
+loadImage(file);
 }
+});
 
 function loadImage(file){
 
-if(!file) return;
+if(!file){
+return;
+}
+
+if(!file.type.startsWith("image/")){
+showMessage("Please select a valid image.","error");
+return;
+}
 
 const reader=new FileReader();
 
@@ -566,6 +516,13 @@ previewImage.naturalWidth + "×" + previewImage.naturalHeight + " px";
 
 };
 
+previewImage.onerror=function(){
+showMessage("Unable to load the image.","error");
+};
+  
+paletteContainer.innerHTML="";
+imageInfo.style.display="none";
+
 previewImage.src=e.target.result;
 previewImage.style.display="block";
 imageLoaded=true;
@@ -574,7 +531,11 @@ extractedColors=[];
 document.getElementById("palette").innerHTML="";
 document.getElementById("paletteSize").value="5";
 
-showToast("Image loaded.","success");
+showMessage(("Image loaded.","success");
+};
+
+reader.onerror=function(){
+showMessage("Unable to read the image.","error");
 };
 
 reader.readAsDataURL(file);
@@ -645,7 +606,7 @@ function extractColors(){
 
 if(!imageLoaded){
 
-showToast("Upload an image first.","error");
+showMessage(("Upload an image first.","error");
 return;
 
 }
@@ -741,31 +702,28 @@ card.innerHTML=`
 `;
 
 card.querySelector(".copy-hex").addEventListener("click",()=>{
-navigator.clipboard.writeText(hex);
-showToast("HEX copied.","success");
+xavertCopyText(hex,"HEX copied.");
 });
 
 card.querySelector(".copy-rgb").addEventListener("click",()=>{
-navigator.clipboard.writeText(`rgb(${rgb.join(", ")})`);
-showToast("RGB copied.","success");
+xavertCopyText(`rgb(${rgb.join(", ")})`,"RGB copied.");
 });
 
 card.querySelector(".copy-hsl").addEventListener("click",()=>{
-navigator.clipboard.writeText(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`);
-showToast("HSL copied.","success");
+xavertCopyText(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,"HSL copied.");
 });
 
 palette.appendChild(card);
 
 });
 
-showToast("Palette extracted.","success");
+showMessage(("Palette extracted.","success");
 
 }
 function copyPalette(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 }
 
@@ -773,15 +731,13 @@ const content=extractedColors
 .map(c=>`${c.hex} | ${c.rgb}`)
 .join("\n");
 
-navigator.clipboard.writeText(content);
-
-showToast("Palette copied.","success");
+xavertCopyText(content,"Palette copied.");
 }
 function downloadTXT(){
 
 if(!extractedColors.length){
 
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 
 }
@@ -792,8 +748,8 @@ const content=extractedColors
 
 downloadFile(
 content,
-"xavert-palette.txt",
-"text/plain"
+"xavert-palette.ase",
+"application/octet-stream"
 );
 
 }
@@ -801,7 +757,7 @@ content,
 function downloadJSON(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 }
 
@@ -816,7 +772,7 @@ JSON.stringify(extractedColors,null,2),
 function downloadCSS(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 }
 
@@ -838,7 +794,7 @@ content,
 function downloadASE(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 }
 
@@ -858,7 +814,7 @@ content,
 function downloadSVG(){
 
 if(!extractedColors.length){
-showToast("Generate a palette first.","error");
+showMessage(("Generate a palette first.","error");
 return;
 }
 
@@ -894,6 +850,11 @@ svg,
 }
 function downloadFile(content,name,type){
 
+if(!content){
+showMessage("Nothing to download.","error");
+return;
+}
+  
 const blob=new Blob([content],{type});
 
 const link=document.createElement("a");
@@ -915,7 +876,7 @@ URL.revokeObjectURL(url);
 
 },1000);
 
-showToast("Download started.","success");
+showMessage(("Download started.","success");
 
 }
 function clearAll(){
@@ -933,7 +894,7 @@ document.getElementById("paletteSize").value="5";
 imageLoaded=false;
 extractedColors=[];
 
-showToast("Cleared.","success");
+showMessage(("Cleared.","success");
 
 }
 </script>
