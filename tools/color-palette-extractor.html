@@ -441,7 +441,6 @@ Powered by XAVERT
 </footer>
 
 <script>
-
 let imageLoaded=false;
 let extractedColors=[];
 
@@ -449,19 +448,23 @@ const dropzone=document.getElementById("dropzone");
 const fileInput=document.getElementById("fileInput");
 const previewImage=document.getElementById("previewImage");
 const imageInfo=document.getElementById("imageInfo");
+const palette=document.getElementById("palette");
+const paletteSize=document.getElementById("paletteSize");
+const canvas=document.getElementById("canvas");
+
 dropzone.addEventListener("click",()=>{
 fileInput.click();
 });
 
-dropzone.addEventListener("keydown",(e)=>{
-if(e.key==="Enter" || e.key===" "){
-e.preventDefault();
+dropzone.addEventListener("keydown",(event)=>{
+if(event.key==="Enter" || event.key===" "){
+event.preventDefault();
 fileInput.click();
 }
 });
-  
-dropzone.addEventListener("dragover",(e)=>{
-e.preventDefault();
+
+dropzone.addEventListener("dragover",(event)=>{
+event.preventDefault();
 dropzone.classList.add("drag");
 });
 
@@ -469,20 +472,19 @@ dropzone.addEventListener("dragleave",()=>{
 dropzone.classList.remove("drag");
 });
 
-dropzone.addEventListener("drop",(e)=>{
-e.preventDefault();
+dropzone.addEventListener("drop",(event)=>{
+event.preventDefault();
 dropzone.classList.remove("drag");
 
-const file=e.dataTransfer.files[0];
+const file=event.dataTransfer.files[0];
 
 if(file){
 loadImage(file);
 }
-
 });
 
-fileInput.addEventListener("change",(e)=>{
-const file=e.target.files[0];
+fileInput.addEventListener("change",(event)=>{
+const file=event.target.files[0];
 
 if(file){
 loadImage(file);
@@ -500,56 +502,54 @@ fileInput.value="";
 showMessage("Please select a valid image.","error");
 return;
 }
+
 if(file.size===0){
 fileInput.value="";
 showMessage("The selected image is empty.","error");
 return;
 }
+
 const reader=new FileReader();
-reader.onabort=function(){
 
-fileInput.value="";
 imageLoaded=false;
+extractedColors=[];
 
-showMessage("Image loading was cancelled.","error");
+palette.replaceChildren();
+imageInfo.style.display="none";
+imageInfo.textContent="";
 
-};
 previewImage.onload=null;
 previewImage.onerror=null;
-reader.onload=function(e){
+
+reader.onload=function(event){
 
 previewImage.onload=function(){
 
 const size=(file.size/(1024*1024)).toFixed(2);
 
-imageInfo.style.display="block";
 imageInfo.textContent=
 file.name + " • " + size + " MB • " +
-previewImage.naturalWidth + "×" + previewImage.naturalHeight + " px";
+previewImage.naturalWidth + "×" +
+previewImage.naturalHeight + " px";
 
+imageInfo.style.display="block";
 imageLoaded=true;
 
+showMessage("Image loaded.","success");
 };
+
 previewImage.onerror=function(){
 
 imageLoaded=false;
+previewImage.removeAttribute("src");
+previewImage.style.display="none";
 
 showMessage("Unable to load the image.","error");
-
 };
-  
-imageInfo.style.display="none";
-
-imageLoaded=false;
-extractedColors=[];
-
-document.getElementById("palette").innerHTML="";
 
 previewImage.removeAttribute("src");
 previewImage.style.display="block";
-previewImage.src=e.target.result;
-
-showMessage("Image loaded.","success");
+previewImage.src=event.target.result;
 };
 
 reader.onerror=function(){
@@ -558,12 +558,19 @@ fileInput.value="";
 imageLoaded=false;
 
 showMessage("Unable to read the image.","error");
+};
 
+reader.onabort=function(){
+
+fileInput.value="";
+imageLoaded=false;
+
+showMessage("Image loading was cancelled.","error");
 };
 
 reader.readAsDataURL(file);
-
 }
+
 function rgbToHsl(r,g,b){
 
 r/=255;
@@ -573,7 +580,9 @@ b/=255;
 const max=Math.max(r,g,b);
 const min=Math.min(r,g,b);
 
-let h,s,l=(max+min)/2;
+let h;
+let s;
+const l=(max+min)/2;
 
 if(max===min){
 
@@ -582,30 +591,28 @@ s=0;
 
 }else{
 
-const d=max-min;
+const difference=max-min;
 
 s=l>0.5
-? d/(2-max-min)
-: d/(max+min);
+? difference/(2-max-min)
+: difference/(max+min);
 
 switch(max){
 
 case r:
-h=(g-b)/d + (g<b ? 6 : 0);
+h=(g-b)/difference+(g<b ? 6 : 0);
 break;
 
 case g:
-h=(b-r)/d + 2;
+h=(b-r)/difference+2;
 break;
 
-case b:
-h=(r-g)/d + 4;
+default:
+h=(r-g)/difference+4;
 break;
-
 }
 
 h/=6;
-
 }
 
 return {
@@ -613,55 +620,74 @@ h:Math.round(h*360),
 s:Math.round(s*100),
 l:Math.round(l*100)
 };
-
 }
+
 function rgbToHex(r,g,b){
 
 return "#" +
 [r,g,b]
-.map(v=>v.toString(16).padStart(2,"0"))
+.map(value=>value.toString(16).padStart(2,"0"))
 .join("")
 .toUpperCase();
-
 }
 
 function extractColors(){
 
 if(!imageLoaded){
-
-showMessage(("Upload an image first.","error");
+showMessage("Upload an image first.","error");
 return;
-
 }
 
-const img=previewImage;
-if(!img.complete || img.naturalWidth===0){
+if(!previewImage.complete || previewImage.naturalWidth===0){
 showMessage("Image is still loading.","error");
 return;
 }
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
-if(!ctx){
+
+const context=canvas.getContext("2d");
+
+if(!context){
 showMessage("Canvas is not supported by this browser.","error");
 return;
 }
+
 const maxCanvasSize=1600;
+
 const scale=Math.min(
 1,
-maxCanvasSize/img.naturalWidth,
-maxCanvasSize/img.naturalHeight
+maxCanvasSize/previewImage.naturalWidth,
+maxCanvasSize/previewImage.naturalHeight
 );
 
-canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
-canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
+canvas.width=Math.max(
+1,
+Math.round(previewImage.naturalWidth*scale)
+);
+
+canvas.height=Math.max(
+1,
+Math.round(previewImage.naturalHeight*scale)
+);
 
 let data;
 
 try{
 
-ctx.drawImage(img,0,0,canvas.width,canvas.height);
+context.clearRect(
+0,
+0,
+canvas.width,
+canvas.height
+);
 
-data=ctx.getImageData(
+context.drawImage(
+previewImage,
+0,
+0,
+canvas.width,
+canvas.height
+);
+
+data=context.getImageData(
 0,
 0,
 canvas.width,
@@ -672,50 +698,67 @@ canvas.height
 
 showMessage("Unable to process this image.","error");
 return;
+}
 
+if(data.length===0){
+showMessage("Unable to read image data.","error");
+return;
 }
 
 const buckets={};
-let sampledPixels=0;
 const quantizationStep=32;
 const sampleStep=40;
 
-for(let i=0;i<data.length;i+=sampleStep){
-if(data[i+3]===0){
+let sampledPixels=0;
+
+for(let index=0;index<data.length;index+=sampleStep){
+
+if(data[index+3]===0){
 continue;
 }
+
 sampledPixels++;
-const r=Math.min(255,Math.round(data[i]/quantizationStep)*quantizationStep);
-const g=Math.min(255,Math.round(data[i+1]/quantizationStep)*quantizationStep);
-const b=Math.min(255,Math.round(data[i+2]/quantizationStep)*quantizationStep);
 
-const key=`${r},${g},${b}`;
-
-buckets[key]=(buckets[key]||0)+1;
-
-}
-
-const size=parseInt(
-document.getElementById("paletteSize").value
+const red=Math.min(
+255,
+Math.round(data[index]/quantizationStep)*quantizationStep
 );
 
-const sorted=Object.entries(buckets)
-.sort((a,b)=>b[1]-a[1])
-.slice(0,size);
-if(sorted.length===0){
-showMessage("No colors could be extracted.","error");
-return;
+const green=Math.min(
+255,
+Math.round(data[index+1]/quantizationStep)*quantizationStep
+);
+
+const blue=Math.min(
+255,
+Math.round(data[index+2]/quantizationStep)*quantizationStep
+);
+
+const key=`${red},${green},${blue}`;
+
+buckets[key]=(buckets[key]||0)+1;
 }
+
 if(sampledPixels===0){
 showMessage("No colors could be extracted.","error");
 return;
 }
-extractedColors=[];
 
-const palette=document.getElementById("palette");
+const requestedSize=parseInt(paletteSize.value,10);
+
+const sortedColors=Object.entries(buckets)
+.sort((first,second)=>second[1]-first[1])
+.slice(0,requestedSize);
+
+if(sortedColors.length===0){
+showMessage("No colors could be extracted.","error");
+return;
+}
+
+extractedColors=[];
 palette.replaceChildren();
 
-sorted.forEach(item=>{
+sortedColors.forEach(item=>{
 
 const rgb=item[0]
 .split(",")
@@ -726,19 +769,26 @@ rgb[0],
 rgb[1],
 rgb[2]
 );
+
 const hsl=rgbToHsl(
 rgb[0],
 rgb[1],
 rgb[2]
 );
-const percentage=
-((item[1]/sampledPixels)*100)
-.toFixed(1);
+
+const percentage=(
+(item[1]/sampledPixels)*100
+).toFixed(1);
+
+const rgbValue=`rgb(${rgb.join(", ")})`;
+const hslValue=
+`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+
 extractedColors.push({
 hex,
-rgb:`rgb(${rgb.join(", ")})`,
-hsl:`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
-percentage:percentage + "%"
+rgb:rgbValue,
+hsl:hslValue,
+percentage:percentage+"%"
 });
 
 const card=document.createElement("div");
@@ -746,37 +796,47 @@ card.className="color-card";
 
 card.innerHTML=`
 <div class="color-preview" style="background:${hex}"></div>
-
 <div class="color-info">
 <div><strong>${hex}</strong></div>
 <div>${percentage}%</div>
-<div>rgb(${rgb.join(", ")})</div>
-<div>hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)</div>
-<button class="copy-btn copy-hex">Copy HEX</button>
-<button class="copy-btn copy-rgb">Copy RGB</button>
-<button class="copy-btn copy-hsl">Copy HSL</button>
+<div>${rgbValue}</div>
+<div>${hslValue}</div>
+<button type="button" class="copy-btn copy-hex">
+Copy HEX
+</button>
+<button type="button" class="copy-btn copy-rgb">
+Copy RGB
+</button>
+<button type="button" class="copy-btn copy-hsl">
+Copy HSL
+</button>
 </div>
 `;
 
-card.querySelector(".copy-hex").addEventListener("click",()=>{
+card
+.querySelector(".copy-hex")
+.addEventListener("click",()=>{
 xavertCopyText(hex,"HEX copied.");
 });
 
-card.querySelector(".copy-rgb").addEventListener("click",()=>{
-xavertCopyText(`rgb(${rgb.join(", ")})`,"RGB copied.");
+card
+.querySelector(".copy-rgb")
+.addEventListener("click",()=>{
+xavertCopyText(rgbValue,"RGB copied.");
 });
 
-card.querySelector(".copy-hsl").addEventListener("click",()=>{
-xavertCopyText(`hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,"HSL copied.");
+card
+.querySelector(".copy-hsl")
+.addEventListener("click",()=>{
+xavertCopyText(hslValue,"HSL copied.");
 });
 
 palette.appendChild(card);
-
 });
 
 showMessage("Palette extracted.","success");
-
 }
+
 function copyPalette(){
 
 if(!extractedColors.length){
@@ -785,30 +845,28 @@ return;
 }
 
 const content=extractedColors
-.map(c=>`${c.hex} | ${c.rgb}`)
+.map(color=>`${color.hex} | ${color.rgb}`)
 .join("\n");
 
 xavertCopyText(content,"Palette copied.");
 }
+
 function downloadTXT(){
 
 if(!extractedColors.length){
-
 showMessage("Generate a palette first.","error");
 return;
-
 }
 
 const content=extractedColors
-.map(c=>`${c.hex} | ${c.rgb}`)
+.map(color=>`${color.hex} | ${color.rgb}`)
 .join("\n");
 
 downloadFile(
 content,
 "xavert-palette.txt",
-"text/plain"
+"text/plain;charset=utf-8"
 );
-
 }
 
 function downloadJSON(){
@@ -821,9 +879,8 @@ return;
 downloadFile(
 JSON.stringify(extractedColors,null,2),
 "xavert-palette.json",
-"application/json"
+"application/json;charset=utf-8"
 );
-
 }
 
 function downloadCSS(){
@@ -836,16 +893,17 @@ return;
 const content=
 ":root {\n" +
 extractedColors
-.map((c,index)=>"  --color-" + (index+1) + ": " + c.hex + ";")
+.map((color,index)=>
+`  --color-${index+1}: ${color.hex};`
+)
 .join("\n") +
 "\n}";
 
 downloadFile(
 content,
 "xavert-palette.css",
-"text/css"
+"text/css;charset=utf-8"
 );
-
 }
 
 function downloadSVG(){
@@ -858,82 +916,91 @@ return;
 const swatchWidth=140;
 const swatchHeight=140;
 const labelHeight=52;
+
 const width=swatchWidth*extractedColors.length;
 const height=swatchHeight+labelHeight;
 
 let svg=
-'<svg xmlns="http://www.w3.org/2000/svg" width="' + width + '" height="' + height + '" viewBox="0 0 ' + width + ' ' + height + '">' +
-'<rect width="100%" height="100%" fill="#ffffff"/>';
+`<svg xmlns="http://www.w3.org/2000/svg" ` +
+`width="${width}" height="${height}" ` +
+`viewBox="0 0 ${width} ${height}">` +
+`<rect width="100%" height="100%" fill="#ffffff"/>`;
 
 extractedColors.forEach((color,index)=>{
 
 const x=index*swatchWidth;
 
 svg+=
-'<rect x="' + x + '" y="0" width="' + swatchWidth + '" height="' + swatchHeight + '" fill="' + color.hex + '"/>' +
-'<text x="' + (x+swatchWidth/2) + '" y="' + (swatchHeight+22) + '" text-anchor="middle" font-family="Arial" font-size="13" fill="#111827">' + color.hex + '</text>' +
-'<text x="' + (x+swatchWidth/2) + '" y="' + (swatchHeight+42) + '" text-anchor="middle" font-family="Arial" font-size="11" fill="#6b7280">' + color.percentage + '</text>';
-
+`<rect x="${x}" y="0" ` +
+`width="${swatchWidth}" height="${swatchHeight}" ` +
+`fill="${color.hex}"/>` +
+`<text x="${x+swatchWidth/2}" ` +
+`y="${swatchHeight+22}" text-anchor="middle" ` +
+`font-family="Arial" font-size="13" ` +
+`fill="#111827">${color.hex}</text>` +
+`<text x="${x+swatchWidth/2}" ` +
+`y="${swatchHeight+42}" text-anchor="middle" ` +
+`font-family="Arial" font-size="11" ` +
+`fill="#6b7280">${color.percentage}</text>`;
 });
 
-svg+='</svg>';
+svg+="</svg>";
 
 downloadFile(
 svg,
 "xavert-palette.svg",
-"image/svg+xml"
+"image/svg+xml;charset=utf-8"
 );
-
 }
+
 function downloadFile(content,name,type){
 
 if(!content){
 showMessage("Nothing to download.","error");
 return;
 }
-  
+
 const blob=new Blob([content],{type});
-
-const link=document.createElement("a");
-
 const url=URL.createObjectURL(blob);
+const link=document.createElement("a");
 
 link.href=url;
 link.download=name;
 
 document.body.appendChild(link);
-
 link.click();
+link.remove();
 
-document.body.removeChild(link);
-
-setTimeout(function(){
-
+setTimeout(()=>{
 URL.revokeObjectURL(url);
-
 },1000);
 
 showMessage("Download started.","success");
-
 }
+
 function clearAll(){
 
 fileInput.value="";
 dropzone.classList.remove("drag");
+
+previewImage.onload=null;
+previewImage.onerror=null;
 previewImage.removeAttribute("src");
 previewImage.style.display="none";
-document.getElementById("palette").replaceChildren();
+
 imageInfo.style.display="none";
 imageInfo.textContent="";
 
-document.getElementById("paletteSize").value="5";
+palette.replaceChildren();
+paletteSize.value="5";
+
+canvas.width=0;
+canvas.height=0;
 
 imageLoaded=false;
 extractedColors=[];
-previewImage.onload=null;
-previewImage.onerror=null;
-showMessage("Cleared.","success");
 
+showMessage("Cleared.","success");
 }
 </script>
 
