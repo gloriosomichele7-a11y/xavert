@@ -496,11 +496,24 @@ return;
 }
 
 if(!file.type.startsWith("image/")){
+fileInput.value="";
 showMessage("Please select a valid image.","error");
 return;
 }
-
+if(file.size===0){
+fileInput.value="";
+showMessage("The selected image is empty.","error");
+return;
+}
 const reader=new FileReader();
+reader.onabort=function(){
+
+fileInput.value="";
+imageLoaded=false;
+
+showMessage("Image loading was cancelled.","error");
+
+};
 previewImage.onload=null;
 previewImage.onerror=null;
 reader.onload=function(e){
@@ -540,7 +553,12 @@ showMessage("Image loaded.","success");
 };
 
 reader.onerror=function(){
+
+fileInput.value="";
+imageLoaded=false;
+
 showMessage("Unable to read the image.","error");
+
 };
 
 reader.readAsDataURL(file);
@@ -667,12 +685,7 @@ if(sorted.length===0){
 showMessage("No colors could be extracted.","error");
 return;
 }
-const totalPixels=sorted.reduce(
-(sum,item)=>sum+item[1],
-0
-);
-
-if(totalPixels===0){
+if(sampledPixels===0){
 showMessage("No colors could be extracted.","error");
 return;
 }
@@ -698,7 +711,7 @@ rgb[1],
 rgb[2]
 );
 const percentage=
-((item[1]/totalPixels)*100)
+((item[1]/sampledPixels)*100)
 .toFixed(1);
 extractedColors.push({
 hex,
