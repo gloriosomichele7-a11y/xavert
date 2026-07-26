@@ -116,3 +116,32 @@ font-size:14px;
 line-height:1.55;
 color:#6b7280;
 }
+
+/* Shared Toast */
+
+.xavert-toast{
+position:fixed;
+left:50%;
+bottom:22px;
+transform:translateX(-50%);
+padding:12px 20px;
+border-radius:10px;
+font-size:14px;
+font-weight:700;
+color:#fff;
+z-index:9999;
+pointer-events:none;
+box-shadow:0 8px 20px rgba(0,0,0,.15);
+}
+
+.xavert-toast-success{
+background:#047857;
+}
+
+.xavert-toast-error{
+background:#dc2626;
+}
+
+.xavert-toast-info{
+background:#111827;
+}
