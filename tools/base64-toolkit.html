@@ -535,21 +535,21 @@ lastAction="result";
 function copyResult(){
 
 if(!outputText.value){
-showMessage("Nothing to copy.","error");
+setMessage("Nothing to copy.","error");
 return;
 }
 
 if(!navigator.clipboard){
-showMessage("Clipboard not supported.","error");
+setMessage("Clipboard not supported.","error");
 return;
 }
 
 navigator.clipboard.writeText(outputText.value)
 .then(function(){
-showMessage("Copied.","success");
+setMessage("Copied.","success");
 })
 .catch(function(){
-showMessage("Copy failed.","error");
+setMessage("Copy failed.","error");
 });
 
 }
@@ -557,7 +557,8 @@ showMessage("Copy failed.","error");
 function downloadResult(){
 
 if(!outputText.value){
-showMessage("Nothing to download.","error");
+setMessage("Nothing to download.","error");
+
 return;
 }
 
@@ -585,7 +586,7 @@ URL.revokeObjectURL(url);
 
 },1000);
 
-showMessage("Download started.","success");
+setMessage("Download started.","success");
 }
 
 function clearAll(){
