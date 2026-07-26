@@ -381,7 +381,6 @@ alt="Uploaded image preview">
 <button onclick="downloadTXT()">Download TXT</button>
 <button onclick="downloadJSON()">Download JSON</button>
 <button onclick="downloadCSS()">Download CSS</button>
-<button onclick="downloadASE()">Download ASE</button>
 <button onclick="downloadSVG()">Download SVG</button>
 </div>
 
@@ -502,7 +501,8 @@ return;
 }
 
 const reader=new FileReader();
-
+previewImage.onload=null;
+previewImage.onerror=null;
 reader.onload=function(e){
 
 previewImage.onload=function(){
@@ -514,22 +514,27 @@ imageInfo.textContent=
 file.name + " • " + size + " MB • " +
 previewImage.naturalWidth + "×" + previewImage.naturalHeight + " px";
 
-};
+imageLoaded=true;
 
+};
 previewImage.onerror=function(){
+
+imageLoaded=false;
+
 showMessage("Unable to load the image.","error");
+
 };
   
-document.getElementById("palette").innerHTML="";
 imageInfo.style.display="none";
 
-previewImage.src=e.target.result;
-previewImage.style.display="block";
 imageLoaded=false;
 extractedColors=[];
 
 document.getElementById("palette").innerHTML="";
-document.getElementById("paletteSize").value="5";
+
+previewImage.removeAttribute("src");
+previewImage.style.display="block";
+previewImage.src=e.target.result;
 
 showMessage("Image loaded.","success");
 };
@@ -612,7 +617,10 @@ return;
 }
 
 const img=previewImage;
-
+if(!img.complete || img.naturalWidth===0){
+showMessage("Image is still loading.","error");
+return;
+}
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
@@ -629,12 +637,18 @@ canvas.height
 ).data;
 
 const buckets={};
+let sampledPixels=0;
+const quantizationStep=32;
+const sampleStep=40;
 
-for(let i=0;i<data.length;i+=40){
-
-const r=Math.min(255,Math.round(data[i]/32)*32);
-const g=Math.min(255,Math.round(data[i+1]/32)*32);
-const b=Math.min(255,Math.round(data[i+2]/32)*32);
+for(let i=0;i<data.length;i+=sampleStep){
+if(data[i+3]===0){
+continue;
+}
+sampledPixels++;
+const r=Math.min(255,Math.round(data[i]/quantizationStep)*quantizationStep);
+const g=Math.min(255,Math.round(data[i+1]/quantizationStep)*quantizationStep);
+const b=Math.min(255,Math.round(data[i+2]/quantizationStep)*quantizationStep);
 
 const key=`${r},${g},${b}`;
 
@@ -649,14 +663,23 @@ document.getElementById("paletteSize").value
 const sorted=Object.entries(buckets)
 .sort((a,b)=>b[1]-a[1])
 .slice(0,size);
+if(sorted.length===0){
+showMessage("No colors could be extracted.","error");
+return;
+}
 const totalPixels=sorted.reduce(
 (sum,item)=>sum+item[1],
 0
 );
+
+if(totalPixels===0){
+showMessage("No colors could be extracted.","error");
+return;
+}
 extractedColors=[];
 
 const palette=document.getElementById("palette");
-palette.innerHTML="";
+palette.replaceChildren();
 
 sorted.forEach(item=>{
 
@@ -791,26 +814,6 @@ content,
 
 }
 
-function downloadASE(){
-
-if(!extractedColors.length){
-showMessage("Generate a palette first.","error");
-return;
-}
-
-const content=extractedColors
-.map((c,index)=>{
-return "Color " + (index+1) + " = " + c.hex;
-})
-.join("\n");
-
-downloadFile(
-content,
-"xavert-palette.ase",
-"application/octet-stream"
-);
-
-}  
 function downloadSVG(){
 
 if(!extractedColors.length){
@@ -882,18 +885,19 @@ showMessage("Download started.","success");
 function clearAll(){
 
 fileInput.value="";
-previewImage.src="";
+dropzone.classList.remove("drag");
+previewImage.removeAttribute("src");
 previewImage.style.display="none";
-
+document.getElementById("palette").replaceChildren();
 imageInfo.style.display="none";
 imageInfo.textContent="";
 
-document.getElementById("palette").innerHTML="";
 document.getElementById("paletteSize").value="5";
 
 imageLoaded=false;
 extractedColors=[];
-
+previewImage.onload=null;
+previewImage.onerror=null;
 showMessage("Cleared.","success");
 
 }
