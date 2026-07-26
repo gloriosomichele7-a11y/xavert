@@ -36,7 +36,6 @@ toast.className="xavert-toast";
 
 }
 
-
 function xavertCopyText(text,successMessage="Copied."){
 
 if(!text){
