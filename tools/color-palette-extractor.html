@@ -520,18 +520,18 @@ previewImage.onerror=function(){
 showMessage("Unable to load the image.","error");
 };
   
-paletteContainer.innerHTML="";
+document.getElementById("palette").innerHTML="";
 imageInfo.style.display="none";
 
 previewImage.src=e.target.result;
 previewImage.style.display="block";
-imageLoaded=true;
+imageLoaded=false;
 extractedColors=[];
 
 document.getElementById("palette").innerHTML="";
 document.getElementById("paletteSize").value="5";
 
-showMessage(("Image loaded.","success");
+showMessage("Image loaded.","success");
 };
 
 reader.onerror=function(){
@@ -717,13 +717,13 @@ palette.appendChild(card);
 
 });
 
-showMessage(("Palette extracted.","success");
+showMessage("Palette extracted.","success");
 
 }
 function copyPalette(){
 
 if(!extractedColors.length){
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 }
 
@@ -737,7 +737,7 @@ function downloadTXT(){
 
 if(!extractedColors.length){
 
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 
 }
@@ -748,8 +748,8 @@ const content=extractedColors
 
 downloadFile(
 content,
-"xavert-palette.ase",
-"application/octet-stream"
+"xavert-palette.txt",
+"text/plain"
 );
 
 }
@@ -757,7 +757,7 @@ content,
 function downloadJSON(){
 
 if(!extractedColors.length){
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 }
 
@@ -772,7 +772,7 @@ JSON.stringify(extractedColors,null,2),
 function downloadCSS(){
 
 if(!extractedColors.length){
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 }
 
@@ -794,7 +794,7 @@ content,
 function downloadASE(){
 
 if(!extractedColors.length){
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 }
 
@@ -806,15 +806,15 @@ return "Color " + (index+1) + " = " + c.hex;
 
 downloadFile(
 content,
-"xavert-palette.ase.txt",
-"text/plain"
+"xavert-palette.ase",
+"application/octet-stream"
 );
 
 }  
 function downloadSVG(){
 
 if(!extractedColors.length){
-showMessage(("Generate a palette first.","error");
+showMessage("Generate a palette first.","error");
 return;
 }
 
@@ -876,7 +876,7 @@ URL.revokeObjectURL(url);
 
 },1000);
 
-showMessage(("Download started.","success");
+showMessage("Download started.","success");
 
 }
 function clearAll(){
@@ -894,7 +894,7 @@ document.getElementById("paletteSize").value="5";
 imageLoaded=false;
 extractedColors=[];
 
-showMessage(("Cleared.","success");
+showMessage("Cleared.","success");
 
 }
 </script>
