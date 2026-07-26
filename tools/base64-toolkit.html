@@ -131,14 +131,6 @@ margin-top:14px;
 button:hover{
 background:#b91c1c;
 }
-
-.footer-note{
-text-align:center;
-color:#111827;
-font-size:13px;
-margin-top:20px;
-padding-bottom:20px;
-}
   
 .result-box{
 display:none;
@@ -173,31 +165,7 @@ gap:10px;
 flex-wrap:wrap;
 margin-top:14px;
 }
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-font-size:14px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
 
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
 @media(max-width:768px){
 body{padding:24px 14px;}
 .logo img{width:150px;}
@@ -238,7 +206,9 @@ placeholder="Paste text or Base64 data here"
 spellcheck="false"
 autocomplete="off"
 autocapitalize="off"
-autocorrect="off"></textarea>
+autocorrect="off"
+aria-label="Input text"></textarea>
+
 <div id="inputInfo" style="margin-top:8px;color:#6b7280;font-size:13px;">
 Characters: 0
 </div>
@@ -288,6 +258,7 @@ id="outputText"
 readonly
 spellcheck="false"
 autocorrect="off"
+autocomplete="off"
 aria-label="Base64 output result"></textarea>
 <div id="conversionStats" style="margin-top:8px;color:#6b7280;font-size:13px;display:none;"></div>
 
@@ -445,6 +416,8 @@ message.style.color="#6b7280";
 if(text){
 if(typeof showMessage==="function"){
 showMessage(text,type || "info");
+}else{
+message.textContent=text;
 }
 }
 
@@ -561,6 +534,7 @@ lastAction="result";
 
 function copyResult(){
 
+if(!outputText.value){
 showMessage("Nothing to copy.","error");
 return;
 }
@@ -572,7 +546,7 @@ return;
 
 navigator.clipboard.writeText(outputText.value)
 .then(function(){
-showMessage("Nothing to copy.","error");
+showMessage("Copied.","success");
 })
 .catch(function(){
 showMessage("Copy failed.","error");
