@@ -641,18 +641,39 @@ return;
 }
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
+if(!ctx){
+showMessage("Canvas is not supported by this browser.","error");
+return;
+}
+const maxCanvasSize=1600;
+const scale=Math.min(
+1,
+maxCanvasSize/img.naturalWidth,
+maxCanvasSize/img.naturalHeight
+);
 
-canvas.width=img.naturalWidth;
-canvas.height=img.naturalHeight;
+canvas.width=Math.max(1,Math.round(img.naturalWidth*scale));
+canvas.height=Math.max(1,Math.round(img.naturalHeight*scale));
 
-ctx.drawImage(img,0,0);
+let data;
 
-const data=ctx.getImageData(
+try{
+
+ctx.drawImage(img,0,0,canvas.width,canvas.height);
+
+data=ctx.getImageData(
 0,
 0,
 canvas.width,
 canvas.height
 ).data;
+
+}catch(error){
+
+showMessage("Unable to process this image.","error");
+return;
+
+}
 
 const buckets={};
 let sampledPixels=0;
