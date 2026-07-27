@@ -146,14 +146,6 @@ color:#6b7280;
 margin-bottom:28px;
 }
 
-.card{
-background:#fff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
 .controls{
 display:grid;
 grid-template-columns:1fr 220px;
@@ -190,28 +182,6 @@ max-width:100%;
 max-height:300px;
 border-radius:12px;
 border:1px solid #e5e7eb;
-}
-
-select{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
 }
 
 .actions{
@@ -361,7 +331,7 @@ Palette Size
 </select>
 
 <div class="actions">
-<button type="button" onclick="extractColors()">Extract Palette</button>
+<button class="btn" type="button" onclick="extractColors()">
 <button type="button" onclick="clearAll()">Clear</button>
 </div>
 </div>
@@ -378,13 +348,16 @@ alt="Uploaded image preview">
 
 <div class="actions">
 <button
+class="btn"
 type="button"
 onclick="copyPalette()"
 aria-label="Copy the extracted color palette">
 Copy Palette
 </button>
 
+
 <button
+class="btn"
 type="button"
 onclick="downloadTXT()"
 aria-label="Download palette as TXT">
@@ -392,6 +365,7 @@ Download TXT
 </button>
 
 <button
+class="btn"
 type="button"
 onclick="downloadJSON()"
 aria-label="Download palette as JSON">
@@ -399,6 +373,7 @@ Download JSON
 </button>
 
 <button
+class="btn"
 type="button"
 onclick="downloadCSS()"
 aria-label="Download palette as CSS">
@@ -406,6 +381,7 @@ Download CSS
 </button>
 
 <button
+class="btn"
 type="button"
 onclick="downloadSVG()"
 aria-label="Download palette as SVG">
