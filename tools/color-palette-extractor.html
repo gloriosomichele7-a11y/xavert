@@ -361,8 +361,8 @@ Palette Size
 </select>
 
 <div class="actions">
-<button onclick="extractColors()">Extract Palette</button>
-<button onclick="clearAll()">Clear</button>
+<button type="button" onclick="extractColors()">Extract Palette</button>
+<button type="button" onclick="clearAll()">Clear</button>
 </div>
 </div>
 
@@ -377,11 +377,40 @@ alt="Uploaded image preview">
 </div>
 
 <div class="actions">
-<button onclick="copyPalette()">Copy Palette</button>
-<button onclick="downloadTXT()">Download TXT</button>
-<button onclick="downloadJSON()">Download JSON</button>
-<button onclick="downloadCSS()">Download CSS</button>
-<button onclick="downloadSVG()">Download SVG</button>
+<button
+type="button"
+onclick="copyPalette()"
+aria-label="Copy the extracted color palette">
+Copy Palette
+</button>
+
+<button
+type="button"
+onclick="downloadTXT()"
+aria-label="Download palette as TXT">
+Download TXT
+</button>
+
+<button
+type="button"
+onclick="downloadJSON()"
+aria-label="Download palette as JSON">
+Download JSON
+</button>
+
+<button
+type="button"
+onclick="downloadCSS()"
+aria-label="Download palette as CSS">
+Download CSS
+</button>
+
+<button
+type="button"
+onclick="downloadSVG()"
+aria-label="Download palette as SVG">
+Download SVG
+</button>
 </div>
 
 <div id="palette" class="palette"></div>
