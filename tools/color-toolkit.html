@@ -436,594 +436,692 @@ Common questions about using the XAVERT Color Toolkit.
 Powered by XAVERT
 </footer>
 
+
 <script>
+const toolSelector = document.getElementById("toolSelector");
+const hexInput = document.getElementById("hexInput");
 
-const toolSelector=document.getElementById("toolSelector");
-document.addEventListener("DOMContentLoaded",()=>{
+let colorHistory = [];
+let savedPalettes = [];
+let currentPalette = [];
 
-if(typeof loadRelatedTools==="function"){
-
-loadRelatedTools("color-toolkit");
-
-}
-
-});
-document.getElementById("hexInput").addEventListener("keydown",function(event){
-
-if(event.key==="Enter"){
-
-event.preventDefault();
-convertHex();
-
-}
-
-});
-let colorHistory=[];
-let savedPalettes=[];
-let currentPalette=[];
-toolSelector.addEventListener("change",function(){
-
-document.querySelectorAll(".tool-section").forEach(section=>{
-section.classList.remove("active");
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof loadRelatedTools === "function") {
+    loadRelatedTools("color-toolkit");
+  }
 });
 
-document.getElementById(toolSelector.value + "Tool").classList.add("active");
+toolSelector.addEventListener("change", () => {
+  document.querySelectorAll(".tool-section").forEach(section => {
+    section.classList.remove("active");
+  });
 
+  const selectedTool = document.getElementById(`${toolSelector.value}Tool`);
+
+  if (selectedTool) {
+    selectedTool.classList.add("active");
+  }
 });
 
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-
-const tool=toolSelector.value;
-
-if(tool==="converter"){
-convertHex();
-}
-
-if(tool==="generator"){
-generateRandomColor();
-}
-
-if(tool==="contrast"){
-checkContrast();
-}
-if(tool==="palette"){
-generatePalette();
-}
-}
-
+hexInput.addEventListener("keydown", event => {
+  if (event.key === "Enter") {
+    event.preventDefault();
+    convertHex();
+  }
 });
 
-function updateColorHistory(hex){
+document.addEventListener("keydown", event => {
+  if (!(event.ctrlKey && event.key === "Enter")) {
+    return;
+  }
 
-colorHistory.unshift(hex);
-colorHistory=[...new Set(colorHistory)];
-colorHistory=colorHistory.slice(0,15);
+  event.preventDefault();
 
-const historyHtml=
-"<br><strong>Color History</strong><br>" +
-colorHistory.map((color,index)=>{
-return (index+1) + ". " +
-'<span style="display:inline-block;width:18px;height:18px;background:' +
-color +
-';border:1px solid #d1d5db;border-radius:4px;margin-right:6px;vertical-align:middle;"></span>' +
-color +
-' <button class="small-button" onclick="copyText(\'' +
-color +
-'\')">Copy</button>';
-}).join("<br>") +
-'<br><br><button class="small-button" onclick="clearColorHistory()">Clear History</button>';
+  const actions = {
+    converter: convertHex,
+    generator: generateRandomColor,
+    contrast: checkContrast,
+    palette: generatePalette
+  };
 
-return historyHtml;
-
-}
-
-function clearColorHistory(){
-
-colorHistory=[];
-
-document.querySelectorAll(".result-box").forEach(box=>{
-box.innerHTML=box.innerHTML.split("<br><strong>Color History</strong><br>")[0];
+  actions[toolSelector.value]?.();
 });
 
-}
-function copyText(text){
+function setMessage(id, text = "", type = "") {
+  const element = document.getElementById(id);
 
-if(!text){
-showMessage("Nothing to copy.","error");
-return;
-}
+  if (!element) {
+    return;
+  }
 
-navigator.clipboard.writeText(text)
-.then(function(){
-
-showMessage("Copied.","success");
-
-})
-.catch(function(){
-
-showMessage("Copy failed.","error");
-
-});
-
+  element.textContent = text;
+  element.className = type ? `message ${type}` : "message";
 }
 
-function setMessage(id,text,type){
+function copyText(text) {
+  if (!text) {
+    showMessage("Nothing to copy.", "error");
+    return;
+  }
 
-const element=document.getElementById(id);
+  if (typeof xavertCopyText === "function") {
+    xavertCopyText(text, "Copied.");
+    return;
+  }
 
-element.textContent=text;
-element.className="message " + type;
-
+  navigator.clipboard.writeText(text)
+    .then(() => {
+      showMessage("Copied.", "success");
+    })
+    .catch(() => {
+      showMessage("Copy failed.", "error");
+    });
 }
 
-function clearConverter(){
-
-document.getElementById("hexInput").value="";
-
-document.getElementById("converterMessage").textContent="";
-document.getElementById("converterMessage").className="message";
-
-document.getElementById("converterResult").innerHTML="";
-document.getElementById("converterResult").style.display="none";
-
-document.getElementById("converterPreview").style.background="#ffffff";
-
-colorHistory=[];
-
-document.getElementById("generatorResult").innerHTML="";
-document.getElementById("generatorResult").style.display="none";
-
-document.getElementById("generatorMessage").textContent="";
-
-document.getElementById("generatorPreview").style.background="#ffffff";
-
-document.getElementById("contrastResult").innerHTML="";
-document.getElementById("contrastResult").style.display="none";
-
-document.getElementById("contrastMessage").textContent="";
-document.getElementById("contrastMessage").className="message";  
-document.getElementById("contrastPreview").style.display="none";
-document.getElementById("paletteResult").innerHTML="";
-document.getElementById("paletteResult").style.display="none";
-
-document.getElementById("paletteMessage").textContent="";
-document.getElementById("paletteMessage").className="message";
-
-document.getElementById("savedPalettes").innerHTML="";
-document.getElementById("savedPalettes").style.display="none";
-
-savedPalettes=[];
-currentPalette=[];
-document.getElementById("paletteColor").value="#FF5733";
-showMessage("Cleared.","success");
+function escapeAttribute(value) {
+  return String(value)
+    .replaceAll("&", "&amp;")
+    .replaceAll("'", "&#39;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
+function hexToRgb(hex) {
+  let normalized = hex.replace("#", "");
 
-function hexToRgb(hex){
+  if (normalized.length === 3) {
+    normalized = normalized
+      .split("")
+      .map(character => character + character)
+      .join("");
+  }
 
-hex=hex.replace("#","");
-
-if(hex.length===3){
-
-hex=
-hex[0]+hex[0]+
-hex[1]+hex[1]+
-hex[2]+hex[2];
-
+  return {
+    r: parseInt(normalized.slice(0, 2), 16),
+    g: parseInt(normalized.slice(2, 4), 16),
+    b: parseInt(normalized.slice(4, 6), 16)
+  };
 }
 
-const r=parseInt(hex.substring(0,2),16);
-const g=parseInt(hex.substring(2,4),16);
-const b=parseInt(hex.substring(4,6),16);
-
-return {r,g,b};
-
-}
-function rgbToHsl(r,g,b){
-
-r/=255;
-g/=255;
-b/=255;
-
-const max=Math.max(r,g,b);
-const min=Math.min(r,g,b);
-
-let h=0;
-let s=0;
-let l=(max+min)/2;
-
-if(max!==min){
-
-const d=max-min;
-
-s=l>0.5 ? d/(2-max-min) : d/(max+min);
-
-if(max===r){
-h=(g-b)/d + (g<b ? 6 : 0);
-}else if(max===g){
-h=(b-r)/d + 2;
-}else{
-h=(r-g)/d + 4;
+function rgbToHex(r, g, b) {
+  return `#${[r, g, b]
+    .map(value => Math.round(value).toString(16).padStart(2, "0"))
+    .join("")
+    .toUpperCase()}`;
 }
 
-h/=6;
+function rgbToHsl(r, g, b) {
+  const red = r / 255;
+  const green = g / 255;
+  const blue = b / 255;
+
+  const max = Math.max(red, green, blue);
+  const min = Math.min(red, green, blue);
+  const lightness = (max + min) / 2;
+
+  let hue = 0;
+  let saturation = 0;
+
+  if (max !== min) {
+    const difference = max - min;
+
+    saturation = lightness > 0.5
+      ? difference / (2 - max - min)
+      : difference / (max + min);
+
+    if (max === red) {
+      hue = (green - blue) / difference + (green < blue ? 6 : 0);
+    } else if (max === green) {
+      hue = (blue - red) / difference + 2;
+    } else {
+      hue = (red - green) / difference + 4;
+    }
+
+    hue /= 6;
+  }
+
+  return {
+    h: Math.round(hue * 360),
+    s: Math.round(saturation * 100),
+    l: Math.round(lightness * 100)
+  };
 }
 
-return {
-h:Math.round(h*360),
-s:Math.round(s*100),
-l:Math.round(l*100)
-};
+function updateColorHistory(hex) {
+  colorHistory.unshift(hex);
+  colorHistory = [...new Set(colorHistory)].slice(0, 15);
 
-}
-function rgbToHex(r,g,b){
+  const colors = colorHistory.map((color, index) => {
+    const safeColor = escapeAttribute(color);
 
-return "#" +
-((1<<24)+(r<<16)+(g<<8)+b)
-.toString(16)
-.slice(1)
-.toUpperCase();
+    return `
+      <div style="display:flex;align-items:center;gap:8px;margin-top:10px;">
+        <span>${index + 1}.</span>
 
-}
+        <span
+          aria-hidden="true"
+          style="
+            display:inline-block;
+            width:18px;
+            height:18px;
+            background:${safeColor};
+            border:1px solid #d1d5db;
+            border-radius:4px;
+          ">
+        </span>
 
-function convertHex(){
+        <span>${safeColor}</span>
 
-let hex=document.getElementById("hexInput").value.trim();
+        <button
+          class="btn small-button"
+          type="button"
+          onclick="copyText('${safeColor}')">
+          Copy
+        </button>
+      </div>
+    `;
+  }).join("");
 
-if(!hex){
+  return `
+    <div style="margin-top:20px;">
+      <strong>Color History</strong>
 
-setMessage(
-"converterMessage",
-"Please enter a HEX color.",
-"error"
-);
-showMessage("Please enter a HEX color.","error");
-return;
+      ${colors}
 
-}
-
-if(!hex.startsWith("#")){
-hex="#" + hex;
-}
-
-if(!/^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(hex)){
-
-setMessage(
-"converterMessage",
-"Invalid HEX color.",
-"error"
-);
-showMessage("Invalid HEX color.","error");
-return;
-
-}
-
-const rgb=hexToRgb(hex);
-const hsl=rgbToHsl(rgb.r,rgb.g,rgb.b);
-document.getElementById("converterPreview").style.background=hex;
-
-document.getElementById("converterResult").style.display="block";
-
-document.getElementById("converterResult").innerHTML=
-"HEX: <strong>" + hex.toUpperCase() + "</strong><br>" +
-"RGB: <strong>" +
-rgb.r + ", " +
-rgb.g + ", " +
-rgb.b +
-"</strong><br>" +
-"HSL: <strong>" +
-hsl.h + ", " +
-hsl.s + "%, " +
-hsl.l + "%" +
-"</strong><br><br>" +
-'<button class="small-button" onclick="copyText(\'' +
-hex.toUpperCase() +
-'\')">Copy HEX</button> ' +
-
-'<button class="small-button" onclick="copyText(\'rgb(' +
-rgb.r + "," + rgb.g + "," + rgb.b +
-')\')">Copy RGB</button> ' +
-
-'<button class="small-button" onclick="copyText(\'hsl(' +
-hsl.h + "," + hsl.s + "%," + hsl.l + "%" +
-')\')">Copy HSL</button>' +
-
-updateColorHistory(hex.toUpperCase());
-
-setMessage(
-"converterMessage",
-"Conversion completed.",
-"success"
-);
-showMessage("Color converted.","success");
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="clearColorHistory()">
+        Clear History
+      </button>
+    </div>
+  `;
 }
 
-function generateRandomColor(){
+function clearColorHistory() {
+  colorHistory = [];
 
-const r=Math.floor(Math.random()*256);
-const g=Math.floor(Math.random()*256);
-const b=Math.floor(Math.random()*256);
+  const activeResult = document.querySelector(".tool-section.active .result-box");
 
-const hex=rgbToHex(r,g,b);
-const hsl=rgbToHsl(r,g,b);
-document.getElementById("generatorPreview").style.background=hex;
+  if (!activeResult) {
+    return;
+  }
 
-document.getElementById("generatorResult").style.display="block";
+  const history = activeResult.querySelector("[data-color-history]");
 
-document.getElementById("generatorResult").innerHTML=
-"HEX: <strong>" + hex + "</strong><br>" +
-"RGB: <strong>" +
-r + ", " +
-g + ", " +
-b +
-"</strong><br>" +
-"HSL: <strong>" +
-hsl.h + ", " +
-hsl.s + "%, " +
-hsl.l + "%" +
-"</strong><br><br>" +
-
-'<button class="small-button" onclick="copyText(\'' +
-hex +
-'\')">Copy HEX</button> ' +
-
-'<button class="small-button" onclick="copyText(\'rgb(' +
-r + "," + g + "," + b +
-')\')">Copy RGB</button> ' +
-
-'<button class="small-button" onclick="copyText(\'hsl(' +
-hsl.h + "," + hsl.s + "%," + hsl.l + "%" +
-')\')">Copy HSL</button>' +
-
-updateColorHistory(hex);
-
-setMessage(
-"generatorMessage",
-"Color generated successfully.",
-"success"
-);
-showMessage("Color generated.","success");
-}
-function generatePalette(){
-
-const base=document.getElementById("paletteColor").value;
-
-const rgb=hexToRgb(base);
-
-const palette=[
-base,
-rgbToHex(
-Math.min(rgb.r+40,255),
-Math.min(rgb.g+40,255),
-Math.min(rgb.b+40,255)
-),
-rgbToHex(
-Math.max(rgb.r-40,0),
-Math.max(rgb.g-40,0),
-Math.max(rgb.b-40,0)
-),
-rgbToHex(
-255-rgb.r,
-255-rgb.g,
-255-rgb.b
-),
-rgbToHex(
-(rgb.r+128)%256,
-(rgb.g+128)%256,
-(rgb.b+128)%256
-)
-];
-currentPalette = palette;
-document.getElementById("paletteResult").style.display="block";
-
-document.getElementById("paletteResult").innerHTML=
-palette.map(color=>{
-
-return `
-<div style="
-margin:10px 0;
-padding:12px;
-border:1px solid #d1d5db;
-border-radius:10px;
-display:flex;
-align-items:center;
-justify-content:space-between;
-">
-
-<div style="
-width:40px;
-height:40px;
-border-radius:8px;
-background:${color};
-border:1px solid #d1d5db;
-"></div>
-
-<div>
-<strong>${color}</strong>
-</div>
-
-<button class="small-button"
-onclick="copyText('${color}')">
-Copy
-</button>
-
-</div>
-`;
-
-}).join("");
-document.getElementById("paletteResult").innerHTML +=
-'<br><div class="button-group">' +
-'<button onclick="savePalette(currentPalette)">Save Palette</button>' +
-'<button onclick="downloadPalette()">Download Palette</button>' +
-'</div>';
-
-
-setMessage(
-"paletteMessage",
-"Palette generated successfully.",
-"success"
-);
-
-showMessage("Palette generated.","success");
-
+  if (history) {
+    history.remove();
+  }
 }
 
-function downloadPalette(){
+function convertHex() {
+  let hex = hexInput.value.trim();
 
-if(!currentPalette.length){
-showMessage("Generate a palette first.","error");
-return;
+  if (!hex) {
+    setMessage("converterMessage", "Please enter a HEX color.", "error");
+    showMessage("Please enter a HEX color.", "error");
+    return;
+  }
+
+  if (!hex.startsWith("#")) {
+    hex = `#${hex}`;
+  }
+
+  if (!/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(hex)) {
+    setMessage("converterMessage", "Invalid HEX color.", "error");
+    showMessage("Invalid HEX color.", "error");
+    return;
+  }
+
+  const normalizedHex = hex.toUpperCase();
+  const rgb = hexToRgb(normalizedHex);
+  const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+
+  const rgbText = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+  const hslText = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
+
+  const result = document.getElementById("converterResult");
+  const preview = document.getElementById("converterPreview");
+
+  preview.style.background = normalizedHex;
+  result.style.display = "block";
+
+  result.innerHTML = `
+    HEX: <strong>${normalizedHex}</strong><br>
+    RGB: <strong>${rgb.r}, ${rgb.g}, ${rgb.b}</strong><br>
+    HSL: <strong>${hsl.h}, ${hsl.s}%, ${hsl.l}%</strong>
+
+    <div class="button-group">
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${normalizedHex}')">
+        Copy HEX
+      </button>
+
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${rgbText}')">
+        Copy RGB
+      </button>
+
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${hslText}')">
+        Copy HSL
+      </button>
+    </div>
+
+    <div data-color-history>
+      ${updateColorHistory(normalizedHex)}
+    </div>
+  `;
+
+  setMessage("converterMessage", "Conversion completed.", "success");
+  showMessage("Color converted.", "success");
 }
 
-const text=currentPalette.join("\n");
+function generateRandomColor() {
+  const red = Math.floor(Math.random() * 256);
+  const green = Math.floor(Math.random() * 256);
+  const blue = Math.floor(Math.random() * 256);
 
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
+  const hex = rgbToHex(red, green, blue);
+  const hsl = rgbToHsl(red, green, blue);
 
-const link=document.createElement("a");
-link.href=URL.createObjectURL(blob);
-link.download="xavert-color-palette.txt";
+  const rgbText = `rgb(${red}, ${green}, ${blue})`;
+  const hslText = `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`;
 
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
+  const result = document.getElementById("generatorResult");
+  const preview = document.getElementById("generatorPreview");
 
-URL.revokeObjectURL(link.href);
+  preview.style.background = hex;
+  result.style.display = "block";
 
-showMessage("Palette downloaded.","success");
+  result.innerHTML = `
+    HEX: <strong>${hex}</strong><br>
+    RGB: <strong>${red}, ${green}, ${blue}</strong><br>
+    HSL: <strong>${hsl.h}, ${hsl.s}%, ${hsl.l}%</strong>
 
-}
-function savePalette(palette){
+    <div class="button-group">
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${hex}')">
+        Copy HEX
+      </button>
 
-savedPalettes.unshift([...palette]);
-savedPalettes=savedPalettes.slice(0,10);
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${rgbText}')">
+        Copy RGB
+      </button>
 
-renderSavedPalettes();
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${hslText}')">
+        Copy HSL
+      </button>
+    </div>
 
-setMessage(
-"paletteMessage",
-"Palette saved successfully.",
-"success"
-);
+    <div data-color-history>
+      ${updateColorHistory(hex)}
+    </div>
+  `;
 
-showMessage("Palette saved.","success");
-}
+  setMessage(
+    "generatorMessage",
+    "Color generated successfully.",
+    "success"
+  );
 
-function renderSavedPalettes(){
-
-if(savedPalettes.length===0){
-return;
-}
-
-document.getElementById("savedPalettes").style.display="block";
-
-document.getElementById("savedPalettes").innerHTML=
-
-"<strong>Saved Palettes</strong><br><br>" +
-
-savedPalettes.map((palette,index)=>{
-
-return `
-<div style="margin-bottom:15px;padding:10px;border:1px solid #d1d5db;border-radius:10px;">
-<strong>Palette ${index+1}</strong><br><br>
-
-${palette.map(color=>`
-<span
-onclick="copyText('${color}')"
-style="
-display:inline-block;
-width:30px;
-height:30px;
-background:${color};
-border:1px solid #ccc;
-border-radius:6px;
-cursor:pointer;
-margin-right:6px;
-">
-</span>
-`).join("")}
-
-</div>
-`;
-
-}).join("");
-
-}
-function luminance(r,g,b){
-
-const values=[r,g,b].map(value=>{
-
-value/=255;
-
-return value<=0.03928
-? value/12.92
-: Math.pow((value+0.055)/1.055,2.4);
-
-});
-
-return (
-0.2126*values[0] +
-0.7152*values[1] +
-0.0722*values[2]
-);
-
+  showMessage("Color generated.", "success");
 }
 
-function checkContrast(){
+function generatePalette() {
+  const base = document.getElementById("paletteColor").value;
+  const rgb = hexToRgb(base);
 
-const foreground=
-document.getElementById("foregroundColor").value;
+  currentPalette = [
+    base.toUpperCase(),
 
-const background=
-document.getElementById("backgroundColor").value;
+    rgbToHex(
+      Math.min(rgb.r + 40, 255),
+      Math.min(rgb.g + 40, 255),
+      Math.min(rgb.b + 40, 255)
+    ),
 
-const fg=hexToRgb(foreground);
-const bg=hexToRgb(background);
+    rgbToHex(
+      Math.max(rgb.r - 40, 0),
+      Math.max(rgb.g - 40, 0),
+      Math.max(rgb.b - 40, 0)
+    ),
 
-const l1=luminance(fg.r,fg.g,fg.b);
-const l2=luminance(bg.r,bg.g,bg.b);
+    rgbToHex(
+      255 - rgb.r,
+      255 - rgb.g,
+      255 - rgb.b
+    ),
 
-const ratio=
-(Math.max(l1,l2)+0.05)/
-(Math.min(l1,l2)+0.05);
+    rgbToHex(
+      (rgb.r + 128) % 256,
+      (rgb.g + 128) % 256,
+      (rgb.b + 128) % 256
+    )
+  ];
 
-let status="Fail";
+  const result = document.getElementById("paletteResult");
+  result.style.display = "block";
 
-if(ratio>=7){
-status="AAA";
-}else if(ratio>=4.5){
-status="AA";
+  const paletteItems = currentPalette.map(color => `
+    <div style="
+      margin:10px 0;
+      padding:12px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    ">
+      <div
+        aria-hidden="true"
+        style="
+          width:40px;
+          height:40px;
+          flex-shrink:0;
+          border-radius:8px;
+          background:${color};
+          border:1px solid #d1d5db;
+        ">
+      </div>
+
+      <strong>${color}</strong>
+
+      <button
+        class="btn small-button"
+        type="button"
+        onclick="copyText('${color}')">
+        Copy
+      </button>
+    </div>
+  `).join("");
+
+  result.innerHTML = `
+    ${paletteItems}
+
+    <div class="button-group">
+      <button
+        class="btn"
+        type="button"
+        onclick="savePalette(currentPalette)">
+        Save Palette
+      </button>
+
+      <button
+        class="btn"
+        type="button"
+        onclick="downloadPalette()">
+        Download Palette
+      </button>
+    </div>
+  `;
+
+  setMessage(
+    "paletteMessage",
+    "Palette generated successfully.",
+    "success"
+  );
+
+  showMessage("Palette generated.", "success");
 }
-const contrastPreview=document.getElementById("contrastPreview");
 
-contrastPreview.style.display="block";
-contrastPreview.style.color=foreground;
-contrastPreview.style.background=background;
-contrastPreview.textContent="Sample Text Preview";
-document.getElementById("contrastResult").style.display="block";
+function savePalette(palette) {
+  if (!Array.isArray(palette) || palette.length === 0) {
+    showMessage("Generate a palette first.", "error");
+    return;
+  }
 
-document.getElementById("contrastResult").innerHTML=
-"Contrast Ratio: <strong>" +
-ratio.toFixed(2) +
-":1</strong><br>" +
-"Accessibility: <strong>" +
-status +
-"</strong>";
+  savedPalettes.unshift([...palette]);
+  savedPalettes = savedPalettes.slice(0, 10);
 
-setMessage(
-"contrastMessage",
-"Contrast analysis completed.",
-"success"
-);
+  renderSavedPalettes();
 
-showMessage("Contrast analysis completed.","success");
+  setMessage(
+    "paletteMessage",
+    "Palette saved successfully.",
+    "success"
+  );
 
+  showMessage("Palette saved.", "success");
 }
 
-</script>
+function renderSavedPalettes() {
+  const container = document.getElementById("savedPalettes");
+
+  if (savedPalettes.length === 0) {
+    container.innerHTML = "";
+    container.style.display = "none";
+    return;
+  }
+
+  container.style.display = "block";
+
+  container.innerHTML = `
+    <strong>Saved Palettes</strong>
+
+    ${savedPalettes.map((palette, index) => `
+      <div style="
+        margin-top:15px;
+        padding:10px;
+        border:1px solid #d1d5db;
+        border-radius:10px;
+      ">
+        <strong>Palette ${index + 1}</strong>
+
+        <div
+          class="button-group"
+          aria-label="Colors in saved palette ${index + 1}">
+
+          ${palette.map(color => `
+            <button
+              type="button"
+              title="Copy ${color}"
+              aria-label="Copy color ${color}"
+              onclick="copyText('${color}')"
+              style="
+                width:36px;
+                height:36px;
+                padding:0;
+                margin:0;
+                background:${color};
+                border:1px solid #d1d5db;
+                border-radius:6px;
+                cursor:pointer;
+              ">
+            </button>
+          `).join("")}
+
+        </div>
+      </div>
+    `).join("")}
+  `;
+}
+
+function downloadPalette() {
+  if (currentPalette.length === 0) {
+    showMessage("Generate a palette first.", "error");
+    return;
+  }
+
+  const blob = new Blob(
+    [currentPalette.join("\n")],
+    { type: "text/plain;charset=utf-8" }
+  );
+
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = "xavert-color-palette.txt";
+
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+
+  URL.revokeObjectURL(url);
+
+  showMessage("Palette downloaded.", "success");
+}
+
+function luminance(r, g, b) {
+  const values = [r, g, b].map(value => {
+    const normalized = value / 255;
+
+    return normalized <= 0.03928
+      ? normalized / 12.92
+      : Math.pow((normalized + 0.055) / 1.055, 2.4);
+  });
+
+  return (
+    0.2126 * values[0] +
+    0.7152 * values[1] +
+    0.0722 * values[2]
+  );
+}
+
+function checkContrast() {
+  const foreground =
+    document.getElementById("foregroundColor").value;
+
+  const background =
+    document.getElementById("backgroundColor").value;
+
+  const foregroundRgb = hexToRgb(foreground);
+  const backgroundRgb = hexToRgb(background);
+
+  const foregroundLuminance = luminance(
+    foregroundRgb.r,
+    foregroundRgb.g,
+    foregroundRgb.b
+  );
+
+  const backgroundLuminance = luminance(
+    backgroundRgb.r,
+    backgroundRgb.g,
+    backgroundRgb.b
+  );
+
+  const ratio =
+    (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
+    (Math.min(foregroundLuminance, backgroundLuminance) + 0.05);
+
+  const normalText = ratio >= 7
+    ? "AAA"
+    : ratio >= 4.5
+      ? "AA"
+      : "Fail";
+
+  const largeText = ratio >= 4.5
+    ? "AAA"
+    : ratio >= 3
+      ? "AA"
+      : "Fail";
+
+  const preview = document.getElementById("contrastPreview");
+  const result = document.getElementById("contrastResult");
+
+  preview.style.display = "block";
+  preview.style.color = foreground;
+  preview.style.background = background;
+  preview.textContent = "Sample Text Preview";
+
+  result.style.display = "block";
+  result.innerHTML = `
+    Contrast Ratio: <strong>${ratio.toFixed(2)}:1</strong><br>
+    Normal Text: <strong>${normalText}</strong><br>
+    Large Text: <strong>${largeText}</strong>
+  `;
+
+  setMessage(
+    "contrastMessage",
+    "Contrast analysis completed.",
+    "success"
+  );
+
+  showMessage("Contrast analysis completed.", "success");
+}
+
+function clearConverter() {
+  const activeTool = toolSelector.value;
+
+  if (activeTool === "converter") {
+    hexInput.value = "";
+    colorHistory = [];
+
+    setMessage("converterMessage");
+
+    const result = document.getElementById("converterResult");
+    result.innerHTML = "";
+    result.style.display = "none";
+
+    document.getElementById("converterPreview").style.background = "#ffffff";
+    hexInput.focus();
+  }
+
+  if (activeTool === "generator") {
+    colorHistory = [];
+
+    setMessage("generatorMessage");
+
+    const result = document.getElementById("generatorResult");
+    result.innerHTML = "";
+    result.style.display = "none";
+
+    document.getElementById("generatorPreview").style.background = "#ffffff";
+  }
+
+  if (activeTool === "contrast") {
+    document.getElementById("foregroundColor").value = "#000000";
+    document.getElementById("backgroundColor").value = "#ffffff";
+
+    setMessage("contrastMessage");
+
+    const result = document.getElementById("contrastResult");
+    result.innerHTML = "";
+    result.style.display = "none";
+
+    const preview = document.getElementById("contrastPreview");
+    preview.style.display = "none";
+    preview.style.color = "";
+    preview.style.background = "";
+  }
+
+  if (activeTool === "palette") {
+    document.getElementById("paletteColor").value = "#FF5733";
+
+    currentPalette = [];
+    savedPalettes = [];
+
+    setMessage("paletteMessage");
+
+    const result = document.getElementById("paletteResult");
+    result.innerHTML = "";
+    result.style.display = "none";
+
+    const saved = document.getElementById("savedPalettes");
+    saved.innerHTML = "";
+    saved.style.display = "none";
+  }
+
+  showMessage("Cleared.", "success");
+}
+</script>  
 
 </body>
 </html>
