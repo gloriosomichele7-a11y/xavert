@@ -1,610 +1,855 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
 
-<title>XAVERT | Cron Expression Generator</title>
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
 
-<meta name="description" content="Free online Cron Expression Generator to create, understand and export cron schedules directly in your browser. Generate cron jobs for Linux, Unix and server automation.">
+    <title>Cron Expression Generator | XAVERT</title>
 
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-<link rel="canonical" href="https://xavert.com/tools/cron-expression-generator.html">
+    <meta
+        name="description"
+        content="Create, validate, understand, copy and download standard five-field cron expressions for Linux, Unix and server automation directly in your browser."
+    >
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="XAVERT">
+    <meta name="theme-color" content="#dc2626">
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Cron Expression Generator">
-<meta property="og:description" content="Create, understand and export cron expressions directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/cron-expression-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <link
+        rel="canonical"
+        href="https://xavert.com/tools/cron-expression-generator.html"
+    >
 
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Cron Expression Generator">
-<meta name="twitter:description" content="Generate cron expressions for Linux, Unix and server automation.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+    <link
+        rel="icon"
+        href="../favicon.svg"
+        type="image/svg+xml"
+    >
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Cron Expression Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/cron-expression-generator.html",
-  "description":"Create, understand and export cron schedules directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
+    <link
+        rel="stylesheet"
+        href="../assets/css/global.css"
+    >
 
-.card{
-background:#fff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
+    <link
+        rel="stylesheet"
+        href="../assets/css/components.css"
+    >
 
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
+    <link
+        rel="stylesheet"
+        href="../assets/css/responsive.css"
+    >
 
-.btn{
-margin-top:14px;
-}
-  
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
+    <meta
+        property="og:type"
+        content="website"
+    >
 
-textarea{
-resize:none;
-}
+    <meta
+        property="og:title"
+        content="Cron Expression Generator | XAVERT"
+    >
 
-.result{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:16px;
-margin-top:16px;
-word-break:break-all;
-font-family:monospace;
-}
+    <meta
+        property="og:description"
+        content="Create, validate and understand five-field cron expressions directly in your browser."
+    >
 
-.description{
-margin-top:14px;
-padding:14px;
-background:#fef2f2;
-border:1px solid #fecaca;
-border-radius:12px;
-}
-  
-#cronOutput{
-font-family:monospace;
-font-size:18px;
-font-weight:700;
-text-align:center;
-background:#f9fafb;
-}
+    <meta
+        property="og:url"
+        content="https://xavert.com/tools/cron-expression-generator.html"
+    >
 
-@media(max-width:900px){
-.grid{
-grid-template-columns:1fr;
-}
-}
+    <meta
+        property="og:image"
+        content="https://xavert.com/assets/images/og-image.png"
+    >
 
-@media(max-width:768px){
+    <meta
+        property="og:site_name"
+        content="XAVERT"
+    >
 
-.card{
-padding:20px;
-}
+    <meta
+        name="twitter:card"
+        content="summary_large_image"
+    >
 
-.btn{
-width:100%;
-}
+    <meta
+        name="twitter:title"
+        content="Cron Expression Generator | XAVERT"
+    >
 
-}
-</style>
+    <meta
+        name="twitter:description"
+        content="Generate and understand cron schedules for Linux, Unix and server automation."
+    >
+
+    <meta
+        name="twitter:image"
+        content="https://xavert.com/assets/images/og-image.png"
+    >
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Cron Expression Generator",
+        "alternateName": "XAVERT Cron Expression Generator",
+        "applicationCategory": "DeveloperApplication",
+        "applicationSubCategory": "Automation Tool",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/cron-expression-generator.html",
+        "description": "Create, validate, understand, copy and download standard five-field cron expressions directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+            "@type": "Offer",
+            "price": "0",
+            "priceCurrency": "USD"
+        },
+        "publisher": {
+            "@type": "Organization",
+            "name": "XAVERT",
+            "url": "https://xavert.com"
+        },
+        "featureList": [
+            "Five-field cron expression generation",
+            "Cron expression validation",
+            "Plain-language schedule descriptions",
+            "Next execution preview",
+            "Preset schedules",
+            "Copy to clipboard",
+            "TXT file download",
+            "Local browser processing"
+        ]
+    }
+    </script>
+
+    <script type="application/ld+json">
+    {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+            {
+                "@type": "Question",
+                "name": "What is a cron expression?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "A cron expression is a sequence of fields that defines when a scheduled command or automated task should run."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Which cron format does this generator use?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "This tool uses the common five-field cron format: minute, hour, day of month, month and day of week."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Can I use the generated expression with Linux cron?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "Yes. The generated expressions follow the standard five-field format commonly used by Linux and Unix cron implementations."
+                }
+            },
+            {
+                "@type": "Question",
+                "name": "Is cron schedule data uploaded?",
+                "acceptedAnswer": {
+                    "@type": "Answer",
+                    "text": "No. Cron expressions are generated, validated and processed locally in your browser."
+                }
+            }
+        ]
+    }
+    </script>
+
+    <script
+        src="../assets/js/global.js"
+        defer
+    ></script>
+
+    <script
+        src="../assets/js/utils.js"
+        defer
+    ></script>
+
+    <script
+        src="../assets/js/related-tools.js"
+        defer
+    ></script>
+
+    <script
+        src="../assets/js/cron-expression-generator.js"
+        defer
+    ></script>
 </head>
 
-<body>
-
-<main class="container" aria-labelledby="tool-title">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT Logo">
-</div>
-
-<h1 id="tool-title">Cron Expression Generator</h1>
-
-<p class="subtitle">
-Create cron schedules and understand task timing instantly.
-</p>
-<div class="success-banner">
-Cron expressions are generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-<label for="cronPreset">Cron Presets</label>
-
-<select id="cronPreset" onchange="applyPreset()">
-<option value="">Custom</option>
-<option value="hourly">Every Hour</option>
-<option value="daily">Every Day</option>
-<option value="weekly">Every Week</option>
-<option value="monthly">Every Month</option>
-<option value="yearly">Every Year</option>
-</select>
-<label for="minute">Minute</label>
-<input id="minute" value="0">
-
-<label for="hour">Hour</label>
-<input id="hour" value="0">
-
-<label for="day">Day of Month</label>
-<input id="day" value="*">
-
-<label for="month">Month</label>
-<input id="month" value="*">
-
-<label for="weekday">Day of Week</label>
-<input id="weekday" value="*">
-
-<div class="button-group">
-
-<button class="btn" type="button" onclick="generateCron()">
-Generate Cron
-</button>
-
-<button class="btn" type="button" onclick="clearAll()">
-Clear
-</button>
-
-</div>
-
-</div>
-
-<div>
-
-<label for="cronOutput">Cron Expression</label>
-
-<textarea
-id="cronOutput"
-rows="2"
-readonly
-aria-label="Generated cron expression"
-placeholder="Cron expression will appear here..."
-></textarea>
-<div id="cronStats" style="margin-top:10px;color:#6b7280;font-size:13px;">
-Fields: 0
-</div>
-<div id="nextRun" style="margin-top:6px;color:#6b7280;font-size:13px;">
-Next Run Preview: —
-</div>
-<div class="button-group">
-
-<button class="btn" type="button" onclick="copyCron()">
-Copy
-</button>
-
-<button class="btn" type="button" onclick="downloadCron()">
-Download TXT
-</button>
-
-</div>
-
-<div id="cronDescription" class="description">
-Waiting for cron generation...
-</div>
-<div id="cronExamples" style="margin-top:16px;color:#6b7280;font-size:14px;line-height:1.8;">
-Popular Examples:
-<br><a href="#" onclick="loadExample('*/5 * * * *');return false;">Every 5 minutes</a>
-<br><a href="#" onclick="loadExample('0 * * * *');return false;">Every hour</a>
-<br><a href="#" onclick="loadExample('0 0 * * *');return false;">Every day at midnight</a>
-<br><a href="#" onclick="loadExample('0 8 * * 1');return false;">Every Monday at 08:00</a>
-<br><a href="#" onclick="loadExample('0 0 1 * *');return false;">First day of month</a>
-</div>
-</div>
-
-</div>
-
-</div>
-<section class="info">
-
-<h2>About Cron Expression Generator</h2>
-
-<p>
-Cron Expression Generator helps you create, understand and export cron schedules for Linux, Unix, servers, automation tasks and recurring jobs.
-</p>
-
-<ul>
-<li>Create cron expressions from presets or custom values.</li>
-<li>Preview the generated cron expression instantly.</li>
-<li>Understand what the schedule means in plain language.</li>
-<li>Copy or download the cron expression as a TXT file.</li>
-<li>Everything runs locally in your browser.</li>
-</ul>
-
-</section>
-
-<section class="info">
-
-<h2>Cron Expression Generator FAQ</h2>
-
-<p>
-Common questions about creating cron expressions online with XAVERT.
-</p>
-
-<ul>
-<li><strong>What is a cron expression?</strong> A cron expression defines when a scheduled task should run.</li>
-<li><strong>Can I use this for Linux cron jobs?</strong> Yes, the generated expressions follow the common five-field cron format.</li>
-<li><strong>Is my cron data uploaded?</strong> No, everything is generated directly in your browser.</li>
-<li><strong>Can I download the cron expression?</strong> Yes, you can download it as a TXT file.</li>
-</ul>
-
-</section>
-
-<section class="info" id="related-tools-section" hidden>
-
-<h2>Related Tools</h2>
-
-<div id="related-tools"></div>
-
-</section>
-</main>
-
-<footer class="xavert-footer-note">
-Powered by XAVERT
-</footer>
-
-<script>
-
-document.addEventListener("DOMContentLoaded",()=>{
-
-if(typeof loadRelatedTools==="function"){
-
-loadRelatedTools("cron-expression-generator");
-
-}
-
-});  
-const minute=document.getElementById("minute");
-const hour=document.getElementById("hour");
-const day=document.getElementById("day");
-const month=document.getElementById("month");
-const weekday=document.getElementById("weekday");
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-generateCron();
-}
-
-});
-
-function loadExample(expression){
-document.getElementById("cronPreset").value="";
-const parts=expression.split(" ");
-
-minute.value=parts[0];
-hour.value=parts[1];
-day.value=parts[2];
-month.value=parts[3];
-weekday.value=parts[4];
-
-generateCron();
-
-}
-function applyPreset(){
-
-const preset=document.getElementById("cronPreset").value;
-
-if(preset==="hourly"){
-minute.value="0";
-hour.value="*";
-day.value="*";
-month.value="*";
-weekday.value="*";
-}
-
-if(preset==="daily"){
-minute.value="0";
-hour.value="0";
-day.value="*";
-month.value="*";
-weekday.value="*";
-}
-
-if(preset==="weekly"){
-minute.value="0";
-hour.value="0";
-day.value="*";
-month.value="*";
-weekday.value="0";
-}
-
-if(preset==="monthly"){
-minute.value="0";
-hour.value="0";
-day.value="1";
-month.value="*";
-weekday.value="*";
-}
-
-if(preset==="yearly"){
-minute.value="0";
-hour.value="0";
-day.value="1";
-month.value="1";
-weekday.value="*";
-}
-if(preset){
-generateCron();
-}
-  
-}
-function getNextRun(minute,hour,day,month,weekday){
-
-const now=new Date();
-let next=new Date(now.getTime()+60000);
-next.setSeconds(0);
-next.setMilliseconds(0);
-
-for(let i=0;i<525600;i++){
-
-const m=String(next.getMinutes());
-const h=String(next.getHours());
-const d=String(next.getDate());
-const mo=String(next.getMonth()+1);
-const w=String(next.getDay());
-
-const minuteMatch=
-minute==="*" ||
-minute===m ||
-(minute.startsWith("*/") && next.getMinutes()%parseInt(minute.slice(2),10)===0);
-
-const hourMatch=hour==="*" || hour===h;
-const dayMatch=day==="*" || day===d;
-const monthMatch=month==="*" || month===mo;
-const weekdayMatch=weekday==="*" || weekday===w;
-
-if(minuteMatch && hourMatch && dayMatch && monthMatch && weekdayMatch){
-return next.toLocaleString();
-}
-
-next.setMinutes(next.getMinutes()+1);
-
-}
-
-return "Unable to calculate";
-
-}
-function generateCron(){
-const minuteValue=document.getElementById("minute").value.trim();
-const hourValue=document.getElementById("hour").value.trim();
-const dayValue=document.getElementById("day").value.trim();
-const monthValue=document.getElementById("month").value.trim();
-const weekdayValue=document.getElementById("weekday").value.trim();
-
-if(
-!minuteValue ||
-!hourValue ||
-!dayValue ||
-!monthValue ||
-!weekdayValue
-){
-showMessage("All fields are required.","error");
-return;
-}
-const minute=document.getElementById("minute").value.trim();
-const hour=document.getElementById("hour").value.trim();
-const day=document.getElementById("day").value.trim();
-const month=document.getElementById("month").value.trim();
-const weekday=document.getElementById("weekday").value.trim();
-const cronRegex=
-/^[0-9*/,\-]+$/;
-
-const values=[
-minute,
-hour,
-day,
-month,
-weekday
-];
-
-for(const value of values){
-
-if(
-value!=="*" &&
-!cronRegex.test(value)
-){
-showMessage("Invalid cron value detected.","error");
-return;
-}
-
-}
-const cron=
-`${minute} ${hour} ${day} ${month} ${weekday}`;
-
-document.getElementById("cronOutput").value=cron;
-document.getElementById("cronStats").textContent=
-"Fields: " + cron.split(" ").length;
-document.getElementById("nextRun").textContent=
-"Next Run Preview: " + getNextRun(minute,hour,day,month,weekday);
-
-let description=
-`Runs at minute ${minute}, hour ${hour}, day ${day}, month ${month}, weekday ${weekday}.`;
-
-if(
-minute==="0" &&
-hour==="*" &&
-day==="*" &&
-month==="*" &&
-weekday==="*"
-){
-description="Runs every hour.";
-}
-
-if(
-minute==="0" &&
-hour==="0" &&
-day==="*" &&
-month==="*" &&
-weekday==="*"
-){
-description="Runs every day at 00:00.";
-}
-
-if(
-minute==="0" &&
-hour==="0" &&
-day==="*" &&
-month==="*" &&
-weekday==="0"
-){
-description="Runs every week on Sunday at 00:00.";
-}
-
-if(
-minute==="0" &&
-hour==="0" &&
-day==="1" &&
-month==="*" &&
-weekday==="*"
-){
-description="Runs on the first day of every month.";
-}
-
-if(
-minute==="0" &&
-hour==="0" &&
-day==="1" &&
-month==="1" &&
-weekday==="*"
-){
-description="Runs once a year on January 1st.";
-}
-
-document.getElementById("cronDescription").innerHTML=
-description;
-showMessage("Cron expression generated.","success");
-}
-
-function copyCron(){
-
-const text=document.getElementById("cronOutput").value;
-
-if(!text){
-showMessage("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-showMessage("Copied.","success");
-})
-.catch(function(){
-showMessage("Copy failed.","error");
-});
-
-}
-
-function downloadCron(){
-
-const text=document.getElementById("cronOutput").value;
-
-if(!text){
-showMessage("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download="xavert-cron-expression.txt";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showMessage("Download started.","success");
-
-}
-
-function clearAll(){
-document.getElementById("cronPreset").value="";
-document.getElementById("minute").value="0";
-document.getElementById("hour").value="0";
-document.getElementById("day").value="*";
-document.getElementById("month").value="*";
-document.getElementById("weekday").value="*";
-
-document.getElementById("cronOutput").value="";
-document.getElementById("cronStats").textContent=
-"Fields: 0";
-document.getElementById("nextRun").textContent=
-"Next Run Preview: —";
-document.getElementById("cronDescription").innerHTML=
-"Waiting for cron generation...";
-
-showMessage("Cleared.","success");
-
-}
-[minute,hour,day,month,weekday].forEach(function(field){
-
-field.addEventListener("input",generateCron);
-
-});
-</script>
+<body data-tool="cron-expression-generator">
+
+    <main
+        class="container"
+        aria-labelledby="tool-title"
+    >
+
+        <a
+            href="../index.html"
+            class="back-link"
+        >
+            ← Back to Home
+        </a>
+
+        <header class="tool-hero">
+
+            <img
+                class="tool-logo"
+                src="../logo-hero.svg"
+                alt="XAVERT"
+                width="220"
+                height="60"
+            >
+
+            <h1
+                id="tool-title"
+                class="tool-title"
+            >
+                Cron Expression Generator
+            </h1>
+
+            <p class="tool-subtitle">
+                Build, validate and understand standard five-field cron schedules
+                for recurring tasks and server automation.
+            </p>
+
+        </header>
+
+        <div
+            class="status-banner"
+            role="note"
+        >
+            All cron expressions are processed locally in your browser.
+            Nothing is uploaded or stored.
+        </div>
+
+        <section
+            class="tool-card"
+            aria-labelledby="generator-heading"
+        >
+
+            <h2 id="generator-heading">
+                Build a Cron Schedule
+            </h2>
+
+            <p>
+                Select a preset or enter custom values for each cron field.
+                Changes are validated and previewed automatically.
+            </p>
+
+            <div class="form-grid">
+
+                <div class="form-group full-width">
+
+                    <label for="cron-preset">
+                        Schedule Preset
+                    </label>
+
+                    <select id="cron-preset">
+                        <option value="custom">
+                            Custom schedule
+                        </option>
+
+                        <option value="every-minute">
+                            Every minute
+                        </option>
+
+                        <option value="every-five-minutes">
+                            Every 5 minutes
+                        </option>
+
+                        <option value="every-fifteen-minutes">
+                            Every 15 minutes
+                        </option>
+
+                        <option value="hourly">
+                            Every hour
+                        </option>
+
+                        <option value="daily">
+                            Every day at midnight
+                        </option>
+
+                        <option value="daily-morning">
+                            Every day at 08:00
+                        </option>
+
+                        <option value="weekdays">
+                            Every weekday at 09:00
+                        </option>
+
+                        <option value="weekly">
+                            Every Sunday at midnight
+                        </option>
+
+                        <option value="monthly">
+                            First day of every month
+                        </option>
+
+                        <option value="yearly">
+                            January 1 every year
+                        </option>
+                    </select>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="cron-minute">
+                        Minute
+                    </label>
+
+                    <input
+                        id="cron-minute"
+                        type="text"
+                        value="0"
+                        inputmode="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-describedby="minute-help minute-error"
+                    >
+
+                    <small id="minute-help">
+                        Allowed range: 0–59. Supports *, lists, ranges and steps.
+                    </small>
+
+                    <p
+                        id="minute-error"
+                        class="message"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="cron-hour">
+                        Hour
+                    </label>
+
+                    <input
+                        id="cron-hour"
+                        type="text"
+                        value="0"
+                        inputmode="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-describedby="hour-help hour-error"
+                    >
+
+                    <small id="hour-help">
+                        Allowed range: 0–23. Uses the 24-hour clock.
+                    </small>
+
+                    <p
+                        id="hour-error"
+                        class="message"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="cron-day">
+                        Day of Month
+                    </label>
+
+                    <input
+                        id="cron-day"
+                        type="text"
+                        value="*"
+                        inputmode="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-describedby="day-help day-error"
+                    >
+
+                    <small id="day-help">
+                        Allowed range: 1–31.
+                    </small>
+
+                    <p
+                        id="day-error"
+                        class="message"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+
+                <div class="form-group">
+
+                    <label for="cron-month">
+                        Month
+                    </label>
+
+                    <input
+                        id="cron-month"
+                        type="text"
+                        value="*"
+                        inputmode="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-describedby="month-help month-error"
+                    >
+
+                    <small id="month-help">
+                        Allowed range: 1–12.
+                    </small>
+
+                    <p
+                        id="month-error"
+                        class="message"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+
+                <div class="form-group full-width">
+
+                    <label for="cron-weekday">
+                        Day of Week
+                    </label>
+
+                    <input
+                        id="cron-weekday"
+                        type="text"
+                        value="*"
+                        inputmode="text"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-describedby="weekday-help weekday-error"
+                    >
+
+                    <small id="weekday-help">
+                        Allowed range: 0–7, where both 0 and 7 represent Sunday.
+                    </small>
+
+                    <p
+                        id="weekday-error"
+                        class="message"
+                        role="alert"
+                        hidden
+                    ></p>
+
+                </div>
+
+            </div>
+
+            <div class="button-group">
+
+                <button
+                    id="generate-cron"
+                    class="btn"
+                    type="button"
+                >
+                    Generate Cron
+                </button>
+
+                <button
+                    id="reset-cron"
+                    class="btn btn-neutral"
+                    type="button"
+                >
+                    Reset
+                </button>
+
+            </div>
+
+        </section>
+
+        <section
+            class="card"
+            aria-labelledby="result-heading"
+        >
+
+            <h2 id="result-heading">
+                Cron Expression
+            </h2>
+
+            <div class="form-group">
+
+                <label for="cron-output">
+                    Generated Expression
+                </label>
+
+                <textarea
+                    id="cron-output"
+                    class="result-box"
+                    rows="2"
+                    readonly
+                    spellcheck="false"
+                    aria-describedby="cron-validation-status"
+                    placeholder="Your cron expression will appear here."
+                ></textarea>
+
+            </div>
+
+            <p
+                id="cron-validation-status"
+                class="message"
+                role="status"
+                aria-live="polite"
+            >
+                Enter or select a schedule to generate an expression.
+            </p>
+
+            <div class="result-actions">
+
+                <button
+                    id="copy-cron"
+                    class="btn btn-secondary"
+                    type="button"
+                    disabled
+                >
+                    Copy Expression
+                </button>
+
+                <button
+                    id="download-cron"
+                    class="btn btn-neutral"
+                    type="button"
+                    disabled
+                >
+                    Download TXT
+                </button>
+
+            </div>
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <span
+                        id="cron-field-count"
+                        class="stat-value"
+                    >
+                        0
+                    </span>
+
+                    <span class="stat-label">
+                        Fields
+                    </span>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <span
+                        id="cron-format"
+                        class="stat-value"
+                    >
+                        —
+                    </span>
+
+                    <span class="stat-label">
+                        Format
+                    </span>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <span
+                        id="cron-status"
+                        class="stat-value"
+                    >
+                        —
+                    </span>
+
+                    <span class="stat-label">
+                        Status
+                    </span>
+
+                </div>
+
+            </div>
+
+            <div
+                id="cron-description"
+                class="result-box"
+                aria-live="polite"
+            >
+                The schedule description will appear here.
+            </div>
+
+            <div
+                id="next-run-container"
+                class="result-box"
+            >
+
+                <strong>
+                    Next execution:
+                </strong>
+
+                <span id="next-run">
+                    —
+                </span>
+
+            </div>
+
+        </section>
+
+        <section
+            class="card"
+            aria-labelledby="examples-heading"
+        >
+
+            <h2 id="examples-heading">
+                Popular Cron Examples
+            </h2>
+
+            <p>
+                Load a common expression and customize it as needed.
+            </p>
+
+            <div
+                id="cron-examples"
+                class="button-grid"
+            >
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="*/5 * * * *"
+                >
+                    Every 5 minutes
+                </button>
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="0 * * * *"
+                >
+                    Every hour
+                </button>
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="0 0 * * *"
+                >
+                    Every day at midnight
+                </button>
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="0 8 * * 1"
+                >
+                    Every Monday at 08:00
+                </button>
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="0 9 * * 1-5"
+                >
+                    Weekdays at 09:00
+                </button>
+
+                <button
+                    class="btn btn-neutral"
+                    type="button"
+                    data-cron-example="0 0 1 * *"
+                >
+                    First day of every month
+                </button>
+
+            </div>
+
+        </section>
+
+        <section
+            class="info"
+            aria-labelledby="syntax-heading"
+        >
+
+            <h2 id="syntax-heading">
+                Cron Expression Syntax
+            </h2>
+
+            <p>
+                A standard cron expression contains five fields separated by
+                spaces:
+            </p>
+
+            <div class="result-box">
+                minute hour day-of-month month day-of-week
+            </div>
+
+            <ul>
+                <li>
+                    <strong>*</strong> matches every allowed value.
+                </li>
+
+                <li>
+                    <strong>,</strong> separates multiple values, such as
+                    <code>1,15,30</code>.
+                </li>
+
+                <li>
+                    <strong>-</strong> defines a range, such as
+                    <code>1-5</code>.
+                </li>
+
+                <li>
+                    <strong>/</strong> defines an interval, such as
+                    <code>*/10</code>.
+                </li>
+            </ul>
+
+            <p>
+                This generator targets the common five-field Linux and Unix cron
+                format. Some platforms use additional fields or platform-specific
+                syntax.
+            </p>
+
+        </section>
+
+        <section
+            class="info"
+            aria-labelledby="about-heading"
+        >
+
+            <h2 id="about-heading">
+                About Cron Expression Generator
+            </h2>
+
+            <p>
+                XAVERT Cron Expression Generator helps developers, system
+                administrators and automation users create recurring schedules
+                without manually assembling every field.
+            </p>
+
+            <ul>
+                <li>
+                    Create expressions from presets or custom field values.
+                </li>
+
+                <li>
+                    Validate ranges, lists, steps and field syntax.
+                </li>
+
+                <li>
+                    Read a plain-language explanation of the generated schedule.
+                </li>
+
+                <li>
+                    Preview the next matching execution time.
+                </li>
+
+                <li>
+                    Copy the result or download it as a text file.
+                </li>
+
+                <li>
+                    Process all schedule data locally in the browser.
+                </li>
+            </ul>
+
+        </section>
+
+        <section
+            class="info"
+            aria-labelledby="faq-heading"
+        >
+
+            <h2 id="faq-heading">
+                Cron Expression Generator FAQ
+            </h2>
+
+            <h3>
+                What is a cron expression?
+            </h3>
+
+            <p>
+                A cron expression defines when a command, script or automated
+                task should run.
+            </p>
+
+            <h3>
+                Which cron format does this tool generate?
+            </h3>
+
+            <p>
+                It generates the common five-field format containing minute,
+                hour, day of month, month and day of week.
+            </p>
+
+            <h3>
+                Can I use these expressions with Linux cron?
+            </h3>
+
+            <p>
+                Yes. The output is designed for common Linux and Unix cron
+                implementations. Always verify whether your specific service
+                supports the same syntax.
+            </p>
+
+            <h3>
+                Why can day of month and day of week behave differently?
+            </h3>
+
+            <p>
+                Traditional cron implementations may treat these two fields with
+                OR-style matching when both are restricted. The final behavior
+                depends on the cron implementation being used.
+            </p>
+
+            <h3>
+                Is my schedule uploaded?
+            </h3>
+
+            <p>
+                No. Expression generation, validation and preview calculation
+                happen directly in your browser.
+            </p>
+
+        </section>
+
+        <section
+            id="related-tools-section"
+            class="info"
+            hidden
+        >
+
+            <h2>
+                Related Tools
+            </h2>
+
+            <div id="related-tools"></div>
+
+        </section>
+
+    </main>
+
+    <footer class="xavert-footer-note">
+        Powered by XAVERT
+    </footer>
 
 </body>
+
 </html>
