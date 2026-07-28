@@ -100,6 +100,24 @@ textarea{
 resize:none;
 }
 
+.result{
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:12px;
+padding:16px;
+margin-top:16px;
+word-break:break-all;
+font-family:monospace;
+}
+
+.description{
+margin-top:14px;
+padding:14px;
+background:#fef2f2;
+border:1px solid #fecaca;
+border-radius:12px;
+}
+  
 #cronOutput{
 font-family:monospace;
 font-size:18px;
@@ -151,7 +169,7 @@ Cron expressions are generated locally in your browser. Nothing is uploaded or s
 <div class="grid">
 
 <div>
-<label>Cron Presets</label>
+<label for="cronPreset">Cron Presets</label>
 
 <select id="cronPreset" onchange="applyPreset()">
 <option value="">Custom</option>
@@ -161,19 +179,19 @@ Cron expressions are generated locally in your browser. Nothing is uploaded or s
 <option value="monthly">Every Month</option>
 <option value="yearly">Every Year</option>
 </select>
-<label>Minute</label>
+<label for="minute">Minute</label>
 <input id="minute" value="0">
 
-<label>Hour</label>
+<label for="hour">Hour</label>
 <input id="hour" value="0">
 
-<label>Day of Month</label>
+<label for="day">Day of Month</label>
 <input id="day" value="*">
 
-<label>Month</label>
+<label for="month">Month</label>
 <input id="month" value="*">
 
-<label>Day of Week</label>
+<label for="weekday">Day of Week</label>
 <input id="weekday" value="*">
 
 <div class="button-group">
@@ -192,7 +210,7 @@ Clear
 
 <div>
 
-<label>Cron Expression</label>
+<label for="cronOutput">Cron Expression</label>
 
 <textarea
 id="cronOutput"
