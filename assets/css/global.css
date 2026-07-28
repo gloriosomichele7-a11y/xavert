@@ -1,21 +1,122 @@
 /* XAVERT Global Styles */
 
+/* Reset */
+
+*,
+*::before,
+*::after{
+box-sizing:border-box;
+}
+
+html{
+scroll-behavior:smooth;
+}
+
+body{
+margin:0;
+background:#f7f8fb;
+color:#111827;
+font-family:Arial,Helvetica,sans-serif;
+line-height:1.5;
+}
+
+img,
+svg{
+display:block;
+max-width:100%;
+}
+
+button,
+input,
+select,
+textarea{
+font:inherit;
+}
+
+button{
+cursor:pointer;
+}
+
+a{
+color:inherit;
+}
+
+/* Page Layout */
+
+.container{
+width:100%;
+max-width:1100px;
+margin:0 auto;
+padding:36px 20px 0;
+}
+
+.back-link{
+display:inline-flex;
+align-items:center;
+margin-bottom:24px;
+border-radius:4px;
+color:#dc2626;
+font-size:14px;
+font-weight:700;
+text-decoration:none;
+}
+
+.back-link:hover{
+color:#b91c1c;
+}
+
+.back-link:focus-visible{
+outline:3px solid rgba(220,38,38,.25);
+outline-offset:3px;
+}
+
+/* Tool Header */
+
+.tool-hero{
+margin-bottom:20px;
+text-align:center;
+}
+
+.tool-logo{
+width:210px;
+max-width:70%;
+height:auto;
+margin:0 auto 18px;
+}
+
+.tool-title{
+margin:0;
+font-size:38px;
+font-weight:800;
+letter-spacing:-1px;
+line-height:1.15;
+}
+
+.tool-subtitle{
+max-width:720px;
+margin:12px auto 0;
+color:#6b7280;
+font-size:16px;
+line-height:1.7;
+}
+
 /* Info / About Sections */
+
 .info{
 margin-top:36px;
+padding:26px;
 background:#ffffff;
 border:1px solid #eceff3;
 border-radius:22px;
-padding:26px;
 box-shadow:0 10px 28px rgba(15,23,42,.04);
 }
 
 .info h2{
+margin:0 0 24px;
+color:#111827;
 font-size:28px;
 font-weight:800;
 letter-spacing:-.4px;
-margin-bottom:24px;
-color:#111827;
 }
 
 .info h2::after{
@@ -28,31 +129,33 @@ border-radius:999px;
 background:#dc2626;
 }
 
-.info p{
-margin-bottom:14px;
-line-height:1.8;
-color:#4b5563;
-}
-
 .info h3{
-margin-bottom:14px;
+margin:26px 0 14px;
+color:#dc2626;
 font-size:14px;
 font-weight:800;
 letter-spacing:.7px;
 text-transform:uppercase;
-color:#dc2626;
+}
+
+.info p{
+margin:0 0 14px;
+color:#4b5563;
+line-height:1.8;
 }
 
 .info ul{
+margin:0;
+padding:0;
 list-style:none;
 }
 
 .info li{
 position:relative;
-padding-left:18px;
 margin:8px 0;
-line-height:1.7;
+padding-left:18px;
 color:#4b5563;
+line-height:1.7;
 }
 
 .info li::before{
@@ -70,19 +173,15 @@ max-width:900px;
 }
 
 .about-intro{
-font-size:16px;
 margin-bottom:26px;
+font-size:16px;
 }
 
 .about-features{
-list-style:none;
-padding-left:0;
 margin-bottom:28px;
-color:#4b5563;
 }
 
 .about-features li{
-position:relative;
 padding-left:25px;
 margin-bottom:10px;
 line-height:1.65;
@@ -90,7 +189,6 @@ line-height:1.65;
 
 .about-features li::before{
 content:"";
-position:absolute;
 left:2px;
 top:.82em;
 width:5px;
@@ -104,10 +202,16 @@ transform:translateY(-50%);
 margin-bottom:0;
 }
 
-/* Utility */
+/* Utilities */
+
+[hidden]{
+display:none !important;
+}
+
 .xavert-footer-note{
-text-align:center;
+margin:28px 0 0;
+padding:0 20px 24px;
 color:#6b7280;
 font-size:13px;
-margin-top:28px;
+text-align:center;
 }
