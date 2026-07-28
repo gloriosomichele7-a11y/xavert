@@ -1,73 +1,97 @@
+// =====================================
 // XAVERT Utilities
+// =====================================
 
-function showMessage(text,type="info"){
+function showMessage(text, type = "info") {
 
-if(!text){
-return;
+    if (!text) return;
+
+    let toast = document.getElementById("xavert-toast");
+
+    if (!toast) {
+
+        toast = document.createElement("div");
+        toast.id = "xavert-toast";
+        toast.className = "xavert-toast";
+        toast.hidden = true;
+
+        toast.setAttribute("role", "status");
+        toast.setAttribute("aria-live", "polite");
+        toast.setAttribute("aria-atomic", "true");
+
+        document.body.append(toast);
+
+    }
+
+    clearTimeout(showMessage.timer);
+
+    toast.textContent = text;
+    toast.className = `xavert-toast xavert-toast-${type}`;
+    toast.hidden = false;
+
+    showMessage.timer = setTimeout(() => {
+
+        toast.hidden = true;
+        toast.textContent = "";
+        toast.className = "xavert-toast";
+
+    }, 2200);
+
 }
 
-let toast=document.getElementById("xavert-toast");
+async function xavertCopyText(text, successMessage = "Copied.") {
 
-if(!toast){
+    if (!text) {
 
-toast=document.createElement("div");
-toast.id="xavert-toast";
-toast.setAttribute("role","status");
-toast.setAttribute("aria-live","polite");
-toast.setAttribute("aria-atomic","true");
+        showMessage("Nothing to copy.", "error");
+        return false;
 
-document.body.appendChild(toast);
+    }
+
+    if (!navigator.clipboard?.writeText) {
+
+        showMessage("Copy is not supported in this browser.", "error");
+        return false;
+
+    }
+
+    try {
+
+        await navigator.clipboard.writeText(text);
+
+        showMessage(successMessage, "success");
+
+        return true;
+
+    } catch {
+
+        showMessage("Copy failed.", "error");
+
+        return false;
+
+    }
 
 }
 
-toast.textContent=text;
-toast.className="xavert-toast xavert-toast-" + type;
-toast.hidden=false;
+function downloadFile(filename, content, mimeType) {
 
-clearTimeout(showMessage.timer);
+    const blob = new Blob([content], { type: mimeType });
 
-showMessage.timer=setTimeout(function(){
+    const url = URL.createObjectURL(blob);
 
-toast.hidden=true;
-toast.textContent="";
-toast.className="xavert-toast";
+    const link = document.createElement("a");
 
-},2200);
+    link.href = url;
+    link.download = filename;
 
-}
+    document.body.append(link);
 
-function xavertCopyText(text,successMessage="Copied."){
+    link.click();
 
-if(!text){
-showMessage("Nothing to copy.","error");
-return false;
-}
+    link.remove();
 
-if(
-!navigator.clipboard ||
-typeof navigator.clipboard.writeText!=="function"
-){
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
 
-showMessage(
-"Copy is not supported in this browser.",
-"error"
-);
-
-return false;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-
-showMessage(successMessage,"success");
-
-})
-.catch(function(){
-
-showMessage("Copy failed.","error");
-
-});
-
-return true;
+    showMessage("Download started.", "success");
 
 }
