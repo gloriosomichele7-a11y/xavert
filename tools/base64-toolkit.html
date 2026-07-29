@@ -1,454 +1,500 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
 <head>
-  <meta charset="UTF-8">
 
-  <meta
-    name="viewport"
-    content="width=device-width, initial-scale=1.0"
-  >
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <title>Base64 Toolkit | Encode and Decode Base64 Online | XAVERT</title>
+<title>XAVERT | Base64 Toolkit</title>
 
-  <meta
-    name="description"
-    content="Encode text to Base64 or decode Base64 to readable UTF-8 text directly in your browser. Free, fast and privacy-friendly."
-  >
+<meta
+  name="description"
+  content="Encode UTF-8 text to Base64 or decode Base64 into readable text directly in your browser. Fast, private and free."
+>
 
-  <meta name="robots" content="index, follow">
-  <meta name="author" content="XAVERT">
-  <meta name="theme-color" content="#dc2626">
+<meta name="robots" content="index, follow">
+<meta name="author" content="XAVERT">
+<meta name="theme-color" content="#dc2626">
 
-  <link
-    rel="canonical"
-    href="https://xavert.com/tools/base64-toolkit.html"
-  >
+<link
+  rel="canonical"
+  href="https://xavert.com/tools/base64-toolkit.html"
+>
 
-  <link
-    rel="icon"
-    href="../favicon.svg"
-    type="image/svg+xml"
-  >
+<link
+  rel="icon"
+  href="../favicon.svg"
+  type="image/svg+xml"
+>
 
-  <link
-    rel="stylesheet"
-    href="../assets/css/global.css"
-  >
+<link
+  rel="stylesheet"
+  href="../assets/css/global.css"
+>
 
-  <link
-    rel="stylesheet"
-    href="../assets/css/components.css"
-  >
+<link
+  rel="stylesheet"
+  href="../assets/css/components.css"
+>
 
-  <link
-    rel="stylesheet"
-    href="../assets/css/responsive.css"
-  >
+<link
+  rel="stylesheet"
+  href="../assets/css/responsive.css"
+>
 
-  <!-- Open Graph -->
-  <meta property="og:type" content="website">
+<meta property="og:type" content="website">
+<meta property="og:title" content="XAVERT | Base64 Toolkit">
 
-  <meta
-    property="og:title"
-    content="Base64 Toolkit | XAVERT"
-  >
+<meta
+  property="og:description"
+  content="Encode and decode Base64 text directly in your browser with UTF-8 support and local processing."
+>
 
-  <meta
-    property="og:description"
-    content="Encode and decode Base64 text securely in your browser. No uploads and no server processing."
-  >
+<meta
+  property="og:url"
+  content="https://xavert.com/tools/base64-toolkit.html"
+>
 
-  <meta
-    property="og:url"
-    content="https://xavert.com/tools/base64-toolkit.html"
-  >
+<meta
+  property="og:image"
+  content="https://xavert.com/assets/images/og-image.png"
+>
 
-  <meta
-    property="og:image"
-    content="https://xavert.com/assets/images/og-image.png"
-  >
+<meta property="og:site_name" content="XAVERT">
 
-  <meta property="og:site_name" content="XAVERT">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="XAVERT | Base64 Toolkit">
 
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
+<meta
+  name="twitter:description"
+  content="Encode UTF-8 text to Base64 or decode Base64 directly in your browser."
+>
 
-  <meta
-    name="twitter:title"
-    content="Base64 Toolkit | XAVERT"
-  >
+<meta
+  name="twitter:image"
+  content="https://xavert.com/assets/images/og-image.png"
+>
 
-  <meta
-    name="twitter:description"
-    content="Encode text to Base64 or decode Base64 to UTF-8 text directly in your browser."
-  >
-
-  <meta
-    name="twitter:image"
-    content="https://xavert.com/assets/images/og-image.png"
-  >
-
-  <!-- Structured Data -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "WebApplication",
-    "name": "XAVERT Base64 Toolkit",
-    "url": "https://xavert.com/tools/base64-toolkit.html",
-    "description": "A browser-based tool for encoding UTF-8 text to Base64 and decoding Base64 to readable UTF-8 text.",
-    "applicationCategory": "DeveloperApplication",
-    "operatingSystem": "Any",
-    "browserRequirements": "Requires JavaScript",
-    "isAccessibleForFree": true,
-    "offers": {
-      "@type": "Offer",
-      "price": "0",
-      "priceCurrency": "EUR"
-    },
-    "publisher": {
-      "@type": "Organization",
-      "name": "XAVERT",
-      "url": "https://xavert.com/"
-    }
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Base64 Toolkit",
+  "applicationCategory": "DeveloperApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "url": "https://xavert.com/tools/base64-toolkit.html",
+  "description": "Encode UTF-8 text to Base64 and decode Base64 into readable UTF-8 text directly in your browser.",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "XAVERT"
   }
-  </script>
+}
+</script>
 
-  <script
-    src="../assets/js/global.js"
-    defer
-  ></script>
+<style>
+.base64-input{
+min-height:220px;
+resize:vertical;
+}
 
-  <script
-    src="../assets/js/utils.js"
-    defer
-  ></script>
+.base64-actions{
+grid-template-columns:repeat(4,minmax(0,1fr));
+margin-top:22px;
+}
 
-  <script
-    src="../assets/js/related-tools.js"
-    defer
-  ></script>
+.field-meta{
+display:flex;
+justify-content:space-between;
+align-items:center;
+gap:16px;
+margin-top:10px;
+color:#6b7280;
+font-size:13px;
+line-height:1.5;
+}
 
-  <script
-    src="../assets/js/base64-toolkit.js"
-    defer
-  ></script>
+.result-box{
+display:none;
+margin-top:24px;
+padding:24px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:18px;
+}
+
+.result-box h2{
+margin-bottom:18px;
+font-size:22px;
+}
+
+.result-output{
+min-height:180px;
+resize:vertical;
+background:#ffffff;
+}
+
+.result-details{
+display:flex;
+flex-wrap:wrap;
+justify-content:space-between;
+gap:10px 18px;
+margin-top:12px;
+color:#6b7280;
+font-size:13px;
+line-height:1.5;
+}
+
+.result-actions{
+grid-template-columns:repeat(2,minmax(0,1fr));
+margin-top:20px;
+}
+
+.xavert-footer-note{
+color:#111827;
+font-size:12px;
+}
+
+#toast{
+display:none;
+}
+
+@media (max-width:768px){
+
+.base64-actions{
+grid-template-columns:repeat(2,minmax(0,1fr));
+}
+
+.result-box{
+padding:20px;
+}
+
+.field-meta,
+.result-details{
+align-items:flex-start;
+flex-direction:column;
+gap:4px;
+}
+
+}
+
+@media (max-width:576px){
+
+.base64-actions,
+.result-actions{
+grid-template-columns:1fr;
+}
+
+.base64-input{
+min-height:190px;
+}
+
+.result-box{
+padding:16px;
+border-radius:14px;
+}
+
+.result-output{
+min-height:160px;
+}
+
+}
+</style>
+
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
+
+<script
+  src="../assets/js/base64-toolkit.js"
+  defer>
+</script>
+
 </head>
 
 <body data-tool="base64-toolkit">
 
-  <main class="container">
+<main class="container">
 
-    <a
-      href="../index.html"
-      class="back-link"
-      aria-label="Back to XAVERT home page"
-    >
-      ← Back to Home
-    </a>
+<a href="../index.html" class="back-link">
+  ← Back to Home
+</a>
 
-    <section
-      class="hero"
-      aria-labelledby="tool-title"
-    >
+<section class="hero">
 
-      <img
-        src="../logo-hero.svg"
-        alt="XAVERT"
-        class="tool-logo"
-        width="210"
-        height="61"
-        fetchpriority="high"
-        decoding="async"
-      >
+<img
+  src="../logo-hero.svg"
+  alt="XAVERT"
+  class="tool-logo"
+  width="210"
+  height="210"
+  fetchpriority="high"
+  decoding="async"
+>
 
-      <h1 id="tool-title">
-        Base64 Toolkit
-      </h1>
+<h1 id="tool-title" class="tool-title">
+  Base64 Toolkit
+</h1>
 
-      <p class="hero-description">
-        Encode UTF-8 text to Base64 or decode valid Base64 back into readable text directly in your browser.
-      </p>
+</section>
 
-    </section>
+<section
+  class="tool-card"
+  aria-labelledby="tool-title"
+>
 
-    <section
-      class="tool-card"
-      aria-labelledby="input-heading"
-    >
+<div class="form-grid">
 
-      <h2
-        id="input-heading"
-        class="sr-only"
-      >
-        Base64 input
-      </h2>
+<div class="form-group full-width">
 
-      <label for="inputText">
-        Input
-      </label>
+<label for="inputText">
+  Input
+</label>
 
-      <textarea
-        id="inputText"
-        placeholder="Enter plain text to encode or Base64 data to decode"
-        spellcheck="false"
-        autocomplete="off"
-        autocapitalize="off"
-        autocorrect="off"
-        aria-describedby="inputInfo inputType message"
-      ></textarea>
+<textarea
+  id="inputText"
+  class="base64-input"
+  placeholder="Enter plain text to encode or Base64 data to decode"
+  autocomplete="off"
+  autocapitalize="off"
+  autocorrect="off"
+  spellcheck="false"
+  aria-describedby="inputInfo inputType message"
+></textarea>
 
-      <div
-        id="inputInfo"
-        class="field-info"
-      >
-        Characters: 0 • UTF-8 bytes: 0
-      </div>
+<div class="field-meta">
 
-      <div
-        id="inputType"
-        class="field-info"
-        aria-live="polite"
-      >
-        Detected: —
-      </div>
+<span id="inputInfo">
+  Characters: 0 • UTF-8 bytes: 0
+</span>
 
-      <div
-        class="button-group"
-        aria-label="Base64 actions"
-      >
+<span
+  id="inputType"
+  aria-live="polite"
+>
+  Detected: —
+</span>
 
-        <button
-          id="encodeBtn"
-          class="btn btn-primary"
-          type="button"
-        >
-          Base64 Encode
-        </button>
+</div>
 
-        <button
-          id="decodeBtn"
-          class="btn btn-secondary"
-          type="button"
-        >
-          Base64 Decode
-        </button>
+</div>
 
-        <button
-          id="sampleBtn"
-          class="btn btn-secondary"
-          type="button"
-        >
-          Load Sample
-        </button>
+</div>
 
-        <button
-          id="clearBtn"
-          class="btn btn-secondary"
-          type="button"
-        >
-          Clear
-        </button>
+<div class="button-grid base64-actions">
 
-      </div>
+<button
+  id="encodeBtn"
+  class="btn"
+  type="button"
+>
+  Base64 Encode
+</button>
 
-      <div
-        id="message"
-        class="message"
-        role="status"
-        aria-live="polite"
-        aria-atomic="true"
-      ></div>
+<button
+  id="decodeBtn"
+  class="btn btn-secondary"
+  type="button"
+>
+  Base64 Decode
+</button>
 
-      <section
-        id="resultBox"
-        class="result-box"
-        aria-labelledby="outputLabel"
-      >
+<button
+  id="clearBtn"
+  class="btn btn-secondary"
+  type="button"
+>
+  Clear
+</button>
 
-        <div class="result-header">
+<button
+  id="sampleBtn"
+  class="btn btn-secondary"
+  type="button"
+>
+  Load Sample
+</button>
 
-          <label
-            id="outputLabel"
-            for="outputText"
-          >
-            Output
-          </label>
+</div>
 
-          <div
-            id="outputInfo"
-            class="field-info"
-            role="status"
-            aria-live="polite"
-            aria-atomic="true"
-          >
-            Characters: 0 • UTF-8 bytes: 0
-          </div>
+<div
+  id="resultBox"
+  class="result-box"
+>
 
-        </div>
+<h2 id="outputLabel">
+  Output
+</h2>
 
-        <textarea
-          id="outputText"
-          readonly
-          spellcheck="false"
-          autocomplete="off"
-          autocorrect="off"
-          aria-label="Base64 conversion result"
-        ></textarea>
+<textarea
+  id="outputText"
+  class="result-output"
+  readonly
+  autocomplete="off"
+  autocapitalize="off"
+  autocorrect="off"
+  spellcheck="false"
+  aria-labelledby="outputLabel"
+></textarea>
 
-        <div
-          id="conversionStats"
-          class="result-meta"
-          aria-live="polite"
-        ></div>
+<div class="result-details">
 
-        <div
-          id="utfInfo"
-          class="result-meta"
-          aria-live="polite"
-        ></div>
+<span
+  id="outputInfo"
+  aria-live="polite"
+>
+  Characters: 0 • UTF-8 bytes: 0
+</span>
 
-        <div
-          class="button-group"
-          aria-label="Result actions"
-        >
+<span
+  id="conversionStats"
+  aria-live="polite"
+></span>
 
-          <button
-            id="copyBtn"
-            class="btn btn-primary"
-            type="button"
-          >
-            Copy Result
-          </button>
+<span
+  id="utfInfo"
+  aria-live="polite"
+></span>
 
-          <button
-            id="downloadBtn"
-            class="btn btn-secondary"
-            type="button"
-          >
-            Download Result
-          </button>
+</div>
 
-        </div>
+<div class="button-grid result-actions">
 
-      </section>
+<button
+  id="copyBtn"
+  class="btn"
+  type="button"
+>
+  Copy Result
+</button>
 
-    </section>
+<button
+  id="downloadBtn"
+  class="btn btn-secondary"
+  type="button"
+>
+  Download Result
+</button>
 
-    <section class="info about-card">
+</div>
 
-      <h2>
-        About the Base64 Toolkit
-      </h2>
+</div>
 
-      <p class="about-intro">
-        The XAVERT Base64 Toolkit converts readable UTF-8 text into Base64 and decodes valid Base64 back into readable UTF-8 text. It is designed for developers, APIs, configuration files, data exchange workflows and general text conversion.
-      </p>
+<div
+  class="message"
+  id="message"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true"
+></div>
 
-      <h3>
-        Main Features
-      </h3>
+</section>
 
-      <ul class="about-features">
-        <li>
-          Encode Unicode and UTF-8 text into standard Base64.
-        </li>
+<section class="info about-card">
 
-        <li>
-          Decode standard and URL-safe Base64 input.
-        </li>
+<h2>
+  About
+</h2>
 
-        <li>
-          Validate Base64 data before attempting conversion.
-        </li>
+<p class="about-intro">
+  The XAVERT Base64 Toolkit converts readable UTF-8 text into Base64 and
+  decodes valid Base64 data back into readable text directly in your browser.
+</p>
 
-        <li>
-          Detect whether the current input is plain text or valid Base64.
-        </li>
+<h3>
+  Main Features
+</h3>
 
-        <li>
-          Display character counts, UTF-8 byte counts and conversion statistics.
-        </li>
+<ul class="about-features">
 
-        <li>
-          Copy converted results directly to the clipboard.
-        </li>
+  <li>
+    Encode UTF-8 and Unicode text into standard Base64.
+  </li>
 
-        <li>
-          Download encoded or decoded results as a text file.
-        </li>
-      </ul>
+  <li>
+    Decode standard and URL-safe Base64 data.
+  </li>
 
-      <h3>
-        How to Use It
-      </h3>
+  <li>
+    Validate Base64 input before decoding.
+  </li>
 
-      <ol class="about-features">
-        <li>
-          Enter plain text or Base64 data in the input field.
-        </li>
+  <li>
+    Detect whether the current input is plain text or valid Base64.
+  </li>
 
-        <li>
-          Select <strong>Base64 Encode</strong> for plain text or <strong>Base64 Decode</strong> for Base64 data.
-        </li>
+  <li>
+    Display character counts, UTF-8 byte counts and conversion statistics.
+  </li>
 
-        <li>
-          Copy or download the generated result.
-        </li>
-      </ol>
+  <li>
+    Copy encoded or decoded results directly to the clipboard.
+  </li>
 
-      <h3>
-        UTF-8 Support
-      </h3>
+  <li>
+    Download the generated result as a text file.
+  </li>
 
-      <p>
-        The toolkit uses modern browser encoding APIs to correctly process Unicode and UTF-8 characters, including accented letters, symbols and emoji.
-      </p>
+</ul>
 
-      <h3>
-        Privacy First
-      </h3>
+<h3>
+  UTF-8 Support
+</h3>
 
-      <p class="about-privacy">
-        All encoding, decoding and validation happens locally inside your browser. Your input and results are never uploaded, transmitted, stored or shared with a server.
-      </p>
+<p>
+  Modern browser encoding APIs are used to correctly process accented
+  characters, international alphabets, symbols and emoji.
+</p>
 
-      <h3>
-        Keyboard Shortcut
-      </h3>
+<h3>
+  Keyboard Shortcut
+</h3>
 
-      <p>
-        Press <strong>Ctrl + Enter</strong> on Windows or Linux, or <strong>Command + Enter</strong> on macOS, to automatically encode plain text or decode detected Base64.
-      </p>
+<p>
+  Press <strong>Ctrl + Enter</strong> on Windows or Linux, or
+  <strong>Command + Enter</strong> on macOS, to automatically encode plain
+  text or decode detected Base64 data.
+</p>
 
-    </section>
+<h3>
+  Privacy First
+</h3>
 
-    <section
-      class="info"
-      hidden
-    >
+<p class="about-privacy">
+  Everything is processed locally within your browser. Your input and results
+  are never uploaded, transmitted, shared or stored on any server.
+</p>
 
-      <h2>
-        Related Tools
-      </h2>
+</section>
 
-      <div id="related-tools"></div>
+<section class="info" hidden>
 
-    </section>
+<h2>
+  Related Tools
+</h2>
 
-  </main>
+<div id="related-tools"></div>
 
-  <footer class="xavert-footer-note">
-    Powered by XAVERT
-  </footer>
+</section>
 
-  <div
-    id="toast"
-    class="xavert-toast"
-    role="status"
-    aria-live="polite"
-    aria-atomic="true"
-    aria-hidden="true"
-  ></div>
+</main>
+
+<footer class="xavert-footer-note">
+  Powered by XAVERT
+</footer>
+
+<div
+  id="toast"
+  class="xavert-toast"
+  aria-hidden="true"
+></div>
 
 </body>
 </html>
