@@ -27,183 +27,56 @@ let toastTimer = null;
 let messageTimer = null;
 let barcodeGenerated = false;
 
-  const formatConfiguration = {
-    CODE128: {
-      label: "Code 128",
-      placeholder: "Example: XAVERT-123456",
-      sample: "XAVERT-123456",
-      filename: "code-128",
-      normalize(value) {
-        return value;
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter a barcode value first.";
-        }
+const formatConfiguration = {
+  CODE128: {
+    label: "Code 128",
+    placeholder: "Example: XAVERT-123456",
+    sample: "XAVERT-123456",
+    filename: "code-128"
+  },
 
-        if (value.length > 120) {
-          return "Code 128 supports a maximum of 120 characters in this tool.";
-        }
+  CODE39: {
+    label: "Code 39",
+    placeholder: "Example: ABC-123",
+    sample: "XAVERT-123",
+    filename: "code-39"
+  },
 
-        if (/[\u0000-\u001F\u007F]/.test(value)) {
-          return "Code 128 cannot contain control characters.";
-        }
+  EAN13: {
+    label: "EAN-13",
+    placeholder: "Example: 5901234123457",
+    sample: "5901234123457",
+    filename: "ean-13"
+  },
 
-        return "";
-      }
-    },
+  EAN8: {
+    label: "EAN-8",
+    placeholder: "Example: 96385074",
+    sample: "96385074",
+    filename: "ean-8"
+  },
 
-    CODE39: {
-      label: "Code 39",
-      placeholder: "Example: ABC-123",
-      sample: "XAVERT-123",
-      filename: "code-39",
-      normalize(value) {
-        return value.toUpperCase();
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter a barcode value first.";
-        }
+  UPC: {
+    label: "UPC-A",
+    placeholder: "Example: 036000291452",
+    sample: "036000291452",
+    filename: "upc-a"
+  },
 
-        if (!/^[0-9A-Z\-. $/+%]+$/.test(value)) {
-          return "Code 39 supports uppercase letters, numbers, spaces and - . $ / + %";
-        }
+  ITF14: {
+    label: "ITF-14",
+    placeholder: "Example: 12345678901231",
+    sample: "12345678901231",
+    filename: "itf-14"
+  },
 
-        if (value.length > 80) {
-          return "Code 39 supports a maximum of 80 characters in this tool.";
-        }
-
-        return "";
-      }
-    },
-
-    EAN13: {
-      label: "EAN-13",
-      placeholder: "Example: 5901234123457",
-      sample: "5901234123457",
-      filename: "ean-13",
-      normalize(value) {
-        return value.replace(/\s+/g, "");
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter an EAN-13 value first.";
-        }
-
-        if (!/^\d{12,13}$/.test(value)) {
-          return "EAN-13 requires 12 digits, or 13 digits including the check digit.";
-        }
-
-        if (value.length === 13 && !isValidCheckDigit(value)) {
-          return "The EAN-13 check digit is invalid.";
-        }
-
-        return "";
-      }
-    },
-
-    EAN8: {
-      label: "EAN-8",
-      placeholder: "Example: 96385074",
-      sample: "96385074",
-      filename: "ean-8",
-      normalize(value) {
-        return value.replace(/\s+/g, "");
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter an EAN-8 value first.";
-        }
-
-        if (!/^\d{7,8}$/.test(value)) {
-          return "EAN-8 requires 7 digits, or 8 digits including the check digit.";
-        }
-
-        if (value.length === 8 && !isValidCheckDigit(value)) {
-          return "The EAN-8 check digit is invalid.";
-        }
-
-        return "";
-      }
-    },
-
-    UPC: {
-      label: "UPC-A",
-      placeholder: "Example: 036000291452",
-      sample: "036000291452",
-      filename: "upc-a",
-      normalize(value) {
-        return value.replace(/\s+/g, "");
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter a UPC-A value first.";
-        }
-
-        if (!/^\d{11,12}$/.test(value)) {
-          return "UPC-A requires 11 digits, or 12 digits including the check digit.";
-        }
-
-        if (value.length === 12 && !isValidCheckDigit(value)) {
-          return "The UPC-A check digit is invalid.";
-        }
-
-        return "";
-      }
-    },
-
-    ITF14: {
-      label: "ITF-14",
-      placeholder: "Example: 12345678901231",
-      sample: "12345678901231",
-      filename: "itf-14",
-      normalize(value) {
-        return value.replace(/\s+/g, "");
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter an ITF-14 value first.";
-        }
-
-        if (!/^\d{13,14}$/.test(value)) {
-          return "ITF-14 requires 13 digits, or 14 digits including the check digit.";
-        }
-
-        if (value.length === 14 && !isValidCheckDigit(value)) {
-          return "The ITF-14 check digit is invalid.";
-        }
-
-        return "";
-      }
-    },
-
-    codabar: {
-      label: "Codabar",
-      placeholder: "Example: A123456A",
-      sample: "A123456A",
-      filename: "codabar",
-      normalize(value) {
-        return value.toUpperCase().replace(/\s+/g, "");
-      },
-      validate(value) {
-        if (!value) {
-          return "Enter a Codabar value first.";
-        }
-
-        if (!/^[A-D][0-9\-$:/.+]+[A-D]$/.test(value)) {
-          return "Codabar must start and end with A, B, C or D and contain only valid Codabar characters.";
-        }
-
-        if (value.length > 80) {
-          return "Codabar supports a maximum of 80 characters in this tool.";
-        }
-
-        return "";
-      }
-    }
-  };
-
+  codabar: {
+    label: "Codabar",
+    placeholder: "Example: A123456A",
+    sample: "A123456A",
+    filename: "codabar"
+  }
+};
   function getCurrentConfiguration() {
     return formatConfiguration[barcodeFormat.value] || formatConfiguration.CODE128;
   }
