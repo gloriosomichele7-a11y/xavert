@@ -8,6 +8,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const displayValue = document.getElementById("displayValue");
 
   const generateBtn = document.getElementById("generateBtn");
+  const checkDigitBtn = document.getElementById("checkDigitBtn");
   const downloadSvgBtn = document.getElementById("downloadSvgBtn");
   const downloadPngBtn = document.getElementById("downloadPngBtn");
   const copySvgBtn = document.getElementById("copySvgBtn");
@@ -119,10 +120,71 @@ function formatSupportsCheckDigit(format) {
     format === "ITF14"
   );
 }
-  
-  function updatePlaceholder() {
-    barcodeValue.placeholder = getCurrentConfiguration().placeholder;
+
+function generateCheckDigit() {
+  const format = barcodeFormat.value;
+  const value = normalizeBarcodeValue(format, barcodeValue.value);
+
+  if (!formatSupportsCheckDigit(format)) {
+    showMessage(
+      "Check digit generation is not available for this format.",
+      "error"
+    );
+    return;
   }
+
+  const requiredBodyLengths = {
+    EAN13: 12,
+    EAN8: 7,
+    UPC: 11,
+    ITF14: 13
+  };
+
+  const requiredLength = requiredBodyLengths[format];
+
+  if (!/^\d+$/.test(value)) {
+    showMessage("Enter numbers only.", "error");
+    barcodeValue.focus();
+    return;
+  }
+
+  if (value.length !== requiredLength) {
+    const formatLabel = getCurrentConfiguration().label;
+
+    showMessage(
+      `${formatLabel} requires exactly ${requiredLength} digits before generating the check digit.`,
+      "error"
+    );
+
+    barcodeValue.focus();
+    return;
+  }
+
+  const checkDigit = calculateCheckDigit(value);
+  const completedValue = `${value}${checkDigit}`;
+
+  barcodeValue.value = completedValue;
+
+  hidePreview();
+
+  showMessage(
+    `Check digit ${checkDigit} generated successfully.`,
+    "success"
+  );
+
+  barcodeValue.focus();
+  barcodeValue.select();
+}
+  
+function updateFormatInterface() {
+  const format = barcodeFormat.value;
+
+  barcodeValue.placeholder = getCurrentConfiguration().placeholder;
+
+  if (checkDigitBtn) {
+    checkDigitBtn.hidden = !formatSupportsCheckDigit(format);
+  }
+}
 
 function showToast(text, type = "info") {
   if (!toast || !text) {
@@ -504,7 +566,7 @@ const cleanValue = normalizeBarcodeValue(
     displayValue.value = "true";
 
     hidePreview();
-    updatePlaceholder();
+    updateFormatInterface();
     window.clearTimeout(messageTimer);
 
 showMessage("Editor cleared.", "success");
@@ -552,6 +614,10 @@ barcodeValue.focus();
     generateBarcode();
   });
 
+if (checkDigitBtn) {
+  checkDigitBtn.addEventListener("click", generateCheckDigit);
+}
+  
   downloadSvgBtn.addEventListener("click", downloadSvg);
   downloadPngBtn.addEventListener("click", downloadPng);
   copySvgBtn.addEventListener("click", copySvg);
@@ -569,7 +635,7 @@ barcodeValue.focus();
 
   barcodeFormat.addEventListener("change", function () {
     barcodeValue.value = "";
-    updatePlaceholder();
+    updateFormatInterface();
     hidePreview();
     showMessage("", "info", false);
     barcodeValue.focus();
@@ -579,6 +645,6 @@ barcodeValue.focus();
   barcodeHeight.addEventListener("change", regenerateWhenAvailable);
   displayValue.addEventListener("change", regenerateWhenAvailable);
 
-  updatePlaceholder();
+  updateFormatInterface();
   resetStatistics();
 });
