@@ -390,6 +390,25 @@ function validateBarcodeValue(format, value) {
   }
 }
 
+function validateCurrentInput() {
+  const format = barcodeFormat.value;
+  const value = normalizeBarcodeValue(format, barcodeValue.value);
+
+  if (!value) {
+    showMessage("", "info", false);
+    return;
+  }
+
+  const validationError = validateBarcodeValue(format, value);
+
+  if (validationError) {
+    showMessage(validationError, "error", false);
+    return;
+  }
+
+  showMessage("Value looks valid.", "success", false);
+}
+  
   function generateBarcode(options = {}) {
     const announce = options.announce !== false;
 
@@ -686,7 +705,6 @@ const cleanValue = normalizeBarcodeValue(
     window.clearTimeout(messageTimer);
 
 showMessage("Editor cleared.", "success");
-validateCurrentInput();
 messageTimer = window.setTimeout(function () {
   if (message.textContent === "Editor cleared.") {
     showMessage("", "info", false);
@@ -700,8 +718,6 @@ barcodeValue.focus();
     const configuration = getCurrentConfiguration();
 
 barcodeValue.value = configuration.sample;
-
-validateCurrentInput();
 generateBarcode();
     barcodeValue.focus();
     barcodeValue.select();
