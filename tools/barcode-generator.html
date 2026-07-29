@@ -7,305 +7,368 @@
 
 <title>XAVERT | Barcode Generator</title>
 
-<meta name="description" content="Generate professional barcodes online for products, inventory, logistics and retail. Create Code 128, Code 39, EAN and UPC barcodes directly in your browser.">
+<meta
+  name="description"
+  content="Generate professional barcodes online for products, inventory, logistics and retail. Create Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser."
+>
 
 <meta name="robots" content="index, follow">
 <meta name="author" content="XAVERT">
 <meta name="theme-color" content="#dc2626">
-<link rel="canonical" href="https://xavert.com/tools/barcode-generator.html">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+<link
+  rel="canonical"
+  href="https://xavert.com/tools/barcode-generator.html"
+>
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js" defer></script>
+<link
+  rel="icon"
+  href="../favicon.svg"
+  type="image/svg+xml"
+>
 
-  
+<link
+  rel="stylesheet"
+  href="../assets/css/global.css"
+>
+
+<link
+  rel="stylesheet"
+  href="../assets/css/components.css"
+>
+
+<link
+  rel="stylesheet"
+  href="../assets/css/responsive.css"
+>
+
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="XAVERT | Barcode Generator">
-<meta property="og:description" content="Generate professional barcodes online for products, inventory, logistics and retail directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/barcode-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
+<meta
+  property="og:description"
+  content="Generate professional barcodes online for products, inventory, logistics and retail directly in your browser."
+>
+<meta
+  property="og:url"
+  content="https://xavert.com/tools/barcode-generator.html"
+>
+<meta
+  property="og:image"
+  content="https://xavert.com/assets/images/og-image.png"
+>
 <meta property="og:site_name" content="XAVERT">
 
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="XAVERT | Barcode Generator">
-<meta name="twitter:description" content="Generate professional barcodes online directly in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+<meta
+  name="twitter:description"
+  content="Generate professional barcodes online directly in your browser."
+>
+<meta
+  name="twitter:image"
+  content="https://xavert.com/assets/images/og-image.png"
+>
+
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Barcode Generator",
-  "applicationCategory":"BusinessApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/barcode-generator.html",
-  "description":"Generate Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
+  "@context": "https://schema.org",
+  "@type": "WebApplication",
+  "name": "Barcode Generator",
+  "applicationCategory": "BusinessApplication",
+  "operatingSystem": "Any",
+  "browserRequirements": "Requires JavaScript",
+  "url": "https://xavert.com/tools/barcode-generator.html",
+  "description": "Generate Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
+  "inLanguage": "en",
+  "isAccessibleForFree": true,
+  "offers": {
+    "@type": "Offer",
+    "price": "0",
+    "priceCurrency": "USD"
   },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
+  "publisher": {
+    "@type": "Organization",
+    "name": "XAVERT"
   }
 }
 </script>
+
 <style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, Helvetica, sans-serif;
 }
 
-body{
-background:#f7f8fb;
-color:#111827;
+body {
+  background: #f7f8fb;
+  color: #111827;
 }
 
-.container{
-max-width:1100px;
-margin:auto;
-padding:36px 20px 0;
+.container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 36px 20px 0;
 }
 
-.back-link{
-display:inline-block;
-margin-bottom:24px;
-font-size:14px;
-font-weight:700;
-text-decoration:none;
-color:#dc2626;
+.back-link {
+  display: inline-block;
+  margin-bottom: 24px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #dc2626;
 }
 
-.back-link:hover{
-color:#b91c1c;
+.back-link:hover {
+  color: #b91c1c;
 }
 
-.back-link:focus-visible{
-outline:3px solid rgba(220,38,38,.25);
-outline-offset:3px;
-border-radius:4px;
-}
-  
-.hero{
-text-align:center;
-margin-bottom:20px;
+.back-link:focus-visible {
+  outline: 3px solid rgba(220, 38, 38, 0.25);
+  outline-offset: 3px;
+  border-radius: 4px;
 }
 
-.tool-logo{
-display:block;
-width:210px;
-max-width:70%;
-height:auto;
-margin:0 auto 18px;
-}
-  
-.hero h1{
-font-size:38px;
-font-weight:800;
-letter-spacing:-1px;
+.hero {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
-.tool-card{
-background:#ffffff;
-border:1px solid #eceff3;
-border-radius:22px;
-padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.05);
+.tool-logo {
+  display: block;
+  width: 210px;
+  max-width: 70%;
+  height: auto;
+  margin: 0 auto 18px;
 }
 
-.form-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:18px;
-margin-bottom:18px;
+.hero h1 {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -1px;
 }
 
-.full-width{
-grid-column:1/-1;
+.tool-card {
+  background: #ffffff;
+  border: 1px solid #eceff3;
+  border-radius: 22px;
+  padding: 26px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
 }
 
-label{
-display:block;
-margin-bottom:8px;
-font-size:14px;
-font-weight:700;
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  margin-bottom: 18px;
 }
 
-.button-grid{
-display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:12px;
-margin:22px 0;
+.full-width {
+  grid-column: 1 / -1;
 }
 
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-font-size:14px;
-font-weight:700;
-cursor:pointer;
-transition:.25s;
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 14px;
+  font-weight: 700;
 }
 
-button:focus-visible{
-outline:3px solid rgba(220,38,38,.25);
-outline-offset:3px;
-}
-  
-.primary{
-background:#dc2626;
-color:#ffffff;
+.button-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 12px;
+  margin: 22px 0;
 }
 
-.primary:hover{
-background:#b91c1c;
-transform:translateY(-2px);
+button {
+  padding: 14px;
+  border: none;
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.25s;
 }
 
-.secondary{
-background:#ffffff;
-border:1px solid #dc2626;
-color:#dc2626;
+button:disabled {
+  cursor: wait;
+  opacity: 0.7;
 }
 
-.secondary:hover{
-background:#dc2626;
-color:#ffffff;
+button:focus-visible {
+  outline: 3px solid rgba(220, 38, 38, 0.25);
+  outline-offset: 3px;
 }
 
-.preview-box{
-display:none;
-margin-top:24px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:24px;
-text-align:center;
+.primary {
+  background: #dc2626;
+  color: #ffffff;
 }
 
-.preview-box h2{
-font-size:22px;
-margin-bottom:18px;
+.primary:hover:not(:disabled) {
+  background: #b91c1c;
+  transform: translateY(-2px);
 }
 
-.barcode-wrap{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-padding:24px;
-overflow:auto;
+.secondary {
+  background: #ffffff;
+  border: 1px solid #dc2626;
+  color: #dc2626;
 }
 
-#barcodeSvg{
-max-width:100%;
-height:auto;
+.secondary:hover:not(:disabled) {
+  background: #dc2626;
+  color: #ffffff;
 }
 
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-top:22px;
+.preview-box {
+  display: none;
+  margin-top: 24px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  border-radius: 18px;
+  padding: 24px;
+  text-align: center;
 }
 
-.stat{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:14px;
-padding:14px;
-text-align:left;
+.preview-box h2 {
+  font-size: 22px;
+  margin-bottom: 18px;
 }
 
-.stat strong{
-display:block;
-font-size:18px;
-margin-bottom:4px;
+.barcode-wrap {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  padding: 24px;
+  overflow: auto;
 }
 
-.stat span{
-font-size:12px;
-font-weight:700;
-color:#6b7280;
+#barcodeSvg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin: auto;
 }
 
-.message{
-margin-top:18px;
-font-size:14px;
-font-weight:700;
-min-height:20px;
-color:#6b7280;
-}
-  
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-font-size:14px;
-display:none;
-pointer-events:none;
-z-index:9999;
+.stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin-top: 22px;
 }
 
-.toast-success{
-background:#047857 !important;
+.stat {
+  background: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  padding: 14px;
+  text-align: left;
 }
 
-.toast-error{
-background:#dc2626 !important;
+.stat strong {
+  display: block;
+  font-size: 18px;
+  margin-bottom: 4px;
 }
 
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:768px){
-
-.container{
-padding:24px 16px 0;
+.stat span {
+  font-size: 12px;
+  font-weight: 700;
+  color: #6b7280;
 }
 
-.hero h1{
-font-size:32px;
+.message {
+  min-height: 20px;
+  margin-top: 18px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #6b7280;
 }
 
-.form-grid{
-grid-template-columns:1fr;
+#toast {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  z-index: 9999;
+  display: none;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  font-size: 14px;
+  pointer-events: none;
+  transform: translateX(-50%);
 }
 
-.button-grid{
-grid-template-columns:1fr;
+.toast-success {
+  background: #047857 !important;
 }
 
-.stats{
-grid-template-columns:1fr 1fr;
+.toast-error {
+  background: #dc2626 !important;
 }
 
-.tool-card{
-padding:20px;
+.toast-info {
+  background: #111827 !important;
 }
 
-}
+@media (max-width: 768px) {
+  .container {
+    padding: 24px 16px 0;
+  }
 
+  .hero h1 {
+    font-size: 32px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .button-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tool-card {
+    padding: 20px;
+  }
+}
 </style>
+
+<script
+  src="../assets/js/global.js"
+  defer>
+</script>
+
+<script
+  src="../assets/js/utils.js"
+  defer>
+</script>
+
+<script
+  src="../assets/js/related-tools.js"
+  defer>
+</script>
+
+<script
+  src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"
+  defer>
+</script>
+
+<script
+  src="../assets/js/barcode-generator.js"
+  defer>
+</script>
 
 </head>
 
@@ -313,147 +376,199 @@ padding:20px;
 
 <main class="container">
 
-<a href="../index.html" class="back-link">
-← Back to Home
+<a
+  href="../index.html"
+  class="back-link">
+  ← Back to Home
 </a>
 
 <section class="hero">
 
 <img
-src="../logo-hero.svg"
-alt="XAVERT"
-class="tool-logo"
-width="210"
-height="210"
-fetchpriority="high"
-decoding="async">
+  src="../logo-hero.svg"
+  alt="XAVERT"
+  class="tool-logo"
+  width="210"
+  height="210"
+  fetchpriority="high"
+  decoding="async">
 
-<h1 id="tool-title">Barcode Generator</h1>
+<h1 id="tool-title">
+  Barcode Generator
+</h1>
 
 </section>
 
-<section class="tool-card" aria-labelledby="tool-title">
+<section
+  class="tool-card"
+  aria-labelledby="tool-title">
 
 <div class="form-grid">
 
 <div class="full-width">
+
 <label for="barcodeValue">
-Barcode value
+  Barcode value
 </label>
+
 <input
-type="text"
-id="barcodeValue"
-placeholder="Example: XAVERT-123456"
-autocomplete="off"
-autocapitalize="off"
-spellcheck="false">
+  type="text"
+  id="barcodeValue"
+  placeholder="Example: XAVERT-123456"
+  autocomplete="off"
+  autocapitalize="off"
+  spellcheck="false"
+  maxlength="120">
+
 </div>
 
 <div>
+
 <label for="barcodeFormat">
-Barcode format
+  Barcode format
 </label>
+
 <select id="barcodeFormat">
-<option value="CODE128">Code 128</option>
-<option value="CODE39">Code 39</option>
-<option value="EAN13">EAN-13</option>
-<option value="EAN8">EAN-8</option>
-<option value="UPC">UPC-A</option>
-<option value="ITF14">ITF-14</option>
-<option value="codabar">Codabar</option>
+  <option value="CODE128">Code 128</option>
+  <option value="CODE39">Code 39</option>
+  <option value="EAN13">EAN-13</option>
+  <option value="EAN8">EAN-8</option>
+  <option value="UPC">UPC-A</option>
+  <option value="ITF14">ITF-14</option>
+  <option value="codabar">Codabar</option>
 </select>
+
 </div>
 
 <div>
+
 <label for="barcodeWidth">
-Bar width
+  Bar width
 </label>
+
 <select id="barcodeWidth">
-<option value="1">Thin</option>
-<option value="2" selected>Standard</option>
-<option value="3">Thick</option>
-<option value="4">Extra Thick</option>
+  <option value="1">Thin</option>
+  <option value="2" selected>Standard</option>
+  <option value="3">Thick</option>
+  <option value="4">Extra Thick</option>
 </select>
+
 </div>
 
 <div>
+
 <label for="barcodeHeight">
-Bar height
+  Bar height
 </label>
+
 <select id="barcodeHeight">
-<option value="60">Small</option>
-<option value="90" selected>Standard</option>
-<option value="120">Large</option>
-<option value="150">Extra Large</option>
+  <option value="60">Small</option>
+  <option value="90" selected>Standard</option>
+  <option value="120">Large</option>
+  <option value="150">Extra Large</option>
 </select>
+
 </div>
 
 <div>
+
 <label for="displayValue">
-Show text
+  Show text
 </label>
+
 <select id="displayValue">
-<option value="true" selected>Yes</option>
-<option value="false">No</option>
+  <option value="true" selected>Yes</option>
+  <option value="false">No</option>
 </select>
+
 </div>
 
 </div>
 
 <div class="button-grid">
 
-<button id="generateBtn" class="primary" type="button">
-Generate
+<button
+  id="generateBtn"
+  class="primary"
+  type="button">
+  Generate
 </button>
 
-<button id="downloadSvgBtn" class="secondary" type="button">
-Download SVG
+<button
+  id="downloadSvgBtn"
+  class="secondary"
+  type="button">
+  Download SVG
 </button>
 
-<button id="downloadPngBtn" class="secondary" type="button">
-Download PNG
+<button
+  id="downloadPngBtn"
+  class="secondary"
+  type="button">
+  Download PNG
 </button>
 
-<button id="copySvgBtn" class="secondary" type="button">
-Copy SVG
+<button
+  id="copySvgBtn"
+  class="secondary"
+  type="button">
+  Copy SVG
 </button>
 
-<button id="clearBtn" class="secondary" type="button">
-Clear
+<button
+  id="clearBtn"
+  class="secondary"
+  type="button">
+  Clear
 </button>
-<button id="sampleBtn" class="secondary" type="button">
-Load Sample
+
+<button
+  id="sampleBtn"
+  class="secondary"
+  type="button">
+  Load Sample
 </button>
+
 </div>
 
-<div class="preview-box" id="previewBox">
+<div
+  class="preview-box"
+  id="previewBox">
 
-<h2>Barcode Preview</h2>
+<h2>
+  Barcode Preview
+</h2>
 
 <div class="barcode-wrap">
-<svg id="barcodeSvg" role="img" aria-label="Generated barcode preview"></svg>
+
+<svg
+  id="barcodeSvg"
+  role="img"
+  aria-label="Generated barcode preview">
+</svg>
+
 </div>
 
 <div class="stats">
 
 <div class="stat">
-<strong id="formatStat">-</strong>
-<span>Format</span>
+  <strong id="formatStat">-</strong>
+  <span>Format</span>
 </div>
 
 <div class="stat">
-<strong id="lengthStat">0</strong>
-<span>Characters</span>
+  <strong id="lengthStat">0</strong>
+  <span>Characters</span>
 </div>
 
 <div class="stat">
-<strong id="widthStat">0</strong>
-<span>Bar Width</span>
+  <strong id="widthStat">0</strong>
+  <span>Bar Width</span>
 </div>
 
 <div class="stat">
-<strong id="heightStat">0</strong>
-<span>Height</span>
+  <strong id="heightStat">0</strong>
+  <span>Height</span>
 </div>
 
 </div>
@@ -461,486 +576,84 @@ Load Sample
 </div>
 
 <div
-class="message"
-id="message"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
+  class="message"
+  id="message"
+  role="status"
+  aria-live="polite"
+  aria-atomic="true">
+</div>
 
 </section>
 
 <section class="info about-card">
 
-<h2>About</h2>
+<h2>
+  About
+</h2>
 
 <p class="about-intro">
-The XAVERT Barcode Generator creates professional barcodes for products, inventory management, warehouses, logistics, retail labels and asset tracking.
+  The XAVERT Barcode Generator creates professional barcodes for products,
+  inventory management, warehouses, logistics, retail labels and asset
+  tracking.
 </p>
 
-<h3>Main Features</h3>
+<h3>
+  Main Features
+</h3>
 
 <ul class="about-features">
-<li>Generate Code 128, Code 39, EAN-13, EAN-8, UPC-A, ITF-14 and Codabar barcodes.</li>
-<li>Customize barcode width, height and visible text.</li>
-<li>Preview the generated barcode instantly.</li>
-<li>Download the result as a high-quality SVG or PNG file.</li>
+  <li>
+    Generate Code 128, Code 39, EAN-13, EAN-8, UPC-A, ITF-14 and Codabar
+    barcodes.
+  </li>
+  <li>
+    Validate supported formats and verify existing check digits.
+  </li>
+  <li>
+    Customize barcode width, height and visible text.
+  </li>
+  <li>
+    Preview the generated barcode directly in the browser.
+  </li>
+  <li>
+    Download the result as a scalable SVG or high-resolution PNG file.
+  </li>
+  <li>
+    Copy the complete SVG source code to the clipboard.
+  </li>
 </ul>
 
-<h3>Privacy First</h3>
+<h3>
+  Privacy First
+</h3>
 
 <p class="about-privacy">
-Everything is processed locally within your browser. Your barcode data is never uploaded, transmitted, shared or stored on any server.
+  Everything is processed locally within your browser. Your barcode data is
+  never uploaded, transmitted, shared or stored on any server.
 </p>
 
 </section>
-  
+
 <section class="info" hidden>
-<h2>Related Tools</h2>
+
+<h2>
+  Related Tools
+</h2>
+
 <div id="related-tools"></div>
+
 </section>
-  
+
 </main>
 
 <footer class="xavert-footer-note">
-Powered by XAVERT
+  Powered by XAVERT
 </footer>
 
 <div
-id="toast"
-aria-hidden="true"></div>
-
-<script>
-const barcodeValue=document.getElementById("barcodeValue");
-const barcodeFormat=document.getElementById("barcodeFormat");
-const barcodeWidth=document.getElementById("barcodeWidth");
-const barcodeHeight=document.getElementById("barcodeHeight");
-const displayValue=document.getElementById("displayValue");
-
-const generateBtn=document.getElementById("generateBtn");
-const downloadSvgBtn=document.getElementById("downloadSvgBtn");
-const downloadPngBtn=document.getElementById("downloadPngBtn");
-const copySvgBtn=document.getElementById("copySvgBtn");
-const clearBtn=document.getElementById("clearBtn");
-const sampleBtn=document.getElementById("sampleBtn");
-const previewBox=document.getElementById("previewBox");
-const barcodeSvg=document.getElementById("barcodeSvg");
-const message=document.getElementById("message");
-const toast=document.getElementById("toast");
-const formatStat=document.getElementById("formatStat");
-const lengthStat=document.getElementById("lengthStat");
-const widthStat=document.getElementById("widthStat");
-const heightStat=document.getElementById("heightStat");
-function updatePlaceholder(){
-
-switch(barcodeFormat.value){
-
-case "CODE128":
-barcodeValue.placeholder="Example: XAVERT-123456";
-break;
-
-case "CODE39":
-barcodeValue.placeholder="Example: ABC-123";
-break;
-
-case "EAN13":
-barcodeValue.placeholder="Example: 5901234123457";
-break;
-
-case "EAN8":
-barcodeValue.placeholder="Example: 96385074";
-break;
-
-case "UPC":
-barcodeValue.placeholder="Example: 036000291452";
-break;
-
-case "ITF14":
-barcodeValue.placeholder="Example: 12345678901231";
-break;
-
-case "codabar":
-barcodeValue.placeholder="Example: A123456A";
-break;
-
-default:
-barcodeValue.placeholder="Enter barcode value";
-
-}
-
-}
-
-function showToast(text,type="info"){
-
-clearTimeout(showToast.timer);
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-showToast.timer=setTimeout(function(){
-
-toast.style.display="none";
-toast.className="";
-
-},2200);
-
-}
-  
-function showMessage(text,type){
-
-message.textContent=text;
-
-if(type==="error"){
-message.style.color="#dc2626";
-}else if(type==="success"){
-message.style.color="#047857";
-}else{
-message.style.color="#6b7280";
-}
-
-if(text){
-showToast(text,type || "info");
-}
-
-}
-
-function validateBarcodeValue(value,format){
-if(!value.trim()){
-return "Enter a barcode value first.";
-}
-
-if(format==="EAN13" && !/^\d{12,13}$/.test(value)){
-return "EAN-13 requires 12 or 13 digits.";
-}
-
-if(format==="EAN8" && !/^\d{7,8}$/.test(value)){
-return "EAN-8 requires 7 or 8 digits.";
-}
-
-if(format==="UPC" && !/^\d{11,12}$/.test(value)){
-return "UPC-A requires 11 or 12 digits.";
-}
-
-if(format==="ITF14" && !/^\d{13,14}$/.test(value)){
-return "ITF-14 requires 13 or 14 digits.";
-}
-
-if(format==="CODE39" && !/^[0-9A-Z\-\.\ \$\/\+\%]+$/.test(value)){
-return "Code 39 supports uppercase letters, numbers, spaces and - . $ / + %";
-}
-
-if(format==="codabar" && !/^[A-Da-d][0-9\-\$:\/\.\+]+[A-Da-d]$/.test(value)){
-return "Codabar must start and end with A, B, C or D.";
-}
-
-return "";
-}
-
-function generateBarcode(){
-const value=barcodeValue.value.trim();
-const format=barcodeFormat.value;
-const width=Number(barcodeWidth.value);
-const height=Number(barcodeHeight.value);
-const showText=displayValue.value==="true";
-
-const validationError=validateBarcodeValue(value,format);
-
-if(validationError){
-
-barcodeSvg.innerHTML="";
-previewBox.style.display="none";
-
-formatStat.textContent="-";
-lengthStat.textContent="0";
-widthStat.textContent="0";
-heightStat.textContent="0";
-
-showMessage(validationError,"error");
-return;
-
-}
-
-if(typeof JsBarcode!=="function"){
-showMessage("Barcode library could not be loaded. Refresh the page and try again.","error");
-return;
-}
-  
-try{
-barcodeSvg.innerHTML="";
-
-JsBarcode(barcodeSvg,value,{
-format:format,
-width:width,
-height:height,
-displayValue:showText,
-lineColor:"#111827",
-background:"#ffffff",
-margin:12,
-fontSize:16
-});
-
-previewBox.style.display="block";
-
-formatStat.textContent=barcodeFormat.options[barcodeFormat.selectedIndex].text;
-lengthStat.textContent=value.length;
-widthStat.textContent=width;
-heightStat.textContent=height;
-
-showMessage("Barcode generated successfully.","success");
-
-}catch(error){
-
-barcodeSvg.innerHTML="";
-previewBox.style.display="none";
-
-formatStat.textContent="-";
-lengthStat.textContent="0";
-widthStat.textContent="0";
-heightStat.textContent="0";
-
-showMessage("Could not generate barcode. Check the value and format.","error");
-
-}
-}
-
-function getSvgContent(){
-if(!barcodeSvg.innerHTML.trim()){
-showMessage("Generate a barcode first.","error");
-return "";
-}
-
-const clone=barcodeSvg.cloneNode(true);
-clone.setAttribute("xmlns","http://www.w3.org/2000/svg");
-
-try{
-const box=barcodeSvg.getBBox();
-
-clone.setAttribute("viewBox",box.x+" "+box.y+" "+box.width+" "+box.height);
-clone.setAttribute("width",box.width);
-clone.setAttribute("height",box.height);
-}catch(error){}
-
-return new XMLSerializer().serializeToString(clone);
-}
-
-function downloadFile(filename,content,type){
-
-const blob=new Blob([content],{type:type});
-
-const url=URL.createObjectURL(blob);
-
-const a=document.createElement("a");
-
-a.href=url;
-a.download=filename;
-
-document.body.appendChild(a);
-
-a.click();
-
-document.body.removeChild(a);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-showMessage("Download started.","success");
-
-}
-function downloadSvg(){
-const svgContent=getSvgContent();
-
-if(!svgContent){
-return;
-}
-
-downloadFile("xavert-barcode.svg",svgContent,"image/svg+xml");
-}
-
-function downloadPng(){
-const svgContent=getSvgContent();
-
-if(!svgContent){
-return;
-}
-
-const svgBlob=new Blob([svgContent],{type:"image/svg+xml;charset=utf-8"});
-const url=URL.createObjectURL(svgBlob);
-const image=new Image();
-
-image.onload=function(){
-const canvas=document.createElement("canvas");
-canvas.width=image.width * 2;
-canvas.height=image.height * 2;
-
-const ctx=canvas.getContext("2d");
-
-if(!ctx){
-URL.revokeObjectURL(url);
-showMessage("PNG export failed.","error");
-return;
-}
-
-ctx.fillStyle="#ffffff";
-ctx.fillRect(0,0,canvas.width,canvas.height);
-ctx.drawImage(image,0,0,canvas.width,canvas.height);
-
-canvas.toBlob(function(blob){
-
-if(!blob){
-URL.revokeObjectURL(url);
-showMessage("PNG export failed.","error");
-return;
-}
-
-const pngUrl=URL.createObjectURL(blob);
-const a=document.createElement("a");
-
-a.href=pngUrl;
-a.download="xavert-barcode.png";
-
-document.body.appendChild(a);
-
-a.click();
-
-document.body.removeChild(a);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(pngUrl);
-URL.revokeObjectURL(url);
-
-},1000);
-
-showMessage("PNG download started.","success");
-},"image/png");
-};
-
-image.onerror=function(){
-URL.revokeObjectURL(url);
-showMessage("PNG export failed.","error");
-};
-
-image.src=url;
-}
-
-function copySvg(){
-const svgContent=getSvgContent();
-
-if(!svgContent){
-return;
-}
-
-xavertCopyText(svgContent);
-}
-
-function clearTool(){
-barcodeValue.value="";
-barcodeValue.focus();
-
-barcodeFormat.value="CODE128";
-barcodeWidth.value="2";
-barcodeHeight.value="90";
-displayValue.value="true";
-
-barcodeSvg.innerHTML="";
-previewBox.style.display="none";
-
-formatStat.textContent="-";
-lengthStat.textContent="0";
-widthStat.textContent="0";
-heightStat.textContent="0";
-
-updatePlaceholder();
-
-showMessage("Editor cleared.","success");
-}
-
-function loadSample(){
-
-barcodeFormat.value="CODE128";
-barcodeWidth.value="2";
-barcodeHeight.value="90";
-displayValue.value="true";
-
-updatePlaceholder();
-
-barcodeValue.value="XAVERT-123456";
-
-generateBarcode();
-
-}
-generateBtn.addEventListener("click",generateBarcode);
-downloadSvgBtn.addEventListener("click",downloadSvg);
-downloadPngBtn.addEventListener("click",downloadPng);
-copySvgBtn.addEventListener("click",copySvg);
-clearBtn.addEventListener("click",clearTool);
-sampleBtn.addEventListener("click",loadSample);
-barcodeValue.addEventListener("input",function(){
-
-barcodeSvg.innerHTML="";
-previewBox.style.display="none";
-
-formatStat.textContent="-";
-lengthStat.textContent="0";
-widthStat.textContent="0";
-heightStat.textContent="0";
-
-showMessage("");
-
-});
-
-barcodeFormat.addEventListener("change",function(){
-
-updatePlaceholder();
-
-barcodeValue.value="";
-
-barcodeSvg.innerHTML="";
-previewBox.style.display="none";
-
-showMessage("");
-
-});
-
-barcodeWidth.addEventListener("change",function(){
-
-if(barcodeSvg.innerHTML.trim()){
-generateBarcode();
-}
-
-});
-
-barcodeHeight.addEventListener("change",function(){
-
-if(barcodeSvg.innerHTML.trim()){
-generateBarcode();
-}
-
-});
-
-displayValue.addEventListener("change",function(){
-
-if(barcodeSvg.innerHTML.trim()){
-generateBarcode();
-}
-
-});
-barcodeValue.addEventListener("keydown",function(event){
-
-if(event.key==="Enter"){
-
-event.preventDefault();
-
-generateBarcode();
-
-}
-
-});
-updatePlaceholder();
-</script>
+  id="toast"
+  aria-hidden="true">
+</div>
 
 </body>
 </html>
