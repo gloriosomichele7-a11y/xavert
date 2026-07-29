@@ -14,11 +14,7 @@ max-width:960px;
 
 .container{
 max-width:100%;
-padding:36px 18px 0;
-}
-
-.form-grid{
-grid-template-columns:1fr;
+padding:32px 18px 0;
 }
 
 .stats-grid{
@@ -37,7 +33,8 @@ font-size:15px;
 padding:24px 16px 0;
 }
 
-.tool-title{
+.tool-title,
+.hero h1{
 font-size:32px;
 }
 
@@ -51,13 +48,21 @@ font-size:15px;
 padding:20px;
 }
 
-.button-group,
-.button-grid{
+.form-grid{
 grid-template-columns:1fr;
+gap:16px;
+}
+
+.button-grid{
+grid-template-columns:repeat(2,minmax(0,1fr));
+gap:10px;
+}
+
+.button-group{
 flex-direction:column;
 }
 
-.btn{
+.button-group .btn{
 width:100%;
 }
 
@@ -73,8 +78,10 @@ grid-template-columns:1fr;
 padding:20px 12px 0;
 }
 
-.tool-title{
+.tool-title,
+.hero h1{
 font-size:28px;
+letter-spacing:-.5px;
 }
 
 .tool-card,
@@ -82,6 +89,18 @@ font-size:28px;
 .info{
 padding:16px;
 border-radius:16px;
+}
+
+.form-grid{
+gap:14px;
+}
+
+.button-grid{
+grid-template-columns:1fr;
+}
+
+.btn{
+width:100%;
 }
 
 .stats-grid{
@@ -93,7 +112,11 @@ font-size:14px;
 }
 
 .xavert-footer-note{
-padding-bottom:18px;
+padding-bottom:calc(18px + env(safe-area-inset-bottom));
+}
+
+.xavert-toast{
+bottom:calc(16px + env(safe-area-inset-bottom));
 }
 
 }
