@@ -111,6 +111,15 @@ const formatConfiguration = {
     return calculateCheckDigit(body) === suppliedCheckDigit;
   }
 
+function formatSupportsCheckDigit(format) {
+  return (
+    format === "EAN13" ||
+    format === "EAN8" ||
+    format === "UPC" ||
+    format === "ITF14"
+  );
+}
+  
   function updatePlaceholder() {
     barcodeValue.placeholder = getCurrentConfiguration().placeholder;
   }
@@ -207,14 +216,14 @@ function showMessage(text = "", type = "info", useToast = true) {
     const announce = options.announce !== false;
 
     const format = barcodeFormat.value;
-    const value = normalizeValue(barcodeValue.value, format);
+    const value = normalizeBarcodeValue(format, barcodeValue.value);
     const width = Number(barcodeWidth.value);
     const height = Number(barcodeHeight.value);
     const showText = displayValue.value === "true";
 
     barcodeValue.value = value;
 
-    const validationError = validateBarcodeValue(value, format);
+    const validationError = validateBarcodeValue(format, value);
 
     if (validationError) {
       hidePreview();
@@ -335,13 +344,13 @@ function showMessage(text = "", type = "info", useToast = true) {
   function createSafeFilename(extension) {
     const configuration = getCurrentConfiguration();
 
-    const cleanValue = normalizeValue(
-      barcodeValue.value,
-      barcodeFormat.value
-    )
-      .replace(/[^a-zA-Z0-9_-]+/g, "-")
-      .replace(/^-+|-+$/g, "")
-      .slice(0, 40);
+const cleanValue = normalizeBarcodeValue(
+  barcodeFormat.value,
+  barcodeValue.value
+)
+  .replace(/[^a-zA-Z0-9_-]+/g, "-")
+  .replace(/^-+|-+$/g, "")
+  .slice(0, 40);
 
     const suffix = cleanValue ? `-${cleanValue}` : "";
 
