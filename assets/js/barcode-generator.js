@@ -740,7 +740,10 @@ if (checkDigitBtn) {
   clearBtn.addEventListener("click", clearTool);
   sampleBtn.addEventListener("click", loadSample);
 
-  barcodeValue.addEventListener("input", invalidateGeneratedBarcode);
+  barcodeValue.addEventListener("input", function () {
+  invalidateGeneratedBarcode();
+  validateCurrentInput();
+});
 
   barcodeValue.addEventListener("keydown", function (event) {
     if (event.key === "Enter") {
@@ -754,6 +757,7 @@ if (checkDigitBtn) {
     updateFormatInterface();
     hidePreview();
     showMessage("", "info", false);
+    validateCurrentInput();
     barcodeValue.focus();
   });
 
