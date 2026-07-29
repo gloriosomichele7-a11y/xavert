@@ -242,42 +242,62 @@ let barcodeGenerated = false;
     barcodeValue.placeholder = getCurrentConfiguration().placeholder;
   }
 
-  function showToast(text, type = "info") {
-    if (!toast || !text) {
-      return;
-    }
-
-    window.clearTimeout(toastTimer);
-
-    toast.textContent = text;
-    toast.className = `toast-${type}`;
-    toast.style.display = "block";
-    toast.setAttribute("aria-hidden", "false");
-
-    toastTimer = window.setTimeout(function () {
-      toast.style.display = "none";
-      toast.className = "";
-      toast.setAttribute("aria-hidden", "true");
-    }, 2200);
+function showToast(text, type = "info") {
+  if (!toast || !text) {
+    return;
   }
 
-  function showMessage(text = "", type = "info", useToast = true) {
-    if (message) {
-      message.textContent = text;
+  const allowedTypes = ["success", "error", "info"];
+  const safeType = allowedTypes.includes(type) ? type : "info";
 
-      if (type === "error") {
-        message.style.color = "#dc2626";
-      } else if (type === "success") {
-        message.style.color = "#047857";
-      } else {
-        message.style.color = "#6b7280";
-      }
-    }
+  window.clearTimeout(toastTimer);
 
-    if (text && useToast) {
-      showToast(text, type);
-    }
+  toast.textContent = text;
+
+  toast.classList.remove(
+    "xavert-toast-success",
+    "xavert-toast-error",
+    "xavert-toast-info"
+  );
+
+  toast.classList.add("xavert-toast", `xavert-toast-${safeType}`);
+  toast.style.display = "block";
+  toast.setAttribute("aria-hidden", "false");
+
+  toastTimer = window.setTimeout(function () {
+    toast.style.display = "none";
+    toast.textContent = "";
+
+    toast.classList.remove(
+      "xavert-toast-success",
+      "xavert-toast-error",
+      "xavert-toast-info"
+    );
+
+    toast.setAttribute("aria-hidden", "true");
+  }, 2200);
+}
+
+function showMessage(text = "", type = "info", useToast = true) {
+  if (message) {
+    const allowedTypes = ["success", "error", "info"];
+    const safeType = allowedTypes.includes(type) ? type : "info";
+
+    message.textContent = text;
+
+    message.classList.remove(
+      "message-success",
+      "message-error",
+      "message-info"
+    );
+
+    message.classList.add(`message-${safeType}`);
   }
+
+  if (text && useToast) {
+    showToast(text, type);
+  }
+}
 
   function resetStatistics() {
     formatStat.textContent = "-";
