@@ -163,17 +163,19 @@ function generateCheckDigit() {
   const checkDigit = calculateCheckDigit(value);
   const completedValue = `${value}${checkDigit}`;
 
-  barcodeValue.value = completedValue;
+barcodeValue.value = completedValue;
 
-  hidePreview();
+const generated = generateBarcode({ announce: false });
 
+if (generated) {
   showMessage(
-    `Check digit ${checkDigit} generated successfully.`,
+    `Check digit ${checkDigit} generated and barcode created successfully.`,
     "success"
   );
+}
 
-  barcodeValue.focus();
-  barcodeValue.select();
+barcodeValue.focus();
+barcodeValue.select();
 }
   
 function updateFormatInterface() {
