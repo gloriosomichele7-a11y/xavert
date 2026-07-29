@@ -42,7 +42,6 @@
   href="../assets/css/responsive.css"
 >
 
-<!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="XAVERT | Barcode Generator">
 <meta
@@ -59,7 +58,6 @@
 >
 <meta property="og:site_name" content="XAVERT">
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="XAVERT | Barcode Generator">
 <meta
@@ -96,274 +94,101 @@
 </script>
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+.barcode-actions{
+grid-template-columns:repeat(6,minmax(0,1fr));
+margin-top:22px;
 }
 
-body {
-  background: #f7f8fb;
-  color: #111827;
+.preview-box{
+display:none;
+margin-top:24px;
+padding:24px;
+background:#f9fafb;
+border:1px solid #e5e7eb;
+border-radius:18px;
+text-align:center;
 }
 
-.container {
-  max-width: 1100px;
-  margin: auto;
-  padding: 36px 20px 0;
+.preview-box h2{
+margin-bottom:18px;
+font-size:22px;
 }
 
-.back-link {
-  display: inline-block;
-  margin-bottom: 24px;
-  font-size: 14px;
-  font-weight: 700;
-  text-decoration: none;
-  color: #dc2626;
+.barcode-wrap{
+padding:24px;
+background:#ffffff;
+border:1px solid #e5e7eb;
+border-radius:16px;
+overflow:auto;
 }
 
-.back-link:hover {
-  color: #b91c1c;
+#barcodeSvg{
+display:block;
+max-width:100%;
+height:auto;
+margin:auto;
 }
 
-.back-link:focus-visible {
-  outline: 3px solid rgba(220, 38, 38, 0.25);
-  outline-offset: 3px;
-  border-radius: 4px;
+.xavert-footer-note{
+color:#111827;
+font-size:12px;
 }
 
-.hero {
-  text-align: center;
-  margin-bottom: 20px;
+#toast{
+display:none;
 }
 
-.tool-logo {
-  display: block;
-  width: 210px;
-  max-width: 70%;
-  height: auto;
-  margin: 0 auto 18px;
+.toast-success{
+background:#047857;
 }
 
-.hero h1 {
-  font-size: 38px;
-  font-weight: 800;
-  letter-spacing: -1px;
+.toast-error{
+background:#dc2626;
 }
 
-.tool-card {
-  background: #ffffff;
-  border: 1px solid #eceff3;
-  border-radius: 22px;
-  padding: 26px;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+.toast-info{
+background:#111827;
 }
 
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 18px;
-  margin-bottom: 18px;
+@media (max-width:992px){
+
+.barcode-actions{
+grid-template-columns:repeat(3,minmax(0,1fr));
 }
 
-.full-width {
-  grid-column: 1 / -1;
 }
 
-label {
-  display: block;
-  margin-bottom: 8px;
-  font-size: 14px;
-  font-weight: 700;
+@media (max-width:768px){
+
+.barcode-actions{
+grid-template-columns:repeat(2,minmax(0,1fr));
 }
 
-.button-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 12px;
-  margin: 22px 0;
+.preview-box,
+.barcode-wrap{
+padding:20px;
 }
 
-button {
-  padding: 14px;
-  border: none;
-  border-radius: 12px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
-  transition: 0.25s;
 }
 
-button:disabled {
-  cursor: wait;
-  opacity: 0.7;
+@media (max-width:576px){
+
+.barcode-actions{
+grid-template-columns:1fr;
 }
 
-button:focus-visible {
-  outline: 3px solid rgba(220, 38, 38, 0.25);
-  outline-offset: 3px;
+.preview-box,
+.barcode-wrap{
+padding:16px;
+border-radius:14px;
 }
 
-.primary {
-  background: #dc2626;
-  color: #ffffff;
-}
-
-.primary:hover:not(:disabled) {
-  background: #b91c1c;
-  transform: translateY(-2px);
-}
-
-.secondary {
-  background: #ffffff;
-  border: 1px solid #dc2626;
-  color: #dc2626;
-}
-
-.secondary:hover:not(:disabled) {
-  background: #dc2626;
-  color: #ffffff;
-}
-
-.preview-box {
-  display: none;
-  margin-top: 24px;
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
-  padding: 24px;
-  text-align: center;
-}
-
-.preview-box h2 {
-  font-size: 22px;
-  margin-bottom: 18px;
-}
-
-.barcode-wrap {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  padding: 24px;
-  overflow: auto;
-}
-
-#barcodeSvg {
-  display: block;
-  max-width: 100%;
-  height: auto;
-  margin: auto;
-}
-
-.stats {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-top: 22px;
-}
-
-.stat {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
-  border-radius: 14px;
-  padding: 14px;
-  text-align: left;
-}
-
-.stat strong {
-  display: block;
-  font-size: 18px;
-  margin-bottom: 4px;
-}
-
-.stat span {
-  font-size: 12px;
-  font-weight: 700;
-  color: #6b7280;
-}
-
-.message {
-  min-height: 20px;
-  margin-top: 18px;
-  font-size: 14px;
-  font-weight: 700;
-  color: #6b7280;
-}
-
-.xavert-footer-note {
-  color: #111827;
-  font-size: 12px;
-}
-  
-#toast {
-  position: fixed;
-  bottom: 22px;
-  left: 50%;
-  z-index: 9999;
-  display: none;
-  padding: 12px 20px;
-  border-radius: 10px;
-  background: #111827;
-  color: #ffffff;
-  font-size: 14px;
-  pointer-events: none;
-  transform: translateX(-50%);
-}
-
-.toast-success {
-  background: #047857 !important;
-}
-
-.toast-error {
-  background: #dc2626 !important;
-}
-
-.toast-info {
-  background: #111827 !important;
-}
-
-@media (max-width: 768px) {
-  .container {
-    padding: 24px 16px 0;
-  }
-
-  .hero h1 {
-    font-size: 32px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .button-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .stats {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .tool-card {
-    padding: 20px;
-  }
 }
 </style>
 
-<script
-  src="../assets/js/global.js"
-  defer>
-</script>
-
-<script
-  src="../assets/js/utils.js"
-  defer>
-</script>
-
-<script
-  src="../assets/js/related-tools.js"
-  defer>
-</script>
+<script src="../assets/js/global.js" defer></script>
+<script src="../assets/js/utils.js" defer></script>
+<script src="../assets/js/related-tools.js" defer></script>
 
 <script
   src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"
@@ -381,9 +206,7 @@ button:focus-visible {
 
 <main class="container">
 
-<a
-  href="../index.html"
-  class="back-link">
+<a href="../index.html" class="back-link">
   ← Back to Home
 </a>
 
@@ -396,9 +219,10 @@ button:focus-visible {
   width="210"
   height="210"
   fetchpriority="high"
-  decoding="async">
+  decoding="async"
+>
 
-<h1 id="tool-title">
+<h1 id="tool-title" class="tool-title">
   Barcode Generator
 </h1>
 
@@ -406,11 +230,12 @@ button:focus-visible {
 
 <section
   class="tool-card"
-  aria-labelledby="tool-title">
+  aria-labelledby="tool-title"
+>
 
 <div class="form-grid">
 
-<div class="full-width">
+<div class="form-group full-width">
 
 <label for="barcodeValue">
   Barcode value
@@ -423,11 +248,12 @@ button:focus-visible {
   autocomplete="off"
   autocapitalize="off"
   spellcheck="false"
-  maxlength="120">
+  maxlength="120"
+>
 
 </div>
 
-<div>
+<div class="form-group">
 
 <label for="barcodeFormat">
   Barcode format
@@ -445,7 +271,7 @@ button:focus-visible {
 
 </div>
 
-<div>
+<div class="form-group">
 
 <label for="barcodeWidth">
   Bar width
@@ -460,7 +286,7 @@ button:focus-visible {
 
 </div>
 
-<div>
+<div class="form-group">
 
 <label for="barcodeHeight">
   Bar height
@@ -475,7 +301,7 @@ button:focus-visible {
 
 </div>
 
-<div>
+<div class="form-group">
 
 <label for="displayValue">
   Show text
@@ -490,47 +316,53 @@ button:focus-visible {
 
 </div>
 
-<div class="button-grid">
+<div class="button-grid barcode-actions">
 
 <button
   id="generateBtn"
-  class="primary"
-  type="button">
+  class="btn"
+  type="button"
+>
   Generate
 </button>
 
 <button
   id="downloadSvgBtn"
-  class="secondary"
-  type="button">
+  class="btn btn-secondary"
+  type="button"
+>
   Download SVG
 </button>
 
 <button
   id="downloadPngBtn"
-  class="secondary"
-  type="button">
+  class="btn btn-secondary"
+  type="button"
+>
   Download PNG
 </button>
 
 <button
   id="copySvgBtn"
-  class="secondary"
-  type="button">
+  class="btn btn-secondary"
+  type="button"
+>
   Copy SVG
 </button>
 
 <button
   id="clearBtn"
-  class="secondary"
-  type="button">
+  class="btn btn-secondary"
+  type="button"
+>
   Clear
 </button>
 
 <button
   id="sampleBtn"
-  class="secondary"
-  type="button">
+  class="btn btn-secondary"
+  type="button"
+>
   Load Sample
 </button>
 
@@ -538,7 +370,8 @@ button:focus-visible {
 
 <div
   class="preview-box"
-  id="previewBox">
+  id="previewBox"
+>
 
 <h2>
   Barcode Preview
@@ -549,31 +382,31 @@ button:focus-visible {
 <svg
   id="barcodeSvg"
   role="img"
-  aria-label="Generated barcode preview">
-</svg>
+  aria-label="Generated barcode preview"
+></svg>
 
 </div>
 
-<div class="stats">
+<div class="stats-grid">
 
-<div class="stat">
-  <strong id="formatStat">-</strong>
-  <span>Format</span>
+<div class="stat-card">
+  <strong id="formatStat" class="stat-value">-</strong>
+  <span class="stat-label">Format</span>
 </div>
 
-<div class="stat">
-  <strong id="lengthStat">0</strong>
-  <span>Characters</span>
+<div class="stat-card">
+  <strong id="lengthStat" class="stat-value">0</strong>
+  <span class="stat-label">Characters</span>
 </div>
 
-<div class="stat">
-  <strong id="widthStat">0</strong>
-  <span>Bar Width</span>
+<div class="stat-card">
+  <strong id="widthStat" class="stat-value">0</strong>
+  <span class="stat-label">Bar Width</span>
 </div>
 
-<div class="stat">
-  <strong id="heightStat">0</strong>
-  <span>Height</span>
+<div class="stat-card">
+  <strong id="heightStat" class="stat-value">0</strong>
+  <span class="stat-label">Height</span>
 </div>
 
 </div>
@@ -585,8 +418,8 @@ button:focus-visible {
   id="message"
   role="status"
   aria-live="polite"
-  aria-atomic="true">
-</div>
+  aria-atomic="true"
+></div>
 
 </section>
 
@@ -657,8 +490,9 @@ button:focus-visible {
 
 <div
   id="toast"
-  aria-hidden="true">
-</div>
+  class="xavert-toast"
+  aria-hidden="true"
+></div>
 
 </body>
 </html>
