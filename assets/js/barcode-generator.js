@@ -23,9 +23,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const lengthStat = document.getElementById("lengthStat");
   const widthStat = document.getElementById("widthStat");
   const heightStat = document.getElementById("heightStat");
-
-  let toastTimer = null;
-  let barcodeGenerated = false;
+let toastTimer = null;
+let messageTimer = null;
+let barcodeGenerated = false;
 
   const formatConfiguration = {
     CODE128: {
@@ -603,9 +603,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     hidePreview();
     updatePlaceholder();
-    showMessage("Editor cleared.", "success");
+    window.clearTimeout(messageTimer);
 
-    barcodeValue.focus();
+showMessage("Editor cleared.", "success");
+
+messageTimer = window.setTimeout(function () {
+  if (message.textContent === "Editor cleared.") {
+    showMessage("", "info", false);
+  }
+}, 1800);
+
+barcodeValue.focus();
   }
 
   function loadSample() {
