@@ -686,7 +686,7 @@ const cleanValue = normalizeBarcodeValue(
     window.clearTimeout(messageTimer);
 
 showMessage("Editor cleared.", "success");
-
+validateCurrentInput();
 messageTimer = window.setTimeout(function () {
   if (message.textContent === "Editor cleared.") {
     showMessage("", "info", false);
@@ -699,9 +699,10 @@ barcodeValue.focus();
   function loadSample() {
     const configuration = getCurrentConfiguration();
 
-    barcodeValue.value = configuration.sample;
+barcodeValue.value = configuration.sample;
 
-    generateBarcode();
+validateCurrentInput();
+generateBarcode();
     barcodeValue.focus();
     barcodeValue.select();
   }
