@@ -107,46 +107,6 @@
 }
 </script>
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Which image formats are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool supports common browser-compatible image formats including JPG, PNG, WebP, GIF, BMP and AVIF."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Is my image uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. Images are processed entirely inside your browser."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I download the palette?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The extracted palette can be downloaded as TXT, JSON, CSS or SVG."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I copy individual colors?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. Every extracted color can be copied in HEX, RGB or HSL."
-      }
-    }
-  ]
-}
-</script>
 
 <style>
 
@@ -748,9 +708,25 @@ Related Tools
 
 </main>
 
+<canvas
+id="canvas"
+width="1"
+height="1"
+hidden>
+</canvas>
+
 <footer class="xavert-footer-note">
 Powered by XAVERT
 </footer>
+
+<div
+id="toast"
+class="xavert-toast"
+aria-hidden="true">
+</div>
+
+</body>
+</html>
 
 <div
 id="toast"
