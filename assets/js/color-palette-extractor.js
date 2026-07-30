@@ -452,16 +452,6 @@ document.addEventListener("DOMContentLoaded", function () {
       const green = imageData[index + 1];
       const blue = imageData[index + 2];
 
-      const maximum = Math.max(red, green, blue);
-      const minimum = Math.min(red, green, blue);
-
-      if (
-        maximum > 250 &&
-        minimum > 250
-      ) {
-        continue;
-      }
-
       const quantizedRed = Math.min(
         255,
         Math.round(red / channelStep) * channelStep
