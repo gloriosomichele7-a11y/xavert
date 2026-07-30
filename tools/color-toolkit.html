@@ -154,7 +154,7 @@ All color conversions and analysis are performed locally in your browser. Your d
 <label for="toolSelector">Select Tool</label>
 
 <select id="toolSelector">
-<option value="converter">HEX / RGB Converter</option>
+<option value="converter">Color Format Converter</option>
 <option value="generator">Random Color Generator</option>
 <option value="contrast">Contrast Checker</option>
 <option value="palette">Palette Generator</option>
@@ -164,19 +164,31 @@ All color conversions and analysis are performed locally in your browser. Your d
 
 <div class="card tool-section active" id="converterTool">
 
-<h2>HEX / RGB Converter</h2>
+<h2>Color Format Converter</h2>
 
-<label for="hexInput">HEX Color</label>
+<label for="colorFormat">Input Format</label>
+<select id="colorFormat">
+  <option value="hex">HEX</option>
+  <option value="rgb">RGB</option>
+  <option value="hsl">HSL</option>
+</select>
+
+<label for="colorInput">Color Value</label>
 <input
-type="text"
-id="hexInput"
-placeholder="#FF5733"
-spellcheck="false"
-autocomplete="off"
-autocapitalize="off">
+  type="text"
+  id="colorInput"
+  placeholder="#FF5733"
+  spellcheck="false"
+  autocomplete="off"
+  autocapitalize="off"
+  aria-describedby="colorInputHint">
+
+<p id="colorInputHint" class="input-hint">
+  Example: #FF5733
+</p>
 <div class="button-group">
 
-<button class="btn" type="button" onclick="convertHex()">
+<button class="btn" type="button" onclick="convertColor()">
 Convert
 </button>
 
@@ -231,6 +243,10 @@ Clear
 
 <button class="btn" type="button" onclick="checkContrast()">
 Check Contrast
+</button>
+
+<button class="btn" type="button" onclick="swapContrastColors()">
+Swap Colors
 </button>
 
 <button class="btn" type="button" onclick="clearCurrentTool()">
@@ -326,18 +342,57 @@ Powered by XAVERT
 
 <script>
 const toolSelector = document.getElementById("toolSelector");
-const hexInput = document.getElementById("hexInput");
+const colorFormat = document.getElementById("colorFormat");
+const colorInput = document.getElementById("colorInput");
+const colorInputHint = document.getElementById("colorInputHint");
+const foregroundColorInput =
+  document.getElementById("foregroundColor");
 
+const backgroundColorInput =
+  document.getElementById("backgroundColor");
+  
 let converterHistory = [];
 let generatorHistory = [];
 let savedPalettes = [];
 let currentPalette = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+
+const storedPalettes = localStorage.getItem("xavertColorPalettes");
+
+if (storedPalettes) {
+  try {
+    const parsedPalettes = JSON.parse(storedPalettes);
+
+    if (Array.isArray(parsedPalettes)) {
+      savedPalettes = parsedPalettes
+        .filter(palette =>
+          Array.isArray(palette) &&
+          palette.length > 0 &&
+          palette.every(color =>
+            typeof color === "string" &&
+            /^#[A-Fa-f0-9]{6}$/.test(color)
+          )
+        )
+        .slice(0, 10)
+        .map(palette =>
+          palette.map(color => color.toUpperCase())
+        );
+
+      renderSavedPalettes();
+    }
+  } catch {
+    savedPalettes = [];
+    localStorage.removeItem("xavertColorPalettes");
+  }
+}
+
   if (typeof loadRelatedTools === "function") {
     loadRelatedTools("color-toolkit");
   }
+
 });
+  
 
 toolSelector.addEventListener("change", () => {
   document.querySelectorAll(".tool-section").forEach(section => {
@@ -351,13 +406,47 @@ toolSelector.addEventListener("change", () => {
   }
 });
 
-hexInput.addEventListener("keydown", event => {
+colorInput.addEventListener("keydown", event => {
   if (event.key === "Enter") {
     event.preventDefault();
-    convertHex();
+    convertColor();
   }
 });
 
+colorFormat.addEventListener("change", () => {
+  const formatSettings = {
+    hex: {
+      placeholder: "#FF5733",
+      hint: "Example: #FF5733"
+    },
+    rgb: {
+      placeholder: "rgb(255, 87, 51)",
+      hint: "Example: rgb(255, 87, 51)"
+    },
+    hsl: {
+      placeholder: "hsl(11, 100%, 60%)",
+      hint: "Example: hsl(11, 100%, 60%)"
+    }
+  };
+
+  const settings = formatSettings[colorFormat.value];
+
+  colorInput.value = "";
+  colorInput.placeholder = settings.placeholder;
+  colorInputHint.textContent = settings.hint;
+
+  setMessage("converterMessage");
+
+  const result = document.getElementById("converterResult");
+  result.innerHTML = "";
+  result.style.display = "none";
+
+  document.getElementById("converterPreview").style.background = "#ffffff";
+
+  colorInput.focus();
+});
+foregroundColorInput.addEventListener("input", checkContrast);
+backgroundColorInput.addEventListener("input", checkContrast);  
 document.addEventListener("keydown", event => {
   if (!(event.ctrlKey && event.key === "Enter")) {
     return;
@@ -366,7 +455,7 @@ document.addEventListener("keydown", event => {
   event.preventDefault();
 
   const actions = {
-    converter: convertHex,
+    converter: convertColor,
     generator: generateRandomColor,
     contrast: checkContrast,
     palette: generatePalette
@@ -476,6 +565,109 @@ function rgbToHsl(r, g, b) {
   };
 }
 
+function hslToHex(h, s, l) {
+  const normalizedHue = ((h % 360) + 360) % 360;
+  const saturation = Math.max(0, Math.min(100, s)) / 100;
+  const lightness = Math.max(0, Math.min(100, l)) / 100;
+
+  const chroma =
+    (1 - Math.abs(2 * lightness - 1)) * saturation;
+
+  const hueSection = normalizedHue / 60;
+
+  const secondary =
+    chroma * (1 - Math.abs((hueSection % 2) - 1));
+
+  const match = lightness - chroma / 2;
+
+  let red = 0;
+  let green = 0;
+  let blue = 0;
+
+  if (hueSection >= 0 && hueSection < 1) {
+    red = chroma;
+    green = secondary;
+  } else if (hueSection < 2) {
+    red = secondary;
+    green = chroma;
+  } else if (hueSection < 3) {
+    green = chroma;
+    blue = secondary;
+  } else if (hueSection < 4) {
+    green = secondary;
+    blue = chroma;
+  } else if (hueSection < 5) {
+    red = secondary;
+    blue = chroma;
+  } else {
+    red = chroma;
+    blue = secondary;
+  }
+
+  return rgbToHex(
+    (red + match) * 255,
+    (green + match) * 255,
+    (blue + match) * 255
+  );
+}
+
+function parseRgbInput(value) {
+  const match = value.match(
+    /^rgb\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  const red = Number(match[1]);
+  const green = Number(match[2]);
+  const blue = Number(match[3]);
+
+  if (
+    red > 255 ||
+    green > 255 ||
+    blue > 255
+  ) {
+    return null;
+  }
+
+  return {
+    r: red,
+    g: green,
+    b: blue
+  };
+}
+
+function parseHslInput(value) {
+  const match = value.match(
+    /^hsl\s*\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)%\s*,\s*(\d+(?:\.\d+)?)%\s*\)$/i
+  );
+
+  if (!match) {
+    return null;
+  }
+
+  const hue = Number(match[1]);
+  const saturation = Number(match[2]);
+  const lightness = Number(match[3]);
+
+  if (
+    saturation < 0 ||
+    saturation > 100 ||
+    lightness < 0 ||
+    lightness > 100
+  ) {
+    return null;
+  }
+
+  return {
+    h: ((hue % 360) + 360) % 360,
+    s: saturation,
+    l: lightness
+  };
+}
+  
 function updateColorHistory(hex, historyType) {
   const history =
     historyType === "generator"
@@ -563,27 +755,86 @@ function clearColorHistory(historyType) {
   showMessage("Color history cleared.", "success");
 }
 
-function convertHex() {
-  let hex = hexInput.value.trim();
+function convertColor() {
+  const inputValue = colorInput.value.trim();
+  const selectedFormat = colorFormat.value;
 
-  if (!hex) {
-    setMessage("converterMessage", "Please enter a HEX color.", "error");
-    showMessage("Please enter a HEX color.", "error");
+  if (!inputValue) {
+    setMessage(
+      "converterMessage",
+      "Please enter a color value.",
+      "error"
+    );
+
+    showMessage("Please enter a color value.", "error");
     return;
   }
 
-  if (!hex.startsWith("#")) {
-    hex = `#${hex}`;
+  let rgb = null;
+  let normalizedHex = "";
+
+  if (selectedFormat === "hex") {
+    let hex = inputValue;
+
+    if (!hex.startsWith("#")) {
+      hex = `#${hex}`;
+    }
+
+    if (!/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(hex)) {
+      setMessage(
+        "converterMessage",
+        "Invalid HEX color.",
+        "error"
+      );
+
+      showMessage("Invalid HEX color.", "error");
+      return;
+    }
+
+    rgb = hexToRgb(hex);
+    normalizedHex = rgbToHex(rgb.r, rgb.g, rgb.b);
   }
 
-  if (!/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(hex)) {
-    setMessage("converterMessage", "Invalid HEX color.", "error");
-    showMessage("Invalid HEX color.", "error");
-    return;
+  if (selectedFormat === "rgb") {
+    rgb = parseRgbInput(inputValue);
+
+    if (!rgb) {
+      setMessage(
+        "converterMessage",
+        "Invalid RGB color. Use rgb(255, 87, 51).",
+        "error"
+      );
+
+      showMessage("Invalid RGB color.", "error");
+      return;
+    }
+
+    normalizedHex = rgbToHex(rgb.r, rgb.g, rgb.b);
   }
 
-  const normalizedHex = hex.toUpperCase();
-  const rgb = hexToRgb(normalizedHex);
+  if (selectedFormat === "hsl") {
+    const parsedHsl = parseHslInput(inputValue);
+
+    if (!parsedHsl) {
+      setMessage(
+        "converterMessage",
+        "Invalid HSL color. Use hsl(11, 100%, 60%).",
+        "error"
+      );
+
+      showMessage("Invalid HSL color.", "error");
+      return;
+    }
+
+    normalizedHex = hslToHex(
+      parsedHsl.h,
+      parsedHsl.s,
+      parsedHsl.l
+    );
+
+    rgb = hexToRgb(normalizedHex);
+  }
+
   const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
   const rgbText = `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
@@ -597,8 +848,8 @@ function convertHex() {
 
   result.innerHTML = `
     HEX: <strong>${normalizedHex}</strong><br>
-    RGB: <strong>${rgb.r}, ${rgb.g}, ${rgb.b}</strong><br>
-    HSL: <strong>${hsl.h}, ${hsl.s}%, ${hsl.l}%</strong>
+    RGB: <strong>${rgbText}</strong><br>
+    HSL: <strong>${hslText}</strong>
 
     <div class="button-group">
       <button
@@ -628,10 +879,15 @@ function convertHex() {
     </div>
   `;
 
-  setMessage("converterMessage", "Conversion completed.", "success");
+  setMessage(
+    "converterMessage",
+    "Conversion completed.",
+    "success"
+  );
+
   showMessage("Color converted.", "success");
 }
-
+  
 function generateRandomColor() {
   const red = Math.floor(Math.random() * 256);
   const green = Math.floor(Math.random() * 256);
@@ -795,10 +1051,39 @@ function savePalette(palette) {
     return;
   }
 
-  savedPalettes.unshift([...palette]);
-  savedPalettes = savedPalettes.slice(0, 10);
+const normalizedPalette = palette.map(color =>
+  String(color).toUpperCase()
+);
 
-  renderSavedPalettes();
+const paletteAlreadySaved = savedPalettes.some(savedPalette =>
+  Array.isArray(savedPalette) &&
+  savedPalette.length === normalizedPalette.length &&
+  savedPalette.every(
+    (color, index) =>
+      String(color).toUpperCase() === normalizedPalette[index]
+  )
+);
+
+if (paletteAlreadySaved) {
+  setMessage(
+    "paletteMessage",
+    "This palette is already saved.",
+    "error"
+  );
+
+  showMessage("Palette already saved.", "error");
+  return;
+}
+
+savedPalettes.unshift(normalizedPalette);
+savedPalettes = savedPalettes.slice(0, 10);
+
+localStorage.setItem(
+  "xavertColorPalettes",
+  JSON.stringify(savedPalettes)
+);
+
+renderSavedPalettes();
 
   setMessage(
     "paletteMessage",
@@ -809,6 +1094,33 @@ function savePalette(palette) {
   showMessage("Palette saved.", "success");
 }
 
+function deleteSavedPalette(index) {
+  if (
+    !Number.isInteger(index) ||
+    index < 0 ||
+    index >= savedPalettes.length
+  ) {
+    return;
+  }
+
+  savedPalettes.splice(index, 1);
+
+  localStorage.setItem(
+    "xavertColorPalettes",
+    JSON.stringify(savedPalettes)
+  );
+
+  renderSavedPalettes();
+
+  setMessage(
+    "paletteMessage",
+    "Saved palette deleted.",
+    "success"
+  );
+
+  showMessage("Palette deleted.", "success");
+}
+  
 function renderSavedPalettes() {
   const container = document.getElementById("savedPalettes");
 
@@ -830,7 +1142,21 @@ function renderSavedPalettes() {
         border:1px solid #d1d5db;
         border-radius:10px;
       ">
-        <strong>Palette ${index + 1}</strong>
+        <div style="
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+">
+  <strong>Palette ${index + 1}</strong>
+
+  <button
+    class="btn small-button"
+    type="button"
+    onclick="deleteSavedPalette(${index})">
+    Delete
+  </button>
+</div>
 
         <div
           class="button-group"
@@ -903,6 +1229,21 @@ function luminance(r, g, b) {
   );
 }
 
+function swapContrastColors() {
+  const foregroundInput =
+    document.getElementById("foregroundColor");
+
+  const backgroundInput =
+    document.getElementById("backgroundColor");
+
+  const previousForeground = foregroundInput.value;
+
+  foregroundInput.value = backgroundInput.value;
+  backgroundInput.value = previousForeground;
+
+  checkContrast();
+}
+  
 function checkContrast() {
   const foreground =
     document.getElementById("foregroundColor").value;
@@ -929,17 +1270,13 @@ function checkContrast() {
     (Math.max(foregroundLuminance, backgroundLuminance) + 0.05) /
     (Math.min(foregroundLuminance, backgroundLuminance) + 0.05);
 
-  const normalText = ratio >= 7
-    ? "AAA"
-    : ratio >= 4.5
-      ? "AA"
-      : "Fail";
+const normalAA = ratio >= 4.5;
+const normalAAA = ratio >= 7;
+const largeAA = ratio >= 3;
+const largeAAA = ratio >= 4.5;
 
-  const largeText = ratio >= 4.5
-    ? "AAA"
-    : ratio >= 3
-      ? "AA"
-      : "Fail";
+const formatStatus = passed =>
+  passed ? "Pass ✓" : "Fail ✕";
 
   const preview = document.getElementById("contrastPreview");
   const result = document.getElementById("contrastResult");
@@ -950,17 +1287,31 @@ function checkContrast() {
   preview.textContent = "Sample Text Preview";
 
   result.style.display = "block";
-  result.innerHTML = `
-    Contrast Ratio: <strong>${ratio.toFixed(2)}:1</strong><br>
-    Normal Text: <strong>${normalText}</strong><br>
-    Large Text: <strong>${largeText}</strong>
-  `;
+result.innerHTML = `
+  Contrast Ratio: <strong>${ratio.toFixed(2)}:1</strong>
 
-  setMessage(
-    "contrastMessage",
-    "Contrast analysis completed.",
-    "success"
-  );
+  <div style="margin-top:14px;line-height:1.8;">
+    Normal text — WCAG AA:
+    <strong>${formatStatus(normalAA)}</strong><br>
+
+    Normal text — WCAG AAA:
+    <strong>${formatStatus(normalAAA)}</strong><br>
+
+    Large text — WCAG AA:
+    <strong>${formatStatus(largeAA)}</strong><br>
+
+    Large text — WCAG AAA:
+    <strong>${formatStatus(largeAAA)}</strong>
+  </div>
+`;
+
+setMessage(
+  "contrastMessage",
+  normalAA
+    ? "The selected colors meet WCAG AA for normal text."
+    : "The selected colors do not meet WCAG AA for normal text.",
+  normalAA ? "success" : "error"
+);
 
   showMessage("Contrast analysis completed.", "success");
 }
@@ -969,7 +1320,7 @@ function clearCurrentTool() {
   const activeTool = toolSelector.value;
 
   if (activeTool === "converter") {
-    hexInput.value = "";
+    colorInput.value = "";
     converterHistory = [];
 
     setMessage("converterMessage");
@@ -979,7 +1330,7 @@ function clearCurrentTool() {
     result.style.display = "none";
 
     document.getElementById("converterPreview").style.background = "#ffffff";
-    hexInput.focus();
+    colorInput.focus();
   }
 
   if (activeTool === "generator") {
