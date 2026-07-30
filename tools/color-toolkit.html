@@ -100,69 +100,33 @@
 </script>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-.card{
-margin-bottom:20px;
-}
-
-input{
-background:#fff;
-}
-
-.btn{
-margin-top:14px;
-}
-
-.small-button{
-padding:10px 16px;
-font-size:14px;
-margin-right:8px;
-margin-top:10px;
-}
-
 .success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
+  background:#ecfdf5;
+  border:1px solid #a7f3d0;
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:20px;
+  text-align:center;
+  font-size:14px;
+  font-weight:700;
+  color:#047857;
 }
 
 .tool-section{
-display:none;
+  display:none;
 }
 
 .tool-section.active{
-display:block;
+  display:block;
 }
 
 .color-preview{
-width:100%;
-height:120px;
-border-radius:12px;
-border:1px solid #d1d5db;
-margin-top:16px;
-background:#ffffff;
-}
-
-@media(max-width:768px){
-.card{
-padding:20px;
-}
-
-.btn{
-width:100%;
-}
+  width:100%;
+  height:120px;
+  margin-top:16px;
+  background:#ffffff;
+  border:1px solid #d1d5db;
+  border-radius:12px;
 }
 </style>
 </head>
@@ -216,7 +180,7 @@ autocapitalize="off">
 Convert
 </button>
 
-<button class="btn" type="button" onclick="clearConverter()">
+<button class="btn" type="button" onclick="clearCurrentTool()">
 Clear
 </button>
 
@@ -240,7 +204,7 @@ Clear
 Generate Color
 </button>
 
-<button class="btn" type="button" onclick="clearConverter()">
+<button class="btn" type="button" onclick="clearCurrentTool()">
 Clear
 </button>
 
@@ -269,7 +233,7 @@ Clear
 Check Contrast
 </button>
 
-<button class="btn" type="button" onclick="clearConverter()">
+<button class="btn" type="button" onclick="clearCurrentTool()">
 Clear
 </button>
 
@@ -296,7 +260,7 @@ Sample Text Preview
 Generate Palette
 </button>
 
-<button class="btn" type="button" onclick="clearConverter()">
+<button class="btn" type="button" onclick="clearCurrentTool()">
 Clear
 </button>
 
@@ -364,7 +328,8 @@ Powered by XAVERT
 const toolSelector = document.getElementById("toolSelector");
 const hexInput = document.getElementById("hexInput");
 
-let colorHistory = [];
+let converterHistory = [];
+let generatorHistory = [];
 let savedPalettes = [];
 let currentPalette = [];
 
@@ -511,11 +476,23 @@ function rgbToHsl(r, g, b) {
   };
 }
 
-function updateColorHistory(hex) {
-  colorHistory.unshift(hex);
-  colorHistory = [...new Set(colorHistory)].slice(0, 15);
+function updateColorHistory(hex, historyType) {
+  const history =
+    historyType === "generator"
+      ? generatorHistory
+      : converterHistory;
 
-  const colors = colorHistory.map((color, index) => {
+  history.unshift(hex);
+
+  const uniqueHistory = [...new Set(history)].slice(0, 15);
+
+  if (historyType === "generator") {
+    generatorHistory = uniqueHistory;
+  } else {
+    converterHistory = uniqueHistory;
+  }
+
+  const colors = uniqueHistory.map((color, index) => {
     const safeColor = escapeAttribute(color);
 
     return `
@@ -555,17 +532,23 @@ function updateColorHistory(hex) {
       <button
         class="btn small-button"
         type="button"
-        onclick="clearColorHistory()">
+        onclick="clearColorHistory('${historyType}')">
         Clear History
       </button>
     </div>
   `;
 }
 
-function clearColorHistory() {
-  colorHistory = [];
+function clearColorHistory(historyType) {
+  if (historyType === "generator") {
+    generatorHistory = [];
+  } else {
+    converterHistory = [];
+  }
 
-  const activeResult = document.querySelector(".tool-section.active .result-box");
+  const activeResult = document.querySelector(
+    ".tool-section.active .result-box"
+  );
 
   if (!activeResult) {
     return;
@@ -576,6 +559,8 @@ function clearColorHistory() {
   if (history) {
     history.remove();
   }
+
+  showMessage("Color history cleared.", "success");
 }
 
 function convertHex() {
@@ -639,7 +624,7 @@ function convertHex() {
     </div>
 
     <div data-color-history>
-      ${updateColorHistory(normalizedHex)}
+      ${updateColorHistory(normalizedHex, "converter")}
     </div>
   `;
 
@@ -693,7 +678,7 @@ function generateRandomColor() {
     </div>
 
     <div data-color-history>
-      ${updateColorHistory(hex)}
+        ${updateColorHistory(hex, "generator")}
     </div>
   `;
 
@@ -980,12 +965,12 @@ function checkContrast() {
   showMessage("Contrast analysis completed.", "success");
 }
 
-function clearConverter() {
+function clearCurrentTool() {
   const activeTool = toolSelector.value;
 
   if (activeTool === "converter") {
     hexInput.value = "";
-    colorHistory = [];
+    converterHistory = [];
 
     setMessage("converterMessage");
 
@@ -998,7 +983,7 @@ function clearConverter() {
   }
 
   if (activeTool === "generator") {
-    colorHistory = [];
+    generatorHistory = [];
 
     setMessage("generatorMessage");
 
@@ -1029,7 +1014,6 @@ function clearConverter() {
     document.getElementById("paletteColor").value = "#FF5733";
 
     currentPalette = [];
-    savedPalettes = [];
 
     setMessage("paletteMessage");
 
@@ -1037,9 +1021,6 @@ function clearConverter() {
     result.innerHTML = "";
     result.style.display = "none";
 
-    const saved = document.getElementById("savedPalettes");
-    saved.innerHTML = "";
-    saved.style.display = "none";
   }
 
   showMessage("Cleared.", "success");
