@@ -147,7 +147,7 @@
 Convert, generate and analyze colors directly in your browser.
 </p>
 <div class="success-banner">
-All color conversions and analysis are performed locally in your browser. Your data is never uploaded or stored.
+All color conversions and analysis are performed locally in your browser. Saved palettes are stored only in your browser and are never uploaded.
 </div>
 <div class="card">
 
@@ -948,36 +948,37 @@ function generateRandomColor() {
 }
 
 function generatePalette() {
-  const base = document.getElementById("paletteColor").value;
-  const rgb = hexToRgb(base);
+const base = document.getElementById("paletteColor").value;
+const rgb = hexToRgb(base);
+const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
 
-  currentPalette = [
-    base.toUpperCase(),
+currentPalette = [
+  base.toUpperCase(),
 
-    rgbToHex(
-      Math.min(rgb.r + 40, 255),
-      Math.min(rgb.g + 40, 255),
-      Math.min(rgb.b + 40, 255)
-    ),
+  hslToHex(
+    hsl.h - 30,
+    hsl.s,
+    hsl.l
+  ),
 
-    rgbToHex(
-      Math.max(rgb.r - 40, 0),
-      Math.max(rgb.g - 40, 0),
-      Math.max(rgb.b - 40, 0)
-    ),
+  hslToHex(
+    hsl.h + 30,
+    hsl.s,
+    hsl.l
+  ),
 
-    rgbToHex(
-      255 - rgb.r,
-      255 - rgb.g,
-      255 - rgb.b
-    ),
+  hslToHex(
+    hsl.h + 180,
+    hsl.s,
+    hsl.l
+  ),
 
-    rgbToHex(
-      (rgb.r + 128) % 256,
-      (rgb.g + 128) % 256,
-      (rgb.b + 128) % 256
-    )
-  ];
+  hslToHex(
+    hsl.h,
+    Math.max(hsl.s - 10, 0),
+    Math.min(hsl.l + 25, 90)
+  )
+];
 
   const result = document.getElementById("paletteResult");
   result.style.display = "block";
