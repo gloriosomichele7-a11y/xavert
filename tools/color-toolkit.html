@@ -20,6 +20,7 @@
 <script src="../assets/js/global.js" defer></script>
 <script src="../assets/js/utils.js" defer></script>
 <script src="../assets/js/related-tools.js" defer></script>
+<script src="../assets/js/color-toolkit.js" defer></script>
 <!-- Open Graph -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="XAVERT | Color Toolkit">
@@ -131,25 +132,35 @@
 </style>
 </head>
 
-<body>
+<body data-tool="color-toolkit">
 
-<main class="container" aria-labelledby="tool-title">
+<main class="container">
 
-<a href="../index.html" class="back">← Back to Home</a>
+<a href="../index.html" class="back-link">
+  ← Back to Home
+</a>
 
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT Logo">
-</div>
+<section class="hero">
 
-<h1 id="tool-title">Color Toolkit</h1>
+<img
+  src="../logo-hero.svg"
+  alt="XAVERT"
+  class="tool-logo"
+  width="210"
+  height="210"
+  fetchpriority="high"
+  decoding="async"
+>
 
-<p class="subtitle">
-Convert, generate and analyze colors directly in your browser.
-</p>
+<h1 id="tool-title" class="tool-title">
+  Color Toolkit
+</h1>
+
+</section>
 <div class="success-banner">
 All color conversions and analysis are performed locally in your browser. Saved palettes are stored only in your browser and are never uploaded.
 </div>
-<div class="card">
+<section class="tool-card" aria-labelledby="tool-title">
 
 <label for="toolSelector">Select Tool</label>
 
@@ -285,13 +296,15 @@ Clear
 <div id="paletteMessage" class="message" aria-live="polite"></div>
 <div id="paletteResult" class="result-box"></div>
 <div id="savedPalettes" class="result-box"></div>
-</div>
-<section class="info">
+</section>
+<section class="info about-card">
 
-<h2>About Color Toolkit</h2>
+<h2>
+  About
+</h2>
 
-<p>
-Color Toolkit provides a collection of color utilities for designers, developers and digital creators. Convert color formats, generate palettes, analyze accessibility and create random colors directly in your browser.
+<p class="about-intro">
+  Color Toolkit provides a collection of color utilities for designers, developers and digital creators. Convert color formats, generate palettes, analyze accessibility and create random colors directly in your browser.
 </p>
 
 <ul>
@@ -338,8 +351,6 @@ Common questions about using the XAVERT Color Toolkit.
 <footer class="xavert-footer-note">
 Powered by XAVERT
 </footer>
-
-<script src="../assets/js/color-toolkit.js"></script>
   
 </body>
 </html>
