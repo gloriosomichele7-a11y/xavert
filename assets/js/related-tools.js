@@ -58,7 +58,13 @@ const tools = {
         description: "Convert and inspect digital color values.",
         path: "color-toolkit.html"
     },
-
+    
+    "color-palette-extractor": {
+    title: "Color Palette Extractor",
+    description: "Extract dominant colors from images and export ready-to-use palettes.",
+    path: "color-palette-extractor.html"
+},
+    
     "date-time-toolkit": {
         title: "Date & Time Toolkit",
         description: "Calculate and convert dates, times and durations.",
@@ -179,20 +185,28 @@ const relatedTools = {
         "data-converter",
         "text-toolkit"
     ],
-
-    "image-toolkit": [
-        "color-toolkit",
-        "qr-generator",
-        "barcode-generator",
-        "pdf-toolkit"
+    
+  "image-toolkit": [  
+    "color-palette-extractor",
+    "color-toolkit",
+    "qr-generator",
+    "pdf-toolkit"
+        
     ],
 
-    "color-toolkit": [
-        "image-toolkit",
-        "qr-generator",
-        "barcode-generator",
-        "text-toolkit"
-    ],
+  "color-toolkit": [
+    "color-palette-extractor",
+    "image-toolkit",
+    "qr-generator",
+    "barcode-generator"
+     ],
+
+"color-palette-extractor": [
+    "color-toolkit",
+    "image-toolkit",
+    "qr-generator",
+    "barcode-generator"
+],
 
     "pdf-toolkit": [
         "image-toolkit",
