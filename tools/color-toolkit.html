@@ -1,135 +1,69 @@
 <!DOCTYPE html>
 <html lang="en" dir="ltr">
+
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>XAVERT | Color Toolkit</title>
 
-<meta name="description" content="Free online Color Toolkit to convert HEX, RGB and HSL colors, generate random colors, create color palettes and check contrast ratios directly in your browser.">
+<meta name="description" content="Free online Color Toolkit to convert HEX, RGB and HSL colors, generate random colors, create color palettes and check WCAG contrast ratios directly in your browser.">
 
 <meta name="robots" content="index, follow">
 <meta name="author" content="XAVERT">
 <meta name="theme-color" content="#dc2626">
+
 <link rel="canonical" href="https://xavert.com/tools/color-toolkit.html">
 
 <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+
 <link rel="stylesheet" href="../assets/css/global.css">
 <link rel="stylesheet" href="../assets/css/components.css">
 <link rel="stylesheet" href="../assets/css/responsive.css">
+<link rel="stylesheet" href="../assets/css/color-toolkit.css">
 
 <script src="../assets/js/global.js" defer></script>
 <script src="../assets/js/utils.js" defer></script>
 <script src="../assets/js/related-tools.js" defer></script>
 <script src="../assets/js/color-toolkit.js" defer></script>
-<!-- Open Graph -->
+
 <meta property="og:type" content="website">
 <meta property="og:title" content="XAVERT | Color Toolkit">
-<meta property="og:description" content="Convert HEX, RGB and HSL colors, generate random colors, create palettes and check accessibility contrast directly in your browser.">
+<meta property="og:description" content="Convert, generate and analyze colors directly in your browser.">
 <meta property="og:url" content="https://xavert.com/tools/color-toolkit.html">
 <meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
 <meta property="og:site_name" content="XAVERT">
 
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="XAVERT | Color Toolkit">
-<meta name="twitter:description" content="Convert, generate and analyze colors directly in your browser.">
+<meta name="twitter:description" content="Convert HEX, RGB and HSL colors, generate palettes and check accessibility contrast.">
 <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
 
 <script type="application/ld+json">
 {
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Color Toolkit",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/color-toolkit.html",
-  "description":"Convert HEX, RGB and HSL colors, generate random colors, create palettes and check color contrast directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Which color formats are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The toolkit supports HEX, RGB and HSL color formats."
-      }
+    "@context":"https://schema.org",
+    "@type":"WebApplication",
+    "name":"Color Toolkit",
+    "applicationCategory":"DeveloperApplication",
+    "operatingSystem":"Any",
+    "browserRequirements":"Requires JavaScript",
+    "url":"https://xavert.com/tools/color-toolkit.html",
+    "description":"Convert HEX, RGB and HSL colors, generate random colors, create palettes and analyze accessibility directly in your browser.",
+    "inLanguage":"en",
+    "isAccessibleForFree":true,
+    "offers":{
+        "@type":"Offer",
+        "price":"0",
+        "priceCurrency":"USD"
     },
-    {
-      "@type":"Question",
-      "name":"Is my data uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All color processing happens locally in your browser."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I check WCAG accessibility?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The Contrast Checker evaluates WCAG AA and AAA color contrast compliance."
-      }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I generate color palettes?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The toolkit can generate, save and download color palettes."
-      }
+    "publisher":{
+        "@type":"Organization",
+        "name":"XAVERT"
     }
-  ]
 }
 </script>
 
-<style>
-.success-banner{
-  background:#ecfdf5;
-  border:1px solid #a7f3d0;
-  border-radius:12px;
-  padding:14px;
-  margin-bottom:20px;
-  text-align:center;
-  font-size:14px;
-  font-weight:700;
-  color:#047857;
-}
-
-.tool-section{
-  display:none;
-}
-
-.tool-section.active{
-  display:block;
-}
-
-.color-preview{
-  width:100%;
-  height:120px;
-  margin-top:16px;
-  background:#ffffff;
-  border:1px solid #d1d5db;
-  border-radius:12px;
-}
-</style>
 </head>
 
 <body data-tool="color-toolkit">
@@ -137,212 +71,438 @@
 <main class="container">
 
 <a href="../index.html" class="back-link">
-  ← Back to Home
+    ← Back to Home
 </a>
 
 <section class="hero">
 
 <img
-  src="../logo-hero.svg"
-  alt="XAVERT"
-  class="tool-logo"
-  width="210"
-  height="210"
-  fetchpriority="high"
-  decoding="async"
->
+    src="../logo-hero.svg"
+    alt="XAVERT"
+    class="tool-logo"
+    width="210"
+    height="210"
+    fetchpriority="high"
+    decoding="async">
 
 <h1 id="tool-title" class="tool-title">
-  Color Toolkit
+    Color Toolkit
 </h1>
 
+<p class="tool-description">
+    Convert, generate and analyze colors with professional browser-based tools. Everything runs locally and no data is uploaded.
+</p>
+
 </section>
-<div class="success-banner">
-All color conversions and analysis are performed locally in your browser. Saved palettes are stored only in your browser and are never uploaded.
-</div>
+
 <section class="tool-card" aria-labelledby="tool-title">
 
-<label for="toolSelector">Select Tool</label>
+<div class="tool-notice">
 
-<select id="toolSelector">
-<option value="converter">Color Format Converter</option>
-<option value="generator">Random Color Generator</option>
-<option value="contrast">Contrast Checker</option>
-<option value="palette">Palette Generator</option>
-</select>
+<strong>Privacy:</strong>
+All conversions, palette generation and contrast analysis are processed entirely inside your browser. Nothing is uploaded to any server.
 
 </div>
 
-<div class="card tool-section active" id="converterTool">
+<label for="toolSelector">
+Choose a Tool
+</label>
+
+<select id="toolSelector">
+
+<option value="converter">
+Color Format Converter
+</option>
+
+<option value="generator">
+Random Color Generator
+</option>
+
+<option value="contrast">
+Contrast Checker
+</option>
+
+<option value="palette">
+Palette Generator
+</option>
+
+</select>
+<div class="tool-section active" id="converterTool">
+
+<div class="card">
 
 <h2>Color Format Converter</h2>
 
-<label for="colorFormat">Input Format</label>
+<p class="tool-intro">
+Convert colors instantly between HEX, RGB and HSL formats.
+</p>
+
+<label for="colorFormat">
+Input Format
+</label>
+
 <select id="colorFormat">
-  <option value="hex">HEX</option>
-  <option value="rgb">RGB</option>
-  <option value="hsl">HSL</option>
+
+<option value="hex">HEX</option>
+<option value="rgb">RGB</option>
+<option value="hsl">HSL</option>
+
 </select>
 
-<label for="colorInput">Color Value</label>
-<input
-  type="text"
-  id="colorInput"
-  placeholder="#FF5733"
-  spellcheck="false"
-  autocomplete="off"
-  autocapitalize="off"
-  aria-describedby="colorInputHint">
+<label for="colorInput">
+Color Value
+</label>
 
-<p id="colorInputHint" class="input-hint">
-  Example: #FF5733
-</p>
+<input
+type="text"
+id="colorInput"
+placeholder="#FF5733"
+autocomplete="off"
+spellcheck="false">
+
 <div class="button-group">
 
-<button class="btn" type="button" onclick="convertColor()">
+<button
+id="convertBtn"
+class="btn"
+type="button">
+
 Convert
+
 </button>
 
-<button class="btn" type="button" onclick="clearCurrentTool()">
+<button
+id="copyHexBtn"
+class="btn btn-secondary"
+type="button">
+
+Copy HEX
+
+</button>
+
+<button
+id="copyRgbBtn"
+class="btn btn-secondary"
+type="button">
+
+Copy RGB
+
+</button>
+
+<button
+id="copyHslBtn"
+class="btn btn-secondary"
+type="button">
+
+Copy HSL
+
+</button>
+
+<button
+id="clearConverterBtn"
+class="btn btn-secondary"
+type="button">
+
 Clear
+
 </button>
 
 </div>
 
+<div id="converterMessage" class="message"></div>
 
-<div id="converterMessage" class="message" aria-live="polite"></div>
 <div id="converterResult" class="result-box"></div>
 
 <div id="converterPreview" class="color-preview"></div>
 
 </div>
 
-<div class="card tool-section" id="generatorTool">
+</div>
+
+<div class="tool-section" id="generatorTool">
+
+<div class="card">
 
 <h2>Random Color Generator</h2>
 
+<p class="tool-intro">
+
+Generate professional random colors with one click.
+
+</p>
+
 <div class="button-group">
 
-<button class="btn" type="button" onclick="generateRandomColor()">
-Generate Color
+<button
+id="generateBtn"
+class="btn"
+type="button">
+
+Generate
+
 </button>
 
-<button class="btn" type="button" onclick="clearCurrentTool()">
+<button
+id="similarBtn"
+class="btn btn-secondary"
+type="button">
+
+Similar
+
+</button>
+
+<button
+id="complementaryBtn"
+class="btn btn-secondary"
+type="button">
+
+Complementary
+
+</button>
+
+<button
+id="clearGeneratorBtn"
+class="btn btn-secondary"
+type="button">
+
 Clear
+
 </button>
 
 </div>
 
-<div id="generatorMessage" class="message" aria-live="polite"></div>
+<div id="generatorMessage" class="message"></div>
+
 <div id="generatorResult" class="result-box"></div>
 
 <div id="generatorPreview" class="color-preview"></div>
 
 </div>
 
-<div class="card tool-section" id="contrastTool">
+</div>
+
+<div class="tool-section" id="contrastTool">
+
+<div class="card">
 
 <h2>Contrast Checker</h2>
 
-<label for="foregroundColor">Text Color</label>
-<input type="color" id="foregroundColor" value="#000000">
+<p class="tool-intro">
 
-<label for="backgroundColor">Background Color</label>
-<input type="color" id="backgroundColor" value="#ffffff">
+Verify WCAG accessibility compliance between foreground and background colors.
+
+</p>
+
+<label for="foregroundColor">
+
+Foreground Color
+
+</label>
+
+<input
+type="color"
+id="foregroundColor"
+value="#000000">
+
+<label for="backgroundColor">
+
+Background Color
+
+</label>
+
+<input
+type="color"
+id="backgroundColor"
+value="#ffffff">
 
 <div class="button-group">
 
-<button class="btn" type="button" onclick="checkContrast()">
+<button
+id="contrastBtn"
+class="btn"
+type="button">
+
 Check Contrast
+
 </button>
 
-<button class="btn" type="button" onclick="swapContrastColors()">
-Swap Colors
+<button
+id="swapBtn"
+class="btn btn-secondary"
+type="button">
+
+Swap
+
 </button>
 
-<button class="btn" type="button" onclick="clearCurrentTool()">
+<button
+id="clearContrastBtn"
+class="btn btn-secondary"
+type="button">
+
 Clear
+
 </button>
 
 </div>
 
-<div id="contrastMessage" class="message" aria-live="polite"></div>
+<div id="contrastMessage" class="message"></div>
+
 <div id="contrastResult" class="result-box"></div>
 
-<div id="contrastPreview" class="result-box" style="font-size:20px;font-weight:700;text-align:center;">
+<div id="contrastPreview" class="contrast-preview">
+
 Sample Text Preview
+
 </div>
 
 </div>
-<div class="card tool-section" id="paletteTool">
+
+</div>
+
+<div class="tool-section" id="paletteTool">
+
+<div class="card">
 
 <h2>Palette Generator</h2>
 
-<label for="paletteColor">Base Color</label>
-<input type="color" id="paletteColor" value="#FF5733">
+<p class="tool-intro">
+
+Generate beautiful palettes starting from any base color.
+
+</p>
+
+<label for="paletteColor">
+
+Base Color
+
+</label>
+
+<input
+type="color"
+id="paletteColor"
+value="#ff5733">
+
+<label for="paletteType">
+
+Palette Type
+
+</label>
+
+<select id="paletteType">
+
+<option value="analogous">
+
+Analogous
+
+</option>
+
+<option value="complementary">
+
+Complementary
+
+</option>
+
+<option value="triadic">
+
+Triadic
+
+</option>
+
+<option value="split">
+
+Split Complementary
+
+</option>
+
+<option value="tetradic">
+
+Tetradic
+
+</option>
+
+<option value="monochromatic">
+
+Monochromatic
+
+</option>
+
+</select>
 
 <div class="button-group">
 
-<button class="btn" type="button" onclick="generatePalette()">
+<button
+id="generatePaletteBtn"
+class="btn"
+type="button">
+
 Generate Palette
+
 </button>
 
-<button class="btn" type="button" onclick="clearCurrentTool()">
+<button
+id="savePaletteBtn"
+class="btn btn-secondary"
+type="button">
+
+Save
+
+</button>
+
+<button
+id="downloadPaletteBtn"
+class="btn btn-secondary"
+type="button">
+
+Download
+
+</button>
+
+<button
+id="clearPaletteBtn"
+class="btn btn-secondary"
+type="button">
+
 Clear
+
 </button>
 
 </div>
 
-<div id="paletteMessage" class="message" aria-live="polite"></div>
-<div id="paletteResult" class="result-box"></div>
-<div id="savedPalettes" class="result-box"></div>
+<div id="paletteMessage" class="message"></div>
+
+<div id="paletteResult" class="palette-grid"></div>
+
+<div id="savedPalettes" class="saved-palettes"></div>
+
+</div>
+
+</div>
 </section>
+
 <section class="info about-card">
 
-<h2>
-  About
-</h2>
+<h2>About</h2>
 
 <p class="about-intro">
-  Color Toolkit provides a collection of color utilities for designers, developers and digital creators. Convert color formats, generate palettes, analyze accessibility and create random colors directly in your browser.
+Color Toolkit is a complete browser-based utility for converting, generating and analyzing colors. It is designed for developers, designers and digital creators who need accurate color values, accessible contrast checks and practical palette generation.
 </p>
 
 <ul>
-<li>Convert HEX, RGB and HSL color formats.</li>
-<li>Generate random colors instantly.</li>
-<li>Create matching color palettes.</li>
-<li>Check WCAG color contrast ratios.</li>
-<li>Everything runs locally in your browser.</li>
-</ul>
-
-</section>
-<section class="info">
-
-<h2>Color Toolkit FAQ</h2>
-
-<p>
-Common questions about using the XAVERT Color Toolkit.
-</p>
-
-<ul>
-
-<li><strong>Which color formats are supported?</strong> HEX, RGB and HSL.</li>
-
-<li><strong>Does this tool upload my colors?</strong> No. Everything is processed locally.</li>
-
-<li><strong>Can I check accessibility?</strong> Yes. The Contrast Checker evaluates WCAG AA and AAA compliance.</li>
-
-<li><strong>Can I generate color palettes?</strong> Yes. The toolkit can generate and save palettes directly in your browser.</li>
-
+<li>Convert colors between HEX, RGB and HSL formats.</li>
+<li>Generate random, similar and complementary colors.</li>
+<li>Check WCAG contrast ratios and accessibility levels.</li>
+<li>Create multiple types of color harmonies and palettes.</li>
+<li>Save palettes locally in your browser.</li>
+<li>Download generated palettes for later use.</li>
+<li>Process all color data locally without uploading anything.</li>
 </ul>
 
 </section>
 
 <section class="info" hidden>
 
-<h2>
-  Related Tools
-</h2>
+<h2>Related Tools</h2>
 
 <div id="related-tools"></div>
 
@@ -353,6 +513,14 @@ Common questions about using the XAVERT Color Toolkit.
 <footer class="xavert-footer-note">
 Powered by XAVERT
 </footer>
-  
+
+<div
+id="toast"
+class="toast"
+role="status"
+aria-live="polite"
+aria-atomic="true">
+</div>
+
 </body>
 </html>
