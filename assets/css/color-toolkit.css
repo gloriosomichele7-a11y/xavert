@@ -176,3 +176,235 @@
     margin-bottom:0;
 
 }
+.tool-intro:last-child{
+    margin-bottom:0;
+}
+/* ==========================================================
+   COLOR PREVIEWS
+   ========================================================== */
+/* ==========================================================
+   RESPONSIVE
+   ========================================================== */
+
+@media (max-width:1200px){
+
+    .palette-grid{
+
+        grid-template-columns:repeat(4,minmax(0,1fr));
+
+    }
+
+}
+
+@media (max-width:992px){
+
+    .color-values,
+
+    .generated-color-details{
+
+        grid-template-columns:repeat(2,minmax(0,1fr));
+
+    }
+
+    .palette-grid{
+
+        grid-template-columns:repeat(3,minmax(0,1fr));
+
+    }
+
+    .saved-palette-colors{
+
+        grid-template-columns:repeat(5,minmax(0,1fr));
+
+    }
+
+}
+
+@media (max-width:768px){
+
+    .button-group{
+
+        flex-direction:column;
+
+    }
+
+    .button-group .btn{
+
+        width:100%;
+
+        flex:none;
+
+    }
+
+    .color-values,
+
+    .generated-color-details,
+
+    .contrast-tests{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .contrast-summary{
+
+        grid-template-columns:1fr;
+
+        text-align:center;
+
+    }
+
+    .palette-grid{
+
+        grid-template-columns:repeat(2,minmax(0,1fr));
+
+    }
+
+    .saved-palette-header{
+
+        flex-direction:column;
+
+        align-items:flex-start;
+
+    }
+
+}
+
+@media (max-width:576px){
+
+    .tool-notice{
+
+        padding:16px;
+
+        font-size:14px;
+
+    }
+
+    .tool-intro{
+
+        font-size:14px;
+
+    }
+
+    .color-preview,
+
+    .contrast-preview{
+
+        min-height:120px;
+
+        padding:18px;
+
+    }
+
+    .contrast-preview{
+
+        font-size:18px;
+
+    }
+
+    .contrast-ratio{
+
+        font-size:24px;
+
+    }
+
+    .palette-grid{
+
+        grid-template-columns:1fr;
+
+    }
+
+    .saved-palette-colors{
+
+        grid-template-columns:repeat(5,1fr);
+
+    }
+
+}
+
+/* ==========================================================
+   LIGHT ANIMATIONS
+   ========================================================== */
+
+.palette-color,
+
+.color-value,
+
+.generated-color-item,
+
+.saved-palette{
+
+    transition:
+        transform .18s ease,
+        box-shadow .18s ease,
+        border-color .18s ease;
+
+}
+
+.palette-color:hover,
+
+.color-value:hover,
+
+.generated-color-item:hover,
+
+.saved-palette:hover{
+
+    transform:translateY(-2px);
+
+    box-shadow:0 10px 24px rgba(17,24,39,.08);
+
+    border-color:#d1d5db;
+
+}
+
+/* ==========================================================
+   PRINT
+   ========================================================== */
+
+@media print{
+
+    .back-link,
+
+    .button-group,
+
+    #toolSelector,
+
+    .tool-notice,
+
+    footer,
+
+    #related-tools{
+
+        display:none !important;
+
+    }
+
+    body{
+
+        background:#ffffff;
+
+    }
+
+    .tool-section{
+
+        display:block !important;
+
+    }
+
+    .card{
+
+        break-inside:avoid;
+
+        page-break-inside:avoid;
+
+        box-shadow:none;
+
+        border:1px solid #d1d5db;
+
+    }
+
+}
+
+/* ==========================================================
+   END OF FILE
+   ========================================================== */
