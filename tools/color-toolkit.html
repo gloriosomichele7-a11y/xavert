@@ -1,526 +1,603 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | Color Toolkit</title>
-
-<meta name="description" content="Free online Color Toolkit to convert HEX, RGB and HSL colors, generate random colors, create color palettes and check WCAG contrast ratios directly in your browser.">
-
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<link rel="canonical" href="https://xavert.com/tools/color-toolkit.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
-<link rel="stylesheet" href="../assets/css/global.css">
-    
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<script src="../assets/js/color-toolkit.js" defer></script>
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Color Toolkit">
-<meta property="og:description" content="Convert, generate and analyze colors directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/color-toolkit.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Color Toolkit">
-<meta name="twitter:description" content="Convert HEX, RGB and HSL colors, generate palettes and check accessibility contrast.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-    "@context":"https://schema.org",
-    "@type":"WebApplication",
-    "name":"Color Toolkit",
-    "applicationCategory":"DeveloperApplication",
-    "operatingSystem":"Any",
-    "browserRequirements":"Requires JavaScript",
-    "url":"https://xavert.com/tools/color-toolkit.html",
-    "description":"Convert HEX, RGB and HSL colors, generate random colors, create palettes and analyze accessibility directly in your browser.",
-    "inLanguage":"en",
-    "isAccessibleForFree":true,
-    "offers":{
-        "@type":"Offer",
-        "price":"0",
-        "priceCurrency":"USD"
-    },
-    "publisher":{
-        "@type":"Organization",
-        "name":"XAVERT"
-    }
-}
-</script>
-
-</head>
-
-<body data-tool="color-toolkit">
-
-<main class="container">
-
-<a href="../index.html" class="back-link">
-    ← Back to Home
-</a>
-
-<section class="hero">
-
-<img
-    src="../logo-hero.svg"
-    alt="XAVERT"
-    class="tool-logo"
-    width="210"
-    height="210"
-    fetchpriority="high"
-    decoding="async">
-
-<h1 id="tool-title" class="tool-title">
-    Color Toolkit
-</h1>
-
-<p class="tool-description">
-    Convert, generate and analyze colors with professional browser-based tools. Everything runs locally and no data is uploaded.
-</p>
-
-</section>
-
-<section class="tool-card" aria-labelledby="tool-title">
-
-<div class="tool-notice">
-
-<strong>Privacy:</strong>
-All conversions, palette generation and contrast analysis are processed entirely inside your browser. Nothing is uploaded to any server.
-
-</div>
-
-<label for="toolSelector">
-Choose a Tool
-</label>
-
-<select id="toolSelector">
-
-<option value="converter">
-Color Format Converter
-</option>
-
-<option value="generator">
-Random Color Generator
-</option>
-
-<option value="contrast">
-Contrast Checker
-</option>
-
-<option value="palette">
-Palette Generator
-</option>
-
-</select>
-<div class="tool-section active" id="converterTool">
-
-<div class="card">
-
-<h2>Color Format Converter</h2>
-
-<p class="tool-intro">
-Convert colors instantly between HEX, RGB and HSL formats.
-</p>
-
-<label for="colorFormat">
-Input Format
-</label>
-
-<select id="colorFormat">
-
-<option value="hex">HEX</option>
-<option value="rgb">RGB</option>
-<option value="hsl">HSL</option>
-
-</select>
-
-<label for="colorInput">
-Color Value
-</label>
-
-<input
-type="text"
-id="colorInput"
-placeholder="#FF5733"
-autocomplete="off"
-spellcheck="false">
-
-<div class="button-group">
-
-<button
-id="convertBtn"
-class="btn"
-type="button">
-
-Convert
-
-</button>
-
-<button
-id="copyHexBtn"
-class="btn btn-secondary"
-type="button">
-
-Copy HEX
-
-</button>
-
-<button
-id="copyRgbBtn"
-class="btn btn-secondary"
-type="button">
-
-Copy RGB
-
-</button>
-
-<button
-id="copyHslBtn"
-class="btn btn-secondary"
-type="button">
-
-Copy HSL
-
-</button>
-
-<button
-id="clearConverterBtn"
-class="btn btn-secondary"
-type="button">
-
-Clear
-
-</button>
-
-</div>
-
-<div id="converterMessage" class="message"></div>
-
-<div id="converterResult" class="result-box"></div>
-
-<div id="converterPreview" class="color-preview"></div>
-
-</div>
-
-</div>
-
-<div class="tool-section" id="generatorTool">
-
-<div class="card">
-
-<h2>Random Color Generator</h2>
-
-<p class="tool-intro">
-
-Generate professional random colors with one click.
-
-</p>
-
-<div class="button-group">
-
-<button
-id="generateBtn"
-class="btn"
-type="button">
-
-Generate
-
-</button>
-
-<button
-id="similarBtn"
-class="btn btn-secondary"
-type="button">
-
-Similar
-
-</button>
-
-<button
-id="complementaryBtn"
-class="btn btn-secondary"
-type="button">
-
-Complementary
-
-</button>
-
-<button
-id="clearGeneratorBtn"
-class="btn btn-secondary"
-type="button">
-
-Clear
-
-</button>
-
-</div>
-
-<div id="generatorMessage" class="message"></div>
-
-<div id="generatorResult" class="result-box"></div>
-
-<div id="generatorPreview" class="color-preview"></div>
-
-</div>
-
-</div>
-
-<div class="tool-section" id="contrastTool">
-
-<div class="card">
-
-<h2>Contrast Checker</h2>
-
-<p class="tool-intro">
-
-Verify WCAG accessibility compliance between foreground and background colors.
-
-</p>
-
-<label for="foregroundColor">
-
-Foreground Color
-
-</label>
-
-<input
-type="color"
-id="foregroundColor"
-value="#000000">
-
-<label for="backgroundColor">
-
-Background Color
-
-</label>
-
-<input
-type="color"
-id="backgroundColor"
-value="#ffffff">
-
-<div class="button-group">
-
-<button
-id="contrastBtn"
-class="btn"
-type="button">
-
-Check Contrast
-
-</button>
-
-<button
-id="swapBtn"
-class="btn btn-secondary"
-type="button">
-
-Swap
-
-</button>
-
-<button
-id="clearContrastBtn"
-class="btn btn-secondary"
-type="button">
-
-Clear
-
-</button>
-
-</div>
-
-<div id="contrastMessage" class="message"></div>
-
-<div id="contrastResult" class="result-box"></div>
-
-<div id="contrastPreview" class="contrast-preview">
-
-Sample Text Preview
-
-</div>
-
-</div>
-
-</div>
-
-<div class="tool-section" id="paletteTool">
-
-<div class="card">
-
-<h2>Palette Generator</h2>
-
-<p class="tool-intro">
-
-Generate beautiful palettes starting from any base color.
-
-</p>
-
-<label for="paletteColor">
-
-Base Color
-
-</label>
-
-<input
-type="color"
-id="paletteColor"
-value="#ff5733">
-
-<label for="paletteType">
-
-Palette Type
-
-</label>
-
-<select id="paletteType">
-
-<option value="analogous">
-
-Analogous
-
-</option>
-
-<option value="complementary">
-
-Complementary
-
-</option>
-
-<option value="triadic">
-
-Triadic
-
-</option>
-
-<option value="split">
-
-Split Complementary
-
-</option>
-
-<option value="tetradic">
-
-Tetradic
-
-</option>
-
-<option value="monochromatic">
-
-Monochromatic
-
-</option>
-
-</select>
-
-<div class="button-group">
-
-<button
-id="generatePaletteBtn"
-class="btn"
-type="button">
-
-Generate Palette
-
-</button>
-
-<button
-id="savePaletteBtn"
-class="btn btn-secondary"
-type="button">
-
-Save
-
-</button>
-
-<button
-id="downloadPaletteBtn"
-class="btn btn-secondary"
-type="button">
-
-Download
-
-</button>
-
-<button
-id="clearPaletteBtn"
-class="btn btn-secondary"
-type="button">
-
-Clear
-
-</button>
-
-</div>
-
-<div id="paletteMessage" class="message"></div>
-
-<div id="paletteResult" class="palette-grid"></div>
-
-<div id="savedPalettes" class="saved-palettes"></div>
-
-</div>
-
-</div>
-</section>
-
-<section class="info about-card">
-
-<h2>About</h2>
-
-<p class="about-intro">
-Color Toolkit is a complete browser-based utility for converting, generating and analyzing colors. It is designed for developers, designers and digital creators who need accurate color values, accessible contrast checks and practical palette generation.
-</p>
-
-<ul>
-<li>Convert colors between HEX, RGB and HSL formats.</li>
-<li>Generate random, similar and complementary colors.</li>
-<li>Check WCAG contrast ratios and accessibility levels.</li>
-<li>Create multiple types of color harmonies and palettes.</li>
-<li>Save palettes locally in your browser.</li>
-<li>Download generated palettes for later use.</li>
-<li>Process all color data locally without uploading anything.</li>
-</ul>
-
-</section>
-
-<section class="info" hidden>
-
-<h2>Related Tools</h2>
-
-<div id="related-tools"></div>
-
-</section>
-
-</main>
-
-<footer class="xavert-footer-note">
-Powered by XAVERT
-</footer>
-
-<div
-id="toast"
-class="xavert-toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"
-aria-hidden="true">
-</div>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Color Toolkit</title>
+
+    <meta
+      name="description"
+      content="Convert HEX, RGB and HSL colors, generate random colors, create professional palettes and check WCAG contrast ratios directly in your browser."
+    />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/color-toolkit.html" />
+
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+
+    <link rel="stylesheet" href="../assets/css/components.css" />
+
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Color Toolkit" />
+
+    <meta
+      property="og:description"
+      content="Convert colors, generate palettes and check WCAG contrast directly in your browser."
+    />
+
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/color-toolkit.html"
+    />
+
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Color Toolkit" />
+
+    <meta
+      name="twitter:description"
+      content="Convert colors, generate palettes and check WCAG contrast directly in your browser."
+    />
+
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Color Toolkit",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/color-toolkit.html",
+        "description": "Convert HEX, RGB and HSL colors, generate random colors, create professional palettes and check WCAG contrast ratios directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
+      }
+    </script>
+
+    <style>
+      .color-actions {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .preview-box {
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .preview-box h2 {
+        margin: 0 0 18px;
+        font-size: 22px;
+      }
+
+      .color-preview {
+        display: flex;
+        width: 110px;
+        height: 110px;
+        margin: 0 auto;
+        padding: 14px;
+        border: 6px solid #ffffff;
+        border-radius: 50%;
+        box-shadow:
+          0 0 0 1px #e5e7eb,
+          0 8px 22px rgba(15, 23, 42, 0.12);
+        align-items: center;
+        justify-content: center;
+        color: #111827;
+        font-size: 13px;
+        font-weight: 800;
+        line-height: 1.3;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+
+      .color-values {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .color-value {
+        min-width: 0;
+        padding: 14px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        text-align: left;
+      }
+
+      .color-value strong {
+        display: block;
+        margin-bottom: 5px;
+        color: #6b7280;
+        font-size: 12px;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+      }
+
+      .color-value code {
+        display: block;
+        color: #111827;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      .contrast-tests {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .contrast-test {
+        display: flex;
+        padding: 13px 14px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 11px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        font-size: 14px;
+        text-align: left;
+      }
+
+      .contrast-pass {
+        color: #047857;
+      }
+
+      .contrast-fail {
+        color: #b91c1c;
+      }
+
+      .palette-grid {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .palette-color {
+        overflow: hidden;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+      }
+
+      .palette-swatch {
+        display: flex;
+        width: 100%;
+        min-height: 120px;
+        padding: 12px;
+        border: 0;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+      }
+
+      .palette-swatch span {
+        padding: 6px 9px;
+        background: rgba(255, 255, 255, 0.9);
+        border: 1px solid rgba(17, 24, 39, 0.12);
+        border-radius: 999px;
+        color: #111827;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .palette-meta {
+        padding: 11px;
+        font-family: monospace;
+        font-size: 13px;
+        text-align: center;
+      }
+
+      .saved-palettes {
+        display: grid;
+        gap: 14px;
+        margin-top: 20px;
+      }
+
+      .saved-palettes:empty {
+        display: none;
+      }
+
+      .saved-palette {
+        padding: 14px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+      }
+
+      .saved-palette-header {
+        display: flex;
+        margin-bottom: 10px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .saved-palette-colors {
+        display: grid;
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+      }
+
+      .saved-palette-color {
+        min-height: 52px;
+        border: 0;
+        cursor: pointer;
+      }
+
+      @media (max-width: 992px) {
+        .color-actions {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .palette-grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .color-actions {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .color-values,
+        .contrast-tests {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .color-actions {
+          grid-template-columns: 1fr;
+        }
+
+        .palette-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .color-preview {
+          padding: 14px;
+        }
+        .saved-palette-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+      }
+
+      .field-help {
+        margin: 8px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+      input[type="color"] {
+        height: 54px;
+        padding: 5px;
+        border-radius: 12px;
+        cursor: pointer;
+      }
+
+      input[type="color"]::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      input[type="color"]::-webkit-color-swatch {
+        border: 0;
+        border-radius: 8px;
+      }
+
+      input[type="color"]::-moz-color-swatch {
+        border: 0;
+        border-radius: 8px;
+      }
+
+      #paletteColor,
+      #foregroundColor,
+      #backgroundColor {
+        width: 72px;
+        min-width: 72px;
+      }
+
+      #paletteColor {
+        width: 58px;
+        min-width: 58px;
+        height: 58px;
+        padding: 4px;
+        border-radius: 50%;
+      }
+
+      #paletteColor::-webkit-color-swatch-wrapper {
+        padding: 0;
+      }
+
+      #paletteColor::-webkit-color-swatch {
+        border: 0;
+        border-radius: 50%;
+      }
+
+      #paletteColor::-moz-color-swatch {
+        border: 0;
+        border-radius: 50%;
+      }
+
+      @media (max-width: 420px) {
+        .palette-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+
+    <script src="../assets/js/color-toolkit.js" defer></script>
+  </head>
+
+  <body
+    data-tool="color-toolkit"
+    data-related-tools="color-palette-extractor,image-toolkit,css-minifier"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link"> ← Back to Home </a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Color Toolkit</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="color-workspace-title">
+        <header class="tool-card-header">
+          <h2 id="color-workspace-title" class="tool-card-title">
+            Color Workspace
+          </h2>
+          <p class="tool-card-description">
+            Choose a color utility and work with conversions, contrast,
+            generated colors or palettes.
+          </p>
+        </header>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="toolSelector"> Color Tool </label>
+
+            <select id="toolSelector">
+              <option value="converter">Color Format Converter</option>
+              <option value="generator">Random Color Generator</option>
+              <option value="contrast">Contrast Checker</option>
+              <option value="palette">Palette Generator</option>
+            </select>
+            <p class="field-help">
+              Choose the color utility you want to use. The available controls
+              and actions update automatically.
+            </p>
+          </div>
+
+          <div class="form-group" id="formatGroup">
+            <label for="colorFormat"> Input format </label>
+
+            <select id="colorFormat">
+              <option value="hex">HEX</option>
+              <option value="rgb">RGB</option>
+              <option value="hsl">HSL</option>
+            </select>
+          </div>
+
+          <div class="form-group" id="valueGroup">
+            <label for="colorInput"> Color value </label>
+
+            <input
+              type="text"
+              id="colorInput"
+              placeholder="#FF5733"
+              autocomplete="off"
+              autocapitalize="off"
+              spellcheck="false"
+            />
+          </div>
+
+          <div class="form-group" id="foregroundGroup" hidden>
+            <label for="foregroundColor">Foreground color</label>
+            <input type="color" id="foregroundColor" value="#000000" />
+            <input
+              type="text"
+              id="foregroundHex"
+              value="#000000"
+              maxlength="7"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Foreground HEX value"
+            />
+          </div>
+
+          <div class="form-group" id="backgroundGroup" hidden>
+            <label for="backgroundColor">Background color</label>
+            <input type="color" id="backgroundColor" value="#ffffff" />
+            <input
+              type="text"
+              id="backgroundHex"
+              value="#FFFFFF"
+              maxlength="7"
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Background HEX value"
+            />
+          </div>
+
+          <div class="form-group" id="paletteColorGroup" hidden>
+            <label for="paletteColor"> Base color </label>
+
+            <input type="color" id="paletteColor" value="#ff5733" />
+          </div>
+
+          <div class="form-group" id="paletteTypeGroup" hidden>
+            <label for="paletteType"> Palette type </label>
+
+            <select id="paletteType">
+              <option value="analogous">Analogous</option>
+              <option value="complementary">Complementary</option>
+              <option value="triadic">Triadic</option>
+              <option value="split">Split Complementary</option>
+              <option value="tetradic">Tetradic</option>
+              <option value="monochromatic">Monochromatic</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-grid color-actions">
+          <button id="primaryBtn" class="btn" type="button" data-primary-action>
+            Convert
+          </button>
+
+          <button id="secondaryBtn1" class="btn btn-secondary" type="button">
+            Copy HEX
+          </button>
+
+          <button id="secondaryBtn2" class="btn btn-secondary" type="button">
+            Copy RGB
+          </button>
+
+          <button id="secondaryBtn3" class="btn btn-secondary" type="button">
+            Copy HSL
+          </button>
+
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+
+          <button
+            id="sampleBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-sample-loader
+          >
+            Load Sample
+          </button>
+        </div>
+
+        <div
+          class="card preview-box"
+          id="previewBox"
+          aria-labelledby="previewTitle"
+          hidden
+        >
+          <h2 id="previewTitle">Color Preview</h2>
+
+          <div id="previewContent"></div>
+        </div>
+
+        <div
+          class="message"
+          id="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Color Toolkit provides professional browser-based color
+          utilities for developers, designers and digital creators.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Convert colors accurately between HEX, RGB and HSL formats.</li>
+          <li>Generate random, similar and complementary colors.</li>
+          <li>
+            Use cryptographically secure random color generation when supported
+            by the browser.
+          </li>
+          <li>
+            Check WCAG AA and AAA contrast compliance for normal and large text.
+          </li>
+          <li>
+            Create analogous, complementary, triadic, split-complementary,
+            tetradic and monochromatic palettes.
+          </li>
+          <li>Copy color values directly to the clipboard.</li>
+          <li>Save palettes locally and download them as TXT files.</li>
+          <li>
+            Enter exact HEX values when checking foreground/background contrast.
+          </li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your colors and
+          saved palettes are never uploaded, transmitted, shared or stored on
+          any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

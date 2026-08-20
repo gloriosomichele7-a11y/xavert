@@ -1,780 +1,344 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | Open Graph Generator</title>
+    <title>XAVERT | Open Graph Generator</title>
 
-<meta name="description" content="Free online Open Graph Generator to create Open Graph meta tags, Twitter Card tags and social sharing previews directly in your browser. Generate social media preview tags instantly.">
+    <meta
+      name="description"
+      content="Generate Open Graph and Twitter Card tags with a live social sharing preview directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/open-graph-generator.html">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/open-graph-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Open Graph Generator">
-<meta property="og:description" content="Generate Open Graph tags, Twitter Card tags and social sharing previews directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/open-graph-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Open Graph Generator">
-<meta name="twitter:description" content="Generate Open Graph and Twitter Card tags locally in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Open Graph Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/open-graph-generator.html",
-  "description":"Generate Open Graph and Twitter Card meta tags directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my Open Graph tags uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All tags are generated locally inside your browser."
+    <style>
+      .og-output {
+        min-height: 280px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which tags can this tool generate?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool generates Open Graph and Twitter Card meta tags for social sharing."
+
+      .og-counter {
+        margin-top: 6px;
+        font-size: 13px;
+        font-weight: 700;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I copy or download the generated tags?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can copy the generated HTML or download it as an HTML snippet."
+
+      .og-counter-good {
+        color: #047857;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-input,
-textarea,
-select{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-
-textarea{
-min-height:110px;
-resize:vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.output{
-min-height:270px;
-font-family:monospace;
-font-size:13px;
-line-height:1.6;
-}
-
-.preview-card{
-margin-top:16px;
-border:1px solid #d1d5db;
-border-radius:14px;
-overflow:hidden;
-background:#ffffff;
-}
-
-.preview-image{
-height:180px;
-background:#e5e7eb;
-display:flex;
-align-items:center;
-justify-content:center;
-color:#6b7280;
-font-size:14px;
-text-align:center;
-background-size:cover;
-background-position:center;
-}
-
-.preview-content{
-padding:14px;
-}
-
-.preview-domain{
-font-size:12px;
-color:#6b7280;
-text-transform:uppercase;
-margin-bottom:6px;
-}
-
-.preview-title{
-font-size:18px;
-font-weight:800;
-line-height:1.35;
-margin-bottom:6px;
-}
-
-.preview-description{
-font-size:14px;
-color:#4b5563;
-line-height:1.5;
-}
-
-.counter{
-font-size:13px;
-color:#6b7280;
-margin-top:6px;
-}
-
-.good{color:#047857;}
-.warn{color:#d97706;}
-.bad{color:#dc2626;}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-
-.footer-note{
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-}
-  
-.success{color:#047857;}
-.error{color:#dc2626;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-
-@media(max-width:900px){
-.grid{
-grid-template-columns:1fr;
-}
-}
-
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-h1{font-size:34px;}
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Open Graph Generator</h1>
-
-<p class="subtitle">
-Create Open Graph and Twitter Card tags for better social media sharing.
-</p>
-<div class="success-banner">
-✓ Open Graph tags are generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label for="pageTitle">OG Title</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleOg();return false;">Load Sample Open Graph</a>
-</div>
-
-<input id="pageTitle" type="text" placeholder="Example: XAVERT | Free Online Tools">
-<div id="titleCounter" class="counter">0 characters</div>
-
-<label for="pageDescription">OG Description</label>
-<textarea id="pageDescription" placeholder="Write a short social sharing description..."></textarea>
-<div id="descriptionCounter" class="counter">0 characters</div>
-
-<label for="pageUrl">Page URL</label>
-<input id="pageUrl" type="url" placeholder="https://example.com/page">
-
-<label for="imageUrl">OG Image URL</label>
-<input id="imageUrl" type="url" placeholder="https://example.com/social-image.jpg">
-
-<label for="siteName">Site Name</label>
-<input id="siteName" type="text" placeholder="Example: XAVERT">
-
-<label for="ogType">OG Type</label>
-<select id="ogType">
-<option value="website">website</option>
-<option value="article">article</option>
-<option value="profile">profile</option>
-<option value="product">product</option>
-</select>
-
-<label for="twitterCard">Twitter Card</label>
-<select id="twitterCard">
-<option value="summary_large_image">summary_large_image</option>
-<option value="summary">summary</option>
-</select>
-
-<div class="button-group">
-<button onclick="generateTags()">Generate Tags</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-
-<label for="output">Generated HTML</label>
-<textarea id="output" class="output" readonly></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy HTML</button>
-<button onclick="downloadOutput()">Download .html</button>
-</div>
-
-<div class="preview-card">
-<div id="previewImage" class="preview-image">
-Social image preview
-</div>
-
-<div class="preview-content">
-<div id="previewDomain" class="preview-domain">example.com</div>
-<div id="previewTitle" class="preview-title">Your Open Graph title will appear here</div>
-<div id="previewDescription" class="preview-description">Your Open Graph description will appear here.</div>
-</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Are my Open Graph tags uploaded?</h3>
-<p>No. Everything is generated locally inside your browser.</p>
-
-<h3>Which tags are generated?</h3>
-<p>The tool generates Open Graph and Twitter Card tags for social media sharing.</p>
-
-<h3>Can I use the generated HTML on my website?</h3>
-<p>Yes. Copy or download the generated HTML snippet and add it to your website.</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<div id="related-tools"></div>
-
-</section>
-</main>
-<div class="footer-note">
-Powered by XAVERT
-</div>
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const titleInput=document.getElementById("pageTitle");
-const descriptionInput=document.getElementById("pageDescription");
-const urlInput=document.getElementById("pageUrl");
-const imageInput=document.getElementById("imageUrl");
-const siteNameInput=document.getElementById("siteName");
-const ogTypeInput=document.getElementById("ogType");
-const twitterCardInput=document.getElementById("twitterCard");
-const output=document.getElementById("output");
-const toast=document.getElementById("toast");
-
-[
-titleInput,
-descriptionInput,
-urlInput,
-imageInput,
-siteNameInput
-].forEach(input=>{
-input.addEventListener("input",updatePreview);
-});
-
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-generateTags();
-}
-});
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-
-const message=document.getElementById("message");
-
-message.textContent=text;
-message.className="message " + type;
-
-showToast(text,type);
-
-}
-
-function escapeHtml(value){
-
-return value
-.replace(/&/g,"&amp;")
-.replace(/"/g,"&quot;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;");
-
-}
-
-function updateCounter(id,count,type){
-
-const element=document.getElementById(id);
-let status="good";
-
-if(type==="title"){
-if(count<30 || count>70) status="warn";
-if(count>90) status="bad";
-}
-
-if(type==="description"){
-if(count<80 || count>200) status="warn";
-if(count>250) status="bad";
-}
-
-element.textContent=count + " characters";
-element.className="counter " + status;
-
-}
-
-function getDomain(url){
-
-try{
-return new URL(url).hostname.replace("www.","");
-}catch(error){
-return "example.com";
-}
-
-}
-
-function updatePreview(){
-
-const title=titleInput.value.trim();
-const description=descriptionInput.value.trim();
-const url=urlInput.value.trim();
-const image=imageInput.value.trim();
-
-document.getElementById("previewTitle").textContent=
-title || "Your Open Graph title will appear here";
-
-document.getElementById("previewDescription").textContent=
-description || "Your Open Graph description will appear here.";
-
-document.getElementById("previewDomain").textContent=
-url ? getDomain(url) : "example.com";
-
-const previewImage=document.getElementById("previewImage");
-
-if(image){
-previewImage.style.backgroundImage="url('" + image + "')";
-previewImage.textContent="";
-}else{
-previewImage.style.backgroundImage="none";
-previewImage.textContent="Social image preview";
-}
-
-updateCounter("titleCounter",title.length,"title");
-updateCounter("descriptionCounter",description.length,"description");
-
-}
-function loadSampleOg(){
-
-titleInput.value="XAVERT | Privacy-First Browser Tools";
-descriptionInput.value="Use professional online tools that run directly in your browser. No uploads, no accounts and privacy-first processing.";
-urlInput.value="https://xavert.com";
-imageInput.value="https://xavert.com/og-image.jpg";
-siteNameInput.value="XAVERT";
-ogTypeInput.value="website";
-twitterCardInput.value="summary_large_image";
-
-output.value="";
-
-updatePreview();
-
-setMessage("Sample Open Graph data loaded.","success");
-
-}
-function generateTags(){
-
-const title=titleInput.value.trim();
-const description=descriptionInput.value.trim();
-const url=urlInput.value.trim();
-const image=imageInput.value.trim();
-const siteName=siteNameInput.value.trim();
-const ogType=ogTypeInput.value;
-const twitterCard=twitterCardInput.value;
-
-if(!title || !description || !url){
-
-setMessage(
-"Please enter at least title, description and page URL.",
-"error"
-);
-
-return;
-
-}
-
-let tags="";
-
-tags += "<!-- Open Graph -->\n";
-tags += '<meta property="og:title" content="' + escapeHtml(title) + '">\n';
-tags += '<meta property="og:description" content="' + escapeHtml(description) + '">\n';
-tags += '<meta property="og:url" content="' + escapeHtml(url) + '">\n';
-tags += '<meta property="og:type" content="' + escapeHtml(ogType) + '">\n';
-
-if(siteName){
-tags += '<meta property="og:site_name" content="' + escapeHtml(siteName) + '">\n';
-}
-
-if(image){
-tags += '<meta property="og:image" content="' + escapeHtml(image) + '">\n';
-}
-
-tags += "\n<!-- Twitter Card -->\n";
-tags += '<meta name="twitter:card" content="' + escapeHtml(twitterCard) + '">\n';
-tags += '<meta name="twitter:title" content="' + escapeHtml(title) + '">\n';
-tags += '<meta name="twitter:description" content="' + escapeHtml(description) + '">\n';
-
-if(image){
-tags += '<meta name="twitter:image" content="' + escapeHtml(image) + '">\n';
-}
-
-output.value=tags;
-
-updatePreview();
-
-setMessage(
-"Open Graph tags generated successfully.",
-"success"
-);
-
-function copyText(text){
-
-if(!text){
-
-setMessage("Nothing to copy.","error");
-return;
-
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-
-setMessage("Copied.","success");
-
-})
-.catch(function(){
-
-setMessage("Copy failed.","error");
-
-});
-
-}
-
-function copyOutput(){
-copyText(output.value);
-}
-
-function downloadOutput(){
-
-if(!output.value){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([output.value],{
-type:"text/html;charset=utf-8"
-});
-
-const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-link.href=url;
-link.download="xavert-open-graph-snippet.html";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-setTimeout(function(){
-URL.revokeObjectURL(url);
-},1000);
-
-setMessage("Download started.","success");
-
-}
-
-function clearAll(){
-
-titleInput.value="";
-titleInput.focus();
-descriptionInput.value="";
-urlInput.value="";
-imageInput.value="";
-siteNameInput.value="";
-ogTypeInput.value="website";
-twitterCardInput.value="summary_large_image";
-output.value="";
-
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-
-updatePreview();
-
-setMessage("Editor cleared.","success");
-
-}
-
-updatePreview();
-</script>
-
-</body>
+      .og-counter-warn {
+        color: #d97706;
+      }
+      .og-counter-bad {
+        color: #dc2626;
+      }
+
+      .og-preview-card {
+        margin-top: 20px;
+        border: 1px solid #d1d5db;
+        border-radius: 14px;
+        overflow: hidden;
+        background: #ffffff;
+      }
+
+      .og-preview-image {
+        display: flex;
+        min-height: 180px;
+        align-items: center;
+        justify-content: center;
+        background: #e5e7eb;
+        background-position: center;
+        background-size: cover;
+        color: #6b7280;
+        font-size: 14px;
+        text-align: center;
+      }
+
+      .og-preview-content {
+        padding: 14px;
+      }
+
+      .og-preview-domain {
+        margin-bottom: 6px;
+        color: #6b7280;
+        font-size: 12px;
+        text-transform: uppercase;
+      }
+
+      .og-preview-title {
+        margin-bottom: 6px;
+        font-size: 18px;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      .og-preview-description {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .og-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+  </head>
+
+  <body
+    data-tool="open-graph-generator"
+    data-related-tools="meta-tag-generator,html-entity-encoder-decoder,markdown-editor,text-toolkit,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Open Graph Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="og-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="og-workspace-title" class="tool-card-title">
+              Generate Social Sharing Tags
+            </h2>
+
+            <p class="tool-card-description">
+              Create Open Graph and Twitter Card metadata with a live social
+              preview.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="pageTitle">OG Title</label>
+                <input
+                  id="pageTitle"
+                  type="text"
+                  maxlength="200"
+                  placeholder="Example: XAVERT | Free Online Tools"
+                  autocomplete="off"
+                />
+                <div id="titleCounter" class="og-counter">0 characters</div>
+              </div>
+
+              <div class="form-group">
+                <label for="siteName">Site Name</label>
+                <input
+                  id="siteName"
+                  type="text"
+                  maxlength="200"
+                  placeholder="Example: XAVERT"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="pageDescription">OG Description</label>
+                <textarea
+                  id="pageDescription"
+                  maxlength="500"
+                  placeholder="Write a short social sharing description..."
+                ></textarea>
+                <div id="descriptionCounter" class="og-counter">
+                  0 characters
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="pageUrl">Page URL</label>
+                <input
+                  id="pageUrl"
+                  type="url"
+                  placeholder="https://example.com/page"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="imageUrl">OG Image URL</label>
+                <input
+                  id="imageUrl"
+                  type="url"
+                  placeholder="https://example.com/social-image.jpg"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="ogType">OG Type</label>
+                <select id="ogType">
+                  <option value="website">website</option>
+                  <option value="article">article</option>
+                  <option value="profile">profile</option>
+                  <option value="product">product</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="twitterCard">Twitter Card</label>
+                <select id="twitterCard">
+                  <option value="summary_large_image">
+                    summary_large_image
+                  </option>
+                  <option value="summary">summary</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="output">Generated HTML</label>
+                <textarea
+                  id="output"
+                  class="og-output"
+                  readonly
+                  spellcheck="false"
+                  placeholder="Generated Open Graph and Twitter Card tags will appear here"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid og-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate Tags
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="button-grid og-actions">
+              <button id="copyBtn" class="btn" type="button">Copy HTML</button>
+
+              <button id="downloadBtn" class="btn btn-secondary" type="button">
+                Download .html
+              </button>
+            </div>
+
+            <div class="og-preview-card">
+              <div id="previewImage" class="og-preview-image">
+                Social image preview
+              </div>
+
+              <div class="og-preview-content">
+                <div id="previewDomain" class="og-preview-domain">
+                  example.com
+                </div>
+
+                <div id="previewTitle" class="og-preview-title">
+                  Your Open Graph title will appear here
+                </div>
+
+                <div id="previewDescription" class="og-preview-description">
+                  Your Open Graph description will appear here.
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Open Graph Generator creates social sharing metadata
+          directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>
+            Generate Open Graph title, description, URL, type, site name and
+            image tags.
+          </li>
+          <li>Generate Twitter Card title, description and image tags.</li>
+          <li>Preview the social card title, domain, description and image.</li>
+          <li>Validate page and image URLs before generating metadata.</li>
+          <li>Copy or download the generated HTML snippet.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is generated locally within your browser. Your metadata is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script src="../assets/js/open-graph-generator.js"></script>
+  </body>
 </html>

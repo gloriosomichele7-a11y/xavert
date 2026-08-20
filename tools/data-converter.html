@@ -1,1694 +1,361 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Data Converter</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | Data Converter</title>
 
-<meta name="description" content="Free online Data Converter to convert CSV, XLSX, JSON and XML files directly in your browser. Format, minify, validate and export structured data instantly.">
+    <meta
+      name="description"
+      content="Free online Data Converter to convert CSV, XLSX, JSON and XML files directly in your browser. Format, minify, validate and export structured data instantly."
+    />
 
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-<link rel="canonical" href="https://xavert.com/tools/data-converter.html">
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+    <link rel="canonical" href="https://xavert.com/tools/data-converter.html" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Data Converter">
-<meta property="og:description" content="Convert CSV, XLSX, JSON and XML files directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/data-converter.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/vendor/xlsx.full.min.js" defer></script>
+  <script src="../assets/js/data-converter.js" defer></script>
+    
+    <!-- Open Graph -->
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Data Converter" />
+    <meta
+      property="og:description"
+      content="Convert CSV, XLSX, JSON and XML files directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/data-converter.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<!-- Twitter -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Data Converter">
-<meta name="twitter:description" content="Convert CSV, XLSX, JSON and XML files directly in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Data Converter" />
+    <meta
+      name="twitter:description"
+      content="Convert CSV, XLSX, JSON and XML files directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Data Converter",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/data-converter.html",
-  "description":"Convert CSV, XLSX, JSON and XML files directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my files uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All files and data are processed locally in your browser and are never uploaded to any server."
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Data Converter",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/data-converter.html",
+        "description": "Convert CSV, XLSX, JSON and XML files directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which file formats are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool supports CSV, XLSX, JSON and XML for conversion, formatting, validation and minification."
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Are my files uploaded?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All files and data are processed locally in your browser and are never uploaded to any server."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Which file formats are supported?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "The tool supports CSV, XLSX, JSON and XML for conversion, formatting, validation and minification."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is Data Converter free to use?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The Data Converter is completely free and requires no registration."
+            }
+          }
+        ]
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Is Data Converter free to use?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The Data Converter is completely free and requires no registration."
+    </script>
+
+    <style>
+      .drop-zone {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        min-height: 140px;
+        padding: 20px;
+        border: 2px dashed #d1d5db;
+        border-radius: 18px;
+        background: #fafafa;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
       }
-    }
-  ]
-}
-</script>
-
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-textarea,
-input{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-select:focus,
-textarea:focus,
-input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-textarea{
-min-height:180px;
-resize:vertical;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-.tool-section{
-display:none;
-}
-
-.tool-section.active{
-display:block;
-}
-
-.tool-description{
-color:#4b5563;
-font-size:14px;
-line-height:1.7;
-margin:8px 0 16px;
-}
-
-.drop-zone{
-border:2px dashed #d1d5db;
-border-radius:16px;
-padding:28px;
-text-align:center;
-background:#f9fafb;
-cursor:pointer;
-margin-top:12px;
-}
-.drop-zone:hover,
-.drop-zone.dragover{
-border-color:#dc2626;
-background:#fff5f5;
-}
-.file-count{
-margin-top:10px;
-font-size:14px;
-font-weight:700;
-color:#374151;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-.loading{color:#4b5563;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-font-size:14px;
-display:none;
-z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
- .toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-} 
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Data Converter</h1>
-
-<p class="subtitle">
-Convert spreadsheets and structured data directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Data is processed locally in your browser. Files are never uploaded or stored.
-</div>
-<div class="card">
-<label for="toolSelector">Select Tool</label>
-<select id="toolSelector">
-<option value="csvxlsx">CSV to XLSX</option>
-<option value="xlsxcsv">XLSX to CSV</option>
-<option value="xlsxjson">XLSX to JSON</option>
-<option value="jsonxlsx">JSON to XLSX</option>
-<option value="jsoncsv">JSON to CSV</option>
-<option value="csvjson">CSV to JSON</option>
-<option value="xmljson">XML to JSON</option>
-<option value="jsonxml">JSON to XML</option>
-<option value="jsonformat">JSON Formatter</option>
-<option value="jsonminify">JSON Minifier</option>
-<option value="jsonvalidate">JSON Validator</option>
-<option value="xmlformat">XML Formatter</option>
-<option value="xmlminify">XML Minifier</option>
-<option value="xmlvalidate">XML Validator</option>
-</select>
-</div>
-<div class="card tool-section active" id="csvxlsxTool">
-<h2>CSV to XLSX</h2>
-<p class="tool-description">
-Convert a CSV file into an Excel XLSX spreadsheet.
-</p>
-
-<div class="drop-zone" data-input="csvXlsxFile">Click or drag CSV file here</div>
-<input type="file" id="csvXlsxFile" accept=".csv,text/csv" hidden>
-<div id="csvXlsxCount" class="file-count">No file selected</div>
-
-<div class="button-group">
-
-<button onclick="csvToXlsx()">
-Convert to XLSX
-</button>
-
-<button onclick="clearFileTool('csvXlsxFile','csvXlsxCount','csvXlsxMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="csvXlsxMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="xlsxcsvTool">
-<h2>XLSX to CSV</h2>
-<p class="tool-description">Convert an Excel XLSX spreadsheet into a CSV file.</p>
-
-<div class="drop-zone" data-input="xlsxCsvFile">Click or drag XLSX file here</div>
-<input type="file" id="xlsxCsvFile" accept=".xlsx,.xls" hidden>
-<div id="xlsxCsvCount" class="file-count">No file selected</div>
-
-<div class="button-group">
-
-<button onclick="xlsxToCsv()">
-Convert to CSV
-</button>
-
-<button onclick="clearFileTool('xlsxCsvFile','xlsxCsvCount','xlsxCsvMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="xlsxCsvMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="xlsxjsonTool">
-<h2>XLSX to JSON</h2>
-<p class="tool-description">Convert an Excel XLSX spreadsheet into a JSON file.</p>
-
-<div class="drop-zone" data-input="xlsxJsonFile">Click or drag XLSX file here</div>
-<input type="file" id="xlsxJsonFile" accept=".xlsx,.xls" hidden>
-<div id="xlsxJsonCount" class="file-count">No file selected</div>
-
-<div class="button-group">
-
-<button onclick="xlsxToJson()">
-Convert to JSON
-</button>
-
-<button onclick="clearFileTool('xlsxJsonFile','xlsxJsonCount','xlsxJsonMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="xlsxJsonMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="jsonxlsxTool">
-<h2>JSON to XLSX</h2>
-<p class="tool-description">Convert JSON data into an Excel XLSX spreadsheet.</p>
-
-<label for="jsonXlsxInput">JSON Input</label>
-<textarea id="jsonXlsxInput" placeholder="Paste JSON data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="jsonToXlsx()">
-Convert to XLSX
-</button>
-
-<button onclick="clearFields('jsonXlsxInput',null,'jsonXlsxMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="jsonXlsxMessage" class="message"></div>
-
-</div>
-<div class="card tool-section" id="jsoncsvTool">
-
-<h2>JSON to CSV</h2>
-
-<p class="tool-description">Convert JSON data into a CSV file.
-</p>
-
-<label for="jsonCsvInput">JSON Input</label>
-
-<textarea id="jsonCsvInput"></textarea>
-
-<div class="button-group">
-
-<button onclick="jsonToCsv()">
-Convert to CSV
-</button>
-
-<button onclick="clearFields('jsonCsvInput',null,'jsonCsvMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="jsonCsvMessage" class="message"></div>
-
-</div>
-<div class="card tool-section" id="csvjsonTool">
-<h2>CSV to JSON</h2>
-
-<p class="tool-description">
-Convert a CSV file into a JSON file.
-</p>
-
-<div class="drop-zone" data-input="csvJsonFile">
-Click or drag CSV file here
-</div>
-
-<input type="file" id="csvJsonFile" accept=".csv,text/csv" hidden>
-
-<div id="csvJsonCount" class="file-count">
-No file selected
-</div>
-
-<div class="button-group">
-
-<button onclick="csvToJson()">
-Convert to JSON
-</button>
-
-<button onclick="clearFileTool('csvJsonFile','csvJsonCount','csvJsonMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="csvJsonMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="jsonformatTool">
-<h2>JSON Formatter</h2>
-
-<p class="tool-description">
- Format and beautify JSON data.
-</p>
-
-<label for="jsonFormatInput">JSON Input</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadJsonExample();return false;">Load Sample JSON</a>
-</div>
-
-<textarea id="jsonFormatInput" placeholder="Paste JSON data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="formatJson()">
-Format JSON
-</button>
-
-<button onclick="clearFields('jsonFormatInput','jsonFormatOutput','jsonFormatMessage')">
-Clear
-</button>
-
-</div>
-<label for="jsonFormatOutput">Formatted JSON</label>
-<textarea id="jsonFormatOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('jsonFormatOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('jsonFormatOutput').value,'XAVERT-Formatted-JSON.json')">
-Download
-</button>
-
-</div>
-<div id="jsonFormatMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="jsonminifyTool">
-
-<h2>JSON Minifier</h2>
-
-<p class="tool-description">
-Minify JSON data by removing unnecessary spaces and line breaks.
-</p>
-
-<label for="jsonMinifyInput">JSON Input</label>
-<textarea id="jsonMinifyInput" placeholder="Paste JSON data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="minifyJson()">
-Minify JSON
-</button>
-
-<button onclick="clearFields('jsonMinifyInput','jsonMinifyOutput','jsonMinifyMessage')">
-Clear
-</button>
-
-</div>
-
-<label for="jsonMinifyOutput">Minified JSON</label>
-<textarea id="jsonMinifyOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('jsonMinifyOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('jsonMinifyOutput').value,'XAVERT-Minified-JSON.json')">
-Download
-</button>
-
-</div>
 
-<div id="jsonMinifyMessage" class="message"></div>
-
-</div>
-<div class="card tool-section" id="jsonvalidateTool">
-
-<h2>JSON Validator</h2>
-
-<p class="tool-description">
-Validate JSON syntax.
-</p>
-
-<label for="jsonValidateInput">JSON Input</label>
-
-<textarea id="jsonValidateInput"></textarea>
-
-<div class="button-group">
-
-<button onclick="validateJson()">
-Validate JSON
-</button>
-
-<button onclick="clearFields('jsonValidateInput',null,'jsonValidateMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="jsonValidateMessage" class="message"></div>
-</div>
-  <div class="card tool-section" id="xmljsonTool">
-<h2>XML to JSON</h2>
-
-<p class="tool-description">
-Convert XML data into JSON.
-</p>
-
-<label for="xmlJsonInput">XML Input</label>
-<textarea id="xmlJsonInput" placeholder="Paste XML data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="xmlToJson()">
-Convert to JSON
-</button>
-
-<button onclick="clearFields('xmlJsonInput','xmlJsonOutput','xmlJsonMessage')">
-Clear
-</button>
-
-</div>
-<label for="xmlJsonOutput">JSON Output</label>
-<textarea id="xmlJsonOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('xmlJsonOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('xmlJsonOutput').value,'XAVERT-Converted-JSON.json')">
-Download
-</button>
-
-</div>
-<div id="xmlJsonMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="jsonxmlTool">
-
-<h2>JSON to XML</h2>
-
-<p class="tool-description">
-Convert JSON data into XML.
-</p>
-
-<label for="jsonXmlInput">JSON Input</label>
-
-<textarea id="jsonXmlInput"></textarea>
-
-<div class="button-group">
-
-<button onclick="jsonToXml()">
-Convert to XML
-</button>
-
-<button onclick="clearFields('jsonXmlInput','jsonXmlOutput','jsonXmlMessage')">
-Clear
-</button>
-
-</div>
-<label for="jsonXmlOutput">XML Output</label>
-
-<textarea id="jsonXmlOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('jsonXmlOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('jsonXmlOutput').value,'XAVERT-Converted-XML.xml')">
-Download
-</button>
-</div>
-<div id="jsonXmlMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="xmlformatTool">
-
-<h2>XML Formatter</h2>
-
-<p class="tool-description">
-Format and beautify XML data.
-</p>
-
-<label for="xmlFormatInput">XML Input</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadXmlExample();return false;">Load Sample XML</a>
-</div>
-
-<textarea id="xmlFormatInput" placeholder="Paste XML data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="formatXml()">
-Format XML
-</button>
-
-<button onclick="clearFields('xmlFormatInput','xmlFormatOutput','xmlFormatMessage')">
-Clear
-</button>
-
-</div>
-
-<label for="xmlFormatOutput">Formatted XML</label>
-
-<textarea id="xmlFormatOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('xmlFormatOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('xmlFormatOutput').value,'XAVERT-Formatted-XML.xml')">
-Download
-</button>
-
-</div>
-<div id="xmlFormatMessage" class="message"></div>
-
-</div>
-<div class="card tool-section" id="xmlminifyTool">
-
-<h2>XML Minifier</h2>
-
-<p class="tool-description">
-Minify XML data by removing unnecessary spaces and line breaks.
-</p>
-
-<label for="xmlMinifyInput">XML Input</label>
-<textarea id="xmlMinifyInput" placeholder="Paste XML data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="minifyXml()">
-Minify XML
-</button>
-
-<button onclick="clearFields('xmlMinifyInput','xmlMinifyOutput','xmlMinifyMessage')">
-Clear
-</button>
-
-</div>
-
-<label for="xmlMinifyOutput">Minified XML</label>
-<textarea id="xmlMinifyOutput" readonly></textarea>
-
-<div class="button-group">
-
-<button onclick="copyText(document.getElementById('xmlMinifyOutput').value)">
-Copy Result
-</button>
-
-<button onclick="downloadText(document.getElementById('xmlMinifyOutput').value,'XAVERT-Minified-XML.xml')">
-Download
-</button>
-</div>
-<div id="xmlMinifyMessage" class="message"></div>
-
-</div>
-<div class="card tool-section" id="xmlvalidateTool">
-
-<h2>XML Validator</h2>
-
-<p class="tool-description">
-Validate XML syntax.
-</p>
-
-<label for="xmlValidateInput">XML Input</label>
-
-<textarea id="xmlValidateInput" placeholder="Paste XML data here"></textarea>
-
-<div class="button-group">
-
-<button onclick="validateXml()">
-Validate XML
-</button>
-
-<button onclick="clearFields('xmlValidateInput',null,'xmlValidateMessage')">
-Clear
-</button>
-
-</div>
-
-<div id="xmlValidateMessage" class="message"></div>
-
-</div>
-<section class="info">
-<h2>About Data Converter</h2>
-
-<p>
-Data Converter lets you convert and process CSV, XLSX, JSON and XML files directly in your browser. No data is uploaded to external servers.
-</p>
-
-<ul>
-<li>CSV ↔ XLSX</li>
-<li>CSV ↔ JSON</li>
-<li>JSON ↔ XML</li>
-<li>JSON formatting, minifying and validation</li>
-<li>XML formatting, minifying and validation</li>
-<li>Local browser processing for better privacy</li>
-</ul>
-</section>
-<section class="info">
-<h2>FAQ</h2>
-
-<h3>Are my files uploaded?</h3>
-<p>No. Everything is processed locally in your browser.</p>
-
-<h3>Which formats are supported?</h3>
-<p>CSV, XLSX, JSON and XML.</p>
-
-<h3>Can I use it for free?</h3>
-<p>Yes. All XAVERT tools are free to use.</p>
-</section>
-<section class="info">
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="csv-viewer-editor.html">CSV Viewer &amp; Editor</a></li>
-<li><a href="json-toolkit.html">JSON Toolkit</a></li>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="text-diff-checker.html">Text Diff Checker</a></li>
-</ul>
-</section>
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const toolSelector=document.getElementById("toolSelector");
-
-toolSelector.addEventListener("change",function(){
-document.querySelectorAll(".tool-section").forEach(section=>{
-section.classList.remove("active");
-});
-
-document.getElementById(toolSelector.value + "Tool").classList.add("active");
-});
-
-document.querySelectorAll(".drop-zone").forEach(zone=>{
-const input=document.getElementById(zone.getAttribute("data-input"));
-
-if(!input){
-return;
-}
-
-zone.addEventListener("click",function(){
-input.click();
-});
-
-zone.addEventListener("dragover",function(e){
-e.preventDefault();
-zone.classList.add("dragover");
-});
-
-zone.addEventListener("dragleave",function(){
-zone.classList.remove("dragover");
-});
-
-zone.addEventListener("drop",function(e){
-e.preventDefault();
-zone.classList.remove("dragover");
-const dt=new DataTransfer();
-dt.items.add(e.dataTransfer.files[0]);
-input.files=dt.files;
-
-updateFileCount(input.id);
-});
-
-input.addEventListener("change",function(){
-updateFileCount(input.id);
-});
-});
-function formatFileSize(bytes){
-
-const mb=bytes/(1024*1024);
-
-if(mb>=1){
-return mb.toFixed(2) + " MB";
-}
-
-return (bytes/1024).toFixed(1) + " KB";
-
-}
-
-function updateFileCount(inputId){
-const files=document.getElementById(inputId).files;
-
-if(inputId==="csvXlsxFile"){
-document.getElementById("csvXlsxCount").textContent=
-files.length
-? files[0].name + " • " +
-formatFileSize(files[0].size)
-: "No file selected";
-}
-if(inputId==="xlsxCsvFile"){
-document.getElementById("xlsxCsvCount").textContent=
-files.length
-? files[0].name + " • " +
-formatFileSize(files[0].size)
-: "No file selected";
-}
-
-if(inputId==="xlsxJsonFile"){
-document.getElementById("xlsxJsonCount").textContent=
-files.length
-? files[0].name + " • " +
-formatFileSize(files[0].size)
-: "No file selected";
-}
-  if(inputId==="csvJsonFile"){
-document.getElementById("csvJsonCount").textContent=
-files.length
-? files[0].name + " • " +
-formatFileSize(files[0].size)
-: "No file selected";
-}
-}
-
-function setMessage(id,text,type){
-const element=document.getElementById(id);
-element.textContent=text;
-element.className="message " + type;
-}
-
-function detectCsvSeparator(text){
-const firstLine=text.split(/\r?\n/)[0] || "";
-
-const separators=[",",";","\t"];
-
-let bestSeparator=",";
-let bestCount=0;
-
-separators.forEach(separator=>{
-const count=firstLine.split(separator).length;
-
-if(count>bestCount){
-bestCount=count;
-bestSeparator=separator;
-}
-});
-
-return bestSeparator;
-}
-function showToast(text,type="info"){
-
-const toast=document.getElementById("toast");
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-function copyText(text){
-
-if(!text){
-showToast("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-showToast("Copied.","success");
-})
-.catch(function(){
-showToast("Copy failed.","error");
-});
-
-}
-function downloadBlob(blob,fileName){
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download=fileName;
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-showToast("Download started.","success");
-
-URL.revokeObjectURL(link.href);
-
-}
-function downloadText(text,fileName){
-
-if(!text){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
-
-downloadBlob(blob,fileName);
-
-}
-async function csvToXlsx(){
-const file=document.getElementById("csvXlsxFile").files[0];
-
-if(!file){
-setMessage("csvXlsxMessage","Please select one CSV file.","error");
-return;
-}
-
-try{
-setMessage("csvXlsxMessage","Converting CSV to XLSX...","loading");
-
-const text=await file.text();
-
-const separator=detectCsvSeparator(text);
-
-const rows=text
-.trim()
-.split(/\r?\n/)
-.map(row=>row.split(separator));
-
-const worksheet=XLSX.utils.aoa_to_sheet(rows);
-const workbook=XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");
-
-const bytes=XLSX.write(workbook,{
-bookType:"xlsx",
-type:"array"
-});
-
-downloadBlob(
-new Blob([bytes],{type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"}),
-"XAVERT-CSV-to-XLSX.xlsx"
-);
-
-setMessage("csvXlsxMessage","CSV converted successfully.","success");
-showToast("CSV converted successfully.","success");
-}catch(error){
-console.error(error);
-setMessage("csvXlsxMessage","Unable to convert CSV.","error");
-showToast("Unable to convert CSV.","error");
-}
-}
-
-async function xlsxToCsv(){
-const file=document.getElementById("xlsxCsvFile").files[0];
-
-if(!file){
-setMessage("xlsxCsvMessage","Please select one XLSX file.","error");
-return;
-}
-
-try{
-setMessage("xlsxCsvMessage","Converting XLSX to CSV...","loading");
-
-const buffer=await file.arrayBuffer();
-const workbook=XLSX.read(buffer,{type:"array"});
-const sheetName=workbook.SheetNames[0];
-const worksheet=workbook.Sheets[sheetName];
-const userLocale=navigator.language || navigator.userLanguage || "en-US";
-
-const semicolonLocales=[
-"it","fr","de","es","pt","nl","pl","tr","ru"
-];
-
-const localePrefix=userLocale.split("-")[0].toLowerCase();
-
-const csvSeparator=semicolonLocales.includes(localePrefix) ? ";" : ",";
-
-const csv=XLSX.utils.sheet_to_csv(worksheet,{
-FS:csvSeparator
-});
-
-downloadBlob(
-new Blob([csv],{type:"text/csv;charset=utf-8"}),
-"XAVERT-XLSX-to-CSV.csv"
-);
-
-setMessage("xlsxCsvMessage","XLSX converted successfully.","success");
-showToast("XLSX converted successfully.","success");
-}catch(error){
-console.error(error);
-setMessage("xlsxCsvMessage","Unable to convert XLSX.","error");
-showToast("Unable to convert XLSX.","error");
-}
-}
-async function xlsxToJson(){
-const file=document.getElementById("xlsxJsonFile").files[0];
-
-if(!file){
-setMessage("xlsxJsonMessage","Please select one XLSX file.","error");
-return;
-}
-
-try{
-setMessage("xlsxJsonMessage","Converting XLSX to JSON...","loading");
-
-const buffer=await file.arrayBuffer();
-const workbook=XLSX.read(buffer,{type:"array"});
-const sheetName=workbook.SheetNames[0];
-const worksheet=workbook.Sheets[sheetName];
-
-const json=XLSX.utils.sheet_to_json(worksheet,{
-defval:""
-});
-
-downloadBlob(
-new Blob([JSON.stringify(json,null,2)],{type:"application/json;charset=utf-8"}),
-"XAVERT-XLSX-to-JSON.json"
-);
-
-setMessage("xlsxJsonMessage","XLSX converted successfully.","success");
-showToast("XLSX converted successfully.","success");
-}catch(error){
-console.error(error);
-setMessage("xlsxJsonMessage","Unable to convert XLSX.","error");
-showToast("Unable to convert XLSX.","error");
-}
-}  
-function jsonToXlsx(){
-const text=document.getElementById("jsonXlsxInput").value.trim();
-
-if(!text){
-setMessage("jsonXlsxMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-setMessage("jsonXlsxMessage","Converting JSON to XLSX...","loading");
-
-const json=JSON.parse(text);
-
-if(!Array.isArray(json)){
-setMessage("jsonXlsxMessage","JSON must be an array of objects.","error");
-return;
-}
-
-const worksheet=XLSX.utils.json_to_sheet(json);
-const workbook=XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(workbook,worksheet,"Sheet1");
-
-const bytes=XLSX.write(workbook,{
-bookType:"xlsx",
-type:"array"
-});
-
-downloadBlob(
-new Blob([bytes],{
-type:"application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-}),
-"XAVERT-JSON-to-XLSX.xlsx"
-);
-
-setMessage("jsonXlsxMessage","JSON converted successfully.","success");
-showToast("JSON converted successfully.","success");
-}catch(error){
-console.error(error);
-setMessage("jsonXlsxMessage","Invalid JSON or unable to convert.","error");
-showToast("Invalid JSON or unable to convert.","error");
-}
-}
-function jsonToCsv(){
-
-const text=document.getElementById("jsonCsvInput").value.trim();
-
-if(!text){
-setMessage("jsonCsvMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-
-const json=JSON.parse(text);
-
-if(!Array.isArray(json)){
-setMessage("jsonCsvMessage","JSON must be an array of objects.","error");
-return;
-}
-
-const worksheet=XLSX.utils.json_to_sheet(json);
-
-const userLocale=navigator.language || navigator.userLanguage || "en-US";
-
-const semicolonLocales=[
-"it","fr","de","es","pt","nl","pl","tr","ru"
-];
-
-const localePrefix=userLocale.split("-")[0].toLowerCase();
-
-const csvSeparator=semicolonLocales.includes(localePrefix) ? ";" : ",";
-
-const csv=XLSX.utils.sheet_to_csv(worksheet,{
-FS:csvSeparator
-});
-
-downloadBlob(
-new Blob([csv],{type:"text/csv;charset=utf-8"}),
-"XAVERT-JSON-to-CSV.csv"
-);
-
-setMessage("jsonCsvMessage","JSON converted successfully.","success");
-showToast("JSON converted successfully.","success");
-}catch(error){
-
-console.error(error);
-
-setMessage(
-"jsonCsvMessage",
-"Invalid JSON or unable to convert.",
-"error"
-);
-showToast("Invalid JSON or unable to convert.","error");
-}
-
-}
-function loadJsonExample(){
-
-document.getElementById("jsonFormatInput").value=`{
-  "name":"XAVERT",
-  "type":"Toolkit",
-  "version":1,
-  "active":true
-}`;
-
-showToast("Sample JSON loaded.","success");
-
-} 
-function formatJson(){
-const input=document.getElementById("jsonFormatInput").value.trim();
-
-if(!input){
-setMessage("jsonFormatMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-const json=JSON.parse(input);
-
-document.getElementById("jsonFormatOutput").value=
-JSON.stringify(json,null,2);
-
-setMessage("jsonFormatMessage","JSON formatted successfully.","success");
-showToast("JSON formatted.","success");
-}catch(error){
-console.error(error);
-setMessage("jsonFormatMessage","Invalid JSON.","error");
-}
-}
-async function csvToJson(){
-
-const file=document.getElementById("csvJsonFile").files[0];
-
-if(!file){
-setMessage("csvJsonMessage","Please select one CSV file.","error");
-return;
-}
-
-try{
-
-setMessage("csvJsonMessage","Converting CSV to JSON...","loading");
-
-const text=await file.text();
-
-const separator=detectCsvSeparator(text);
-
-const rows=text
-.trim()
-.split(/\r?\n/)
-.map(row=>row.split(separator));
-
-const headers=rows[0];
-
-const json=rows.slice(1).map(row=>{
-const obj={};
-
-headers.forEach((header,index)=>{
-obj[header.trim()]=row[index] ? row[index].trim() : "";
-});
-
-return obj;
-});
-
-downloadBlob(
-new Blob(
-[JSON.stringify(json,null,2)],
-{type:"application/json;charset=utf-8"}
-),
-"XAVERT-CSV-to-JSON.json"
-);
-
-setMessage("csvJsonMessage","CSV converted successfully.","success");
-showToast("CSV converted successfully.","success");
-}catch(error){
-
-console.error(error);
-
-setMessage(
-"csvJsonMessage",
-"Unable to convert CSV.",
-"error"
-);
-showToast("Unable to convert CSV.","error");
-}
-}
-function minifyJson(){
-
-const input=document.getElementById("jsonMinifyInput").value.trim();
-
-if(!input){
-setMessage("jsonMinifyMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-const json=JSON.parse(input);
-
-document.getElementById("jsonMinifyOutput").value=
-JSON.stringify(json);
-
-setMessage("jsonMinifyMessage","JSON minified successfully.","success");
-showToast("JSON minified.","success");
-}catch(error){
-console.error(error);
-setMessage("jsonMinifyMessage","Invalid JSON.","error");
-}
-
-}
-function validateJson(){
-
-const text=document.getElementById("jsonValidateInput").value.trim();
-
-if(!text){
-setMessage("jsonValidateMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-
-JSON.parse(text);
-
-setMessage(
-"jsonValidateMessage",
-"Valid JSON",
-"success"
-);
-showToast("Valid JSON.","success");
-}catch(error){
-
-setMessage(
-"jsonValidateMessage",
-"Invalid JSON",
-"error"
-);
-
-}
-
-}
-function xmlNodeToJson(node){
-const obj={};
-
-if(node.attributes && node.attributes.length>0){
-obj["@attributes"]={};
-
-Array.from(node.attributes).forEach(attribute=>{
-obj["@attributes"][attribute.name]=attribute.value;
-});
-}
-
-if(node.children.length===0){
-const text=node.textContent.trim();
-
-if(Object.keys(obj).length>0){
-obj["#text"]=text;
-return obj;
-}
-
-return text;
-}
-
-Array.from(node.children).forEach(child=>{
-const childName=child.nodeName;
-const childValue=xmlNodeToJson(child);
-
-if(obj[childName]){
-if(!Array.isArray(obj[childName])){
-obj[childName]=[obj[childName]];
-}
-
-obj[childName].push(childValue);
-}else{
-obj[childName]=childValue;
-}
-});
-
-return obj;
-}
-function xmlToJson(){
-const text=document.getElementById("xmlJsonInput").value.trim();
-
-if(!text){
-setMessage("xmlJsonMessage","Please enter XML data.","error");
-return;
-}
-
-try{
-const parser=new DOMParser();
-const xmlDoc=parser.parseFromString(text,"application/xml");
-
-if(xmlDoc.getElementsByTagName("parsererror").length){
-setMessage("xmlJsonMessage","Invalid XML.","error");
-return;
-}
-
-const root=xmlDoc.documentElement;
-
-const json={};
-json[root.nodeName]=xmlNodeToJson(root);
-
-document.getElementById("xmlJsonOutput").value=
-JSON.stringify(json,null,2);
-
-setMessage("xmlJsonMessage","XML converted successfully.","success");
-
-}catch(error){
-console.error(error);
-setMessage("xmlJsonMessage","Unable to convert XML.","error");
-}
-}
-function escapeXml(value){
-return String(value)
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&apos;");
-}
-
-function jsonToXmlNode(name,value,level=0){
-const indent="  ".repeat(level);
-
-if(Array.isArray(value)){
-return value.map(item=>jsonToXmlNode(name,item,level)).join("\n");
-}
-
-if(typeof value!=="object" || value===null){
-return `${indent}<${name}>${escapeXml(value)}</${name}>`;
-}
-
-let attributes="";
-
-if(value["@attributes"]){
-Object.keys(value["@attributes"]).forEach(attributeName=>{
-attributes+=` ${attributeName}="${escapeXml(value["@attributes"][attributeName])}"`;
-});
-}
-
-if(value["#text"] && Object.keys(value).length<=2){
-return `${indent}<${name}${attributes}>${escapeXml(value["#text"])}</${name}>`;
-}
-
-let xml=`${indent}<${name}${attributes}>\n`;
-
-Object.keys(value).forEach(key=>{
-if(key==="@attributes" || key==="#text"){
-return;
-}
-
-xml+=jsonToXmlNode(key,value[key],level+1) + "\n";
-});
-
-xml+=`${indent}</${name}>`;
-
-return xml;
-}
-function jsonToXml(){
-const text=document.getElementById("jsonXmlInput").value.trim();
-
-if(!text){
-setMessage("jsonXmlMessage","Please enter JSON data.","error");
-return;
-}
-
-try{
-const json=JSON.parse(text);
-
-let xml="";
-
-for(const key in json){
-xml+=jsonToXmlNode(key,json[key],0);
-}
-
-document.getElementById("jsonXmlOutput").value=xml;
-
-setMessage("jsonXmlMessage","JSON converted successfully.","success");
-
-}catch(error){
-console.error(error);
-setMessage("jsonXmlMessage","Invalid JSON.","error");
-}
-}
-
-
-function clearFields(inputId,outputId,messageId){
-const input=document.getElementById(inputId);
-const output=document.getElementById(outputId);
-const message=document.getElementById(messageId);
-
-if(input){
-input.value="";
-}
-
-if(output){
-output.value="";
-}
-
-if(message){
-message.textContent="";
-message.className="message";
-}
-
-showToast("Cleared.","success");
-}
-
-function clearFileTool(fileInputId,countId,messageId){
-const fileInput=document.getElementById(fileInputId);
-const count=document.getElementById(countId);
-const message=document.getElementById(messageId);
-
-if(fileInput){
-fileInput.value="";
-}
-
-if(count){
-count.textContent="No file selected";
-}
-
-if(message){
-message.textContent="";
-message.className="message";
-}
-
-showToast("Cleared.","success");
-}
-
-function enableCtrlEnter(textareaId,callback){
-const textarea=document.getElementById(textareaId);
-
-if(!textarea){
-return;
-}
-
-textarea.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-e.preventDefault();
-callback();
-}
-});
-}
-function loadXmlExample(){
-
-document.getElementById("xmlFormatInput").value=
-`<company>
-<name>XAVERT</name>
-<type>Toolkit</type>
-<version>1</version>
-</company>`;
-
-showToast("Sample XML loaded.","success");
-
-}
-function formatXml(){
-const text=document.getElementById("xmlFormatInput").value.trim();
-
-if(!text){
-setMessage("xmlFormatMessage","Please enter XML data.","error");
-return;
-}
-
-try{
-const parser=new DOMParser();
-const xmlDoc=parser.parseFromString(text,"application/xml");
-
-if(xmlDoc.getElementsByTagName("parsererror").length){
-setMessage("xmlFormatMessage","Invalid XML.","error");
-return;
-}
-
-const serializer=new XMLSerializer();
-let xml=serializer.serializeToString(xmlDoc);
-
-xml=xml.replace(/>\s*</g,"><");
-xml=xml.replace(/></g,">\n<");
-
-let formatted="";
-let indent=0;
-
-xml.split("\n").forEach(line=>{
-if(line.match(/^<\/\w/)){
-indent--;
-}
-
-formatted+="  ".repeat(Math.max(indent,0)) + line + "\n";
-
-if(line.match(/^<[^!?/][^>]*[^/]>/) && !line.match(/<\/[^>]+>$/)){
-indent++;
-}
-});
-
-document.getElementById("xmlFormatOutput").value=formatted.trim();
-
-setMessage("xmlFormatMessage","XML formatted successfully.","success");
-showToast("XML formatted.","success");
-}catch(error){
-console.error(error);
-setMessage("xmlFormatMessage","Unable to format XML.","error");
-}
-}
-function minifyXml(){
-
-const text=document.getElementById("xmlMinifyInput").value.trim();
-
-if(!text){
-setMessage("xmlMinifyMessage","Please enter XML data.","error");
-return;
-}
-
-try{
-const parser=new DOMParser();
-const xmlDoc=parser.parseFromString(text,"application/xml");
-
-if(xmlDoc.getElementsByTagName("parsererror").length){
-setMessage("xmlMinifyMessage","Invalid XML.","error");
-return;
-}
-
-const serializer=new XMLSerializer();
-
-let xml=serializer.serializeToString(xmlDoc);
-
-xml=xml
-.replace(/>\s+</g,"><")
-.replace(/\s{2,}/g," ")
-.trim();
-
-document.getElementById("xmlMinifyOutput").value=xml;
-
-setMessage("xmlMinifyMessage","XML minified successfully.","success");
-showToast("XML minified.","success");
-}catch(error){
-console.error(error);
-setMessage("xmlMinifyMessage","Unable to minify XML.","error");
-}
-
-}
-function validateXml(){
-const text=document.getElementById("xmlValidateInput").value.trim();
-
-if(!text){
-setMessage("xmlValidateMessage","Please enter XML data.","error");
-return;
-}
-
-try{
-const parser=new DOMParser();
-const xmlDoc=parser.parseFromString(text,"application/xml");
-
-if(xmlDoc.getElementsByTagName("parsererror").length){
-setMessage("xmlValidateMessage","Invalid XML","error");
-return;
-}
-
-setMessage("xmlValidateMessage","Valid XML","success");
-showToast("Valid XML.","success");
-}catch(error){
-console.error(error);
-setMessage("xmlValidateMessage","Invalid XML","error");
-}
-}
-enableCtrlEnter("jsonXlsxInput",jsonToXlsx);
-enableCtrlEnter("jsonCsvInput",jsonToCsv);
-enableCtrlEnter("jsonFormatInput",formatJson);
-enableCtrlEnter("jsonMinifyInput",minifyJson);
-enableCtrlEnter("jsonValidateInput",validateJson);
-enableCtrlEnter("xmlJsonInput",xmlToJson);
-enableCtrlEnter("jsonXmlInput",jsonToXml);
-enableCtrlEnter("xmlFormatInput",formatXml);
-enableCtrlEnter("xmlMinifyInput",minifyXml);
-enableCtrlEnter("xmlValidateInput",validateXml);
-</script>
-
-</body>
+      .tool-card .form-grid {
+        margin-top: 20px;
+      }
+
+      .tool-card .card {
+        margin-top: 20px;
+      }
+
+      .drop-zone:hover,
+      .drop-zone:focus-visible,
+      .drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        transform: translateY(-1px);
+        outline: none;
+      }
+
+      .drop-zone strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #111827;
+        font-size: 17px;
+      }
+
+      .drop-zone span,
+      .drop-zone p {
+        margin: 4px 0;
+        color: #6b7280;
+      }
+
+      .file-count {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .tool-description {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.7;
+        margin: 8px 0 16px;
+      }
+
+      .workflow-shell {
+        margin-top: 24px;
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 20px;
+        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.04);
+      }
+
+      .workflow-body {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .workflow-body .button-group {
+        margin-top: 0;
+      }
+
+      .workflow-body .message {
+        min-height: 20px;
+        margin-top: 0;
+      }
+
+      .workflow-body textarea {
+        min-height: 180px;
+        resize: vertical;
+      }
+
+      .workflow-sample-link {
+        margin-bottom: 6px;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      textarea {
+        min-height: 180px;
+        resize: vertical;
+      }
+
+      select {
+        min-height: 46px;
+      }
+
+      @media (max-width: 576px) {
+        .drop-zone {
+          min-height: 120px;
+          padding: 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .drop-zone {
+          transition: none;
+        }
+
+        .drop-zone:hover,
+        .drop-zone:focus-visible,
+        .drop-zone.dragover {
+          transform: none;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    data-tool="data-converter"
+    data-related-tools="csv-viewer-editor,json-toolkit,xml-json-converter,text-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Data Converter</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="converter-workspace-title">
+        <header class="tool-card-header">
+          <h2 id="converter-workspace-title" class="tool-card-title">
+            Data Conversion Workspace
+          </h2>
+          <p class="tool-card-description">
+            Choose a conversion or processing workflow and work with your data
+            locally.
+          </p>
+        </header>
+        <div class="form-grid">
+          <div class="form-group full-width">
+            <label for="toolSelector">Select Tool</label>
+            <select id="toolSelector">
+              <option value="csvxlsx">CSV to XLSX</option>
+              <option value="xlsxcsv">XLSX to CSV</option>
+              <option value="xlsxjson">XLSX to JSON</option>
+              <option value="jsonxlsx">JSON to XLSX</option>
+              <option value="jsoncsv">JSON to CSV</option>
+              <option value="csvjson">CSV to JSON</option>
+              <option value="xmljson">XML to JSON</option>
+              <option value="jsonxml">JSON to XML</option>
+              <option value="jsonformat">JSON Formatter</option>
+              <option value="jsonminify">JSON Minifier</option>
+              <option value="jsonvalidate">JSON Validator</option>
+              <option value="xmlformat">XML Formatter</option>
+              <option value="xmlminify">XML Minifier</option>
+              <option value="xmlvalidate">XML Validator</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="workflow-shell">
+          <div class="workflow-header">
+            <h2 id="workflowTitle">CSV to XLSX</h2>
+            <p id="workflowDescription" class="tool-description">
+              Convert a CSV file into an Excel XLSX spreadsheet.
+            </p>
+          </div>
+          <div id="workflowContent"></div>
+        </div>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          Data Converter lets you transform CSV, XLSX, JSON and XML content
+          directly in your browser with a privacy-first workflow.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Convert between CSV, XLSX, JSON and XML formats across the supported
+            workflows.
+          </li>
+          <li>
+            Format, minify and validate JSON and XML data without sending
+            anything to a server.
+          </li>
+          <li>
+            Work with file imports, drag and drop, copy actions and downloads
+            from the same unified experience.
+          </li>
+          <li>
+            Keep every conversion and processing step local to the browser for
+            speed and privacy.
+          </li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your data is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

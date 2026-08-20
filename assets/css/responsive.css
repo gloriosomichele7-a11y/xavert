@@ -2,121 +2,195 @@
    XAVERT Responsive Styles
 ===================================== */
 
-@media (max-width:1200px){
-
-.container{
-max-width:960px;
+@media (max-width: 1200px) {
+  .container {
+    max-width: 960px;
+  }
 }
 
+@media (max-width: 992px) {
+  .container {
+    max-width: 100%;
+    padding: 32px 18px 0;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
 }
 
-@media (max-width:992px){
+@media (max-width: 768px) {
+  body {
+    font-size: 15px;
+  }
 
-.container{
-max-width:100%;
-padding:32px 18px 0;
+  .container {
+    padding: 24px max(16px, env(safe-area-inset-right)) 0
+      max(16px, env(safe-area-inset-left));
+  }
+
+  .tool-sections {
+    gap: 16px;
+  }
+
+  .tool-card-header {
+    margin-bottom: 18px;
+  }
+
+  .tool-card-title {
+    font-size: 22px;
+  }
+
+  .tool-logo {
+    width: 150px;
+    max-width: 70%;
+  }
+
+  .tool-title,
+  .hero h1 {
+    font-size: 32px;
+    line-height: 1.18;
+  }
+
+  .tool-card,
+  .card,
+  .info {
+    padding: 20px;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .full-width {
+    grid-column: auto;
+  }
+
+  input,
+  select,
+  textarea {
+    min-width: 0;
+    font-size: 16px;
+  }
+
+  .button-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 10px;
+  }
+
+  .button-group {
+    flex-direction: column;
+  }
+
+  .button-group .btn {
+    width: 100%;
+  }
+
+  .related-tools-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-actions {
+    flex-direction: column;
+  }
+
+  .result-actions .btn {
+    width: 100%;
+  }
 }
 
-.stats-grid{
-grid-template-columns:repeat(2,minmax(0,1fr));
+@media (max-width: 576px) {
+  .container {
+    padding: 20px max(12px, env(safe-area-inset-right)) 0
+      max(12px, env(safe-area-inset-left));
+  }
+
+  .tool-sections {
+    gap: 14px;
+  }
+
+  .tool-card-header {
+    margin-bottom: 16px;
+  }
+
+  .tool-card-title {
+    font-size: 20px;
+  }
+
+  .tool-title,
+  .hero h1 {
+    font-size: 28px;
+    letter-spacing: -0.5px;
+  }
+
+  .tool-logo {
+    width: 140px;
+  }
+
+  .tool-card,
+  .card,
+  .info {
+    padding: 16px;
+    border-radius: 16px;
+  }
+
+  .form-grid {
+    gap: 14px;
+  }
+
+  .button-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .btn {
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .result-box {
+    font-size: 14px;
+  }
+
+  .message {
+    font-size: 13px;
+  }
+
+  .related-tool-card {
+    padding: 16px;
+  }
+
+  .xavert-footer-note {
+    padding: 0 max(12px, env(safe-area-inset-right))
+      calc(18px + env(safe-area-inset-bottom))
+      max(12px, env(safe-area-inset-left));
+  }
+
+  .xavert-toast {
+    bottom: calc(16px + env(safe-area-inset-bottom));
+    max-width: calc(
+      100% -
+        max(24px, env(safe-area-inset-left) + env(safe-area-inset-right) + 24px)
+    );
+  }
 }
 
-}
+@media (max-width: 380px) {
+  .tool-title,
+  .hero h1 {
+    font-size: 26px;
+  }
 
-@media (max-width:768px){
+  .tool-card,
+  .card,
+  .info {
+    padding: 14px;
+  }
 
-body{
-font-size:15px;
-}
-
-.container{
-padding:24px 16px 0;
-}
-
-.tool-title,
-.hero h1{
-font-size:32px;
-}
-
-.tool-subtitle{
-font-size:15px;
-}
-
-.tool-card,
-.card,
-.info{
-padding:20px;
-}
-
-.form-grid{
-grid-template-columns:1fr;
-gap:16px;
-}
-
-.button-grid{
-grid-template-columns:repeat(2,minmax(0,1fr));
-gap:10px;
-}
-
-.button-group{
-flex-direction:column;
-}
-
-.button-group .btn{
-width:100%;
-}
-
-.related-tools-grid{
-grid-template-columns:1fr;
-}
-
-}
-
-@media (max-width:576px){
-
-.container{
-padding:20px 12px 0;
-}
-
-.tool-title,
-.hero h1{
-font-size:28px;
-letter-spacing:-.5px;
-}
-
-.tool-card,
-.card,
-.info{
-padding:16px;
-border-radius:16px;
-}
-
-.form-grid{
-gap:14px;
-}
-
-.button-grid{
-grid-template-columns:1fr;
-}
-
-.btn{
-width:100%;
-}
-
-.stats-grid{
-grid-template-columns:1fr;
-}
-
-.result-box{
-font-size:14px;
-}
-
-.xavert-footer-note{
-padding-bottom:calc(18px + env(safe-area-inset-bottom));
-}
-
-.xavert-toast{
-bottom:calc(16px + env(safe-area-inset-bottom));
-}
-
+  .btn {
+    padding: 11px 14px;
+  }
 }

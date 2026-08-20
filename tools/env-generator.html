@@ -1,620 +1,462 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | .ENV Generator</title>
+    <title>XAVERT | .ENV Generator</title>
 
-<meta name="description" content="Free online .ENV Generator to create environment configuration files for web applications directly in your browser. Generate, copy and download .env files instantly.">
+    <meta
+      name="description"
+      content="Free online .ENV Generator to create environment configuration files for web applications directly in your browser. Generate, copy and download .env files instantly."
+    />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/env-generator.html">
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://xavert.com/tools/env-generator.html" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/env-generator.js" defer></script>
 
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | .ENV Generator">
-<meta property="og:description" content="Generate secure .env configuration files directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/env-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | .ENV Generator" />
+    <meta
+      property="og:description"
+      content="Generate secure .env configuration files directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/env-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | .ENV Generator">
-<meta name="twitter:description" content="Generate secure .env configuration files directly in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | .ENV Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate secure .env configuration files directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":".ENV Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/env-generator.html",
-  "description":"Generate .env configuration files locally in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my .env files uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All .env files are generated locally in your browser."
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": ".ENV Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/env-generator.html",
+        "description": "Generate .env configuration files locally in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I download the generated file?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can download the generated .env file instantly."
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "FAQPage",
+        "mainEntity": [
+          {
+            "@type": "Question",
+            "name": "Are my .env files uploaded?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "No. All .env files are generated locally in your browser."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Can I download the generated file?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. You can download the generated .env file instantly."
+            }
+          },
+          {
+            "@type": "Question",
+            "name": "Is the generated APP_KEY secure?",
+            "acceptedAnswer": {
+              "@type": "Answer",
+              "text": "Yes. The generator uses the browser's cryptographically secure random number generator."
+            }
+          }
+        ]
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Is the generated APP_KEY secure?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The generator uses the browser's cryptographically secure random number generator."
+    </script>
+    <style>
+      .password-field {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: stretch;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-}
-
-h1{
-text-align:center;
-font-size:42px;
-margin-bottom:10px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:12px 0 6px;
-font-weight:700;
-}
-
-input,
-select,
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-}
-
-textarea{
-min-height:320px;
-font-family:monospace;
-resize:vertical;
-}
-
-input:focus,
-select:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>.ENV Generator</h1>
-
-<p class="subtitle">
-Generate environment configuration files directly in your browser. Nothing is uploaded to a server.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ .ENV files are generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label>Application Name</label>
-<input id="appName" placeholder="XAVERT">
-<label>Application Key</label>
-<input id="appKey" readonly>
-
-<div class="button-group">
-<button onclick="generateAppKey()">
-Generate APP_KEY
-</button>
-</div>
-<label>Environment</label>
-<select id="appEnv">
-<option>production</option>
-<option>development</option>
-<option>local</option>
-<option>staging</option>
-</select>
-
-<label>Debug Mode</label>
-<select id="appDebug">
-<option>false</option>
-<option>true</option>
-</select>
-
-<label>Application URL</label>
-<input id="appUrl" placeholder="https://example.com">
-
-<label>Database Host</label>
-<input id="dbHost" placeholder="localhost">
-
-<label>Database Port</label>
-<input id="dbPort" placeholder="3306">
-
-<label>Database Name</label>
-<input id="dbName" placeholder="database_name">
-
-<label>Database User</label>
-<input id="dbUser" placeholder="database_user">
-
-<label>Database Password</label>
-<input id="dbPassword" placeholder="database_password">
-
-<div class="button-group">
-<button onclick="generateDbPassword()">
-Generate DB Password
-</button>
-</div>
-
-<div class="button-group">
-<button onclick="clearAll()">Clear</button>
-</div>
-
-</div>
-
-<div>
-
-<label>Generated .ENV</label>
-
-<textarea
-id="output"
-readonly
-placeholder=".env file will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="generateEnv()">Generate .ENV</button>
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadOutput()">Download .env</button>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<section class="info">
-<h2>About .ENV Generator</h2>
-
-<p>
-Generate production-ready environment configuration files directly in your browser. Create secure APP_KEY values, generate strong database passwords and export complete .env files without sending any information to a server.
-</p>
-
-<ul>
-<li>Secure APP_KEY generation</li>
-<li>Strong database password generator</li>
-<li>Download ready-to-use .env files</li>
-<li>One-click copy</li>
-<li>Local browser processing</li>
-</ul>
-</section>
-
-<section class="info">
-<h2>FAQ</h2>
-
-<h3>Are my .env files uploaded?</h3>
-<p>No. Everything is generated locally inside your browser.</p>
-
-<h3>Is the APP_KEY secure?</h3>
-<p>Yes. It uses the browser's cryptographically secure random number generator.</p>
-
-<h3>Can I download the generated file?</h3>
-<p>Yes. The generated .env file can be downloaded immediately.</p>
-</section>
-
-<section class="info">
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="password-toolkit.html">Password Toolkit</a></li>
-<li><a href="file-hash-checker.html">File Hash Checker</a></li>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="uuid-generator.html">UUID Generator</a></li>
-</ul>
-</section>
-
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
-Powered by XAVERT
-</div>
-
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-
-const toast=document.getElementById("toast");
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-function getSecureRandomChar(chars){
-
-const array=new Uint32Array(1);
-crypto.getRandomValues(array);
 
-return chars.charAt(array[0] % chars.length);
-
-}
-
-function generateAppKey(){
-
-const bytes=new Uint8Array(32);
-crypto.getRandomValues(bytes);
-
-let binary="";
-
-bytes.forEach(function(byte){
-binary+=String.fromCharCode(byte);
-});
-
-const key="base64:" + btoa(binary);
-
-document.getElementById("appKey").value=key;
-
-showToast("APP_KEY generated.","success");
-
-}
-function generateDbPassword(){
-
-const chars=
-"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-
-let password="";
-
-for(let i=0;i<24;i++){
-password+=getSecureRandomChar(chars);
-}
-
-document.getElementById("dbPassword").value=password;
-
-showToast("Database password generated.","success");
-
-}
-function generateEnv(){
-if(!document.getElementById("appKey").value){
-    generateAppKey();
-}
-const env=
-`APP_NAME="${document.getElementById("appName").value || "XAVERT"}"
-APP_ENV=${document.getElementById("appEnv").value}
-APP_DEBUG=${document.getElementById("appDebug").value}
-APP_URL=${document.getElementById("appUrl").value || "http://localhost"}
-APP_KEY=${document.getElementById("appKey").value}
-
-DB_HOST=${document.getElementById("dbHost").value || "localhost"}
-DB_PORT=${document.getElementById("dbPort").value || "3306"}
-DB_NAME=${document.getElementById("dbName").value || "database"}
-DB_USER=${document.getElementById("dbUser").value || "root"}
-DB_PASSWORD=${document.getElementById("dbPassword").value}`;
-
-
-document.getElementById("output").value=env;
-
-showToast(".ENV generated.","success");
-
-}
-
-function copyOutput(){
-
-const text=document.getElementById("output").value;
-
-if(!text){
-showToast("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-showToast("Copied.","success");
-})
-.catch(function(){
-showToast("Copy failed.","error");
-});
-
-}
-
-function downloadOutput(){
-
-const text=document.getElementById("output").value;
-
-if(!text){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download=".env";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Download started.","success");
-}
-
-function clearAll(){
-
-document.getElementById("appName").value="";
-document.getElementById("appEnv").value="production";
-document.getElementById("appDebug").value="false";
-document.getElementById("appUrl").value="";
-
-document.getElementById("dbHost").value="";
-document.getElementById("dbPort").value="";
-document.getElementById("dbName").value="";
-document.getElementById("dbUser").value="";
-document.getElementById("dbPassword").value="";
-document.getElementById("appKey").value="";
-document.getElementById("output").value="";
-document.getElementById("output").scrollTop=0;
-showToast("Cleared.","success");
-
-}
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-generateEnv();
-}
-
-});
-
-</script>
-
-</body>
+      .password-toggle {
+        min-width: 84px;
+      }
+
+      @media (max-width: 576px) {
+        .password-field {
+          grid-template-columns: 1fr;
+        }
+
+        .password-toggle {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+
+  <body
+    data-tool="env-generator"
+    data-related-tools="password-toolkit,base64-toolkit,htaccess-generator,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">.ENV Generator</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">
+            Environment Configuration Workspace
+          </h2>
+          <p class="tool-card-description">
+            Generate secure application keys, database credentials and a
+            ready-to-use .env configuration locally.
+          </p>
+        </header>
+
+        <div class="form-grid">
+          <div class="form-group">
+            <label for="appName">Application Name</label>
+            <input
+              id="appName"
+              name="appName"
+              type="text"
+              placeholder="XAVERT"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="appKey"> Application Key </label>
+
+            <div class="password-field">
+              <input
+                id="appKey"
+                name="appKey"
+                type="password"
+                readonly
+                autocomplete="off"
+                spellcheck="false"
+              />
+
+              <button
+                type="button"
+                class="btn btn-neutral password-toggle"
+                data-action="toggle-app-key"
+                aria-controls="appKey"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+
+            <div class="button-grid">
+              <button type="button" class="btn" data-action="generate-app-key">
+                Generate APP_KEY
+              </button>
+            </div>
+
+            <label for="appEnv">Environment</label>
+            <select id="appEnv" name="appEnv">
+              <option value="production">production</option>
+              <option value="development">development</option>
+              <option value="local">local</option>
+              <option value="staging">staging</option>
+            </select>
+
+            <label for="appDebug">Debug Mode</label>
+            <select id="appDebug" name="appDebug">
+              <option value="false">false</option>
+              <option value="true">true</option>
+            </select>
+
+            <label for="appUrl">Application URL</label>
+            <input
+              id="appUrl"
+              name="appUrl"
+              type="url"
+              placeholder="https://example.com"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="dbConnection">Database Driver</label>
+            <select id="dbConnection" name="dbConnection">
+              <option value="mysql">mysql</option>
+              <option value="pgsql">pgsql</option>
+              <option value="mariadb">mariadb</option>
+              <option value="sqlsrv">sqlsrv</option>
+            </select>
+
+            <label for="dbHost">Database Host</label>
+            <input
+              id="dbHost"
+              name="dbHost"
+              type="text"
+              placeholder="localhost"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="dbPort">Database Port</label>
+            <input
+              id="dbPort"
+              name="dbPort"
+              type="number"
+              min="1"
+              max="65535"
+              inputmode="numeric"
+              placeholder="3306"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="dbName">Database Name</label>
+            <input
+              id="dbName"
+              name="dbName"
+              type="text"
+              placeholder="database_name"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="dbUser">Database User</label>
+            <input
+              id="dbUser"
+              name="dbUser"
+              type="text"
+              placeholder="database_user"
+              autocomplete="off"
+              spellcheck="false"
+            />
+
+            <label for="dbPassword"> Database Password </label>
+
+            <div class="password-field">
+              <input
+                id="dbPassword"
+                name="dbPassword"
+                type="password"
+                placeholder="database_password"
+                autocomplete="new-password"
+                spellcheck="false"
+              />
+
+              <button
+                type="button"
+                class="btn btn-neutral password-toggle"
+                data-action="toggle-db-password"
+                aria-controls="dbPassword"
+                aria-pressed="false"
+              >
+                Show
+              </button>
+            </div>
+
+            <div class="button-grid">
+              <button
+                type="button"
+                class="btn"
+                data-action="generate-db-password"
+              >
+                Generate DB Password
+              </button>
+            </div>
+
+            <div class="button-grid">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="load-sample"
+                data-sample-loader
+              >
+                Load Sample
+              </button>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="clear-all"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="output">Generated .ENV</label>
+            <textarea
+              id="output"
+              name="output"
+              readonly
+              placeholder=".env file will appear here..."
+              spellcheck="false"
+              aria-describedby="outputHelp message"
+            ></textarea>
+            <p id="outputHelp" class="tool-card-description">
+              Review generated values before using them in a real deployment.
+              Never commit secrets to source control.
+            </p>
+
+            <div class="button-grid">
+              <button
+                type="button"
+                class="btn"
+                data-action="generate-env"
+                data-primary-action
+              >
+                Generate .ENV
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="copy-output"
+              >
+                Copy
+              </button>
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="download-output"
+              >
+                Download .env
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <p
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></p>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          Generate environment configuration templates directly in your browser.
+          The tool helps developers create secure APP_KEY values, strong
+          database credentials and complete .env files for local, staging and
+          production setups.
+        </p>
+
+        <h3>Overview</h3>
+        <p>
+          This generator is designed for fast setup whenever you need a
+          ready-to-use .env template without leaving the browser. It creates a
+          clear configuration structure that can be copied into an application,
+          saved as a file or refined before deployment.
+        </p>
+
+        <h3>Features</h3>
+        <ul class="about-features">
+          <li>
+            Generate secure APP_KEY values with cryptographically strong
+            randomness.
+          </li>
+          <li>
+            Create 24-character database passwords with upper/lowercase letters,
+            numbers and symbols.
+          </li>
+          <li>
+            Populate common application and database fields for local, staging,
+            development or production environments.
+          </li>
+          <li>
+            Choose common database drivers and validate application URLs and
+            ports.
+          </li>
+          <li>
+            Copy the generated .env content or download it as a .env file
+            instantly.
+          </li>
+        </ul>
+
+        <h3>Use Cases</h3>
+        <p>
+          Use this tool when you are bootstrapping a Laravel, Node, PHP, Python
+          or other web application and need a consistent .env file quickly. It
+          is also useful for developers preparing environment values for
+          testing, demos or deployment handoffs.
+        </p>
+
+        <h3>Privacy</h3>
+        <p class="about-privacy">
+          Everything is generated locally in your browser. Your values are not
+          uploaded, transmitted or stored on any server, and the generated file
+          remains under your control.
+        </p>
+
+        <p>
+          The most common questions are covered in the same section: your .env
+          files are never uploaded, you can download the generated file
+          immediately, and the APP_KEY uses the browser's secure random
+          generator.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+  </body>
 </html>

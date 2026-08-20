@@ -1,694 +1,550 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | CSS Minifier & Beautifier</title>
-
-<meta name="description" content="Free online CSS Minifier and Beautifier to minify, format, clean and optimize CSS code directly in your browser. Reduce file size, improve readability and download CSS instantly.">
-
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-<link rel="canonical" href="https://xavert.com/tools/css-minifier.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
-
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | CSS Minifier & Beautifier">
-<meta property="og:description" content="Minify, beautify, clean and optimize CSS code directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/css-minifier.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<!-- Twitter Card -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | CSS Minifier & Beautifier">
-<meta name="twitter:description" content="Minify and beautify CSS code directly in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"CSS Minifier & Beautifier",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/css-minifier.html",
-  "description":"Minify, format, clean and optimize CSS code directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-textarea{
-width:100%;
-min-height:280px;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:14px;
-font-family:monospace;
-resize:vertical;
-line-height:1.6;
-}
-
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:12px;
-margin-top:20px;
-}
-
-.stat-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:14px;
-text-align:center;
-}
-
-.stat-box strong{
-display:block;
-font-size:20px;
-margin-bottom:4px;
-}
-
-.stat-box span{
-font-size:13px;
-color:#6b7280;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success{
-color:#047857;
-}
-
-.error{
-color:#dc2626;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-.stats{
-grid-template-columns:1fr;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>CSS Minifier & Beautifier</h1>
-
-<p class="subtitle">
-Minify and beautify CSS code directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ CSS code is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label>Input CSS</label>
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-Example:
-<a href="#" onclick="loadExampleCss();return false;">Load Sample CSS</a>
-</div>
-<textarea
-id="inputCss"
-placeholder="Paste your CSS here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="minifyCss()">Minify CSS</button>
-<button onclick="beautifyCss()">Beautify CSS</button>
-<button onclick="swapCss()">Swap</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-
-<label>Output CSS</label>
-
-<textarea
-id="outputCss"
-readonly
-placeholder="Processed CSS will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadCss()">Download CSS</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="stats">
-
-<div class="stat-box">
-<strong id="inputChars">0</strong>
-<span>Input Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="lineCount">0</strong>
-<span>Lines</span>
-</div>
-
-<div class="stat-box">
-<strong id="operationType">-</strong>
-<span>Operation</span>
-</div>
-  
-<div class="stat-box">
-<strong id="outputChars">0</strong>
-<span>Output Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="savedChars">0</strong>
-<span>Saved Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="compression">0%</strong>
-<span>Compression</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-<section class="info">
-
-<h2>About CSS Minifier & Beautifier</h2>
-
-<p>
-CSS Minifier & Beautifier helps you compress, clean and format CSS code directly in your browser. It is useful for web developers, designers and anyone who works with stylesheets.
-</p>
-
-<ul>
-<li>Minify CSS to reduce file size.</li>
-<li>Beautify CSS to improve readability.</li>
-<li>Copy or download the processed CSS instantly.</li>
-<li>View character, line and compression statistics.</li>
-<li>Everything runs locally in your browser.</li>
-</ul>
-
-</section>
-
-<section class="info">
-
-<h2>CSS Minifier & Beautifier FAQ</h2>
-
-<p>
-Common questions about minifying and beautifying CSS online with XAVERT.
-</p>
-
-<ul>
-<li><strong>What does CSS minification do?</strong> It removes unnecessary spaces, comments and formatting to reduce file size.</li>
-<li><strong>Can I beautify CSS?</strong> Yes, the tool can format CSS to make it easier to read.</li>
-<li><strong>Is my CSS uploaded?</strong> No, all processing happens directly in your browser.</li>
-<li><strong>Can I download the result?</strong> Yes, you can download the processed CSS as a .css file.</li>
-</ul>
-
-</section>
-
-<section class="related-tools">
-
-<h2>Related Tools</h2>
-
-<div class="related-grid">
-
-<div class="related-card">
-<h3>HTML Minifier</h3>
-<p>Minify and clean HTML code directly in your browser.</p>
-<a href="html-minifier.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>JavaScript Minifier</h3>
-<p>Compress and format JavaScript code quickly.</p>
-<a href="javascript-minifier.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>JSON Toolkit</h3>
-<p>Format, validate and inspect JSON data.</p>
-<a href="json-toolkit.html">Open Tool</a>
-</div>
-
-<div class="related-card">
-<h3>Regex Tester</h3>
-<p>Test and validate regular expressions online.</p>
-<a href="regex-tester.html">Open Tool</a>
-</div>
-
-</div>
-
-</section>
-</main>
-
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-
-<div id="toast" role="status" aria-live="polite"></div>
-
-<script>
-const toast=document.getElementById("toast");
-const inputCss=document.getElementById("inputCss");
-const outputCss=document.getElementById("outputCss");
-
-inputCss.addEventListener("input",function(){
-updateStats(inputCss.value,outputCss.value);
-});
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-minifyCss();
-}
-
-});
-
-function showToast(text,type="success"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-
-const message=document.getElementById("message");
-
-message.textContent=text;
-message.className="message " + type;
-
-}
-
-function updateStats(input,output,operation="-"){
-
-const inputLength=input.length;
-const outputLength=output.length;
-
-const saved=Math.max(0,inputLength-outputLength);
-
-const compression=inputLength
-? ((saved/inputLength)*100).toFixed(1)
-: 0;
-
-const lines=input
-? input.split(/\r?\n/).length
-: 0;
-
-document.getElementById("inputChars").textContent=inputLength;
-document.getElementById("outputChars").textContent=outputLength;
-document.getElementById("savedChars").textContent=saved;
-document.getElementById("compression").textContent=compression + "%";
-document.getElementById("lineCount").textContent=lines;
-document.getElementById("operationType").textContent=operation;
-
-}
-function loadExampleCss(){
-
-document.getElementById("inputCss").value=
-`body {
-  background: white;
-  color: black;
-}
-
-.container {
-  max-width: 1200px;
-  margin: auto;
-}`;
-document.getElementById("outputCss").value="";
-updateStats(document.getElementById("inputCss").value,"","-");
-showToast("Sample CSS loaded.","success");
-
-}
-function minifyCss(){
-
-const input=document.getElementById("inputCss").value;
-
-if(!input.trim()){
-setMessage("Please enter CSS code.","error");
-showToast("Please enter CSS code.","error");
-return;
-}
-
-let output=input
-.replace(/\/\*[\s\S]*?\*\//g,"")
-.replace(/\s+/g," ")
-.replace(/\s*{\s*/g,"{")
-.replace(/\s*}\s*/g,"}")
-.replace(/\s*:\s*/g,":")
-.replace(/\s*;\s*/g,";")
-.replace(/\s*,\s*/g,",")
-.trim();
-
-document.getElementById("outputCss").value=output;
-
-updateStats(input,output,"Minify");
-
-setMessage(
-"CSS minified successfully.",
-"success"
-);
-showToast("CSS minified successfully.","success");
-}
-
-function beautifyCss(){
-
-const input=document.getElementById("inputCss").value;
-
-if(!input.trim()){
-setMessage("Please enter CSS code.","error");
-showToast("Please enter CSS code.","error");
-return;
-}
-
-let output=input
-.replace(/\{/g,"{\n  ")
-.replace(/;/g,";\n  ")
-.replace(/\}/g,"\n}\n\n")
-.replace(/\n\s*\n\s*\n/g,"\n\n")
-.trim();
-
-document.getElementById("outputCss").value=output;
-
-updateStats(input,output,"Beautify");
-setMessage(
-"CSS beautified successfully.",
-"success"
-);
-showToast("CSS beautified successfully.","success");
-}
-
-function copyOutput(){
-
-const text=document.getElementById("outputCss").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-navigator.clipboard.writeText(text);
-
-showToast("Copied.","success");
-
-}
-
-function downloadCss(){
-
-const text=document.getElementById("outputCss").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-const blob=new Blob(
-[text],
-{
-type:"text/css;charset=utf-8"
-}
-);
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-const operation=
-document.getElementById("operationType").textContent
-.toLowerCase();
-
-link.download=
-"xavert-css-" + operation + ".css";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Download started.","success");
-}
-function swapCss(){
-
-const input=document.getElementById("inputCss");
-const output=document.getElementById("outputCss");
-
-if(!output.value){
-showToast("Nothing to swap.","error");
-return;
-}
-
-input.value=output.value;
-output.value="";
-
-updateStats(
-input.value,
-"",
-"-"
-);
-
-showToast("Output moved to input.","success");
-
-}
-function clearAll(){
-
-document.getElementById("inputCss").value="";
-document.getElementById("outputCss").value="";
-
-document.getElementById("inputChars").textContent="0";
-document.getElementById("outputChars").textContent="0";
-document.getElementById("savedChars").textContent="0";
-document.getElementById("compression").textContent="0%";
-document.getElementById("lineCount").textContent="0";
-document.getElementById("operationType").textContent="-";
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-showToast("Cleared.","success");
-}
-
-</script>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | CSS Minifier &amp; Beautifier</title>
+
+    <meta
+      name="description"
+      content="Minify, beautify, validate and download CSS directly in your browser. Reduce file size, improve readability and process stylesheets privately with XAVERT."
+    />
+
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/css-minifier.html" />
+
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+
+    <link rel="stylesheet" href="../assets/css/components.css" />
+
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+
+    <meta
+      property="og:title"
+      content="XAVERT | CSS Minifier &amp; Beautifier"
+    />
+
+    <meta
+      property="og:description"
+      content="Minify, beautify, validate and download CSS directly in your browser."
+    />
+
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/css-minifier.html"
+    />
+
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <meta
+      name="twitter:title"
+      content="XAVERT | CSS Minifier &amp; Beautifier"
+    />
+
+    <meta
+      name="twitter:description"
+      content="Minify, beautify and validate CSS locally in your browser."
+    />
+
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "CSS Minifier & Beautifier",
+        "alternateName": "XAVERT CSS Minifier",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/css-minifier.html",
+        "description": "Minify, beautify, validate and download CSS directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT",
+          "url": "https://xavert.com"
+        },
+        "featureList": [
+          "CSS minification",
+          "CSS beautification",
+          "Basic structural validation",
+          "License comment preservation",
+          "CSS file import",
+          "Copy and download",
+          "Compression statistics",
+          "Local browser processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .css-editor-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 20px;
+      }
+
+      .css-editor-panel {
+        min-width: 0;
+      }
+
+      .css-editor {
+        min-height: 360px;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 14px;
+        line-height: 1.65;
+        tab-size: 2;
+        white-space: pre;
+      }
+
+      .css-panel-header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 14px;
+        margin-bottom: 8px;
+      }
+
+      .css-panel-header label {
+        margin: 0;
+      }
+
+      .css-panel-meta {
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
+        text-align: right;
+      }
+
+      .css-options {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+        gap: 18px;
+        margin-top: 20px;
+        padding-top: 20px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .css-checkbox {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .css-checkbox input {
+        width: auto;
+        min-height: auto;
+        margin-top: 3px;
+      }
+
+      .css-checkbox label {
+        margin: 0;
+        font-weight: 700;
+      }
+
+      .css-checkbox small {
+        display: block;
+        margin-top: 4px;
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 400;
+        line-height: 1.5;
+      }
+
+      .css-actions {
+        grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+        margin-top: 22px;
+      }
+
+      .css-output-actions {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .css-file-input {
+        display: none;
+      }
+
+      .css-status {
+        margin-top: 18px;
+      }
+
+      .css-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .css-shortcuts {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .css-shortcuts code {
+        padding: 2px 6px;
+        border-radius: 5px;
+        background: #f3f4f6;
+        color: #111827;
+        font-family: monospace;
+      }
+
+      @media (max-width: 992px) {
+        .css-editor-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .css-actions {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .css-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 768px) {
+        .css-options {
+          grid-template-columns: 1fr;
+        }
+
+        .css-editor {
+          min-height: 300px;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .css-actions,
+        .css-output-actions,
+        .css-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .css-panel-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .css-panel-meta {
+          text-align: left;
+        }
+
+        .css-editor {
+          min-height: 250px;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/css-minifier.js" defer></script>
+  </head>
+
+  <body
+    data-tool="css-minifier"
+    data-related-tools="html-minifier,json-toolkit,text-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link"> ← Back to Home </a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">
+          CSS Minifier &amp; Beautifier
+        </h1>
+      </section>
+
+      <section class="tool-card" aria-label="CSS processing workspace">
+        <div class="css-editor-grid">
+          <div class="css-editor-panel">
+            <div class="css-panel-header">
+              <label for="inputCss"> Input CSS </label>
+
+              <span id="inputMeta" class="css-panel-meta">
+                0 characters · 0 lines
+              </span>
+            </div>
+
+            <textarea
+              id="inputCss"
+              class="css-editor"
+              placeholder="Paste CSS here or import a .css file..."
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              aria-describedby="inputMeta css-message"
+            ></textarea>
+          </div>
+
+          <div class="css-editor-panel">
+            <div class="css-panel-header">
+              <label for="outputCss"> Output CSS </label>
+
+              <span id="outputMeta" class="css-panel-meta">
+                0 characters · 0 lines
+              </span>
+            </div>
+
+            <textarea
+              id="outputCss"
+              class="css-editor"
+              readonly
+              placeholder="Minified or beautified CSS will appear here..."
+              autocomplete="off"
+              autocapitalize="off"
+              autocorrect="off"
+              spellcheck="false"
+              aria-describedby="outputMeta css-message"
+            ></textarea>
+
+            <div class="button-grid css-output-actions">
+              <button id="copyBtn" class="btn" type="button" disabled>
+                Copy Result
+              </button>
+
+              <button
+                id="downloadBtn"
+                class="btn btn-secondary"
+                type="button"
+                disabled
+              >
+                Download CSS
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="css-options">
+          <div class="css-checkbox">
+            <input id="preserveComments" type="checkbox" checked />
+
+            <div>
+              <label for="preserveComments"> Preserve license comments </label>
+
+              <small>
+                Keeps comments beginning with /*! or containing @license,
+                @preserve or @copyright.
+              </small>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="indentSize"> Beautify indentation </label>
+
+            <select id="indentSize">
+              <option value="2" selected>2 spaces</option>
+              <option value="4">4 spaces</option>
+              <option value="tab">Tab</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="button-grid css-actions">
+          <button id="minifyBtn" class="btn" type="button" data-primary-action>
+            Minify CSS
+          </button>
+
+          <button id="beautifyBtn" class="btn btn-secondary" type="button">
+            Beautify CSS
+          </button>
+
+          <button id="validateBtn" class="btn btn-secondary" type="button">
+            Validate
+          </button>
+
+          <button id="importBtn" class="btn btn-secondary" type="button">
+            Import CSS
+          </button>
+
+          <button
+            id="sampleBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-sample-loader
+          >
+            Load Sample
+          </button>
+
+          <button id="swapBtn" class="btn btn-secondary" type="button" disabled>
+            Move Output to Input
+          </button>
+
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <input
+          id="fileInput"
+          class="css-file-input"
+          type="file"
+          accept=".css,text/css"
+        />
+
+        <div
+          id="css-message"
+          class="message css-status"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <div class="stats-grid css-stats">
+          <div class="stat-card">
+            <strong id="inputChars" class="stat-value"> 0 </strong>
+
+            <span class="stat-label"> Input Chars </span>
+          </div>
+
+          <div class="stat-card">
+            <strong id="outputChars" class="stat-value"> 0 </strong>
+
+            <span class="stat-label"> Output Chars </span>
+          </div>
+
+          <div class="stat-card">
+            <strong id="inputLines" class="stat-value"> 0 </strong>
+
+            <span class="stat-label"> Input Lines </span>
+          </div>
+
+          <div class="stat-card">
+            <strong id="ruleCount" class="stat-value"> 0 </strong>
+
+            <span class="stat-label"> Rules </span>
+          </div>
+
+          <div class="stat-card">
+            <strong id="savedChars" class="stat-value"> 0 </strong>
+
+            <span class="stat-label"> Saved Chars </span>
+          </div>
+
+          <div class="stat-card">
+            <strong id="compression" class="stat-value"> 0% </strong>
+
+            <span class="stat-label"> Reduction </span>
+          </div>
+        </div>
+
+        <p class="css-shortcuts">
+          Shortcut:
+          <code>Ctrl/⌘ + Shift + B</code> beautifies.
+        </p>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT CSS Minifier &amp; Beautifier helps developers compress,
+          format and inspect stylesheets without uploading code to a server.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Minify CSS while preserving strings, URLs and optional license
+            comments.
+          </li>
+
+          <li>
+            Beautify compact or unformatted CSS with configurable indentation.
+          </li>
+
+          <li>
+            Check brackets, comments and quoted strings for basic structural
+            errors.
+          </li>
+
+          <li>
+            Import local CSS files and export the processed result as a .css
+            file.
+          </li>
+
+          <li>View character, line, rule and compression statistics.</li>
+
+          <li>Copy results directly to the clipboard.</li>
+        </ul>
+
+        <h3>Important Note</h3>
+
+        <p>
+          This tool performs safe structural processing and basic validation. It
+          does not replace a full standards-aware CSS parser or build pipeline.
+        </p>
+
+        <h3>Keyboard Shortcut</h3>
+
+        <p>
+          Press <strong>Ctrl + Shift + B</strong> (or
+          <strong>Command + Shift + B</strong> on macOS) to beautify CSS.
+        </p>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your CSS is never
+          uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

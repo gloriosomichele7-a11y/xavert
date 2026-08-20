@@ -1,592 +1,274 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Unit Converter</title>
-
-<meta name="description" content="Free online Unit Converter to convert length, weight, temperature, area, volume and speed units directly in your browser. Fast, private and easy unit conversions.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/unit-converter.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-input{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-select:focus,
-input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-.result-box{
-display:none;
-margin-top:16px;
-padding:14px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-font-size:15px;
-color:#374151;
-line-height:1.6;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Unit Converter</h1>
-
-<p class="subtitle">
-Convert length, weight, temperature, area, volume and speed units instantly.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ All conversions run locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-<label for="favoriteConversion">Favorite Conversions</label>
-<select id="favoriteConversion">
-<option value="">Select a quick conversion</option>
-<option value="length|kilometer|mile">Kilometer → Mile</option>
-<option value="length|mile|kilometer">Mile → Kilometer</option>
-<option value="weight|kilogram|pound">Kilogram → Pound</option>
-<option value="weight|pound|kilogram">Pound → Kilogram</option>
-<option value="temperature|celsius|fahrenheit">Celsius → Fahrenheit</option>
-<option value="temperature|fahrenheit|celsius">Fahrenheit → Celsius</option>
-<option value="volume|liter|gallon">Liter → Gallon</option>
-<option value="volume|gallon|liter">Gallon → Liter</option>
-</select>
-<label for="category">Conversion Category</label>
-
-<select id="category">
-<option value="length">Length</option>
-<option value="weight">Weight</option>
-<option value="temperature">Temperature</option>
-<option value="area">Area</option>
-<option value="volume">Volume</option>
-<option value="speed">Speed</option>
-</select>
-
-<label for="inputValue">Value</label>
-<input type="number" id="inputValue" placeholder="Enter value">
-
-<label for="fromUnit">From</label>
-<select id="fromUnit"></select>
-
-<label for="toUnit">To</label>
-<select id="toUnit"></select>
-
-<div class="button-group">
-
-<button onclick="swapUnits()">
-Swap Units
-</button>
-
-<button onclick="convertUnits()">
-Convert
-</button>
-
-<button onclick="clearConverter()">
-Clear
-</button>
-
-</div>
-
-<div id="message" class="message"></div>
-<div id="resultBox" class="result-box"></div>
-
-</div>
-
-</div>
-
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-
-<script>
-const category=document.getElementById("category");
-const favoriteConversion=document.getElementById("favoriteConversion");
-const inputValue=document.getElementById("inputValue");
-const fromUnit=document.getElementById("fromUnit");
-const toUnit=document.getElementById("toUnit");
-const message=document.getElementById("message");
-const resultBox=document.getElementById("resultBox");
-const toast=document.getElementById("toast");
-let lastResultText="";
-let conversionHistory=[];
-const units={
-length:{
-meter:1,
-kilometer:1000,
-centimeter:0.01,
-millimeter:0.001,
-mile:1609.344,
-yard:0.9144,
-foot:0.3048,
-inch:0.0254
-},
-weight:{
-kilogram:1,
-gram:0.001,
-milligram:0.000001,
-tonne:1000,
-pound:0.45359237,
-ounce:0.0283495231
-},
-area:{
-"square meter":1,
-"square kilometer":1000000,
-"square centimeter":0.0001,
-"square millimeter":0.000001,
-"square mile":2589988.110336,
-"square yard":0.83612736,
-"square foot":0.09290304,
-acre:4046.8564224,
-hectare:10000
-},
-volume:{
-liter:1,
-milliliter:0.001,
-"cubic meter":1000,
-"cubic centimeter":0.001,
-gallon:3.785411784,
-quart:0.946352946,
-pint:0.473176473,
-cup:0.2365882365,
-"fluid ounce":0.0295735296
-},
-speed:{
-"meter per second":1,
-"kilometer per hour":0.2777777778,
-"mile per hour":0.44704,
-knot:0.514444444,
-"foot per second":0.3048
-}
-};
-
-const temperatureUnits=[
-"celsius",
-"fahrenheit",
-"kelvin"
-];
-
-category.addEventListener("change",function(){
-populateUnits();
-message.textContent="";
-message.className="message";
-});
-favoriteConversion.addEventListener("change",function(){
-
-if(!favoriteConversion.value){
-return;
-}
-
-const parts=favoriteConversion.value.split("|");
-
-category.value=parts[0];
-
-populateUnits();
-
-fromUnit.value=parts[1];
-toUnit.value=parts[2];
-
-if(inputValue.value){
-convertUnits();
-}
-
-});
-inputValue.addEventListener("input",function(){
-
-if(inputValue.value){
-convertUnits();
-}else{
-clearResult();
-}
-
-});
-fromUnit.addEventListener("change",function(){
-
-if(inputValue.value){
-convertUnits();
-}
-
-});
-
-toUnit.addEventListener("change",function(){
-
-if(inputValue.value){
-convertUnits();
-}
-
-});
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-convertUnits();
-}
-});
-
-function populateUnits(){
-fromUnit.innerHTML="";
-toUnit.innerHTML="";
-
-let list=[];
-
-if(category.value==="temperature"){
-list=temperatureUnits;
-}else{
-list=Object.keys(units[category.value]);
-}
-
-list.forEach(unit=>{
-const optionFrom=document.createElement("option");
-optionFrom.value=unit;
-optionFrom.textContent=unit;
-
-const optionTo=document.createElement("option");
-optionTo.value=unit;
-optionTo.textContent=unit;
-
-fromUnit.appendChild(optionFrom);
-toUnit.appendChild(optionTo);
-});
-
-if(list.length>1){
-toUnit.value=list[1];
-}
-}
-function clearHistory(){
-
-conversionHistory=[];
-
-if(!lastResultText){
-return;
-}
-
-resultBox.innerHTML=
-"<strong>" + lastResultText.split(" → ")[0] + "</strong><br>" +
-"= <strong>" + lastResultText.split(" → ")[1] + "</strong><br><br>" +
-'<button onclick="copyResult()">Copy Result</button>';
-
-}
-function updateHistory(text){
-
-conversionHistory.unshift(text);
-conversionHistory=conversionHistory.slice(0,15);
-
-const historyHtml=
-"<br><strong>Conversion History</strong><br>" +
-conversionHistory.map((item,index)=>{
-return (index+1) + ". " + item;
-}).join("<br>") +
-'<br><br><button onclick="clearHistory()">Clear History</button>';
-
-return historyHtml;
-
-}
-function showToast(message,type="info"){
-
-toast.textContent=message;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function copyResult(){
-
-if(!lastResultText){
-return;
-}
-
-navigator.clipboard.writeText(lastResultText);
-
-showToast("Result copied.","success");
-
-}
-function setMessage(text,type){
-message.textContent=text;
-message.className="message " + type;
-}
-
-function clearResult(){
-message.textContent="";
-message.className="message";
-resultBox.innerHTML="";
-resultBox.style.display="none";
-}
-function swapUnits(){
-
-const temp=fromUnit.value;
-fromUnit.value=toUnit.value;
-toUnit.value=temp;
-
-if(inputValue.value){
-convertUnits();
-}
-
-showToast("Units swapped.","success");
-
-}
-function clearConverter(){
-
-inputValue.value="";
-
-category.value="length";
-favoriteConversion.value="";
-populateUnits();
-
-fromUnit.selectedIndex=0;
-
-if(toUnit.options.length>1){
-toUnit.selectedIndex=1;
-}
-
-conversionHistory=[];
-lastResultText="";
-
-clearResult();
-showToast("Cleared.","success");
-}
-
-function formatNumber(value){
-if(!isFinite(value)){
-return "Invalid result";
-}
-
-return Number(value.toFixed(6)).toString();
-}
-
-function convertTemperature(value,from,to){
-if(from===to){
-return value;
-}
-
-let celsius=value;
-
-if(from==="fahrenheit"){
-celsius=(value-32)*5/9;
-}
-
-if(from==="kelvin"){
-celsius=value-273.15;
-}
-
-if(to==="fahrenheit"){
-return (celsius*9/5)+32;
-}
-
-if(to==="kelvin"){
-return celsius+273.15;
-}
-
-return celsius;
-}
-
-function convertUnits(){
-const value=parseFloat(inputValue.value);
-
-if(isNaN(value)){
-setMessage("Please enter a valid number.","error");
-showToast("Please enter a valid number.","error");
-return;
-}
-
-const from=fromUnit.value;
-const to=toUnit.value;
-
-if(category.value==="temperature" && from==="kelvin" && value<0){
-setMessage("Kelvin cannot be below 0.","error");
-showToast("Invalid Kelvin value.","error");
-return;
-}
-
-let result=0;
-
-if(category.value==="temperature"){
-result=convertTemperature(value,from,to);
-}else{
-const base=value*units[category.value][from];
-result=base/units[category.value][to];
-}
-
-setMessage("Conversion completed.","success");
-showToast("Conversion completed.","success");
-lastResultText=
-formatNumber(value) + " " + from + " → " + formatNumber(result) + " " + to;
-
-resultBox.style.display="block";
-resultBox.innerHTML=
-"<strong>" + formatNumber(value) + " " + from + "</strong><br>" +
-"= <strong>" + formatNumber(result) + " " + to + "</strong><br><br>" +
-'<button onclick="copyResult()">Copy Result</button>' +
-updateHistory(lastResultText);
-}
-
-populateUnits();
-</script>
-
-</body>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Unit Converter</title>
+
+    <meta
+      name="description"
+      content="Convert length, weight, temperature, area, volume and speed units directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/unit-converter.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .unit-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .unit-result[hidden] {
+        display: none !important;
+      }
+
+      .unit-result-main {
+        display: grid;
+        gap: 6px;
+        margin-bottom: 18px;
+        padding: 16px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+      }
+
+      .unit-result-value {
+        font-size: 18px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .unit-history-list {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .unit-history-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid #e5e7eb;
+        color: #4b5563;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/unit-converter.js" defer></script>
+  </head>
+
+  <body
+    data-tool="unit-converter"
+    data-related-tools="date-time-toolkit,data-converter,color-toolkit,text-toolkit,unix-timestamp-converter"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Unit Converter</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="converter-title">
+          <header class="tool-card-header">
+            <h2 id="converter-title" class="tool-card-title">Convert Units</h2>
+            <p class="tool-card-description">
+              Convert common length, weight, temperature, area, volume and speed
+              units.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="favoriteConversion">Favorite Conversions</label>
+                <select id="favoriteConversion">
+                  <option value="">Select a quick conversion</option>
+                  <option value="length|kilometer|mile">
+                    Kilometer → Mile
+                  </option>
+                  <option value="length|mile|kilometer">
+                    Mile → Kilometer
+                  </option>
+                  <option value="weight|kilogram|pound">
+                    Kilogram → Pound
+                  </option>
+                  <option value="weight|pound|kilogram">
+                    Pound → Kilogram
+                  </option>
+                  <option value="temperature|celsius|fahrenheit">
+                    Celsius → Fahrenheit
+                  </option>
+                  <option value="temperature|fahrenheit|celsius">
+                    Fahrenheit → Celsius
+                  </option>
+                  <option value="volume|liter|gallon">Liter → Gallon</option>
+                  <option value="volume|gallon|liter">Gallon → Liter</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="category">Conversion Category</label>
+                <select id="category">
+                  <option value="length">Length</option>
+                  <option value="weight">Weight</option>
+                  <option value="temperature">Temperature</option>
+                  <option value="area">Area</option>
+                  <option value="volume">Volume</option>
+                  <option value="speed">Speed</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="inputValue">Value</label>
+                <input
+                  id="inputValue"
+                  type="number"
+                  step="any"
+                  placeholder="Enter value"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="fromUnit">From</label>
+                <select id="fromUnit"></select>
+              </div>
+
+              <div class="form-group">
+                <label for="toUnit">To</label>
+                <select id="toUnit"></select>
+              </div>
+            </div>
+
+            <div class="button-grid unit-actions">
+              <button
+                id="convertBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Convert
+              </button>
+
+              <button id="swapBtn" class="btn btn-secondary" type="button">
+                Swap Units
+              </button>
+
+              <button id="copyBtn" class="btn btn-secondary" type="button">
+                Copy Result
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <section
+              id="resultBox"
+              class="tool-card-result unit-result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <h3 id="result-title">Result</h3>
+
+              <div class="unit-result-main">
+                <span id="resultSource" class="unit-result-value"></span>
+                <span>=</span>
+                <span id="resultTarget" class="unit-result-value"></span>
+              </div>
+
+              <div class="button-grid unit-actions">
+                <button
+                  id="clearHistoryBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Clear History
+                </button>
+              </div>
+
+              <h3>Conversion History</h3>
+              <ul id="historyList" class="unit-history-list"></ul>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Unit Converter performs common unit conversions directly in
+          your browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Convert length, weight, temperature, area, volume and speed.</li>
+          <li>Use common favorite conversion pairs.</li>
+          <li>Swap source and target units instantly.</li>
+          <li>Keep a short conversion history during the current session.</li>
+          <li>Copy the latest result.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          All conversions happen locally within your browser. Your values are
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

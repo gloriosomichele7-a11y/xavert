@@ -1,0 +1,283 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Word & Character Counter</title>
+
+    <meta
+      name="description"
+      content="Count words, characters, sentences, paragraphs, lines, spaces and reading time directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/word-character-counter.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .counter-editor {
+        min-height: 320px;
+        resize: vertical;
+        line-height: 1.7;
+      }
+
+      .counter-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .counter-result[hidden] {
+        display: none !important;
+      }
+
+      .counter-detail-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .counter-detail-card {
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+      }
+
+      .counter-detail-card strong {
+        display: block;
+        margin-bottom: 4px;
+        font-size: 16px;
+      }
+
+      .counter-detail-card span {
+        color: #6b7280;
+        font-size: 13px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/word-character-counter.js" defer></script>
+  </head>
+
+  <body
+    data-tool="word-character-counter"
+    data-related-tools="text-toolkit,lorem-ipsum-generator,text-diff-checker,regex-tester,html-entity-encoder-decoder"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Word &amp; Character Counter</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="counter-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="counter-workspace-title" class="tool-card-title">
+              Analyze Text
+            </h2>
+
+            <p class="tool-card-description">
+              Count words, characters, sentences, paragraphs, lines and reading
+              time from any text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="inputText">Text</label>
+
+              <textarea
+                id="inputText"
+                class="counter-editor"
+                placeholder="Paste or type your text here..."
+                spellcheck="true"
+              ></textarea>
+            </div>
+
+            <div class="button-grid counter-actions">
+              <button
+                id="analyzeBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Analyze Text
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button id="copyBtn" class="btn btn-secondary" type="button">
+                Copy Text
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <section
+              id="resultBox"
+              class="tool-card-result counter-result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <h3 id="result-title">Text Statistics</h3>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="wordCount" class="stat-value">0</strong>
+                  <span class="stat-label">Words</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="characterCount" class="stat-value">0</strong>
+                  <span class="stat-label">Characters</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="characterNoSpacesCount" class="stat-value"
+                    >0</strong
+                  >
+                  <span class="stat-label">Characters No Spaces</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="sentenceCount" class="stat-value">0</strong>
+                  <span class="stat-label">Sentences</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="paragraphCount" class="stat-value">0</strong>
+                  <span class="stat-label">Paragraphs</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="lineCount" class="stat-value">0</strong>
+                  <span class="stat-label">Lines</span>
+                </div>
+              </div>
+
+              <div class="counter-detail-grid">
+                <div class="counter-detail-card">
+                  <strong id="spaceCount">0</strong>
+                  <span>Spaces</span>
+                </div>
+
+                <div class="counter-detail-card">
+                  <strong id="uniqueWordCount">0</strong>
+                  <span>Unique Words</span>
+                </div>
+
+                <div class="counter-detail-card">
+                  <strong id="averageWordLength">0</strong>
+                  <span>Average Word Length</span>
+                </div>
+
+                <div class="counter-detail-card">
+                  <strong id="readingTime">0 sec</strong>
+                  <span>Estimated Reading Time</span>
+                </div>
+
+                <div class="counter-detail-card">
+                  <strong id="speakingTime">0 sec</strong>
+                  <span>Estimated Speaking Time</span>
+                </div>
+
+                <div class="counter-detail-card">
+                  <strong id="byteCount">0</strong>
+                  <span>UTF-8 Bytes</span>
+                </div>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Word &amp; Character Counter analyzes text locally in your
+          browser.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Count words and total characters.</li>
+          <li>Count characters excluding whitespace.</li>
+          <li>Count sentences, paragraphs and lines.</li>
+          <li>Count spaces and unique words.</li>
+          <li>Calculate average word length.</li>
+          <li>Estimate reading and speaking time.</li>
+          <li>Calculate UTF-8 byte size.</li>
+          <li>Copy the original text instantly.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Text analysis happens locally within your browser. Your text is never
+          uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

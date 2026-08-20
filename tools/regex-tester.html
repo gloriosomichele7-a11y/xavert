@@ -1,593 +1,349 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Regex Tester & Regular Expression Tool</title>
-
-<meta name="description" content="Free online Regex Tester to test regular expressions, highlight matches, validate patterns, analyze text and download regex matches directly in your browser.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/regex-tester.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-input[type="text"],
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-font-family:monospace;
-line-height:1.6;
-}
-
-textarea{
-min-height:220px;
-resize:vertical;
-}
-
-input[type="text"]:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.flags{
-display:flex;
-gap:14px;
-flex-wrap:wrap;
-margin-top:10px;
-}
-
-.flags label{
-display:flex;
-align-items:center;
-gap:7px;
-margin:0;
-font-size:14px;
-font-weight:700;
-color:#374151;
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.secondary{
-background:#ffffff;
-color:#111827;
-border:1px solid #d1d5db;
-}
-
-.secondary:hover{
-background:#ffffff;
-color:#dc2626;
-border-color:#dc2626;
-}
-
-.result-box{
-display:none;
-margin-top:20px;
-padding:20px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-}
-
-.result-title{
-font-weight:700;
-margin-bottom:10px;
-}
-
-.preview{
-background:white;
-border:1px solid #dbe3ea;
-border-radius:10px;
-padding:14px;
-min-height:140px;
-white-space:pre-wrap;
-word-break:break-word;
-font-family:monospace;
-line-height:1.6;
-}
-
-mark{
-background:rgba(220,38,38,.18);
-color:#991b1b;
-padding:2px 3px;
-border-radius:4px;
-}
-
-.match-list{
-list-style:none;
-margin-top:8px;
-}
-
-.match-list li{
-padding:9px 0;
-border-bottom:1px solid #e5e7eb;
-font-family:monospace;
-font-size:14px;
-word-break:break-word;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-.flags{gap:10px;}
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Regex Tester</h1>
-
-<p class="subtitle">
-Test regular expressions, highlight matches and copy results directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Regex tests run locally in your browser. Your text is never uploaded or stored.
-</div>
-<div class="card">
-
-<label for="pattern">Regular Expression</label>
-<input id="pattern" type="text" placeholder="Example: \d+">
-<div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
-
-<button type="button" onclick="loadRegex('\\d+')">
-Numbers
-</button>
-
-<button type="button" onclick="loadRegex('[A-Za-z]+')">
-Words
-</button>
-
-<button type="button" onclick="loadRegex('https?:\\/\\/[^\\s]+')">
-URLs
-</button>
-
-<button type="button" onclick="loadRegex('[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}')">
-Email
-</button>
-
-</div>
-<label>Flags</label>
-<div class="flags">
-<label><input type="checkbox" id="flagG" checked> Global</label>
-<label><input type="checkbox" id="flagI"> Ignore Case</label>
-<label><input type="checkbox" id="flagM"> Multiline</label>
-</div>
-
-<label for="inputText">Test Text</label>
-<textarea id="inputText" placeholder="Paste the text you want to test here"></textarea>
-
-<div class="button-group">
-<button onclick="testRegex()">Test Regex</button>
-<button onclick="copyMatches()">Copy Matches</button>
-<button onclick="downloadMatches()">Download Matches</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-<div id="resultBox" class="result-box">
-
-<div class="result-title">Highlighted Preview</div>
-<div id="preview" class="preview">Matches will appear here.</div>
-
-<br>
-
-<div class="result-title">Matches</div>
-<div id="matchInfo" style="margin-bottom:8px;color:#6b7280;font-size:13px;line-height:1.7;">
-Matches: 0
-</div>
-
-<ul id="matches" class="match-list">
-<li>No matches yet.</li>
-</ul>
-
-</div>
-
-</div>
-
-</div>
-
-<div id="toast"></div>
-
-<script>
-const pattern=document.getElementById("pattern");
-const inputText=document.getElementById("inputText");
-const resultBox=document.getElementById("resultBox");
-const preview=document.getElementById("preview");
-const matches=document.getElementById("matches");
-const matchInfo=document.getElementById("matchInfo");
-const message=document.getElementById("message");
-const toast=document.getElementById("toast");
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-message.textContent=text;
-message.className="message " + type;
-}
-
-function escapeHtml(value){
-return value
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#039;");
-}
-
-function getFlags(){
-let flags="";
-
-if(document.getElementById("flagG").checked){
-flags+="g";
-}
-
-if(document.getElementById("flagI").checked){
-flags+="i";
-}
-
-if(document.getElementById("flagM").checked){
-flags+="m";
-}
-
-return flags;
-}
-
-function testRegex(){
-const regexValue=pattern.value;
-const textValue=inputText.value;
-const flags=getFlags();
-
-matches.innerHTML="";
-preview.innerHTML="";
-
-if(!regexValue){
-resultBox.style.display="none";
-setMessage("Please enter a regular expression.","error");
-showToast("Please enter a regular expression.","error");
-return;
-}
-
-if(!textValue){
-resultBox.style.display="none";
-setMessage("Please enter text to test.","error");
-showToast("Please enter text to test.","error");
-return;
-}
-
-try{
-const regex=new RegExp(regexValue,flags);
-let found=[];
-let highlighted="";
-let lastIndex=0;
-
-if(flags.includes("g")){
-let match;
-
-while((match=regex.exec(textValue))!==null){
-found.push(match[0]);
-
-highlighted+=escapeHtml(textValue.slice(lastIndex,match.index));
-highlighted+="<mark>" + escapeHtml(match[0]) + "</mark>";
-
-lastIndex=match.index + match[0].length;
-
-if(match[0]===""){
-regex.lastIndex++;
-}
-}
-
-highlighted+=escapeHtml(textValue.slice(lastIndex));
-}else{
-const match=regex.exec(textValue);
-
-if(match){
-found.push(match[0]);
-
-highlighted+=escapeHtml(textValue.slice(0,match.index));
-highlighted+="<mark>" + escapeHtml(match[0]) + "</mark>";
-highlighted+=escapeHtml(textValue.slice(match.index + match[0].length));
-}else{
-highlighted=escapeHtml(textValue);
-}
-}
-
-preview.innerHTML=highlighted || escapeHtml(textValue);
-resultBox.style.display="block";
-matchInfo.innerHTML=
-"Matches: " + found.length +
-"<br>Pattern Length: " + regexValue.length +
-"<br>Text Length: " + textValue.length +
-"<br>Flags: " + (flags || "-");
-
-if(found.length===0){
-matches.innerHTML="<li>No matches found.</li>";
-setMessage("No matches found.","error");
-showToast("No matches found.","error");
-return;
-}
-
-found.forEach(function(item,index){
-const li=document.createElement("li");
-li.textContent=(index + 1) + ". " + item;
-matches.appendChild(li);
-});
-
-setMessage("Regex tested successfully.","success");
-showToast("Regex tested successfully.","success");
-}catch(error){
-resultBox.style.display="none";
-setMessage("Invalid regular expression: " + error.message,"error");
-showToast("Invalid regular expression.","error");
-}
-}
-
-function copyMatches(){
-const items=Array.from(matches.querySelectorAll("li")).map(function(li){
-return li.textContent;
-});
-
-if(
-items.length===0 ||
-items[0].includes("No matches")
-){
-showToast("Nothing to copy.","error");
-return;
-}
-
-const cleanItems=items.map(function(item){
-return item.replace(/^\d+\.\s/,"");
-}).join("\n");
-
-navigator.clipboard.writeText(cleanItems);
-showToast("Matches copied.","success");
-}
-function downloadMatches(){
-
-const items = Array.from(
-matches.querySelectorAll("li")
-).map(function(li){
-return li.textContent;
-});
-
-if(
-items.length===0 ||
-items[0].includes("No matches")
-){
-showToast("Nothing to download.","error");
-return;
-}
-
-const content = items.map(function(item){
-return item.replace(/^\d+\.\s/,"");
-}).join("\n");
-
-const blob = new Blob(
-[content],
-{type:"text/plain;charset=utf-8"}
-);
-
-const url = URL.createObjectURL(blob);
-
-const a = document.createElement("a");
-
-a.href = url;
-a.download = "xavert-regex-matches.txt";
-
-document.body.appendChild(a);
-a.click();
-document.body.removeChild(a);
-
-URL.revokeObjectURL(url);
-
-showToast("Download started.","success");
-
-}
-function clearAll(){
-
-pattern.value="";
-inputText.value="";
-
-document.getElementById("flagG").checked=true;
-document.getElementById("flagI").checked=false;
-document.getElementById("flagM").checked=false;
-
-preview.textContent="Matches will appear here.";
-matches.innerHTML="<li>No matches yet.</li>";
-matchInfo.innerHTML="Matches: 0";
-
-resultBox.style.display="none";
-
-message.textContent="";
-message.className="message";
-
-showToast("Cleared.","success");
-
-}
-function loadRegex(value){
-
-pattern.value=value;
-
-if(!inputText.value.trim()){
-inputText.value=
-`Contact us at support@xavert.com or visit https://xavert.com.
-Order 12345 was created on 2026-01-15.
-The quick brown fox jumps over 42 lazy dogs.`;
-}
-
-testRegex();
-
-}
-pattern.addEventListener("input",testRegex);
-inputText.addEventListener("input",testRegex);
-
-document.querySelectorAll(".flags input").forEach(function(flag){
-flag.addEventListener("change",testRegex);
-});
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-testRegex();
-}
-
-});
-</script>
-
-</body>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | Regex Tester</title>
+
+    <meta
+      name="description"
+      content="Test regular expressions, highlight matches, analyze text and export results directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/regex-tester.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .regex-input,
+      .regex-textarea {
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
+      }
+
+      .regex-textarea {
+        min-height: 220px;
+        resize: vertical;
+      }
+
+      .regex-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .regex-flags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 14px;
+        margin-top: 10px;
+      }
+
+      .regex-flag {
+        display: flex;
+        align-items: center;
+        gap: 7px;
+        margin: 0;
+        color: #374151;
+        font-size: 14px;
+        font-weight: 700;
+      }
+
+      .regex-flag input {
+        width: auto;
+        min-height: auto;
+        margin: 0;
+      }
+
+      .regex-result[hidden] {
+        display: none !important;
+      }
+
+      .regex-preview {
+        min-height: 140px;
+        padding: 14px;
+        border: 1px solid #dbe3ea;
+        border-radius: 10px;
+        background: #ffffff;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
+      }
+
+      .regex-preview mark {
+        padding: 2px 3px;
+        border-radius: 4px;
+        background: rgba(220, 38, 38, 0.18);
+        color: #991b1b;
+      }
+
+      .regex-match-list {
+        margin: 10px 0 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .regex-match-list li {
+        padding: 9px 0;
+        border-bottom: 1px solid #e5e7eb;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      .regex-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/regex-tester.js" defer></script>
+  </head>
+
+  <body
+    data-tool="regex-tester"
+    data-related-tools="text-toolkit,text-diff-checker,json-toolkit,base64-toolkit,markdown-editor"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">Regex Tester</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="regex-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="regex-workspace-title" class="tool-card-title">
+              Test Regular Expressions
+            </h2>
+            <p class="tool-card-description">
+              Validate patterns, highlight matches and export matched text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="pattern">Regular Expression</label>
+              <input
+                id="pattern"
+                class="regex-input"
+                type="text"
+                placeholder="Example: \d+"
+                spellcheck="false"
+                autocomplete="off"
+              />
+
+              <div class="regex-presets" aria-label="Regex presets">
+                <button
+                  class="btn btn-secondary regex-preset"
+                  type="button"
+                  data-regex-preset="\d+"
+                >
+                  Numbers
+                </button>
+                <button
+                  class="btn btn-secondary regex-preset"
+                  type="button"
+                  data-regex-preset="[A-Za-z]+"
+                >
+                  Words
+                </button>
+                <button
+                  class="btn btn-secondary regex-preset"
+                  type="button"
+                  data-regex-preset="https?:\/\/[^\s]+"
+                >
+                  URLs
+                </button>
+                <button
+                  class="btn btn-secondary regex-preset"
+                  type="button"
+                  data-regex-preset="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+                >
+                  Email
+                </button>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Flags</label>
+              <div class="regex-flags">
+                <label class="regex-flag" for="flagG"
+                  ><input id="flagG" type="checkbox" checked /><span
+                    >Global</span
+                  ></label
+                >
+                <label class="regex-flag" for="flagI"
+                  ><input id="flagI" type="checkbox" /><span
+                    >Ignore Case</span
+                  ></label
+                >
+                <label class="regex-flag" for="flagM"
+                  ><input id="flagM" type="checkbox" /><span
+                    >Multiline</span
+                  ></label
+                >
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label for="inputText">Test Text</label>
+              <textarea
+                id="inputText"
+                class="regex-textarea"
+                placeholder="Paste the text you want to test here"
+                spellcheck="false"
+              ></textarea>
+            </div>
+
+            <div class="button-grid regex-actions">
+              <button
+                id="testBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Test Regex
+              </button>
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+              <button
+                id="copyMatchesBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Copy Matches
+              </button>
+              <button
+                id="downloadMatchesBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Download Matches
+              </button>
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <section
+              id="resultBox"
+              class="tool-card-result regex-result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <h3 id="result-title">Highlighted Preview</h3>
+              <div id="preview" class="regex-preview">
+                Matches will appear here.
+              </div>
+
+              <h3>Matches</h3>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="matchCountStat" class="stat-value">0</strong
+                  ><span class="stat-label">Matches</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="patternLengthStat" class="stat-value">0</strong
+                  ><span class="stat-label">Pattern Length</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="textLengthStat" class="stat-value">0</strong
+                  ><span class="stat-label">Text Length</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="flagsStat" class="stat-value">—</strong
+                  ><span class="stat-label">Flags</span>
+                </div>
+              </div>
+
+              <ul id="matches" class="regex-match-list">
+                <li>No matches yet.</li>
+              </ul>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          The XAVERT Regex Tester lets you test JavaScript-compatible regular
+          expressions directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Test regular expressions against custom text.</li>
+          <li>Use global, ignore-case and multiline flags.</li>
+          <li>Highlight matching text safely in the preview.</li>
+          <li>
+            Use quick presets for numbers, words, URLs and email addresses.
+          </li>
+          <li>Copy or download matched values.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Regex processing happens locally within your browser. Your pattern and
+          test text are never uploaded, transmitted, shared or stored on any
+          server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

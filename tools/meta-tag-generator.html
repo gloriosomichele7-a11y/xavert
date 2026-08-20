@@ -1,755 +1,337 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | Meta Tag Generator</title>
+    <title>XAVERT | Meta Tag Generator</title>
 
-<meta name="description" content="Free online Meta Tag Generator to create SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots meta tags directly in your browser.">
+    <meta
+      name="description"
+      content="Generate SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots directives directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/meta-tag-generator.html">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/meta-tag-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Meta Tag Generator">
-<meta property="og:description" content="Create SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots directives directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/meta-tag-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Meta Tag Generator">
-<meta name="twitter:description" content="Generate SEO, Open Graph and Twitter Card meta tags locally in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Meta Tag Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/meta-tag-generator.html",
-  "description":"Generate SEO meta tags, Open Graph tags, Twitter Card tags, canonical URLs and robots directives directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my meta tags uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All meta tags are generated locally inside your browser."
+    <style>
+      .meta-output {
+        min-height: 300px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which tags can this tool generate?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool generates title, description, robots, author, keywords, canonical, Open Graph and Twitter Card tags."
+
+      .meta-counter {
+        margin-top: 6px;
+        font-size: 13px;
+        font-weight: 700;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I copy or download the generated tags?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can copy the generated HTML or download it as an HTML snippet."
+
+      .meta-counter-good {
+        color: #047857;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-input,
-textarea,
-select{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-
-textarea{
-min-height:120px;
-resize:vertical;
-}
-
-input:focus,
-textarea:focus,
-select:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.output{
-min-height:260px;
-font-family:monospace;
-font-size:13px;
-line-height:1.6;
-}
-
-.preview-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:18px;
-margin-top:16px;
-}
-
-.google-title{
-color:#1a0dab;
-font-size:20px;
-line-height:1.3;
-margin-bottom:4px;
-}
-
-.google-url{
-color:#006621;
-font-size:14px;
-margin-bottom:6px;
-word-break:break-all;
-}
-
-.google-description{
-color:#4b5563;
-font-size:14px;
-line-height:1.5;
-}
-
-.counter{
-font-size:13px;
-color:#6b7280;
-margin-top:6px;
-}
-
-.good{color:#047857;}
-.warn{color:#d97706;}
-.bad{color:#dc2626;}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-
-.footer-note{
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-}
-  
-.success{color:#047857;}
-.error{color:#dc2626;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-
-@media(max-width:900px){
-.grid{
-grid-template-columns:1fr;
-}
-}
-
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-h1{font-size:34px;}
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Meta Tag Generator</h1>
-
-<p class="subtitle">
-Create SEO meta tags, Open Graph tags and Twitter Card tags directly in your browser.
-</p>
-<div class="success-banner">
-✓ Meta tags are generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label for="siteTitle">Meta Title</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleMeta();return false;">Load Sample Meta Tags</a>
-</div>
-
-<input id="siteTitle" type="text" placeholder="Example: XAVERT | Free Online Tools">
-
-<div id="titleCounter" class="counter">0 characters</div>
-
-<label for="siteDescription">Meta Description</label>
-<textarea id="siteDescription" placeholder="Write a short SEO description for your page..."></textarea>
-
-<div id="descriptionCounter" class="counter">0 characters</div>
-<label for="authorName">Meta Author</label>
-<input id="authorName" type="text" placeholder="John Smith">
-<label for="keywords">Meta Keywords</label>
-<input id="keywords" type="text" placeholder="tools, seo, converter, developer">
-
-<label for="canonicalUrl">Canonical URL</label>
-<input id="canonicalUrl" type="url" placeholder="https://example.com/page">
-
-<label for="imageUrl">Open Graph Image URL</label>
-<input id="imageUrl" type="url" placeholder="https://example.com/image.jpg">
-
-<label for="twitterCard">Twitter Card Type</label>
-<select id="twitterCard">
-<option value="summary_large_image">summary_large_image</option>
-<option value="summary">summary</option>
-</select>
-<label for="robotsMeta">Robots Meta</label>
-<select id="robotsMeta">
-<option value="index, follow">index, follow</option>
-<option value="noindex, follow">noindex, follow</option>
-<option value="index, nofollow">index, nofollow</option>
-<option value="noindex, nofollow">noindex, nofollow</option>
-</select>
-<div class="button-group">
-<button onclick="generateTags()">Generate Tags</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-
-<label for="output">Generated HTML</label>
-<textarea id="output" class="output" readonly></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy HTML</button>
-<button onclick="downloadOutput()">Download .html</button>
-</div>
-
-<div class="preview-box">
-<strong>Google Preview</strong>
-<br><br>
-<div id="previewTitle" class="google-title">Your page title will appear here</div>
-<div id="previewUrl" class="google-url">https://example.com/page</div>
-<div id="previewDescription" class="google-description">Your meta description preview will appear here.</div>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Are my meta tags uploaded?</h3>
-<p>No. Everything is generated locally inside your browser.</p>
-
-<h3>Which meta tags are supported?</h3>
-<p>The generator creates title, description, robots, keywords, author, canonical, Open Graph and Twitter Card tags.</p>
-
-<h3>Can I use the generated code on any website?</h3>
-<p>Yes. The generated HTML can be copied or downloaded and used on any website.</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<div id="related-tools"></div>
-
-</section>
-</main>
-<div class="footer-note">
-Powered by XAVERT
-</div>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const titleInput=document.getElementById("siteTitle");
-const descriptionInput=document.getElementById("siteDescription");
-const keywordsInput=document.getElementById("keywords");
-const authorInput=document.getElementById("authorName");
-const canonicalInput=document.getElementById("canonicalUrl");
-const imageInput=document.getElementById("imageUrl");
-const twitterCardInput=document.getElementById("twitterCard");
-const robotsMetaInput=document.getElementById("robotsMeta");
-const output=document.getElementById("output");
-const toast=document.getElementById("toast");
-
-titleInput.addEventListener("input",updatePreview);
-descriptionInput.addEventListener("input",updatePreview);
-canonicalInput.addEventListener("input",updatePreview);
-
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-generateTags();
-}
-});
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-
-const message=document.getElementById("message");
-
-message.textContent=text;
-message.className="message " + type;
-
-showToast(text,type);
-
-}
-
-function escapeHtml(value){
-
-return value
-.replace(/&/g,"&amp;")
-.replace(/"/g,"&quot;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;");
-
-}
-
-function updateCounter(id,count,type){
-
-const element=document.getElementById(id);
-
-let status="good";
-
-if(type==="title"){
-if(count<30 || count>65) status="warn";
-if(count>75) status="bad";
-}
-
-if(type==="description"){
-if(count<80 || count>160) status="warn";
-if(count>180) status="bad";
-}
-
-element.textContent=count + " characters";
-element.className="counter " + status;
-
-}
-
-function updatePreview(){
-
-const title=titleInput.value.trim();
-const description=descriptionInput.value.trim();
-const url=canonicalInput.value.trim();
-
-document.getElementById("previewTitle").textContent=
-title || "Your page title will appear here";
-
-document.getElementById("previewDescription").textContent=
-description || "Your meta description preview will appear here.";
-
-document.getElementById("previewUrl").textContent=
-url || "https://example.com/page";
-
-updateCounter("titleCounter",title.length,"title");
-updateCounter("descriptionCounter",description.length,"description");
-
-}
-function loadSampleMeta(){
-
-titleInput.value="XAVERT | Privacy-First Browser Tools";
-descriptionInput.value="Use professional online tools that run directly in your browser. No uploads, no accounts and privacy-first processing.";
-authorInput.value="XAVERT";
-keywordsInput.value="browser tools, privacy tools, online tools, developer tools";
-canonicalInput.value="https://xavert.com";
-imageInput.value="https://xavert.com/og-image.jpg";
-twitterCardInput.value="summary_large_image";
-robotsMetaInput.value="index, follow";
-
-output.value="";
-
-updatePreview();
-
-setMessage("Sample meta data loaded.","success");
-
-}
-function generateTags(){
-
-const title=titleInput.value.trim();
-const description=descriptionInput.value.trim();
-const keywords=keywordsInput.value.trim();
-const canonical=canonicalInput.value.trim();
-const author=authorInput.value.trim();
-const image=imageInput.value.trim();
-const twitterCard=twitterCardInput.value;
-
-if(!title || !description){
-
-setMessage(
-"Please enter at least a title and description.",
-"error"
-);
-
-return;
-
-}
-
-let tags="";
-
-tags += '<title>' + escapeHtml(title) + '</title>\n';
-tags += '<meta name="description" content="' + escapeHtml(description) + '">\n';
-tags += '<meta name="robots" content="' + escapeHtml(robotsMetaInput.value) + '">\n';
-if(keywords){
-tags += '<meta name="keywords" content="' + escapeHtml(keywords) + '">\n';
-}
-if(author){
-tags += '<meta name="author" content="' + escapeHtml(author) + '">\n';
-}
-if(canonical){
-tags += '<link rel="canonical" href="' + escapeHtml(canonical) + '">\n';
-}
-
-tags += '\n<!-- Open Graph -->\n';
-tags += '<meta property="og:title" content="' + escapeHtml(title) + '">\n';
-tags += '<meta property="og:description" content="' + escapeHtml(description) + '">\n';
-
-if(canonical){
-tags += '<meta property="og:url" content="' + escapeHtml(canonical) + '">\n';
-}
-
-tags += '<meta property="og:type" content="website">\n';
-if(author){
-tags += '<meta property="og:site_name" content="' + escapeHtml(author) + '">\n';
-}
-if(image){
-tags += '<meta property="og:image" content="' + escapeHtml(image) + '">\n';
-}
-
-tags += '\n<!-- Twitter Card -->\n';
-tags += '<meta name="twitter:card" content="' + escapeHtml(twitterCard) + '">\n';
-tags += '<meta name="twitter:title" content="' + escapeHtml(title) + '">\n';
-tags += '<meta name="twitter:description" content="' + escapeHtml(description) + '">\n';
-
-if(image){
-tags += '<meta name="twitter:image" content="' + escapeHtml(image) + '">\n';
-}
-
-output.value=tags;
-
-updatePreview();
-
-setMessage(
-"Meta tags generated successfully.",
-"success"
-);
-showToast("Meta tags generated.","success");
-}
-
-function copyText(text){
-
-if(!text){
-
-setMessage("Nothing to copy.","error");
-return;
-
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-
-setMessage("Copied.","success");
-
-})
-.catch(function(){
-
-setMessage("Copy failed.","error");
-
-});
-
-}
-
-function copyOutput(){
-copyText(output.value);
-}
-
-function downloadOutput(){
-
-if(!output.value){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([output.value],{
-type:"text/html;charset=utf-8"
-});
-
-const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-link.href=url;
-link.download="xavert-meta-tags-snippet.html";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-setTimeout(function(){
-URL.revokeObjectURL(url);
-},1000);
-
-setMessage("Download started.","success");
-
-}
-
-function clearAll(){
-
-titleInput.value="";
-titleInput.focus();
-descriptionInput.value="";
-keywordsInput.value="";
-canonicalInput.value="";
-imageInput.value="";
-authorInput.value="";
-keywordsInput.value="";
-twitterCardInput.value="summary_large_image";
-robotsMetaInput.value="index, follow";
-output.value="";
-
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-
-authorInput.value="";
-keywordsInput.value="";
-
-updatePreview();
-setMessage("Editor cleared.","success");
-
-}
-</script>
-
-</body>
+      .meta-counter-warn {
+        color: #d97706;
+      }
+      .meta-counter-bad {
+        color: #dc2626;
+      }
+
+      .meta-preview {
+        margin-top: 20px;
+        padding: 18px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+      }
+
+      .meta-preview-title {
+        margin-bottom: 4px;
+        color: #1a0dab;
+        font-size: 20px;
+        line-height: 1.3;
+      }
+
+      .meta-preview-url {
+        margin-bottom: 6px;
+        color: #006621;
+        font-size: 14px;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-preview-description {
+        color: #4b5563;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+
+      .meta-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+  </head>
+
+  <body
+    data-tool="meta-tag-generator"
+    data-related-tools="html-entity-encoder-decoder,markdown-editor,text-toolkit,json-toolkit,regex-tester"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Meta Tag Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="meta-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="meta-workspace-title" class="tool-card-title">
+              Generate SEO Meta Tags
+            </h2>
+
+            <p class="tool-card-description">
+              Build standard SEO, Open Graph and Twitter Card tags with a live
+              search preview.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="siteTitle">Meta Title</label>
+                <input
+                  id="siteTitle"
+                  type="text"
+                  maxlength="200"
+                  placeholder="Example: XAVERT | Free Online Tools"
+                  autocomplete="off"
+                />
+                <div id="titleCounter" class="meta-counter">0 characters</div>
+              </div>
+
+              <div class="form-group">
+                <label for="authorName">Meta Author</label>
+                <input
+                  id="authorName"
+                  type="text"
+                  maxlength="200"
+                  placeholder="John Smith"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="siteDescription">Meta Description</label>
+                <textarea
+                  id="siteDescription"
+                  maxlength="500"
+                  placeholder="Write a short SEO description for your page..."
+                ></textarea>
+                <div id="descriptionCounter" class="meta-counter">
+                  0 characters
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="keywords">Meta Keywords</label>
+                <input
+                  id="keywords"
+                  type="text"
+                  maxlength="500"
+                  placeholder="tools, seo, converter, developer"
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="robotsMeta">Robots Meta</label>
+                <select id="robotsMeta">
+                  <option value="index, follow">index, follow</option>
+                  <option value="noindex, follow">noindex, follow</option>
+                  <option value="index, nofollow">index, nofollow</option>
+                  <option value="noindex, nofollow">noindex, nofollow</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="canonicalUrl">Canonical URL</label>
+                <input
+                  id="canonicalUrl"
+                  type="url"
+                  placeholder="https://example.com/page"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="imageUrl">Open Graph Image URL</label>
+                <input
+                  id="imageUrl"
+                  type="url"
+                  placeholder="https://example.com/image.jpg"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="twitterCard">Twitter Card Type</label>
+                <select id="twitterCard">
+                  <option value="summary_large_image">
+                    summary_large_image
+                  </option>
+                  <option value="summary">summary</option>
+                </select>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="output">Generated HTML</label>
+                <textarea
+                  id="output"
+                  class="meta-output"
+                  readonly
+                  spellcheck="false"
+                  placeholder="Generated meta tags will appear here"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid meta-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate Tags
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="button-grid meta-actions">
+              <button id="copyBtn" class="btn" type="button">Copy HTML</button>
+
+              <button id="downloadBtn" class="btn btn-secondary" type="button">
+                Download .html
+              </button>
+            </div>
+
+            <div class="meta-preview" aria-labelledby="preview-title-label">
+              <strong id="preview-title-label">Google Preview</strong>
+
+              <div id="previewTitle" class="meta-preview-title">
+                Your page title will appear here
+              </div>
+
+              <div id="previewUrl" class="meta-preview-url">
+                https://example.com/page
+              </div>
+
+              <div id="previewDescription" class="meta-preview-description">
+                Your meta description preview will appear here.
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Meta Tag Generator creates standard SEO and social sharing
+          tags directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>
+            Generate title, description, robots, author and keywords tags.
+          </li>
+          <li>Create canonical URL markup.</li>
+          <li>
+            Generate Open Graph title, description, URL, image and site name
+            tags.
+          </li>
+          <li>Generate Twitter Card metadata.</li>
+          <li>Preview title, URL and description in a search-style result.</li>
+          <li>Copy or download the generated HTML snippet.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is generated locally within your browser. Your metadata is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script src="../assets/js/meta-tag-generator.js"></script>
+  </body>
 </html>

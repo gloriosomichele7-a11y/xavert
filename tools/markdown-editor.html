@@ -1,1050 +1,356 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | Markdown Editor</title>
+    <title>XAVERT | Markdown Editor</title>
 
-<meta name="description" content="Free online Markdown Editor with live preview, Markdown to HTML conversion, tables, task lists, copy tools and file export directly in your browser. Write, preview and download Markdown instantly.">
+    <meta
+      name="description"
+      content="Write, preview, convert and export Markdown directly in your browser with live preview and local processing."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/markdown-editor.html">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/markdown-editor.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Markdown Editor">
-<meta property="og:description" content="Write, preview, convert and export Markdown directly in your browser with live preview and local processing.">
-<meta property="og:url" content="https://xavert.com/tools/markdown-editor.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Markdown Editor">
-<meta name="twitter:description" content="Free online Markdown Editor with live preview, HTML conversion and local processing.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Markdown Editor",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/markdown-editor.html",
-  "description":"Write, preview, convert and export Markdown directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Is my Markdown uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. Markdown processing, preview and conversion happen locally in your browser."
+    <style>
+      .markdown-editor {
+        min-height: 320px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I export Markdown and HTML?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can download both Markdown (.md) and HTML (.html) files."
+
+      .markdown-preview {
+        min-height: 320px;
+        padding: 18px;
+        background: #f9fafb;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        line-height: 1.7;
+        overflow: auto;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Does the editor support live preview?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The preview updates automatically while you edit your Markdown."
+
+      .markdown-preview h1,
+      .markdown-preview h2,
+      .markdown-preview h3,
+      .markdown-preview h4,
+      .markdown-preview h5,
+      .markdown-preview h6 {
+        margin: 16px 0 8px;
+        text-align: left;
+        letter-spacing: normal;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-textarea{
-width:100%;
-min-height:300px;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-resize:vertical;
-line-height:1.6;
-font-family:monospace;
-}
-
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-.editor-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-.preview-box{
-min-height:300px;
-padding:18px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-line-height:1.7;
-overflow:auto;
-}
-
-.preview-box h1{
-font-size:32px;
-margin:14px 0 8px;
-}
-
-.preview-box h2{
-font-size:26px;
-margin:14px 0 8px;
-}
-
-.preview-box h3{
-font-size:22px;
-margin:14px 0 8px;
-}
-
-.preview-box p{
-margin:10px 0;
-}
-
-.preview-box ul,
-.preview-box ol{
-margin:10px 0 10px 24px;
-}
-
-.preview-box code{
-background:#ffffff;
-border:1px solid #e5e7eb;
-padding:2px 6px;
-border-radius:6px;
-font-family:monospace;
-}
-
-.preview-box pre{
-background:#111827;
-color:white;
-padding:14px;
-border-radius:10px;
-overflow:auto;
-margin:12px 0;
-}
-
-.preview-box blockquote{
-border-left:4px solid #dc2626;
-padding-left:12px;
-color:#4b5563;
-margin:12px 0;
-}
-
-.preview-box a{
-color:#dc2626;
-font-weight:700;
-}
-.preview-box table{
-width:100%;
-border-collapse:collapse;
-margin:14px 0;
-font-size:14px;
-}
-
-.preview-box th,
-.preview-box td{
-border:1px solid #d1d5db;
-padding:10px;
-text-align:left;
-}
-
-.preview-box th{
-background:#f3f4f6;
-font-weight:800;
-}
-.stats{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:12px;
-margin-top:16px;
-}
-
-.stat-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:14px;
-text-align:center;
-}
-
-.stat-box strong{
-display:block;
-font-size:22px;
-margin-bottom:4px;
-}
-
-.stat-box span{
-font-size:13px;
-color:#6b7280;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-  
-.error{color:#dc2626;}
-.success{color:#047857;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
- .footer-note{
-margin-top:30px;
-text-align:center;
-font-size:14px;
-color:#6b7280;
-}
-
-.footer-note a{
-color:#dc2626;
-font-weight:700;
-text-decoration:none;
-}
-
-.footer-note a:hover{
-text-decoration:underline;
-} 
-@media(max-width:900px){
-.editor-grid{
-grid-template-columns:1fr;
-}
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-}
-
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-h1{font-size:34px;}
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Markdown Editor</h1>
-
-<p class="subtitle">
-Write, preview, convert and export Markdown documents directly in your browser.
-</p>
-<div class="success-banner">
-Markdown is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="editor-grid">
-
-<div>
-<label for="markdownInput">Markdown Input</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleMarkdown();return false;">Load Sample Markdown</a>
-</div>
-<textarea id="markdownInput" placeholder="# Hello XAVERT
-
-Write your Markdown here...
-
-## Features
-
-- Live preview
-- Copy Markdown
-- Copy HTML
-- Download .md
-- Download .html"></textarea>
-
-<div class="button-group">
-<button onclick="renderMarkdown()">Update Preview</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-</div>
-
-<div>
-<label>Live Preview</label>
-<div
-id="previewBox"
-class="preview-box"
-aria-live="polite"></div>
-
-<div class="button-group">
-<button onclick="copyMarkdown()">Copy Markdown</button>
-<button onclick="copyHtml()">Copy HTML</button>
-<button onclick="downloadMarkdown()">Download .md</button>
-<button onclick="downloadHtml()">Download .html</button>
-</div>
-</div>
-
-</div>
-
-<div class="stats">
-<div class="stat-box">
-<strong id="wordCount">0</strong>
-<span>Words</span>
-</div>
-
-<div class="stat-box">
-<strong id="charCount">0</strong>
-<span>Characters</span>
-</div>
-
-<div class="stat-box">
-<strong id="lineCount">0</strong>
-<span>Lines</span>
-</div>
-
-<div class="stat-box">
-<strong id="headingCount">0</strong>
-<span>Headings</span>
-</div>
-
-<div class="stat-box">
-<strong id="readingTime">0 min</strong>
-<span>Reading Time</span>
-</div>
-</div> 
-
-<div id="message" class="message"></div>
-
-</div>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Is my Markdown uploaded?</h3>
-<p>No. Markdown processing, preview and conversion happen locally inside your browser.</p>
-
-<h3>Can I export Markdown and HTML?</h3>
-<p>Yes. You can download both Markdown and HTML files.</p>
-
-<h3>Does the editor support live preview?</h3>
-<p>Yes. The preview updates automatically while you write.</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<div id="related-tools"></div>
-
-</section>
-
-</main>
-
-<div class="footer-note">
-Powered by <strong>XAVERT</strong>
-</div>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const markdownInput=document.getElementById("markdownInput");
-const previewBox=document.getElementById("previewBox");
-const message=document.getElementById("message");
-const toast=document.getElementById("toast");
-
-markdownInput.addEventListener("input",function(){
-renderMarkdown(false);
-});
-
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-renderMarkdown(true);
-}
-});
-
-function showToast(text,type="info"){
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-}
-
-function setMessage(text,type="info"){
-
-message.textContent=text;
-
-message.className="message";
-
-if(type==="success"){
-
-message.classList.add("success");
-
-}else if(type==="error"){
-
-message.classList.add("error");
-
-}
-
-if(text){
-
-showToast(text,type);
-
-}
-
-}
-
-function escapeHtml(text){
-return text
-.split("&").join("&amp;")
-.split("<").join("&lt;")
-.split(">").join("&gt;");
-}
-
-function replacePairs(text,marker,openTag,closeTag){
-
-let result="";
-let open=false;
-let i=0;
-
-while(i<text.length){
-
-if(text.slice(i,i+marker.length)===marker){
-result += open ? closeTag : openTag;
-open=!open;
-i += marker.length;
-}else{
-result += text[i];
-i++;
-}
-
-}
-
-if(open){
-result += closeTag;
-}
-
-return result;
-
-}
-
-function parseLinks(text){
-
-let result="";
-let i=0;
-
-while(i<text.length){
-
-let start=text.indexOf("[",i);
-let mid=text.indexOf("](",start);
-let end=text.indexOf(")",mid);
-
-if(start===-1 || mid===-1 || end===-1){
-result += text.slice(i);
-break;
-}
-
-result += text.slice(i,start);
-
-let label=text.slice(start+1,mid);
-let url=text.slice(mid+2,end);
-
-result += '<a href="' + url + '" target="_blank" rel="noopener noreferrer">' + label + '</a>';
-
-i=end+1;
-
-}
-
-return result;
-
-}
-
-function isTableSeparator(line){
-
-const trimmed=line.trim();
-
-if(!trimmed.includes("|")){
-return false;
-}
-
-return trimmed
-.split("|")
-.filter(cell=>cell.trim() !== "")
-.every(cell=>/^:?-{3,}:?$/.test(cell.trim()));
-
-}
-
-function parseTable(lines,startIndex){
-
-let header=lines[startIndex].trim();
-let separator=lines[startIndex+1].trim();
-let rows=[];
-let index=startIndex+2;
-
-if(!header.includes("|") || !isTableSeparator(separator)){
-return null;
-}
-
-while(index<lines.length && lines[index].includes("|") && lines[index].trim()!==""){
-rows.push(lines[index].trim());
-index++;
-}
-
-function splitRow(row){
-return row
-.split("|")
-.map(cell=>cell.trim())
-.filter((cell,pos,array)=>!(cell==="" && (pos===0 || pos===array.length-1)));
-}
-
-let headers=splitRow(header);
-
-let html="<table><thead><tr>";
-
-headers.forEach(function(cell){
-html+="<th>" + parseInline(cell) + "</th>";
-});
-
-html+="</tr></thead><tbody>";
-
-rows.forEach(function(row){
-html+="<tr>";
-splitRow(row).forEach(function(cell){
-html+="<td>" + parseInline(cell) + "</td>";
-});
-html+="</tr>";
-});
-
-html+="</tbody></table>";
-
-return {
-html:html,
-nextIndex:index
-};
-
-}
-
-function parseInline(text){
-
-text=parseLinks(text);
-text=replacePairs(text,"`","<code>","</code>");
-text=replacePairs(text,"**","<strong>","</strong>");
-text=replacePairs(text,"*","<em>","</em>");
-
-return text;
-
-}
-function markdownToHtml(markdown){
-
-const lines=markdown.split("\n");
-let html="";
-let inList=false;
-let inCode=false;
-let codeBuffer="";
-
-function closeList(){
-if(inList){
-html += "</ul>";
-inList=false;
-}
-}
-
-for(let i=0;i<lines.length;i++){
-
-let line=escapeHtml(lines[i]);
-
-if(line.trim().startsWith("```")){
-
-if(!inCode){
-closeList();
-inCode=true;
-codeBuffer="";
-}else{
-html += "<pre><code>" + codeBuffer.trim() + "</code></pre>";
-inCode=false;
-codeBuffer="";
-}
-
-continue;
-}
-
-if(inCode){
-codeBuffer += line + "\n";
-continue;
-}
-
-if(line.trim()===""){
-closeList();
-continue;
-}
-if(i+1<lines.length && line.includes("|") && isTableSeparator(lines[i+1])){
-closeList();
-
-const table=parseTable(lines,i);
-
-if(table){
-html += table.html;
-i=table.nextIndex-1;
-continue;
-}
-}
-if(line.startsWith("# ")){
-closeList();
-html += "<h1>" + parseInline(line.slice(2)) + "</h1>";
-continue;
-}
-
-if(line.startsWith("## ")){
-closeList();
-html += "<h2>" + parseInline(line.slice(3)) + "</h2>";
-continue;
-}
-
-if(line.startsWith("### ")){
-closeList();
-html += "<h3>" + parseInline(line.slice(4)) + "</h3>";
-continue;
-}
-
-if(line.startsWith("#### ")){
-closeList();
-html += "<h4>" + parseInline(line.slice(5)) + "</h4>";
-continue;
-}
-
-if(line.startsWith("##### ")){
-closeList();
-html += "<h5>" + parseInline(line.slice(6)) + "</h5>";
-continue;
-}
-
-if(line.startsWith("###### ")){
-closeList();
-html += "<h6>" + parseInline(line.slice(7)) + "</h6>";
-continue;
-}
-
-if(line.startsWith("> ")){
-closeList();
-html += "<blockquote>" + parseInline(line.slice(2)) + "</blockquote>";
-continue;
-}
-
-if(line.startsWith("- ")){
-if(!inList){
-html += "<ul>";
-inList=true;
-}
-
-const itemText=line.slice(2);
-
-if(itemText.toLowerCase().startsWith("[x] ")){
-html += '<li><input type="checkbox" checked disabled> ' + parseInline(itemText.slice(4)) + "</li>";
-}else if(itemText.startsWith("[ ] ")){
-html += '<li><input type="checkbox" disabled> ' + parseInline(itemText.slice(4)) + "</li>";
-}else{
-html += "<li>" + parseInline(itemText) + "</li>";
-}
-
-continue;
-}
-
-closeList();
-html += "<p>" + parseInline(line) + "</p>";
-
-}
-
-closeList();
-
-if(inCode){
-html += "<pre><code>" + codeBuffer.trim() + "</code></pre>";
-}
-
-return html;
-
-}
-function loadSampleMarkdown(){
-
-markdownInput.value=
-`# XAVERT Markdown Editor
-
-Write **Markdown** and preview it instantly.
-
-## Features
-
-- Live preview
-- Markdown to HTML
-- Copy Markdown
-- Copy HTML
-- Download .md
-- Download .html
-
-> Everything runs directly in your browser.
-
-| Feature | Status |
-|---|---|
-| Preview | Ready |
-| Export | Ready |
-
-- [x] Create content
-- [ ] Export final document`;
-
-renderMarkdown(true);
-
-}
-function updateStats(text){
-
-const clean=text.trim();
-const words=clean ? clean.split(/\s+/).length : 0;
-const characters=text.length;
-const lines=text ? text.split("\n").length : 0;
-
-let headings=0;
-text.split("\n").forEach(function(line){
-if(line.startsWith("#")){
-headings++;
-}
-});
-
-document.getElementById("wordCount").textContent=words;
-document.getElementById("charCount").textContent=characters;
-document.getElementById("lineCount").textContent=lines;
-document.getElementById("headingCount").textContent=headings;
-
-const readingTime=Math.max(1,Math.ceil(words/200));
-document.getElementById("readingTime").textContent=
-words ? readingTime + " min" : "0 min";
-
-}
-
-function renderMarkdown(showMessage=true){
-
-const text=markdownInput.value;
-const html=markdownToHtml(text);
-
-previewBox.innerHTML=html || "<p style='color:#6b7280;'>Live preview will appear here.</p>";
-
-updateStats(text);
-
-if(showMessage){
-setMessage("Preview updated successfully.","success");
-}
-
-}
-
-async function copyText(text){
-
-const value=text.trim();
-
-if(value===""){
-
-setMessage("Nothing to copy.","error");
-return;
-
-}
-
-try{
-
-await navigator.clipboard.writeText(value);
-
-setMessage("Copied.","success");
-
-}catch{
-
-setMessage("Copy failed.","error");
-
-}
-
-}
-
-function copyMarkdown(){
-copyText(markdownInput.value);
-}
-
-function copyHtml(){
-copyText(previewBox.innerHTML);
-}
-
-function downloadText(text,fileName,type){
-
-if(!text){
-setMessage("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([text],{type:type});
-const link=document.createElement("a");
-
-const url=URL.createObjectURL(blob);
-
-link.href=url;
-link.download=fileName;
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-setMessage("Download started.","success");
-
-}
-
-function downloadMarkdown(){
-downloadText(markdownInput.value,"xavert-markdown-document.md","text/markdown;charset=utf-8");
-}
-
-function downloadHtml(){
-
-const htmlDocument=
-"<!DOCTYPE html>\n" +
-"<html lang=\"en\">\n" +
-"<head>\n" +
-"<meta charset=\"UTF-8\">\n" +
-"<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\">\n" +
-"<title>XAVERT Markdown Export</title>\n" +
-"</head>\n" +
-"<body>\n" +
-previewBox.innerHTML +
-"\n</body>\n" +
-"</html>";
-
-downloadText(htmlDocument,"xavert-markdown-export.html","text/html;charset=utf-8");
-
-}
-
-function clearAll(){
-
-markdownInput.value="";
-markdownInput.focus();
-previewBox.innerHTML="<p style='color:#6b7280;'>Live preview will appear here.</p>";
-updateStats("");
-
-setMessage("Editor cleared.","success");
-}
-
-renderMarkdown(false);
-</script>
-  
-</body>
+
+      .markdown-preview h1 {
+        font-size: 32px;
+      }
+      .markdown-preview h2 {
+        font-size: 26px;
+      }
+      .markdown-preview h3 {
+        font-size: 22px;
+      }
+      .markdown-preview h4 {
+        font-size: 18px;
+      }
+      .markdown-preview h5 {
+        font-size: 16px;
+      }
+      .markdown-preview h6 {
+        font-size: 14px;
+      }
+
+      .markdown-preview p {
+        margin: 10px 0;
+      }
+
+      .markdown-preview ul,
+      .markdown-preview ol {
+        margin: 10px 0 10px 24px;
+      }
+
+      .markdown-preview code {
+        padding: 2px 6px;
+        border: 1px solid #e5e7eb;
+        border-radius: 6px;
+        background: #ffffff;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+      }
+
+      .markdown-preview pre {
+        margin: 12px 0;
+        padding: 14px;
+        border-radius: 10px;
+        background: #111827;
+        color: #ffffff;
+        overflow: auto;
+      }
+
+      .markdown-preview pre code {
+        padding: 0;
+        border: 0;
+        background: transparent;
+        color: inherit;
+      }
+
+      .markdown-preview blockquote {
+        margin: 12px 0;
+        padding-left: 12px;
+        border-left: 4px solid #dc2626;
+        color: #4b5563;
+      }
+
+      .markdown-preview a {
+        color: #dc2626;
+        font-weight: 700;
+      }
+
+      .markdown-preview table {
+        width: 100%;
+        margin: 14px 0;
+        border-collapse: collapse;
+        font-size: 14px;
+      }
+
+      .markdown-preview th,
+      .markdown-preview td {
+        padding: 10px;
+        border: 1px solid #d1d5db;
+        text-align: left;
+      }
+
+      .markdown-preview th {
+        background: #f3f4f6;
+        font-weight: 800;
+      }
+
+      .markdown-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+  </head>
+
+  <body
+    data-tool="markdown-editor"
+    data-related-tools="text-toolkit,html-entity-encoder-decoder,text-diff-checker,regex-tester,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Markdown Editor</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="markdown-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="markdown-workspace-title" class="tool-card-title">
+              Write and Preview Markdown
+            </h2>
+
+            <p class="tool-card-description">
+              Edit Markdown with live preview, HTML conversion and local export.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="markdownInput">Markdown Input</label>
+
+                <textarea
+                  id="markdownInput"
+                  class="markdown-editor"
+                  placeholder="# Hello XAVERT"
+                  spellcheck="false"
+                ></textarea>
+
+                <div class="button-grid markdown-actions">
+                  <button
+                    id="updateBtn"
+                    class="btn"
+                    type="button"
+                    data-primary-action
+                  >
+                    Update Preview
+                  </button>
+
+                  <button
+                    id="sampleBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Load Sample
+                  </button>
+
+                  <button
+                    id="clearBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    data-clear-action
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="previewBox">Live Preview</label>
+
+                <div
+                  id="previewBox"
+                  class="markdown-preview"
+                  role="region"
+                  aria-live="polite"
+                  aria-label="Markdown preview"
+                ></div>
+
+                <div class="button-grid markdown-actions">
+                  <button id="copyMarkdownBtn" class="btn" type="button">
+                    Copy Markdown
+                  </button>
+
+                  <button
+                    id="copyHtmlBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Copy HTML
+                  </button>
+
+                  <button
+                    id="downloadMarkdownBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Download .md
+                  </button>
+
+                  <button
+                    id="downloadHtmlBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Download .html
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <strong id="wordCount" class="stat-value">0</strong>
+                <span class="stat-label">Words</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="charCount" class="stat-value">0</strong>
+                <span class="stat-label">Characters</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="lineCount" class="stat-value">0</strong>
+                <span class="stat-label">Lines</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="headingCount" class="stat-value">0</strong>
+                <span class="stat-label">Headings</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="readingTime" class="stat-value">0 min</strong>
+                <span class="stat-label">Reading Time</span>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Markdown Editor lets you write, preview and export Markdown
+          directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Live Markdown preview while typing.</li>
+          <li>
+            Headings, lists, task lists, blockquotes, tables and code blocks.
+          </li>
+          <li>Inline emphasis, code and links.</li>
+          <li>Copy Markdown or generated HTML.</li>
+          <li>Download Markdown and standalone HTML files.</li>
+          <li>
+            Track words, characters, lines, headings and estimated reading time.
+          </li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Markdown processing and conversion happen locally in your browser.
+          Your content is never uploaded, transmitted, shared or stored on any
+          server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script src="../assets/js/markdown-editor.js"></script>
+  </body>
 </html>

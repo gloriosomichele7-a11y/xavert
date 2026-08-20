@@ -1,579 +1,281 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | SQL Formatter</title>
-
-<meta name="description" content="Free online SQL Formatter to format, beautify and organize SQL queries directly in your browser. Improve SQL readability, copy formatted queries and download SQL files instantly.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/sql-formatter.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-textarea{
-width:100%;
-min-height:350px;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:14px;
-font-family:monospace;
-resize:vertical;
-line-height:1.6;
-}
-
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-top:20px;
-}
-
-.stat-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:14px;
-text-align:center;
-}
-
-.stat-box strong{
-display:block;
-font-size:20px;
-margin-bottom:4px;
-}
-
-.stat-box span{
-font-size:13px;
-color:#6b7280;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success{
-color:#047857;
-}
-
-.error{
-color:#dc2626;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-.stats{
-grid-template-columns:1fr;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>SQL Formatter</h1>
-
-<p class="subtitle">
-Format and beautify SQL queries directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ SQL is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label>Input SQL</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleSql('join');return false;">JOIN Query</a>
-&nbsp;•&nbsp;
-<a href="#" onclick="loadSampleSql('select');return false;">SELECT</a>
-&nbsp;•&nbsp;
-<a href="#" onclick="loadSampleSql('insert');return false;">INSERT</a>
-&nbsp;•&nbsp;
-<a href="#" onclick="loadSampleSql('update');return false;">UPDATE</a>
-</div>
-
-<textarea
-id="inputSql"
-placeholder="Paste your SQL query here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="formatSql()">Format SQL</button>
-<button onclick="minifySql()">Minify SQL</button>
-<button onclick="swapSql()">Swap</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-
-<label>Formatted SQL</label>
-
-<textarea
-id="outputSql"
-readonly
-placeholder="Formatted SQL will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadSql()">Download SQL</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="stats">
-
-<div class="stat-box">
-<strong id="inputChars">0</strong>
-<span>Input Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="outputChars">0</strong>
-<span>Output Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="lineCount">0</strong>
-<span>Lines</span>
-</div>
-
-<div class="stat-box">
-<strong id="keywordCount">0</strong>
-<span>Keywords</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-
-<script>
-
-const toast=document.getElementById("toast");
-let lastOperation="query";
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-formatSql();
-}
-});
-
-function showToast(text,type="success"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-
-const message=document.getElementById("message");
-
-message.textContent=text;
-message.className="message " + type;
-
-}
-function loadSampleSql(type="join"){
-
-let sample="";
-
-if(type==="select"){
-sample=
-`select id, name, email from users where active = 1 order by name asc limit 20;`;
-}
-
-if(type==="join"){
-sample=
-`select users.id, users.name, orders.total from users inner join orders on users.id = orders.user_id where orders.total > 100 order by orders.total desc limit 10;`;
-}
-
-if(type==="insert"){
-sample=
-`insert into users (name, email, active) values ('Mario Rossi', 'mario@example.com', 1);`;
-}
-
-if(type==="update"){
-sample=
-`update users set active = 0, updated_at = now() where last_login < '2025-01-01';`;
-}
-
-document.getElementById("inputSql").value=sample;
-document.getElementById("outputSql").value="";
-
-setMessage("Sample SQL loaded.","success");
-showToast("Sample SQL loaded.","success");
-
-}
-function formatSql(){
-
-let sql=document.getElementById("inputSql").value;
-
-if(!sql.trim()){
-setMessage("Please enter SQL code.","error");
-showToast("Please enter SQL code.","error");
-return;
-}
-
-const keywords=[
-"SELECT","FROM","WHERE","GROUP BY","ORDER BY",
-"HAVING","LEFT JOIN","RIGHT JOIN","INNER JOIN",
-"OUTER JOIN","JOIN","LIMIT","VALUES",
-"INSERT INTO","UPDATE","DELETE","SET",
-"CREATE TABLE","ALTER TABLE","DROP TABLE"
-];
-
-let formatted=sql;
-
-keywords.forEach(function(keyword){
-
-const regex=new RegExp(keyword,"gi");
-
-formatted=formatted.replace(
-regex,
-"\n" + keyword.toUpperCase()
-);
-
-});
-
-formatted=formatted
-.replace(/\n+/g,"\n")
-.trim();
-
-document.getElementById("outputSql").value=formatted;
-lastOperation="formatted";
-updateStats(sql,formatted);
-
-setMessage(
-"SQL formatted successfully.",
-"success"
-);
-showToast("SQL formatted successfully.","success");
-}
-function minifySql(){
-
-const sql=document.getElementById("inputSql").value;
-
-if(!sql.trim()){
-setMessage("Please enter SQL code.","error");
-showToast("Please enter SQL code.","error");
-return;
-}
-
-const minified=sql
-.replace(/--.*$/gm,"")
-.replace(/\/\*[\s\S]*?\*\//g,"")
-.replace(/\s+/g," ")
-.replace(/\s*([(),=<>+\-*\/])\s*/g,"$1")
-.trim();
-
-document.getElementById("outputSql").value=minified;
-lastOperation="minified";
-updateStats(sql,minified);
-
-setMessage("SQL minified successfully.","success");
-showToast("SQL minified successfully.","success");
-
-}
-function swapSql(){
-
-const input=document.getElementById("inputSql");
-const output=document.getElementById("outputSql");
-
-if(!output.value){
-showToast("Nothing to swap","error");
-return;
-}
-
-input.value=output.value;
-
-updateStats(input.value,output.value);
-
-showToast("Output moved to input.","success");
-
-}
-function updateStats(input,output){
-
-document.getElementById("inputChars").textContent=input.length;
-document.getElementById("outputChars").textContent=output.length;
-
-document.getElementById("lineCount").textContent=
-output
-? output.split(/\r?\n/).length
-: 0;
-
-const keywordsFound=
-(output.match(/\b(SELECT|FROM|WHERE|JOIN|GROUP BY|ORDER BY|HAVING|LIMIT|INSERT INTO|UPDATE|DELETE|SET)\b/gi)||[]).length;
-
-const selectCount=(output.match(/\bSELECT\b/gi)||[]).length;
-const joinCount=(output.match(/\bJOIN\b/gi)||[]).length;
-const whereCount=(output.match(/\bWHERE\b/gi)||[]).length;
-const orderCount=(output.match(/\bORDER BY\b/gi)||[]).length;
-
-document.getElementById("keywordCount").textContent=
-keywordsFound + " total";
-
-}
-
-function copyOutput(){
-
-const text=document.getElementById("outputSql").value;
-
-if(!text){
-showToast("Nothing to copy","error");
-return;
-}
-
-navigator.clipboard.writeText(text);
-
-showToast("Copied.","success");
-
-}
-
-function downloadSql(){
-
-const text=document.getElementById("outputSql").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-const blob=new Blob(
-[text],
-{
-type:"text/plain;charset=utf-8"
-}
-);
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download="xavert-sql-" + lastOperation + ".sql";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Download started.","success");
-
-}
-
-function clearAll(){
-
-document.getElementById("inputSql").value="";
-document.getElementById("outputSql").value="";
-lastOperation="query";
-document.getElementById("inputChars").textContent="0";
-document.getElementById("outputChars").textContent="0";
-document.getElementById("lineCount").textContent="0";
-document.getElementById("keywordCount").textContent="0";
-
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-showToast("Cleared.","success");
-}
-
-</script>
-
-</body>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | SQL Formatter</title>
+
+    <meta
+      name="description"
+      content="Format, beautify and minify SQL queries directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/sql-formatter.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .sql-editor {
+        min-height: 350px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
+      }
+
+      .sql-presets {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        margin-top: 10px;
+      }
+
+      .sql-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/sql-formatter.js" defer></script>
+  </head>
+
+  <body
+    data-tool="sql-formatter"
+    data-related-tools="json-toolkit,text-toolkit,regex-tester,data-converter,markdown-editor"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">SQL Formatter</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="sql-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="sql-workspace-title" class="tool-card-title">
+              Format and Minify SQL
+            </h2>
+
+            <p class="tool-card-description">
+              Beautify SQL queries for readability or minify them for compact
+              output.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div>
+                <div class="form-group">
+                  <label for="inputSql">Input SQL</label>
+
+                  <div class="sql-presets" aria-label="SQL samples">
+                    <button
+                      id="sampleBtn"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      Load Sample
+                    </button>
+
+                    <button
+                      class="btn btn-secondary sql-preset"
+                      type="button"
+                      data-sql-sample="join"
+                    >
+                      JOIN Query
+                    </button>
+
+                    <button
+                      class="btn btn-secondary sql-preset"
+                      type="button"
+                      data-sql-sample="select"
+                    >
+                      SELECT
+                    </button>
+
+                    <button
+                      class="btn btn-secondary sql-preset"
+                      type="button"
+                      data-sql-sample="insert"
+                    >
+                      INSERT
+                    </button>
+
+                    <button
+                      class="btn btn-secondary sql-preset"
+                      type="button"
+                      data-sql-sample="update"
+                    >
+                      UPDATE
+                    </button>
+                  </div>
+
+                  <textarea
+                    id="inputSql"
+                    class="sql-editor"
+                    placeholder="Paste your SQL query here..."
+                    spellcheck="false"
+                  ></textarea>
+                </div>
+
+                <div class="button-grid sql-actions">
+                  <button
+                    id="formatBtn"
+                    class="btn"
+                    type="button"
+                    data-primary-action
+                  >
+                    Format SQL
+                  </button>
+
+                  <button
+                    id="minifyBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Minify SQL
+                  </button>
+
+                  <button id="swapBtn" class="btn btn-secondary" type="button">
+                    Swap
+                  </button>
+
+                  <button
+                    id="clearBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    data-clear-action
+                  >
+                    Clear
+                  </button>
+                </div>
+
+                <div
+                  id="message"
+                  class="message"
+                  role="status"
+                  aria-live="polite"
+                  aria-atomic="true"
+                ></div>
+              </div>
+
+              <div>
+                <div class="form-group">
+                  <label for="outputSql">Formatted SQL</label>
+
+                  <textarea
+                    id="outputSql"
+                    class="sql-editor"
+                    readonly
+                    spellcheck="false"
+                    placeholder="Formatted SQL will appear here..."
+                  ></textarea>
+                </div>
+
+                <div class="button-grid sql-actions">
+                  <button id="copyBtn" class="btn" type="button">Copy</button>
+
+                  <button
+                    id="downloadBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Download SQL
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <strong id="inputChars" class="stat-value">0</strong>
+                <span class="stat-label">Input Chars</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="outputChars" class="stat-value">0</strong>
+                <span class="stat-label">Output Chars</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="lineCount" class="stat-value">0</strong>
+                <span class="stat-label">Lines</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="keywordCount" class="stat-value">0</strong>
+                <span class="stat-label">Keywords</span>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT SQL Formatter formats and minifies SQL directly in your
+          browser.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Format common SELECT, JOIN, INSERT, UPDATE and DELETE statements.
+          </li>
+          <li>Minify SQL while preserving quoted strings.</li>
+          <li>Use quick sample queries.</li>
+          <li>Track input/output characters, lines and SQL keyword count.</li>
+          <li>Copy or download the generated SQL file.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          SQL processing happens locally within your browser. Your queries are
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

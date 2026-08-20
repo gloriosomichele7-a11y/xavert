@@ -1,210 +1,155 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded", function () {
-  const toolSelector = document.getElementById("toolSelector");
-  const toolSections = document.querySelectorAll(".tool-section");
+document.addEventListener("DOMContentLoaded", () => {
+  if (document.body.dataset.tool !== "color-toolkit") {
+    return;
+  }
 
-  const colorFormat = document.getElementById("colorFormat");
-  const colorInput = document.getElementById("colorInput");
-  const convertBtn = document.getElementById("convertBtn");
-  const copyHexBtn = document.getElementById("copyHexBtn");
-  const copyRgbBtn = document.getElementById("copyRgbBtn");
-  const copyHslBtn = document.getElementById("copyHslBtn");
-  const clearConverterBtn = document.getElementById("clearConverterBtn");
-  const converterMessage = document.getElementById("converterMessage");
-  const converterResult = document.getElementById("converterResult");
-  const converterPreview = document.getElementById("converterPreview");
+  const $ = (id) => document.getElementById(id);
 
-  const generateBtn = document.getElementById("generateBtn");
-  const similarBtn = document.getElementById("similarBtn");
-  const complementaryBtn = document.getElementById("complementaryBtn");
-  const clearGeneratorBtn = document.getElementById("clearGeneratorBtn");
-  const generatorMessage = document.getElementById("generatorMessage");
-  const generatorResult = document.getElementById("generatorResult");
-  const generatorPreview = document.getElementById("generatorPreview");
+  const el = {
+    toolSelector: $("toolSelector"),
+    formatGroup: $("formatGroup"),
+    valueGroup: $("valueGroup"),
+    foregroundGroup: $("foregroundGroup"),
+    backgroundGroup: $("backgroundGroup"),
+    paletteColorGroup: $("paletteColorGroup"),
+    paletteTypeGroup: $("paletteTypeGroup"),
+    colorFormat: $("colorFormat"),
+    colorInput: $("colorInput"),
+    foregroundColor: $("foregroundColor"),
+    foregroundHex: $("foregroundHex"),
+    backgroundColor: $("backgroundColor"),
+    backgroundHex: $("backgroundHex"),
+    paletteColor: $("paletteColor"),
+    paletteType: $("paletteType"),
+    primaryBtn: $("primaryBtn"),
+    secondaryBtn1: $("secondaryBtn1"),
+    secondaryBtn2: $("secondaryBtn2"),
+    secondaryBtn3: $("secondaryBtn3"),
+    clearBtn: $("clearBtn"),
+    sampleBtn: $("sampleBtn"),
+    previewBox: $("previewBox"),
+    previewTitle: $("previewTitle"),
+    previewContent: $("previewContent"),
+    message: $("message"),
+  };
 
-  const foregroundColor = document.getElementById("foregroundColor");
-  const backgroundColor = document.getElementById("backgroundColor");
-  const contrastBtn = document.getElementById("contrastBtn");
-  const swapBtn = document.getElementById("swapBtn");
-  const clearContrastBtn = document.getElementById("clearContrastBtn");
-  const contrastMessage = document.getElementById("contrastMessage");
-  const contrastResult = document.getElementById("contrastResult");
-  const contrastPreview = document.getElementById("contrastPreview");
+  const missingElements = Object.entries(el)
+    .filter(([, node]) => !node)
+    .map(([name]) => name);
 
-  const paletteColor = document.getElementById("paletteColor");
-  const paletteType = document.getElementById("paletteType");
-  const generatePaletteBtn = document.getElementById("generatePaletteBtn");
-  const savePaletteBtn = document.getElementById("savePaletteBtn");
-  const downloadPaletteBtn = document.getElementById("downloadPaletteBtn");
-  const clearPaletteBtn = document.getElementById("clearPaletteBtn");
-  const paletteMessage = document.getElementById("paletteMessage");
-  const paletteResult = document.getElementById("paletteResult");
-  const savedPalettes = document.getElementById("savedPalettes");
+  if (missingElements.length) {
+    console.error("Color Toolkit initialization failed.", missingElements);
+    return;
+  }
 
-  const toast = document.getElementById("toast");
+  const STORAGE_KEY = "xavert-color-toolkit-palettes";
+  const MAX_SAVED = 10;
 
-  const storageKey = "xavert-color-toolkit-palettes";
-  const maximumSavedPalettes = 10;
-
-  let currentConverterColor = null;
-  let currentGeneratorColor = null;
+  // --------------------------------------------------
+  // State
+  // --------------------------------------------------
+  let currentColor = null;
+  let currentContrast = null;
   let currentPalette = [];
-  let storedPalettes = [];
-  let toastTimer = null;
+  let savedPalettes = loadSavedPalettes();
 
-  function clamp(value, minimum, maximum) {
-    return Math.min(
-      maximum,
-      Math.max(minimum, Number(value))
-    );
+  const modes = {
+    converter: ["Convert", "Copy HEX", "Copy RGB", "Copy HSL", "Load Sample"],
+    generator: ["Generate", "Similar", "Complementary", "Copy HEX", ""],
+    contrast: [
+      "Check Contrast",
+      "Swap Colors",
+      "Copy Ratio",
+      "Copy Colors",
+      "Load Sample",
+    ],
+    palette: [
+      "Generate Palette",
+      "Save Palette",
+      "Download TXT",
+      "Copy Palette",
+      "Load Sample",
+    ],
+  };
+
+  // --------------------------------------------------
+  // UI Helpers
+  // --------------------------------------------------
+  function setInlineMessage(text = "", type = "info") {
+    const allowed = ["success", "error", "info"];
+    const safe = allowed.includes(type) ? type : "info";
+
+    el.message.textContent = text;
+    el.message.className = "message";
+
+    if (text) {
+      el.message.classList.add(`message-${safe}`);
+    }
   }
 
-  function normalizeHue(value) {
-    const normalized = Number(value) % 360;
+  function notify(text = "", type = "info", useToast = true) {
+    setInlineMessage(text, type);
 
-    return normalized < 0
-      ? normalized + 360
-      : normalized;
+    if (text && useToast && typeof window.showMessage === "function") {
+      window.showMessage(text, type);
+    }
   }
 
-  function showToast(text, type = "info") {
-    if (!toast || !text) {
+  function showPreview(title, ...nodes) {
+    el.previewTitle.textContent = title;
+    el.previewContent.replaceChildren(...nodes);
+    el.previewBox.hidden = false;
+  }
+
+  function hidePreview() {
+    el.previewContent.replaceChildren();
+    el.previewBox.hidden = true;
+  }
+
+  function syncContrastFields(source) {
+    if (source === "foreground-color") {
+      el.foregroundHex.value = el.foregroundColor.value.toUpperCase();
       return;
     }
 
-    const allowedTypes = ["success", "error", "info"];
-    const safeType = allowedTypes.includes(type)
-      ? type
-      : "info";
-
-    window.clearTimeout(toastTimer);
-
-    toast.textContent = text;
-
-    toast.classList.remove(
-      "xavert-toast-success",
-      "xavert-toast-error",
-      "xavert-toast-info"
-    );
-
-    toast.classList.add(
-      "xavert-toast",
-      `xavert-toast-${safeType}`
-    );
-
-    toast.style.display = "block";
-    toast.setAttribute("aria-hidden", "false");
-
-    toastTimer = window.setTimeout(function () {
-      toast.style.display = "none";
-      toast.textContent = "";
-
-      toast.classList.remove(
-        "xavert-toast-success",
-        "xavert-toast-error",
-        "xavert-toast-info"
-      );
-
-      toast.setAttribute("aria-hidden", "true");
-    }, 2200);
-  }
-
-  function setMessage(
-    element,
-    text = "",
-    type = "info",
-    useToast = false
-  ) {
-    if (element) {
-      const allowedTypes = ["success", "error", "info"];
-      const safeType = allowedTypes.includes(type)
-        ? type
-        : "info";
-
-      element.textContent = text;
-
-      element.classList.remove(
-        "message-success",
-        "message-error",
-        "message-info",
-        "success",
-        "error"
-      );
-
-      if (text) {
-        element.classList.add(`message-${safeType}`);
-      }
+    if (source === "background-color") {
+      el.backgroundHex.value = el.backgroundColor.value.toUpperCase();
+      return;
     }
 
-    if (text && useToast) {
-      showToast(text, type);
+    if (source === "foreground-hex") {
+      const normalized = normalizeHex(el.foregroundHex.value);
+      if (normalized) {
+        el.foregroundHex.value = normalized;
+        el.foregroundColor.value = normalized.toLowerCase();
+      }
+      return;
+    }
+
+    if (source === "background-hex") {
+      const normalized = normalizeHex(el.backgroundHex.value);
+      if (normalized) {
+        el.backgroundHex.value = normalized;
+        el.backgroundColor.value = normalized.toLowerCase();
+      }
     }
   }
 
-  async function copyText(value, successMessage) {
-    if (!value) {
-      showToast("Nothing to copy.", "error");
-      return false;
-    }
+  // --------------------------------------------------
+  // Color Conversion
+  // --------------------------------------------------
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, Number(value)));
+  }
 
-    try {
-      if (typeof window.xavertCopyText === "function") {
-        const result = window.xavertCopyText(
-          value,
-          successMessage
-        );
-
-        if (result instanceof Promise) {
-          await result;
-        }
-
-        return true;
-      }
-
-      if (
-        navigator.clipboard &&
-        window.isSecureContext
-      ) {
-        await navigator.clipboard.writeText(value);
-        showToast(successMessage, "success");
-        return true;
-      }
-
-      const textarea = document.createElement("textarea");
-
-      textarea.value = value;
-      textarea.setAttribute("readonly", "");
-      textarea.style.position = "fixed";
-      textarea.style.opacity = "0";
-
-      document.body.appendChild(textarea);
-      textarea.select();
-
-      const copied = document.execCommand("copy");
-
-      textarea.remove();
-
-      if (!copied) {
-        throw new Error("Clipboard command failed.");
-      }
-
-      showToast(successMessage, "success");
-
-      return true;
-    } catch (error) {
-      console.error("Copy failed:", error);
-      showToast("Copy failed.", "error");
-      return false;
-    }
+  function normalizeHue(value) {
+    return ((Number(value) % 360) + 360) % 360;
   }
 
   function componentToHex(value) {
-    return clamp(
-      Math.round(value),
-      0,
-      255
-    )
+    return clamp(Math.round(value), 0, 255)
       .toString(16)
       .padStart(2, "0")
       .toUpperCase();
@@ -219,25 +164,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function normalizeHex(value) {
-    if (typeof value !== "string") {
-      return "";
-    }
-
-    let hex = value.trim();
+    let hex = String(value).trim();
 
     if (!hex.startsWith("#")) {
       hex = `#${hex}`;
     }
 
-    if (!/^#(?:[A-Fa-f0-9]{3}|[A-Fa-f0-9]{6})$/.test(hex)) {
+    if (!/^#(?:[\da-f]{3}|[\da-f]{6})$/i.test(hex)) {
       return "";
     }
 
     if (hex.length === 4) {
-      hex =
-        `#${hex[1]}${hex[1]}` +
-        `${hex[2]}${hex[2]}` +
-        `${hex[3]}${hex[3]}`;
+      hex = `#${hex[1]}${hex[1]}` + `${hex[2]}${hex[2]}` + `${hex[3]}${hex[3]}`;
     }
 
     return hex.toUpperCase();
@@ -250,60 +188,39 @@ document.addEventListener("DOMContentLoaded", function () {
       return null;
     }
 
-    const raw = hex.slice(1);
-
     return {
-      red: parseInt(raw.slice(0, 2), 16),
-      green: parseInt(raw.slice(2, 4), 16),
-      blue: parseInt(raw.slice(4, 6), 16)
+      red: parseInt(hex.slice(1, 3), 16),
+      green: parseInt(hex.slice(3, 5), 16),
+      blue: parseInt(hex.slice(5, 7), 16),
     };
   }
 
   function rgbToHsl(red, green, blue) {
-    const normalizedRed = red / 255;
-    const normalizedGreen = green / 255;
-    const normalizedBlue = blue / 255;
+    const r = red / 255;
+    const g = green / 255;
+    const b = blue / 255;
 
-    const maximum = Math.max(
-      normalizedRed,
-      normalizedGreen,
-      normalizedBlue
-    );
-
-    const minimum = Math.min(
-      normalizedRed,
-      normalizedGreen,
-      normalizedBlue
-    );
-
-    const lightness = (maximum + minimum) / 2;
+    const max = Math.max(r, g, b);
+    const min = Math.min(r, g, b);
+    const lightness = (max + min) / 2;
 
     let hue = 0;
     let saturation = 0;
 
-    if (maximum !== minimum) {
-      const difference = maximum - minimum;
+    if (max !== min) {
+      const difference = max - min;
 
       saturation =
         lightness > 0.5
-          ? difference / (2 - maximum - minimum)
-          : difference / (maximum + minimum);
+          ? difference / (2 - max - min)
+          : difference / (max + min);
 
-      if (maximum === normalizedRed) {
-        hue =
-          (normalizedGreen - normalizedBlue) /
-            difference +
-          (normalizedGreen < normalizedBlue ? 6 : 0);
-      } else if (maximum === normalizedGreen) {
-        hue =
-          (normalizedBlue - normalizedRed) /
-            difference +
-          2;
+      if (max === r) {
+        hue = (g - b) / difference + (g < b ? 6 : 0);
+      } else if (max === g) {
+        hue = (b - r) / difference + 2;
       } else {
-        hue =
-          (normalizedRed - normalizedGreen) /
-            difference +
-          4;
+        hue = (r - g) / difference + 4;
       }
 
       hue /= 6;
@@ -312,1732 +229,886 @@ document.addEventListener("DOMContentLoaded", function () {
     return {
       hue: Math.round(hue * 360),
       saturation: Math.round(saturation * 100),
-      lightness: Math.round(lightness * 100)
+      lightness: Math.round(lightness * 100),
     };
   }
 
   function hslToRgb(hue, saturation, lightness) {
-    const normalizedHue = normalizeHue(hue) / 360;
-    const normalizedSaturation =
-      clamp(saturation, 0, 100) / 100;
+    const h = normalizeHue(hue) / 360;
+    const s = clamp(saturation, 0, 100) / 100;
+    const l = clamp(lightness, 0, 100) / 100;
 
-    const normalizedLightness =
-      clamp(lightness, 0, 100) / 100;
-
-    if (normalizedSaturation === 0) {
-      const gray = Math.round(
-        normalizedLightness * 255
-      );
+    if (s === 0) {
+      const gray = Math.round(l * 255);
 
       return {
         red: gray,
         green: gray,
-        blue: gray
+        blue: gray,
       };
     }
 
-    function hueToChannel(
-      firstValue,
-      secondValue,
-      channelHue
-    ) {
-      let adjustedHue = channelHue;
+    function channel(p, q, input) {
+      let t = input;
 
-      if (adjustedHue < 0) {
-        adjustedHue += 1;
+      if (t < 0) {
+        t += 1;
       }
 
-      if (adjustedHue > 1) {
-        adjustedHue -= 1;
+      if (t > 1) {
+        t -= 1;
       }
 
-      if (adjustedHue < 1 / 6) {
-        return (
-          firstValue +
-          (secondValue - firstValue) *
-            6 *
-            adjustedHue
-        );
+      if (t < 1 / 6) {
+        return p + (q - p) * 6 * t;
       }
 
-      if (adjustedHue < 1 / 2) {
-        return secondValue;
+      if (t < 1 / 2) {
+        return q;
       }
 
-      if (adjustedHue < 2 / 3) {
-        return (
-          firstValue +
-          (secondValue - firstValue) *
-            (2 / 3 - adjustedHue) *
-            6
-        );
+      if (t < 2 / 3) {
+        return p + (q - p) * (2 / 3 - t) * 6;
       }
 
-      return firstValue;
+      return p;
     }
 
-    const secondValue =
-      normalizedLightness < 0.5
-        ? normalizedLightness *
-          (1 + normalizedSaturation)
-        : normalizedLightness +
-          normalizedSaturation -
-          normalizedLightness *
-            normalizedSaturation;
+    const q = l < 0.5 ? l * (1 + s) : l + s - l * s;
 
-    const firstValue =
-      2 * normalizedLightness -
-      secondValue;
+    const p = 2 * l - q;
 
     return {
-      red: Math.round(
-        hueToChannel(
-          firstValue,
-          secondValue,
-          normalizedHue + 1 / 3
-        ) * 255
-      ),
-
-      green: Math.round(
-        hueToChannel(
-          firstValue,
-          secondValue,
-          normalizedHue
-        ) * 255
-      ),
-
-      blue: Math.round(
-        hueToChannel(
-          firstValue,
-          secondValue,
-          normalizedHue - 1 / 3
-        ) * 255
-      )
+      red: Math.round(channel(p, q, h + 1 / 3) * 255),
+      green: Math.round(channel(p, q, h) * 255),
+      blue: Math.round(channel(p, q, h - 1 / 3) * 255),
     };
   }
 
   function createColor(red, green, blue) {
-    const safeRed = clamp(Math.round(red), 0, 255);
-    const safeGreen = clamp(Math.round(green), 0, 255);
-    const safeBlue = clamp(Math.round(blue), 0, 255);
+    const r = clamp(Math.round(red), 0, 255);
 
-    const hsl = rgbToHsl(
-      safeRed,
-      safeGreen,
-      safeBlue
-    );
+    const g = clamp(Math.round(green), 0, 255);
+
+    const b = clamp(Math.round(blue), 0, 255);
+
+    const hsl = rgbToHsl(r, g, b);
 
     return {
-      red: safeRed,
-      green: safeGreen,
-      blue: safeBlue,
-
+      red: r,
+      green: g,
+      blue: b,
       hue: hsl.hue,
       saturation: hsl.saturation,
       lightness: hsl.lightness,
-
-      hex: rgbToHex(
-        safeRed,
-        safeGreen,
-        safeBlue
-      ),
-
-      rgb:
-        `rgb(${safeRed}, ${safeGreen}, ${safeBlue})`,
-
-      hsl:
-        `hsl(${hsl.hue}, ${hsl.saturation}%, ${hsl.lightness}%)`
+      hex: rgbToHex(r, g, b),
+      rgb: `rgb(${r}, ${g}, ${b})`,
+      hsl: `hsl(${hsl.hue}, ` + `${hsl.saturation}%, ` + `${hsl.lightness}%)`,
     };
   }
 
-  function createColorFromHsl(
-    hue,
-    saturation,
-    lightness
-  ) {
-    const rgb = hslToRgb(
-      hue,
-      saturation,
-      lightness
-    );
+  function createColorFromHsl(hue, saturation, lightness) {
+    const rgb = hslToRgb(hue, saturation, lightness);
 
-    return createColor(
-      rgb.red,
-      rgb.green,
-      rgb.blue
-    );
-  }
-  function parseRgbInput(value) {
-    if (typeof value !== "string") {
-      return null;
-    }
-
-    const match = value.trim().match(
-      /^rgb\s*\(\s*(\d{1,3})\s*,\s*(\d{1,3})\s*,\s*(\d{1,3})\s*\)$/i
-    );
-
-    if (!match) {
-      return null;
-    }
-
-    const red = Number(match[1]);
-    const green = Number(match[2]);
-    const blue = Number(match[3]);
-
-    if (
-      red > 255 ||
-      green > 255 ||
-      blue > 255
-    ) {
-      return null;
-    }
-
-    return createColor(
-      red,
-      green,
-      blue
-    );
+    return createColor(rgb.red, rgb.green, rgb.blue);
   }
 
-  function parseHslInput(value) {
-    if (typeof value !== "string") {
-      return null;
-    }
-
-    const match = value.trim().match(
-      /^hsl\s*\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)%\s*,\s*(\d+(?:\.\d+)?)%\s*\)$/i
-    );
-
-    if (!match) {
-      return null;
-    }
-
-    const hue = Number(match[1]);
-    const saturation = Number(match[2]);
-    const lightness = Number(match[3]);
-
-    if (
-      saturation < 0 ||
-      saturation > 100 ||
-      lightness < 0 ||
-      lightness > 100
-    ) {
-      return null;
-    }
-
-    return createColorFromHsl(
-      hue,
-      saturation,
-      lightness
-    );
-  }
-
-  function parseColorValue(
-    value,
-    format
-  ) {
+  function parseColor(value, format) {
     if (format === "hex") {
       const rgb = hexToRgb(value);
 
-      if (!rgb) {
-        return null;
-      }
-
-      return createColor(
-        rgb.red,
-        rgb.green,
-        rgb.blue
-      );
+      return rgb ? createColor(rgb.red, rgb.green, rgb.blue) : null;
     }
 
     if (format === "rgb") {
-      return parseRgbInput(value);
+      const match = String(value)
+        .trim()
+        .match(
+          /^rgb\s*\(\s*(\d{1,3})\s*(?:,|\s)\s*(\d{1,3})\s*(?:,|\s)\s*(\d{1,3})\s*\)$/i,
+        );
+
+      if (!match) {
+        return null;
+      }
+
+      const channels = match.slice(1).map(Number);
+
+      if (channels.some((channel) => channel > 255)) {
+        return null;
+      }
+
+      return createColor(...channels);
     }
 
     if (format === "hsl") {
-      return parseHslInput(value);
+      const match = String(value)
+        .trim()
+        .match(
+          /^hsl\s*\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(\d+(?:\.\d+)?)%\s*,\s*(\d+(?:\.\d+)?)%\s*\)$/i,
+        );
+
+      if (!match) {
+        return null;
+      }
+
+      const hue = Number(match[1]);
+      const saturation = Number(match[2]);
+      const lightness = Number(match[3]);
+
+      if (saturation > 100 || lightness > 100) {
+        return null;
+      }
+
+      return createColorFromHsl(hue, saturation, lightness);
     }
 
     return null;
   }
 
-  function clearElement(element) {
-    if (element) {
-      element.replaceChildren();
-    }
+  function colorValues(color) {
+    const wrapper = document.createElement("div");
+
+    wrapper.className = "color-values";
+
+    [
+      ["HEX", color.hex],
+      ["RGB", color.rgb],
+      ["HSL", color.hsl],
+    ].forEach(([label, value]) => {
+      const item = document.createElement("div");
+
+      const title = document.createElement("strong");
+
+      const code = document.createElement("code");
+
+      item.className = "color-value";
+      title.textContent = label;
+      code.textContent = value;
+
+      item.append(title, code);
+      wrapper.append(item);
+    });
+
+    return wrapper;
   }
 
-  function setPreview(
-    element,
-    color
-  ) {
-    if (!element) {
-      return;
-    }
+  function renderColor(color, title) {
+    const swatch = document.createElement("div");
 
-    if (!color) {
-      element.style.backgroundColor = "";
-      element.classList.remove("has-color");
-      element.removeAttribute("data-color");
-      return;
-    }
+    swatch.className = "color-preview";
 
-    element.style.backgroundColor = color.hex;
-    element.classList.add("has-color");
-    element.setAttribute("data-color", color.hex);
-  }
+    swatch.style.backgroundColor = color.hex;
 
-  function createValueItem(
-    label,
-    value
-  ) {
-    const item = document.createElement("div");
-    const labelElement = document.createElement("span");
-    const valueElement = document.createElement("code");
+    swatch.textContent = color.hex;
 
-    item.className = "color-value";
-    labelElement.className = "color-value-label";
-    valueElement.className = "color-value-code";
-
-    labelElement.textContent = label;
-    valueElement.textContent = value;
-
-    item.append(
-      labelElement,
-      valueElement
-    );
-
-    return item;
-  }
-
-  function createGeneratedValueItem(
-    label,
-    value
-  ) {
-    const item = document.createElement("div");
-    const labelElement = document.createElement("strong");
-    const valueElement = document.createElement("span");
-
-    item.className = "generated-color-item";
-
-    labelElement.textContent = label;
-    valueElement.textContent = value;
-
-    item.append(
-      labelElement,
-      valueElement
-    );
-
-    return item;
-  }
-
-  function renderConverterResult(color) {
-    clearElement(converterResult);
-
-    const values = document.createElement("div");
-
-    values.className = "color-values";
-
-    values.append(
-      createValueItem("HEX", color.hex),
-      createValueItem("RGB", color.rgb),
-      createValueItem("HSL", color.hsl)
-    );
-
-    converterResult.appendChild(values);
-    converterResult.style.display = "block";
-
-    setPreview(
-      converterPreview,
-      color
-    );
-  }
-
-  function renderGeneratorResult(color) {
-    clearElement(generatorResult);
-
-    const values = document.createElement("div");
-
-    values.className = "generated-color-details";
-
-    values.append(
-      createGeneratedValueItem(
-        "HEX",
-        color.hex
-      ),
-      createGeneratedValueItem(
-        "RGB",
-        color.rgb
-      ),
-      createGeneratedValueItem(
-        "HSL",
-        color.hsl
-      )
-    );
-
-    generatorResult.appendChild(values);
-    generatorResult.style.display = "block";
-
-    setPreview(
-      generatorPreview,
-      color
-    );
-  }
-
-  function updateColorFormatInterface() {
-    const settings = {
-      hex: {
-        placeholder: "#FF5733"
-      },
-
-      rgb: {
-        placeholder: "rgb(255, 87, 51)"
-      },
-
-      hsl: {
-        placeholder: "hsl(11, 100%, 60%)"
-      }
-    };
-
-    const selectedSettings =
-      settings[colorFormat.value] ||
-      settings.hex;
-
-    colorInput.placeholder =
-      selectedSettings.placeholder;
-
-    colorInput.value = "";
-
-    currentConverterColor = null;
-
-    clearElement(converterResult);
-    converterResult.style.display = "none";
-
-    setPreview(
-      converterPreview,
-      null
-    );
-
-    setMessage(converterMessage);
-
-    colorInput.focus();
+    showPreview(title, swatch, colorValues(color));
   }
 
   function convertColor() {
-    const value = colorInput.value.trim();
-    const format = colorFormat.value;
-
-    if (!value) {
-      currentConverterColor = null;
-
-      clearElement(converterResult);
-      converterResult.style.display = "none";
-
-      setPreview(
-        converterPreview,
-        null
-      );
-
-      setMessage(
-        converterMessage,
-        "Enter a color value first.",
-        "error",
-        true
-      );
-
-      colorInput.focus();
-
-      return false;
-    }
-
-    const color = parseColorValue(
-      value,
-      format
-    );
+    const color = parseColor(el.colorInput.value, el.colorFormat.value);
 
     if (!color) {
-      currentConverterColor = null;
+      hidePreview();
 
-      clearElement(converterResult);
-      converterResult.style.display = "none";
+      notify("Enter a valid color value.", "error");
 
-      setPreview(
-        converterPreview,
-        null
-      );
-
-      const errors = {
-        hex:
-          "Enter a valid HEX color such as #FF5733.",
-
-        rgb:
-          "Enter a valid RGB color such as rgb(255, 87, 51).",
-
-        hsl:
-          "Enter a valid HSL color such as hsl(11, 100%, 60%)."
-      };
-
-      setMessage(
-        converterMessage,
-        errors[format] ||
-          "Enter a valid color.",
-        "error",
-        true
-      );
-
-      colorInput.focus();
-
-      return false;
-    }
-
-    currentConverterColor = color;
-
-    colorInput.value =
-      format === "hex"
-        ? color.hex
-        : format === "rgb"
-          ? color.rgb
-          : color.hsl;
-
-    renderConverterResult(color);
-
-    setMessage(
-      converterMessage,
-      "Color converted successfully.",
-      "success",
-      true
-    );
-
-    return true;
-  }
-
-  function copyConverterValue(
-    property,
-    successMessage
-  ) {
-    if (!currentConverterColor) {
-      setMessage(
-        converterMessage,
-        "Convert a color first.",
-        "error",
-        true
-      );
-
+      el.colorInput.focus();
       return;
     }
 
-    copyText(
-      currentConverterColor[property],
-      successMessage
-    );
+    currentColor = color;
+
+    el.colorInput.value = color[el.colorFormat.value];
+
+    renderColor(color, "Converted Color");
+
+    setInlineMessage("Action completed successfully.", "success");
+
+    if (typeof window.showActionSuccess === "function") {
+      window.showActionSuccess();
+    } else if (typeof window.showMessage === "function") {
+      window.showMessage("Action completed successfully.", "success");
+    }
   }
 
-  function clearConverter() {
-    colorFormat.value = "hex";
-    colorInput.value = "";
-    colorInput.placeholder = "#FF5733";
+  function randomChannel() {
+    if (window.crypto?.getRandomValues) {
+      const value = new Uint8Array(1);
 
-    currentConverterColor = null;
+      window.crypto.getRandomValues(value);
 
-    clearElement(converterResult);
-    converterResult.style.display = "none";
-
-    setPreview(
-      converterPreview,
-      null
-    );
-
-    setMessage(
-      converterMessage,
-      "Converter cleared.",
-      "success",
-      true
-    );
-
-    colorInput.focus();
-  }
-
-  function getRandomChannel() {
-    if (
-      window.crypto &&
-      typeof window.crypto.getRandomValues ===
-        "function"
-    ) {
-      const values = new Uint8Array(1);
-
-      window.crypto.getRandomValues(values);
-
-      return values[0];
+      return value[0];
     }
 
-    return Math.floor(
-      Math.random() * 256
-    );
+    return Math.floor(Math.random() * 256);
+  }
+
+  function randomInteger(minimum, maximum) {
+    const min = Math.ceil(minimum);
+    const max = Math.floor(maximum);
+    const range = max - min + 1;
+
+    if (range <= 0) {
+      return min;
+    }
+
+    if (window.crypto?.getRandomValues) {
+      const maximumUint32 = 0x100000000;
+      const limit = maximumUint32 - (maximumUint32 % range);
+      const values = new Uint32Array(1);
+
+      do {
+        window.crypto.getRandomValues(values);
+      } while (values[0] >= limit);
+
+      return min + (values[0] % range);
+    }
+
+    return min + Math.floor(Math.random() * range);
   }
 
   function generateRandomColor() {
-    const color = createColor(
-      getRandomChannel(),
-      getRandomChannel(),
-      getRandomChannel()
+    currentColor = createColor(
+      randomChannel(),
+      randomChannel(),
+      randomChannel(),
     );
 
-    currentGeneratorColor = color;
+    renderColor(currentColor, "Generated Color");
 
-    renderGeneratorResult(color);
+    setInlineMessage("Action completed successfully.", "success");
 
-    setMessage(
-      generatorMessage,
-      "Random color generated.",
-      "success",
-      true
-    );
-
-    return color;
+    if (typeof window.showActionSuccess === "function") {
+      window.showActionSuccess();
+    } else if (typeof window.showMessage === "function") {
+      window.showMessage("Action completed successfully.", "success");
+    }
   }
 
   function generateSimilarColor() {
-    if (!currentGeneratorColor) {
+    if (!currentColor) {
       generateRandomColor();
       return;
     }
 
-    const hueVariation =
-      Math.floor(Math.random() * 41) - 20;
+    currentColor = createColorFromHsl(
+      currentColor.hue + randomInteger(-20, 20),
 
-    const saturationVariation =
-      Math.floor(Math.random() * 21) - 10;
+      clamp(currentColor.saturation + randomInteger(-10, 10), 15, 100),
 
-    const lightnessVariation =
-      Math.floor(Math.random() * 21) - 10;
-
-    const color = createColorFromHsl(
-      currentGeneratorColor.hue +
-        hueVariation,
-
-      clamp(
-        currentGeneratorColor.saturation +
-          saturationVariation,
-        15,
-        100
-      ),
-
-      clamp(
-        currentGeneratorColor.lightness +
-          lightnessVariation,
-        10,
-        90
-      )
+      clamp(currentColor.lightness + randomInteger(-10, 10), 10, 90),
     );
 
-    currentGeneratorColor = color;
+    renderColor(currentColor, "Similar Color");
 
-    renderGeneratorResult(color);
-
-    setMessage(
-      generatorMessage,
-      "Similar color generated.",
-      "success",
-      true
-    );
+    notify("Action completed successfully.", "success");
   }
 
   function generateComplementaryColor() {
-    if (!currentGeneratorColor) {
+    if (!currentColor) {
       generateRandomColor();
       return;
     }
 
-    const color = createColorFromHsl(
-      currentGeneratorColor.hue + 180,
-      currentGeneratorColor.saturation,
-      currentGeneratorColor.lightness
+    currentColor = createColorFromHsl(
+      currentColor.hue + 180,
+      currentColor.saturation,
+      currentColor.lightness,
     );
 
-    currentGeneratorColor = color;
+    renderColor(currentColor, "Complementary Color");
 
-    renderGeneratorResult(color);
-
-    setMessage(
-      generatorMessage,
-      "Complementary color generated.",
-      "success",
-      true
-    );
+    notify("Action completed successfully.", "success");
   }
 
-  function clearGenerator() {
-    currentGeneratorColor = null;
+  function luminance(color) {
+    const channels = [color.red, color.green, color.blue].map((channel) => {
+      const value = channel / 255;
 
-    clearElement(generatorResult);
-    generatorResult.style.display = "none";
-
-    setPreview(
-      generatorPreview,
-      null
-    );
-
-    setMessage(
-      generatorMessage,
-      "Generator cleared.",
-      "success",
-      true
-    );
-  }
-function calculateRelativeLuminance(color) {
-    const channels = [
-      color.red,
-      color.green,
-      color.blue
-    ].map(function (channel) {
-      const normalized = channel / 255;
-
-      return normalized <= 0.03928
-        ? normalized / 12.92
-        : Math.pow(
-            (normalized + 0.055) / 1.055,
-            2.4
-          );
+      return value <= 0.03928
+        ? value / 12.92
+        : ((value + 0.055) / 1.055) ** 2.4;
     });
 
-    return (
-      0.2126 * channels[0] +
-      0.7152 * channels[1] +
-      0.0722 * channels[2]
-    );
-  }
-
-  function calculateContrastRatio(
-    foreground,
-    background
-  ) {
-    const foregroundLuminance =
-      calculateRelativeLuminance(foreground);
-
-    const backgroundLuminance =
-      calculateRelativeLuminance(background);
-
-    return (
-      Math.max(
-        foregroundLuminance,
-        backgroundLuminance
-      ) +
-      0.05
-    ) /
-    (
-      Math.min(
-        foregroundLuminance,
-        backgroundLuminance
-      ) +
-      0.05
-    );
-  }
-
-  function createContrastStatus(
-    label,
-    passed
-  ) {
-    const item = document.createElement("div");
-    const labelElement = document.createElement("strong");
-    const statusElement = document.createElement("span");
-
-    item.className = "contrast-test";
-    labelElement.textContent = label;
-
-    statusElement.className =
-      `contrast-test-status ${
-        passed ? "pass" : "fail"
-      }`;
-
-    statusElement.textContent =
-      passed ? "Pass ✓" : "Fail ✕";
-
-    item.append(
-      labelElement,
-      statusElement
-    );
-
-    return item;
-  }
-
-  function renderContrastResult(
-    ratio,
-    foreground,
-    background
-  ) {
-    clearElement(contrastResult);
-
-    const summary =
-      document.createElement("div");
-
-    const summaryText =
-      document.createElement("div");
-
-    const ratioElement =
-      document.createElement("p");
-
-    const ratingElement =
-      document.createElement("span");
-
-    const tests =
-      document.createElement("div");
-
-    const normalAA = ratio >= 4.5;
-    const normalAAA = ratio >= 7;
-    const largeAA = ratio >= 3;
-    const largeAAA = ratio >= 4.5;
-
-    summary.className = "contrast-summary";
-    ratioElement.className = "contrast-ratio";
-    ratingElement.className =
-      `contrast-rating ${
-        normalAA ? "pass" : "fail"
-      }`;
-
-    ratioElement.textContent =
-      `${ratio.toFixed(2)}:1`;
-
-    ratingElement.textContent =
-      normalAA
-        ? "WCAG AA Passed"
-        : "WCAG AA Failed";
-
-    summaryText.appendChild(ratioElement);
-
-    summary.append(
-      summaryText,
-      ratingElement
-    );
-
-    tests.className = "contrast-tests";
-
-    tests.append(
-      createContrastStatus(
-        "Normal Text — AA",
-        normalAA
-      ),
-
-      createContrastStatus(
-        "Normal Text — AAA",
-        normalAAA
-      ),
-
-      createContrastStatus(
-        "Large Text — AA",
-        largeAA
-      ),
-
-      createContrastStatus(
-        "Large Text — AAA",
-        largeAAA
-      )
-    );
-
-    contrastResult.append(
-      summary,
-      tests
-    );
-
-    contrastResult.style.display = "block";
-
-    contrastPreview.style.display = "flex";
-    contrastPreview.style.color = foreground.hex;
-    contrastPreview.style.backgroundColor =
-      background.hex;
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
   }
 
   function checkContrast() {
-    const foregroundRgb =
-      hexToRgb(foregroundColor.value);
+    const foregroundHex = normalizeHex(el.foregroundHex.value);
+    const backgroundHex = normalizeHex(el.backgroundHex.value);
 
-    const backgroundRgb =
-      hexToRgb(backgroundColor.value);
-
-    if (!foregroundRgb || !backgroundRgb) {
-      setMessage(
-        contrastMessage,
-        "Select two valid colors.",
-        "error",
-        true
-      );
-
-      return false;
+    if (!foregroundHex || !backgroundHex) {
+      hidePreview();
+      notify("Enter valid foreground and background HEX colors.", "error");
+      return;
     }
+
+    el.foregroundHex.value = foregroundHex;
+    el.backgroundHex.value = backgroundHex;
+    el.foregroundColor.value = foregroundHex.toLowerCase();
+    el.backgroundColor.value = backgroundHex.toLowerCase();
+
+    const foregroundRgb = hexToRgb(foregroundHex);
+    const backgroundRgb = hexToRgb(backgroundHex);
 
     const foreground = createColor(
       foregroundRgb.red,
       foregroundRgb.green,
-      foregroundRgb.blue
+      foregroundRgb.blue,
     );
 
     const background = createColor(
       backgroundRgb.red,
       backgroundRgb.green,
-      backgroundRgb.blue
+      backgroundRgb.blue,
     );
 
-    const ratio = calculateContrastRatio(
-      foreground,
-      background
-    );
+    const light = Math.max(luminance(foreground), luminance(background));
 
-    renderContrastResult(
+    const dark = Math.min(luminance(foreground), luminance(background));
+
+    const ratio = (light + 0.05) / (dark + 0.05);
+
+    currentContrast = {
       ratio,
-      foreground,
-      background
-    );
-
-    setMessage(
-      contrastMessage,
-      ratio >= 4.5
-        ? "The selected colors meet WCAG AA for normal text."
-        : "The selected colors do not meet WCAG AA for normal text.",
-      ratio >= 4.5 ? "success" : "error",
-      true
-    );
-
-    return true;
-  }
-
-  function swapContrastColors() {
-    const previousForeground =
-      foregroundColor.value;
-
-    foregroundColor.value =
-      backgroundColor.value;
-
-    backgroundColor.value =
-      previousForeground;
-
-    checkContrast();
-  }
-
-  function clearContrast() {
-    foregroundColor.value = "#000000";
-    backgroundColor.value = "#ffffff";
-
-    clearElement(contrastResult);
-    contrastResult.style.display = "none";
-
-    contrastPreview.style.display = "flex";
-    contrastPreview.style.color = "#000000";
-    contrastPreview.style.backgroundColor =
-      "#ffffff";
-
-    setMessage(
-      contrastMessage,
-      "Contrast checker reset.",
-      "success",
-      true
-    );
-  }
-
-  function getPaletteHueOffsets(type) {
-    const offsets = {
-      analogous: [-60, -30, 0, 30, 60],
-      complementary: [0, 30, 180, 210, 330],
-      triadic: [0, 60, 120, 240, 300],
-      split: [0, 30, 150, 210, 330],
-      tetradic: [0, 90, 180, 270, 315],
-      monochromatic: [0, 0, 0, 0, 0]
+      foreground: foreground.hex,
+      background: background.hex,
     };
 
-    return offsets[type] || offsets.analogous;
+    const preview = document.createElement("div");
+
+    const tests = document.createElement("div");
+
+    preview.className = "color-preview";
+
+    preview.style.color = foreground.hex;
+
+    preview.style.backgroundColor = background.hex;
+
+    preview.textContent = `Sample Text — ` + `${ratio.toFixed(2)}:1`;
+
+    tests.className = "contrast-tests";
+
+    [
+      ["Normal Text — AA", ratio >= 4.5],
+      ["Normal Text — AAA", ratio >= 7],
+      ["Large Text — AA", ratio >= 3],
+      ["Large Text — AAA", ratio >= 4.5],
+    ].forEach(([label, passed]) => {
+      const item = document.createElement("div");
+
+      const title = document.createElement("strong");
+
+      const result = document.createElement("span");
+
+      item.className = "contrast-test";
+
+      title.textContent = label;
+
+      result.className = passed ? "contrast-pass" : "contrast-fail";
+
+      result.textContent = passed ? "Pass ✓" : "Fail ✕";
+
+      item.append(title, result);
+      tests.append(item);
+    });
+
+    showPreview("Contrast Result", preview, tests);
+
+    notify(
+      ratio >= 4.5
+        ? "WCAG AA passed for normal text."
+        : "WCAG AA not passed for normal text.",
+      ratio >= 4.5 ? "success" : "error",
+    );
   }
 
-  function createPaletteColors(
-    baseColor,
-    type
-  ) {
-    const offsets =
-      getPaletteHueOffsets(type);
+  function paletteOffsets(type) {
+    return {
+      analogous: [-60, -30, 0, 30, 60],
 
+      complementary: [0, 30, 180, 210, 330],
+
+      triadic: [0, 60, 120, 240, 300],
+
+      split: [0, 30, 150, 210, 330],
+
+      tetradic: [0, 90, 180, 270, 315],
+
+      monochromatic: [0, 0, 0, 0, 0],
+    }[type];
+  }
+
+  function buildPalette(base, type) {
     if (type === "monochromatic") {
-      const lightnessValues = [
-        20,
-        35,
-        50,
-        65,
-        80
-      ];
-
-      return lightnessValues.map(
-        function (lightness) {
-          return createColorFromHsl(
-            baseColor.hue,
-            baseColor.saturation,
-            lightness
-          );
-        }
+      return [20, 35, 50, 65, 80].map((lightness) =>
+        createColorFromHsl(base.hue, base.saturation, lightness),
       );
     }
 
-    return offsets.map(
-      function (offset, index) {
-        const saturationAdjustment =
-          index % 2 === 0 ? 0 : -8;
+    return paletteOffsets(type).map((offset, index) =>
+      createColorFromHsl(
+        base.hue + offset,
 
-        const lightnessAdjustment =
-          index === 0
-            ? 0
-            : index % 2 === 0
-              ? 6
-              : -6;
+        clamp(base.saturation + (index % 2 ? -8 : 0), 20, 100),
 
-        return createColorFromHsl(
-          baseColor.hue + offset,
-
-          clamp(
-            baseColor.saturation +
-              saturationAdjustment,
-            20,
-            100
-          ),
-
-          clamp(
-            baseColor.lightness +
-              lightnessAdjustment,
-            15,
-            85
-          )
-        );
-      }
+        clamp(base.lightness + (index === 0 ? 0 : index % 2 ? -6 : 6), 15, 85),
+      ),
     );
   }
 
-  function getReadableTextColor(color) {
-    return calculateRelativeLuminance(color) >
-      0.45
-      ? "#111827"
-      : "#ffffff";
-  }
-
-  function createPaletteCard(
-    color,
-    index
-  ) {
+  function paletteCard(color) {
     const card = document.createElement("article");
+
     const swatch = document.createElement("button");
-    const copyLabel = document.createElement("span");
-    const information = document.createElement("div");
-    const value = document.createElement("strong");
-    const name = document.createElement("span");
+
+    const label = document.createElement("span");
+
+    const meta = document.createElement("div");
 
     card.className = "palette-color";
 
     swatch.type = "button";
-    swatch.className = "palette-color-swatch";
+
+    swatch.className = "palette-swatch";
+
     swatch.style.backgroundColor = color.hex;
-    swatch.style.color =
-      getReadableTextColor(color);
 
-    swatch.setAttribute(
-      "aria-label",
-      `Copy color ${color.hex}`
-    );
+    swatch.setAttribute("aria-label", `Copy ${color.hex}`);
 
-    copyLabel.className = "palette-color-copy";
-    copyLabel.textContent = "Copy";
+    label.textContent = "Copy";
 
-    information.className =
-      "palette-color-info";
+    meta.className = "palette-meta";
 
-    value.className =
-      "palette-color-value";
+    meta.textContent = color.hex;
 
-    name.className =
-      "palette-color-name";
+    swatch.append(label);
 
-    value.textContent = color.hex;
-    name.textContent = `Color ${index + 1}`;
+    swatch.addEventListener("click", () => xavertCopyText(color.hex));
 
-    swatch.appendChild(copyLabel);
-
-    swatch.addEventListener(
-      "click",
-      function () {
-        copyText(
-          color.hex,
-          `${color.hex} copied.`
-        );
-      }
-    );
-
-    information.append(
-      value,
-      name
-    );
-
-    card.append(
-      swatch,
-      information
-    );
+    card.append(swatch, meta);
 
     return card;
   }
 
-  function renderPalette() {
-    clearElement(paletteResult);
-
-    currentPalette.forEach(
-      function (color, index) {
-        paletteResult.appendChild(
-          createPaletteCard(
-            color,
-            index
-          )
-        );
-      }
-    );
-
-    paletteResult.style.display = "grid";
-  }
-
-  function generatePalette() {
-    const baseRgb =
-      hexToRgb(paletteColor.value);
-
-    if (!baseRgb) {
-      currentPalette = [];
-
-      clearElement(paletteResult);
-      paletteResult.style.display = "none";
-
-      setMessage(
-        paletteMessage,
-        "Select a valid base color.",
-        "error",
-        true
-      );
-
-      return false;
-    }
-
-    const baseColor = createColor(
-      baseRgb.red,
-      baseRgb.green,
-      baseRgb.blue
-    );
-
-    currentPalette =
-      createPaletteColors(
-        baseColor,
-        paletteType.value
-      );
-
-    renderPalette();
-
-    setMessage(
-      paletteMessage,
-      "Palette generated successfully.",
-      "success",
-      true
-    );
-
-    return true;
-  }
-
-  function normalizeStoredPalette(
-    palette
-  ) {
-    if (!Array.isArray(palette)) {
-      return null;
-    }
-
-    const normalized = palette
-      .map(function (color) {
-        return normalizeHex(color);
-      })
-      .filter(Boolean);
-
-    return normalized.length === 5
-      ? normalized
-      : null;
-  }
-
-  function loadStoredPalettes() {
+  // --------------------------------------------------
+  // Palette Management
+  // --------------------------------------------------
+  function loadSavedPalettes() {
     try {
-      const storedValue =
-        window.localStorage.getItem(
-          storageKey
-        );
+      const data = JSON.parse(localStorage.getItem(STORAGE_KEY) || "[]");
 
-      if (!storedValue) {
-        storedPalettes = [];
-        return;
+      if (!Array.isArray(data)) {
+        return [];
       }
 
-      const parsed =
-        JSON.parse(storedValue);
-
-      if (!Array.isArray(parsed)) {
-        throw new Error(
-          "Invalid palette storage."
-        );
-      }
-
-      storedPalettes = parsed
-        .map(normalizeStoredPalette)
-        .filter(Boolean)
-        .slice(
-          0,
-          maximumSavedPalettes
-        );
-    } catch (error) {
-      console.warn(
-        "Saved palettes could not be loaded:",
-        error
-      );
-
-      storedPalettes = [];
-
-      try {
-        window.localStorage.removeItem(
-          storageKey
-        );
-      } catch {
-        // Storage may be unavailable.
-      }
+      return data
+        .filter(
+          (palette) =>
+            Array.isArray(palette) &&
+            palette.length === 5 &&
+            palette.every((hex) => normalizeHex(hex)),
+        )
+        .slice(0, MAX_SAVED);
+    } catch {
+      return [];
     }
   }
 
   function saveStoredPalettes() {
     try {
-      window.localStorage.setItem(
-        storageKey,
-        JSON.stringify(storedPalettes)
-      );
-
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(savedPalettes));
       return true;
     } catch (error) {
-      console.warn(
-        "Saved palettes could not be stored:",
-        error
-      );
-
-      setMessage(
-        paletteMessage,
-        "The palette could not be stored in this browser.",
-        "error",
-        true
-      );
-
+      console.error("Could not save palettes locally:", error);
+      notify("Saved palettes are unavailable in this browser.", "error");
       return false;
     }
   }
 
-  function palettesAreEqual(
-    firstPalette,
-    secondPalette
-  ) {
-    return (
-      firstPalette.length ===
-        secondPalette.length &&
-      firstPalette.every(
-        function (color, index) {
-          return (
-            color ===
-            secondPalette[index]
-          );
-        }
-      )
-    );
-  }
+  function renderSavedPalettes(container) {
+    container.replaceChildren();
 
-  function saveCurrentPalette() {
-    if (currentPalette.length === 0) {
-      setMessage(
-        paletteMessage,
-        "Generate a palette first.",
-        "error",
-        true
-      );
+    savedPalettes.forEach((palette, index) => {
+      const section = document.createElement("section");
 
-      return;
-    }
+      const header = document.createElement("div");
 
-    const paletteToSave =
-      currentPalette.map(
-        function (color) {
-          return color.hex;
-        }
-      );
+      const title = document.createElement("strong");
 
-    const alreadySaved =
-      storedPalettes.some(
-        function (savedPalette) {
-          return palettesAreEqual(
-            savedPalette,
-            paletteToSave
-          );
-        }
-      );
+      const remove = document.createElement("button");
 
-    if (alreadySaved) {
-      setMessage(
-        paletteMessage,
-        "This palette is already saved.",
-        "info",
-        true
-      );
+      const colors = document.createElement("div");
 
-      return;
-    }
+      section.className = "saved-palette";
 
-    storedPalettes.unshift(
-      paletteToSave
-    );
+      header.className = "saved-palette-header";
 
-    storedPalettes =
-      storedPalettes.slice(
-        0,
-        maximumSavedPalettes
-      );
+      title.textContent = `Saved Palette ${index + 1}`;
 
-    if (!saveStoredPalettes()) {
-      return;
-    }
+      remove.type = "button";
 
-    renderSavedPalettes();
+      remove.className = "btn btn-secondary";
 
-    setMessage(
-      paletteMessage,
-      "Palette saved successfully.",
-      "success",
-      true
-    );
-  }
+      remove.textContent = "Delete";
 
-  function deleteStoredPalette(index) {
-    if (
-      !Number.isInteger(index) ||
-      index < 0 ||
-      index >= storedPalettes.length
-    ) {
-      return;
-    }
+      colors.className = "saved-palette-colors";
 
-    storedPalettes.splice(index, 1);
+      remove.addEventListener("click", () => {
+        savedPalettes.splice(index, 1);
 
-    saveStoredPalettes();
-    renderSavedPalettes();
+        saveStoredPalettes();
 
-    setMessage(
-      paletteMessage,
-      "Saved palette deleted.",
-      "success",
-      true
-    );
-  }
+        renderSavedPalettes(container);
 
-  function createSavedPalette(
-    palette,
-    index
-  ) {
-    const wrapper =
-      document.createElement("section");
+        notify("Saved palette deleted.", "success");
+      });
 
-    const header =
-      document.createElement("div");
-
-    const title =
-      document.createElement("h3");
-
-    const removeButton =
-      document.createElement("button");
-
-    const colors =
-      document.createElement("div");
-
-    wrapper.className = "saved-palette";
-    header.className =
-      "saved-palette-header";
-
-    title.className =
-      "saved-palette-title";
-
-    title.textContent =
-      `Palette ${index + 1}`;
-
-    removeButton.type = "button";
-
-    removeButton.className =
-      "saved-palette-remove";
-
-    removeButton.textContent = "Delete";
-
-    removeButton.addEventListener(
-      "click",
-      function () {
-        deleteStoredPalette(index);
-      }
-    );
-
-    colors.className =
-      "saved-palette-colors";
-
-    palette.forEach(
-      function (hex) {
-        const button =
-          document.createElement("button");
+      palette.forEach((hex) => {
+        const button = document.createElement("button");
 
         button.type = "button";
 
-        button.className =
-          "saved-palette-color";
+        button.className = "saved-palette-color";
 
         button.style.backgroundColor = hex;
 
-        button.setAttribute(
-          "aria-label",
-          `Copy color ${hex}`
-        );
-
         button.title = `Copy ${hex}`;
 
-        button.addEventListener(
-          "click",
-          function () {
-            copyText(
-              hex,
-              `${hex} copied.`
-            );
-          }
-        );
+        button.setAttribute("aria-label", `Copy ${hex}`);
 
-        colors.appendChild(button);
-      }
-    );
+        button.addEventListener("click", () => xavertCopyText(hex));
 
-    header.append(
-      title,
-      removeButton
-    );
+        colors.append(button);
+      });
 
-    wrapper.append(
-      header,
-      colors
-    );
+      header.append(title, remove);
 
-    return wrapper;
+      section.append(header, colors);
+
+      container.append(section);
+    });
   }
 
-  function renderSavedPalettes() {
-    clearElement(savedPalettes);
+  function renderPalette() {
+    const grid = document.createElement("div");
 
-    if (storedPalettes.length === 0) {
+    const saved = document.createElement("div");
+
+    grid.className = "palette-grid";
+
+    saved.className = "saved-palettes";
+
+    currentPalette.forEach((color) => grid.append(paletteCard(color)));
+
+    renderSavedPalettes(saved);
+
+    showPreview("Generated Palette", grid, saved);
+  }
+
+  function generatePalette() {
+    const rgb = hexToRgb(el.paletteColor.value);
+
+    const base = createColor(rgb.red, rgb.green, rgb.blue);
+
+    currentPalette = buildPalette(base, el.paletteType.value);
+
+    renderPalette();
+
+    setInlineMessage("Action completed successfully.", "success");
+
+    if (typeof window.showActionSuccess === "function") {
+      window.showActionSuccess();
+    } else if (typeof window.showMessage === "function") {
+      window.showMessage("Action completed successfully.", "success");
+    }
+  }
+
+  function savePalette() {
+    if (!currentPalette.length) {
+      notify("Generate a palette first.", "error");
+
       return;
     }
 
-    const title =
-      document.createElement("h3");
+    const palette = currentPalette.map((color) => color.hex);
 
-    title.className =
-      "saved-palettes-title";
-
-    title.textContent =
-      "Saved Palettes";
-
-    savedPalettes.appendChild(title);
-
-    storedPalettes.forEach(
-      function (palette, index) {
-        savedPalettes.appendChild(
-          createSavedPalette(
-            palette,
-            index
-          )
-        );
-      }
+    const duplicate = savedPalettes.some(
+      (saved) => saved.join("|") === palette.join("|"),
     );
+
+    if (duplicate) {
+      notify("This palette is already saved.", "info");
+
+      return;
+    }
+
+    savedPalettes.unshift(palette);
+
+    savedPalettes = savedPalettes.slice(0, MAX_SAVED);
+
+    if (!saveStoredPalettes()) {
+      savedPalettes.shift();
+      return;
+    }
+
+    renderPalette();
+
+    notify("Palette saved successfully.", "success");
   }
-function downloadCurrentPalette() {
-    if (currentPalette.length === 0) {
-      setMessage(
-        paletteMessage,
-        "Generate a palette first.",
-        "error",
-        true
-      );
+
+  function downloadPalette() {
+    if (!currentPalette.length) {
+      notify("Generate a palette first.", "error");
 
       return;
     }
 
     const content = currentPalette
-      .map(function (color, index) {
-        return [
-          `Color ${index + 1}`,
-          `HEX: ${color.hex}`,
-          `RGB: ${color.rgb}`,
-          `HSL: ${color.hsl}`
-        ].join("\n");
-      })
+      .map(
+        (color, index) =>
+          `Color ${index + 1}\n` +
+          `HEX: ${color.hex}\n` +
+          `RGB: ${color.rgb}\n` +
+          `HSL: ${color.hsl}`,
+      )
       .join("\n\n");
 
-    const blob = new Blob(
-      [content],
-      {
-        type: "text/plain;charset=utf-8"
-      }
-    );
-
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = "xavert-color-palette.txt";
-    link.hidden = true;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
-
-    setMessage(
-      paletteMessage,
-      "Palette download started.",
-      "success",
-      true
+    downloadFile(
+      "xavert-color-palette.txt",
+      content,
+      "text/plain;charset=utf-8",
     );
   }
 
-  function clearPalette() {
-    paletteColor.value = "#ff5733";
-    paletteType.value = "analogous";
-
+  function resetState() {
+    currentColor = null;
+    currentContrast = null;
     currentPalette = [];
 
-    clearElement(paletteResult);
-    paletteResult.style.display = "none";
+    hidePreview();
 
-    setMessage(
-      paletteMessage,
-      "Palette generator cleared.",
-      "success",
-      true
-    );
+    notify("", "info", false);
   }
 
-  function switchTool() {
-    const selectedTool = toolSelector.value;
+  function updateMode() {
+    const mode = el.toolSelector.value;
 
-    toolSections.forEach(function (section) {
-      section.classList.remove("active");
+    const labels = modes[mode];
+
+    el.formatGroup.hidden = mode !== "converter";
+
+    el.valueGroup.hidden = mode !== "converter";
+
+    el.foregroundGroup.hidden = mode !== "contrast";
+
+    el.backgroundGroup.hidden = mode !== "contrast";
+
+    el.paletteColorGroup.hidden = mode !== "palette";
+
+    el.paletteTypeGroup.hidden = mode !== "palette";
+
+    [
+      el.primaryBtn,
+      el.secondaryBtn1,
+      el.secondaryBtn2,
+      el.secondaryBtn3,
+      el.sampleBtn,
+    ].forEach((button, index) => {
+      button.textContent = labels[index];
     });
 
-    const selectedSection = document.getElementById(
-      `${selectedTool}Tool`
-    );
+    el.sampleBtn.hidden = mode === "generator";
 
-    if (selectedSection) {
-      selectedSection.classList.add("active");
+    resetState();
+  }
+
+  function clearMode() {
+    const mode = el.toolSelector.value;
+
+    if (mode === "converter") {
+      el.colorFormat.value = "hex";
+      el.colorInput.value = "";
+      el.colorInput.placeholder = "#FF5733";
+      el.colorInput.focus();
+    } else if (mode === "contrast") {
+      el.foregroundColor.value = "#000000";
+      el.foregroundHex.value = "#000000";
+      el.backgroundColor.value = "#ffffff";
+      el.backgroundHex.value = "#FFFFFF";
+    } else if (mode === "palette") {
+      el.paletteColor.value = "#ff5733";
+
+      el.paletteType.value = "analogous";
+    }
+
+    resetState();
+  }
+
+  function loadSample() {
+    const mode = el.toolSelector.value;
+
+    if (mode === "converter") {
+      const samples = {
+        hex: "#FF5733",
+        rgb: "rgb(255, 87, 51)",
+        hsl: "hsl(11, 100%, 60%)",
+      };
+
+      el.colorInput.value = samples[el.colorFormat.value];
+      convertColor();
+    } else if (mode === "generator") {
+      generateRandomColor();
+    } else if (mode === "contrast") {
+      el.foregroundColor.value = "#111827";
+      el.foregroundHex.value = "#111827";
+      el.backgroundColor.value = "#ffffff";
+      el.backgroundHex.value = "#FFFFFF";
+      checkContrast();
+    } else {
+      el.paletteColor.value = "#FF5733";
+      el.paletteType.value = "analogous";
+      generatePalette();
+    }
+
+    if (typeof window.showSampleSuccess === "function") {
+      window.showSampleSuccess();
+    } else if (typeof window.showMessage === "function") {
+      window.showMessage("Sample loaded successfully.", "success");
+    } else {
+      setInlineMessage("Sample loaded successfully.", "success");
     }
   }
 
-  function runCurrentTool() {
-    const actions = {
-      converter: convertColor,
-      generator: generateRandomColor,
-      contrast: checkContrast,
-      palette: generatePalette
+  // --------------------------------------------------
+  // Event Listeners
+  // --------------------------------------------------
+  const primaryActions = {
+    converter: convertColor,
+    generator: generateRandomColor,
+    contrast: checkContrast,
+    palette: generatePalette,
+  };
+
+  const secondaryActions = {
+    converter: [
+      () => xavertCopyText(currentColor?.hex || ""),
+
+      () => xavertCopyText(currentColor?.rgb || ""),
+
+      () => xavertCopyText(currentColor?.hsl || ""),
+    ],
+
+    generator: [
+      generateSimilarColor,
+      generateComplementaryColor,
+
+      () => xavertCopyText(currentColor?.hex || ""),
+    ],
+
+    contrast: [
+      () => {
+        [el.foregroundColor.value, el.backgroundColor.value] = [
+          el.backgroundColor.value,
+          el.foregroundColor.value,
+        ];
+
+        el.foregroundHex.value = el.foregroundColor.value.toUpperCase();
+        el.backgroundHex.value = el.backgroundColor.value.toUpperCase();
+
+        checkContrast();
+      },
+
+      () =>
+        xavertCopyText(
+          currentContrast ? `${currentContrast.ratio.toFixed(2)}:1` : "",
+        ),
+
+      () =>
+        xavertCopyText(
+          currentContrast
+            ? `Foreground: ${currentContrast.foreground}\n` +
+                `Background: ${currentContrast.background}`
+            : "",
+        ),
+    ],
+
+    palette: [
+      savePalette,
+      downloadPalette,
+
+      () => xavertCopyText(currentPalette.map((color) => color.hex).join("\n")),
+    ],
+  };
+
+  el.toolSelector.addEventListener("change", updateMode);
+
+  el.colorFormat.addEventListener("change", () => {
+    const placeholders = {
+      hex: "#FF5733",
+      rgb: "rgb(255, 87, 51)",
+      hsl: "hsl(11, 100%, 60%)",
     };
 
-    const action = actions[toolSelector.value];
+    el.colorInput.value = "";
 
-    if (typeof action === "function") {
-      action();
+    el.colorInput.placeholder = placeholders[el.colorFormat.value];
+
+    resetState();
+    el.colorInput.focus();
+  });
+
+  el.foregroundColor.addEventListener("input", () => {
+    syncContrastFields("foreground-color");
+    if (currentContrast) checkContrast();
+  });
+
+  el.backgroundColor.addEventListener("input", () => {
+    syncContrastFields("background-color");
+    if (currentContrast) checkContrast();
+  });
+
+  el.foregroundHex.addEventListener("input", () => {
+    syncContrastFields("foreground-hex");
+    if (currentContrast && normalizeHex(el.foregroundHex.value)) {
+      checkContrast();
     }
-  }
+  });
 
-  toolSelector.addEventListener(
-    "change",
-    switchTool
-  );
-
-  colorFormat.addEventListener(
-    "change",
-    updateColorFormatInterface
-  );
-
-  colorInput.addEventListener(
-    "keydown",
-    function (event) {
-      if (event.key === "Enter") {
-        event.preventDefault();
-        convertColor();
-      }
+  el.backgroundHex.addEventListener("input", () => {
+    syncContrastFields("background-hex");
+    if (currentContrast && normalizeHex(el.backgroundHex.value)) {
+      checkContrast();
     }
+  });
+
+  el.paletteColor.addEventListener("input", () => {
+    if (currentPalette.length) {
+      generatePalette();
+    }
+  });
+
+  el.paletteType.addEventListener("change", () => {
+    if (currentPalette.length) {
+      generatePalette();
+    }
+  });
+
+  el.primaryBtn.addEventListener("click", () =>
+    primaryActions[el.toolSelector.value](),
   );
 
-  convertBtn.addEventListener(
-    "click",
-    convertColor
-  );
-
-  copyHexBtn.addEventListener(
-    "click",
-    function () {
-      copyConverterValue(
-        "hex",
-        "HEX color copied."
+  [el.secondaryBtn1, el.secondaryBtn2, el.secondaryBtn3].forEach(
+    (button, index) => {
+      button.addEventListener("click", () =>
+        secondaryActions[el.toolSelector.value][index](),
       );
-    }
+    },
   );
 
-  copyRgbBtn.addEventListener(
-    "click",
-    function () {
-      copyConverterValue(
-        "rgb",
-        "RGB color copied."
-      );
-    }
-  );
+  el.clearBtn.addEventListener("click", clearMode);
 
-  copyHslBtn.addEventListener(
-    "click",
-    function () {
-      copyConverterValue(
-        "hsl",
-        "HSL color copied."
-      );
-    }
-  );
+  el.sampleBtn.addEventListener("click", loadSample);
 
-  clearConverterBtn.addEventListener(
-    "click",
-    clearConverter
-  );
-
-  generateBtn.addEventListener(
-    "click",
-    generateRandomColor
-  );
-
-  similarBtn.addEventListener(
-    "click",
-    generateSimilarColor
-  );
-
-  complementaryBtn.addEventListener(
-    "click",
-    generateComplementaryColor
-  );
-
-  clearGeneratorBtn.addEventListener(
-    "click",
-    clearGenerator
-  );
-
-  foregroundColor.addEventListener(
-    "input",
-    checkContrast
-  );
-
-  backgroundColor.addEventListener(
-    "input",
-    checkContrast
-  );
-
-  contrastBtn.addEventListener(
-    "click",
-    checkContrast
-  );
-
-  swapBtn.addEventListener(
-    "click",
-    swapContrastColors
-  );
-
-  clearContrastBtn.addEventListener(
-    "click",
-    clearContrast
-  );
-
-  paletteColor.addEventListener(
-    "input",
-    function () {
-      if (currentPalette.length > 0) {
-        generatePalette();
-      }
-    }
-  );
-
-  paletteType.addEventListener(
-    "change",
-    function () {
-      if (currentPalette.length > 0) {
-        generatePalette();
-      }
-    }
-  );
-
-  generatePaletteBtn.addEventListener(
-    "click",
-    generatePalette
-  );
-
-  savePaletteBtn.addEventListener(
-    "click",
-    saveCurrentPalette
-  );
-
-  downloadPaletteBtn.addEventListener(
-    "click",
-    downloadCurrentPalette
-  );
-
-  clearPaletteBtn.addEventListener(
-    "click",
-    clearPalette
-  );
-
-  document.addEventListener(
-    "keydown",
-    function (event) {
-      if (
-        event.ctrlKey &&
-        event.key === "Enter"
-      ) {
-        event.preventDefault();
-        runCurrentTool();
-      }
-    }
-  );
-
-  updateColorFormatInterface();
-
-  clearElement(converterResult);
-  converterResult.style.display = "none";
-
-  clearElement(generatorResult);
-  generatorResult.style.display = "none";
-
-  clearElement(contrastResult);
-  contrastResult.style.display = "none";
-
-  clearElement(paletteResult);
-  paletteResult.style.display = "none";
-
-  setPreview(
-    converterPreview,
-    null
-  );
-
-  setPreview(
-    generatorPreview,
-    null
-  );
-
-  contrastPreview.style.display = "flex";
-  contrastPreview.style.color = "#000000";
-  contrastPreview.style.backgroundColor =
-    "#ffffff";
-
-  loadStoredPalettes();
-  renderSavedPalettes();
-  switchTool();
-});  
+  updateMode();
+});

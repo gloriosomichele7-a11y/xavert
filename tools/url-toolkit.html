@@ -1,644 +1,413 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | URL Toolkit</title>
-
-<meta name="description" content="Free online URL Toolkit to encode, decode, analyze, parse and build URLs with UTM parameters directly in your browser. Fast, private and easy URL tools.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/url-toolkit.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-textarea,
-input{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-
-textarea{
-min-height:180px;
-resize:vertical;
-line-height:1.6;
-}
-
-textarea:focus,
-input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.result-box{
-display:none;
-margin-top:20px;
-padding:20px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-}
-
-.result-box textarea{
-background:#ffffff;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{
-color:#dc2626;
-}
-
-.success{
-color:#047857;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-}
-
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">
-← Back to Home
-</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>URL Toolkit</h1>
-
-<p class="subtitle">
-Encode, decode, analyze and build URLs directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ URLs are processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<label for="inputUrl">
-Input URL or Text
-</label>
-
-<textarea
-id="inputUrl"
-placeholder="Paste URL or text here">
-</textarea>
-
-<div class="button-group">
-
-<button onclick="encodeURL()">
-URL Encode
-</button>
-
-<button onclick="decodeURL()">
-URL Decode
-</button>
-
-<button onclick="parseURL()">
-Parse URL
-</button>
-
-<button onclick="clearAll()">
-Clear
-</button>
-
-</div>
-
-<div id="message" class="message"></div>
-
-<div id="resultBox" class="result-box">
-
-<label for="outputText">
-Result
-</label>
-
-<textarea
-id="outputText"
-readonly>
-</textarea>
-
-<div class="button-group">
-
-<button onclick="copyResult()">
-Copy Result
-</button>
-
-<button onclick="downloadResult()">
-Download Result
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div class="card">
-
-<h2 style="margin-bottom:18px;">
-UTM Builder
-</h2>
-
-<label>
-Website URL
-</label>
-
-<input id="utmUrl" placeholder="https://example.com">
-
-<label>
-Source
-</label>
-
-<input id="utmSource" placeholder="google">
-
-<label>
-Medium
-</label>
-
-<input id="utmMedium" placeholder="cpc">
-
-<label>
-Campaign
-</label>
-
-<input id="utmCampaign" placeholder="summer-sale">
-
-<div class="button-group">
-
-<button onclick="buildUTM()">
-Build UTM URL
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-
-<script>
-const inputUrl=document.getElementById("inputUrl");
-const outputText=document.getElementById("outputText");
-const resultBox=document.getElementById("resultBox");
-const message=document.getElementById("message");
-const toast=document.getElementById("toast");
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-parseURL();
-}
-
-});
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-function setMessage(text,type){
-
-message.textContent=text;
-message.className="message " + type;
-
-}
-
-function showResult(value){
-
-outputText.value=value;
-resultBox.style.display="block";
-
-}
-
-function encodeURL(){
-
-const value=inputUrl.value;
-
-if(!value){
-setMessage("Please enter text to encode.","error");
-showToast("Please enter text to encode.","error");
-return;
-}
-
-try{
-
-showResult(
-encodeURIComponent(value)
-);
-
-setMessage(
-"URL encoded successfully.",
-"success"
-);
-showToast("URL encoded.","success");
-}catch(error){
-
-setMessage(
-"Unable to encode.",
-"error"
-);
-
-showToast("Unable to encode.","error");
-
-}
-
-}
-
-function decodeURL(){
-
-const value=inputUrl.value;
-
-if(!value){
-setMessage("Please enter text to decode.","error");
-showToast("Please enter text to decode.","error");
-return;
-}
-
-try{
-
-showResult(
-decodeURIComponent(value)
-);
-
-setMessage(
-"URL decoded successfully.",
-"success"
-);
-showToast("URL decoded.","success");
-}catch(error){
-
-setMessage(
-"Invalid encoded URL.",
-"error"
-);
-
-showToast("Invalid encoded URL.","error");
-
-}
-
-}
-
-function parseURL(){
-
-const value=inputUrl.value.trim();
-
-if(!value){
-setMessage("Please enter a URL.","error");
-showToast("Please enter a URL.","error");
-return;
-}
-
-try{
-
-const url=new URL(value);
-
-let result="";
-
-result += "Protocol: " + url.protocol + "\n";
-result += "Host: " + url.host + "\n";
-result += "Hostname: " + url.hostname + "\n";
-result += "Pathname: " + url.pathname + "\n";
-result += "Hash: " + url.hash + "\n";
-result += "Search: " + url.search + "\n";
-
-if(url.searchParams.toString()){
-
-result += "\nParameters\n";
-result += "------------------\n";
-
-for(const [key,val] of url.searchParams){
-
-result += key + " = " + val + "\n";
-
-}
-
-}
-
-showResult(result);
-
-setMessage(
-"URL parsed successfully.",
-"success"
-);
-showToast("URL parsed.","success");
-}catch(error){
-
-setMessage(
-"Invalid URL.",
-"error"
-);
-showToast("Invalid URL.","error");
-
-}
-
-}
-
-function buildUTM(){
-
-const base=document
-.getElementById("utmUrl")
-.value
-.trim();
-
-if(!base){
-setMessage("Website URL required.","error");
-showToast("Website URL required.","error");
-return;
-}
-
-try{
-
-const url=new URL(base);
-
-const source=
-document.getElementById("utmSource").value.trim();
-
-const medium=
-document.getElementById("utmMedium").value.trim();
-
-const campaign=
-document.getElementById("utmCampaign").value.trim();
-
-if(source){
-url.searchParams.set(
-"utm_source",
-source
-);
-}
-
-if(medium){
-url.searchParams.set(
-"utm_medium",
-medium
-);
-}
-
-if(campaign){
-url.searchParams.set(
-"utm_campaign",
-campaign
-);
-}
-
-showResult(url.toString());
-
-resultBox.style.display="block";
-
-setMessage(
-"UTM URL created successfully.",
-"success"
-);
-showToast("UTM URL created.","success");
-}catch(error){
-
-setMessage(
-"Invalid website URL.",
-"error"
-);
-showToast("Invalid website URL.","error");
-
-}
-
-}
-
-function copyResult(){
-
-if(!outputText.value){
-showToast("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(
-outputText.value
-);
-
-showToast("Copied.","success");
-
-}
-
-function downloadResult(){
-
-if(!outputText.value){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob(
-[outputText.value],
-{
-type:"text/plain;charset=utf-8"
-}
-);
-
-const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-
-link.href=url;
-link.download="xavert-url-toolkit.txt";
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-URL.revokeObjectURL(url);
-
-showToast("Download started.","success");
-
-}
-
-function clearAll(){
-
-inputUrl.value="";
-outputText.value="";
-
-document.getElementById("utmUrl").value="";
-document.getElementById("utmSource").value="";
-document.getElementById("utmMedium").value="";
-document.getElementById("utmCampaign").value="";
-
-resultBox.style.display="none";
-
-message.textContent="";
-message.className="message";
-showToast("Cleared.","success");
-}
-
-</script>
-
-</body>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | URL Toolkit</title>
+
+    <meta
+      name="description"
+      content="Encode, decode, parse and build URLs with UTM parameters directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/url-toolkit.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .url-tool-panel[hidden] {
+        display: none !important;
+      }
+
+      .url-editor {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+
+      .url-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .url-result[hidden] {
+        display: none !important;
+      }
+
+      .url-result-output {
+        min-height: 200px;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/url-toolkit.js" defer></script>
+  </head>
+
+  <body
+    data-tool="url-toolkit"
+    data-related-tools="qr-generator,text-toolkit,base64-toolkit,regex-tester,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">URL Toolkit</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="selector-title">
+          <header class="tool-card-header">
+            <h2 id="selector-title" class="tool-card-title">Select Tool</h2>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="toolSelector">Tool</label>
+
+              <select id="toolSelector">
+                <option value="encode">URL Encode</option>
+                <option value="decode">URL Decode</option>
+                <option value="parse">Parse URL</option>
+                <option value="utm">UTM Builder</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="encodePanel"
+          class="tool-card url-tool-panel"
+          aria-labelledby="encode-title"
+        >
+          <header class="tool-card-header">
+            <h2 id="encode-title" class="tool-card-title">URL Encode</h2>
+            <p class="tool-card-description">
+              Encode text for safe use inside a URL component.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="encodeInput">Text</label>
+              <textarea
+                id="encodeInput"
+                class="url-editor"
+                placeholder="Example: hello world & XAVERT"
+              ></textarea>
+            </div>
+
+            <button
+              id="encodeSampleBtn"
+              class="btn btn-secondary"
+              type="button"
+              data-sample-loader="url-encode"
+            >
+              Load Sample
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="decodePanel"
+          class="tool-card url-tool-panel"
+          aria-labelledby="decode-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="decode-title" class="tool-card-title">URL Decode</h2>
+            <p class="tool-card-description">
+              Decode percent-encoded URL component text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="decodeInput">Encoded Text</label>
+              <textarea
+                id="decodeInput"
+                class="url-editor"
+                placeholder="Example: hello%20world%20%26%20XAVERT"
+              ></textarea>
+            </div>
+
+            <button
+              id="decodeSampleBtn"
+              class="btn btn-secondary"
+              type="button"
+              data-sample-loader="url-decode"
+            >
+              Load Sample
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="parsePanel"
+          class="tool-card url-tool-panel"
+          aria-labelledby="parse-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="parse-title" class="tool-card-title">Parse URL</h2>
+            <p class="tool-card-description">
+              Inspect the main components and query parameters of an absolute
+              URL.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="parseInput">URL</label>
+              <textarea
+                id="parseInput"
+                class="url-editor"
+                placeholder="https://example.com/path?source=xavert#section"
+              ></textarea>
+            </div>
+
+            <button
+              id="parseSampleBtn"
+              class="btn btn-secondary"
+              type="button"
+              data-sample-loader="url-parse"
+            >
+              Load Sample
+            </button>
+          </div>
+        </section>
+
+        <section
+          id="utmPanel"
+          class="tool-card url-tool-panel"
+          aria-labelledby="utm-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="utm-title" class="tool-card-title">UTM Builder</h2>
+            <p class="tool-card-description">
+              Build a campaign URL with standard UTM parameters.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="utmUrl">Website URL</label>
+                <input
+                  id="utmUrl"
+                  type="url"
+                  placeholder="https://example.com"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="utmSource">Source</label>
+                <input id="utmSource" type="text" placeholder="google" />
+              </div>
+
+              <div class="form-group">
+                <label for="utmMedium">Medium</label>
+                <input id="utmMedium" type="text" placeholder="cpc" />
+              </div>
+
+              <div class="form-group">
+                <label for="utmCampaign">Campaign</label>
+                <input id="utmCampaign" type="text" placeholder="summer-sale" />
+              </div>
+
+              <div class="form-group">
+                <label for="utmTerm">Term (optional)</label>
+                <input id="utmTerm" type="text" placeholder="running-shoes" />
+              </div>
+
+              <div class="form-group full-width">
+                <label for="utmContent">Content (optional)</label>
+                <input id="utmContent" type="text" placeholder="banner-a" />
+              </div>
+            </div>
+
+            <button
+              id="utmSampleBtn"
+              class="btn btn-secondary"
+              type="button"
+              data-sample-loader="url-utm"
+            >
+              Load Sample
+            </button>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="actions-title">
+          <header class="tool-card-header">
+            <h2 id="actions-title" class="tool-card-title">Action</h2>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="button-grid url-actions">
+              <button
+                id="primaryBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                URL Encode
+              </button>
+
+              <button id="copyBtn" class="btn btn-secondary" type="button">
+                Copy Result
+              </button>
+
+              <button id="downloadBtn" class="btn btn-secondary" type="button">
+                Download Result
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <div id="resultBox" class="tool-card-result url-result" hidden>
+              <div class="form-group">
+                <label for="outputText">Result</label>
+                <textarea
+                  id="outputText"
+                  class="url-result-output"
+                  readonly
+                  spellcheck="false"
+                ></textarea>
+              </div>
+            </div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT URL Toolkit provides common browser-based utilities for
+          encoding, decoding, parsing and building URLs.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Encode text with URL component encoding.</li>
+          <li>Decode percent-encoded URL text.</li>
+          <li>Parse protocol, host, pathname, hash and query parameters.</li>
+          <li>
+            Build UTM campaign URLs with source, medium, campaign, term and
+            content.
+          </li>
+          <li>Copy or download generated results.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          URL processing happens locally within your browser. Your data is never
+          uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script type="application/json" id="xavert-sample-url-encode">
+      {
+        "fields": {
+          "encodeInput": "hello world & XAVERT"
+        },
+        "focus": "encodeInput",
+        "message": "Sample text loaded.",
+        "action": "primaryBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-url-decode">
+      {
+        "fields": {
+          "decodeInput": "hello%20world%20%26%20XAVERT"
+        },
+        "focus": "decodeInput",
+        "message": "Sample encoded text loaded.",
+        "action": "primaryBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-url-parse">
+      {
+        "fields": {
+          "parseInput": "https://xavert.com/tools/url-toolkit.html?source=google&medium=cpc#features"
+        },
+        "focus": "parseInput",
+        "message": "Sample URL loaded.",
+        "action": "primaryBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-url-utm">
+      {
+        "fields": {
+          "utmUrl": "https://example.com/landing",
+          "utmSource": "google",
+          "utmMedium": "cpc",
+          "utmCampaign": "summer-sale",
+          "utmTerm": "running-shoes",
+          "utmContent": "banner-a"
+        },
+        "focus": "utmUrl",
+        "message": "Sample UTM settings loaded.",
+        "action": "primaryBtn"
+      }
+    </script>
+  </body>
 </html>

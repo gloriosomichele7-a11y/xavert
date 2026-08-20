@@ -1,796 +1,229 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | Lorem Ipsum Generator</title>
-
-<meta name="description" content="Free online Lorem Ipsum Generator to create placeholder text for websites, apps, layouts and design projects directly in your browser. Generate words, sentences and paragraphs instantly.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/lorem-ipsum-generator.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
-
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Lorem Ipsum Generator">
-<meta property="og:description" content="Generate placeholder text for websites, applications, layouts and design projects directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/lorem-ipsum-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Lorem Ipsum Generator">
-<meta name="twitter:description" content="Generate placeholder text instantly for websites, applications and design projects.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Lorem Ipsum Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/lorem-ipsum-generator.html",
-  "description":"Generate Lorem Ipsum placeholder text locally in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Is the generated text uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All placeholder text is generated locally inside your browser."
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | Lorem Ipsum Generator</title>
+    <meta
+      name="description"
+      content="Generate Lorem Ipsum placeholder text as words, sentences or paragraphs directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/lorem-ipsum-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .lorem-output {
+        min-height: 320px;
+        resize: vertical;
+        line-height: 1.7;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I generate words, sentences and paragraphs?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can generate Lorem Ipsum as words, sentences or paragraphs."
+
+      .lorem-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-top: 4px;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I copy or download the generated text?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can copy the generated text to the clipboard or download it as a TXT file."
+
+      .lorem-checkbox input {
+        width: auto;
+        min-height: auto;
+        margin: 0;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
 
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.grid{
-display:grid;
-grid-template-columns:320px 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-input,
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-
-textarea{
-min-height:320px;
-resize:vertical;
-line-height:1.7;
-}
-
-select:focus,
-input:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:12px;
-margin-top:16px;
-}
-
-.stat-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:14px;
-text-align:center;
-}
-
-.stat-box strong{
-display:block;
-font-size:20px;
-margin-bottom:4px;
-}
-
-.stat-box span{
-font-size:13px;
-color:#6b7280;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-  
-.success{
-color:#047857;
-}
-
-.error{
-color:#dc2626;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-.toast-info{
-background:#111827 !important;
-}
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-.footer-note{
-margin-top:30px;
-text-align:center;
-font-size:14px;
-color:#6b7280;
-}
-
-.footer-note a{
-color:#dc2626;
-font-weight:700;
-text-decoration:none;
-}
-
-.footer-note a:hover{
-text-decoration:underline;
-}
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:1fr;
-}
-
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Lorem Ipsum Generator</h1>
-
-<p class="subtitle">
-Generate placeholder text for websites, applications, layouts and design projects.
-</p>
-<div class="success-banner">
-Placeholder text is generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label>Generation Type</label>
-
-<select id="type">
-<option value="paragraphs">Paragraphs</option>
-<option value="sentences">Sentences</option>
-<option value="words">Words</option>
-</select>
-
-<label>Quantity</label>
-
-<input
-id="quantity"
-type="number"
-min="1"
-max="100"
-value="5"
->
-
-<label>
-<input
-type="checkbox"
-id="startLorem"
-checked
-style="width:auto;margin-right:8px;"
->
-Start with "Lorem ipsum"
-</label>
-
-<div class="button-group">
-<button onclick="generateLorem()">Generate Text</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleLorem();return false;">Load Sample</a>
-</div>
-<label>Generated Text</label>
-
-<textarea
-id="output"
-readonly
-placeholder="Generated Lorem Ipsum text will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadOutput()">Download TXT</button>
-</div>
-
-<div class="stats">
-
-<div class="stat-box">
-<strong id="wordCount">0</strong>
-<span>Words</span>
-</div>
-
-<div class="stat-box">
-<strong id="charCount">0</strong>
-<span>Characters</span>
-</div>
-
-<div class="stat-box">
-<strong id="paragraphCount">0</strong>
-<span>Paragraphs</span>
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Is the generated text uploaded?</h3>
-<p>
-No. All Lorem Ipsum text is generated locally in your browser.
-</p>
-
-<h3>Can I generate words, sentences and paragraphs?</h3>
-<p>
-Yes. You can generate placeholder text as words, sentences or paragraphs.
-</p>
-
-<h3>Can I download the generated text?</h3>
-<p>
-Yes. You can copy it to the clipboard or download it as a TXT file.
-</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<div id="relatedTools"></div>
-
-</section>
-
-<p class="footer-note">
-Powered by <a href="../index.html">XAVERT</a>
-</p>
-
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-
-const loremWords=`lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua ut enim ad minim veniam quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute irure dolor in reprehenderit voluptate velit esse cillum dolore eu fugiat nulla pariatur excepteur sint occaecat cupidatat non proident sunt in culpa qui officia deserunt mollit anim id est laborum`.split(" ");
-
-const toast=document.getElementById("toast");
-
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-generateLorem();
-}
-
-});
-
-function showToast(text,type="success"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type="info"){
-
-const message=document.getElementById("message");
-
-message.textContent=text;
-
-message.className="message";
-
-if(type==="success"){
-
-message.classList.add("success");
-
-}else if(type==="error"){
-
-message.classList.add("error");
-
-}
-
-if(text){
-
-showToast(text,type);
-
-}
-
-}
-function randomWord(){
-
-return loremWords[
-Math.floor(Math.random()*loremWords.length)
-];
-
-}
-
-function createSentence(){
-
-let length=Math.floor(Math.random()*10)+8;
-
-let words=[];
-
-for(let i=0;i<length;i++){
-words.push(randomWord());
-}
-
-let sentence=words.join(" ");
-
-sentence=
-sentence.charAt(0).toUpperCase() +
-sentence.slice(1);
-
-return sentence + ".";
-
-}
-
-function createParagraph(){
-
-let sentences=[];
-
-let count=Math.floor(Math.random()*4)+4;
-
-for(let i=0;i<count;i++){
-sentences.push(createSentence());
-}
-
-return sentences.join(" ");
-
-}
-function loadSampleLorem(){
-
-document.getElementById("type").value="paragraphs";
-document.getElementById("quantity").value="3";
-document.getElementById("startLorem").checked=true;
-
-generateLorem();
-
-}
-function generateLorem(){
-
-const type=document.getElementById("type").value;
-const quantity=parseInt(document.getElementById("quantity").value);
-
-if(!quantity || quantity<1 || quantity>100){
-
-setMessage(
-"Quantity must be between 1 and 100.",
-"error"
-);
-
-showToast("Quantity must be between 1 and 100.","error");
-return;
-
-}
-
-let result="";
-
-if(type==="words"){
-
-let words=[];
-
-for(let i=0;i<quantity;i++){
-words.push(randomWord());
-}
-
-result=words.join(" ");
-
-}else if(type==="sentences"){
-
-let sentences=[];
-
-for(let i=0;i<quantity;i++){
-sentences.push(createSentence());
-}
-
-result=sentences.join(" ");
-
-}else{
-
-let paragraphs=[];
-
-for(let i=0;i<quantity;i++){
-paragraphs.push(createParagraph());
-}
-
-result=paragraphs.join("\n\n");
-
-}
-
-if(document.getElementById("startLorem").checked){
-
-result=
-"Lorem ipsum dolor sit amet, consectetur adipiscing elit. " +
-result;
-
-}
-
-document.getElementById("output").value=result;
-
-updateStats(result);
-
-setMessage(
-"Lorem Ipsum generated successfully.",
-"success"
-);
-
-}
-
-function updateStats(text){
-
-document.getElementById("wordCount").textContent=
-text.trim()
-? text.trim().split(/\s+/).length
-: 0;
-
-document.getElementById("charCount").textContent=
-text.length;
-
-const type=document.getElementById("type").value;
-
-document.getElementById("paragraphCount").textContent=
-type==="paragraphs"
-? (text.trim() ? text.split(/\n\s*\n/).length : 0)
-: "-";
-
-}
-
-async function copyOutput(){
-
-const text=document.getElementById("output").value.trim();
-
-if(text===""){
-
-setMessage("Nothing to copy.","error");
-return;
-
-}
-
-try{
-
-await navigator.clipboard.writeText(text);
-
-setMessage("Copied.","success");
-
-}catch{
-
-setMessage("Copy failed.","error");
-
-}
-
-}
-
-function downloadOutput(){
-
-const text=document.getElementById("output").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-const blob=new Blob(
-[text],
-{
-type:"text/plain;charset=utf-8"
-}
-);
-
-const link=document.createElement("a");
-
-const url=URL.createObjectURL(blob);
-
-link.href=url;
-
-const type=document.getElementById("type").value;
-
-link.download=
-"xavert-lorem-" + type + ".txt";
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-setMessage("Download started.","success");
-
-}
-
-function clearAll(){
-
-document.getElementById("output").value="";
-document.getElementById("quantity").value="5";
-document.getElementById("type").value="paragraphs";
-document.getElementById("startLorem").checked=true;
-document.getElementById("wordCount").textContent="0";
-document.getElementById("charCount").textContent="0";
-document.getElementById("paragraphCount").textContent="0";
-document.getElementById("output").focus();
-setMessage("Tool cleared.","success");
-}
-
-</script>
-
-</body>
+      .lorem-actions,
+      .lorem-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+  </head>
+  <body
+    data-tool="lorem-ipsum-generator"
+    data-related-tools="text-toolkit,text-diff-checker,regex-tester,html-entity-encoder-decoder,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">Lorem Ipsum Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="lorem-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="lorem-workspace-title" class="tool-card-title">
+              Generate Placeholder Text
+            </h2>
+            <p class="tool-card-description">
+              Create Lorem Ipsum as words, sentences or paragraphs with optional
+              standard opening text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="type">Generation Type</label>
+                <select id="type">
+                  <option value="paragraphs">Paragraphs</option>
+                  <option value="sentences">Sentences</option>
+                  <option value="words">Words</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="quantity">Quantity</label>
+                <input
+                  id="quantity"
+                  type="number"
+                  min="1"
+                  max="100"
+                  step="1"
+                  value="5"
+                />
+              </div>
+
+              <div class="form-group full-width">
+                <label class="lorem-checkbox" for="startLorem">
+                  <input id="startLorem" type="checkbox" checked />
+                  <span>Start with "Lorem ipsum"</span>
+                </label>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="output">Generated Text</label>
+                <textarea
+                  id="output"
+                  class="lorem-output"
+                  readonly
+                  spellcheck="false"
+                  placeholder="Generated Lorem Ipsum text will appear here"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid lorem-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate Text
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <strong id="wordCount" class="stat-value">0</strong>
+                <span class="stat-label">Words</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="charCount" class="stat-value">0</strong>
+                <span class="stat-label">Characters</span>
+              </div>
+
+              <div class="stat-card">
+                <strong id="paragraphCount" class="stat-value">0</strong>
+                <span class="stat-label">Paragraphs</span>
+              </div>
+            </div>
+
+            <div class="button-grid lorem-result-actions">
+              <button id="copyBtn" class="btn" type="button">Copy</button>
+              <button id="downloadBtn" class="btn btn-secondary" type="button">
+                Download TXT
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          The XAVERT Lorem Ipsum Generator creates placeholder text locally in
+          your browser for layouts, prototypes and design work.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Generate words, sentences or paragraphs.</li>
+          <li>Choose quantities from 1 to 100.</li>
+          <li>Optionally start with the traditional Lorem Ipsum opening.</li>
+          <li>Track words, characters and paragraph count.</li>
+          <li>Copy generated text or download it as a TXT file.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is generated locally within your browser. No generated text
+          is uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script src="../assets/js/lorem-ipsum-generator.js"></script>
+  </body>
 </html>
