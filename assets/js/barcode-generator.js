@@ -1,6 +1,10 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (document.body.dataset.tool !== "barcode-generator") {
+    return;
+  }
+
   const barcodeValue = document.getElementById("barcodeValue");
   const barcodeFormat = document.getElementById("barcodeFormat");
   const barcodeWidth = document.getElementById("barcodeWidth");
@@ -18,97 +22,231 @@ document.addEventListener("DOMContentLoaded", function () {
   const previewBox = document.getElementById("previewBox");
   const barcodeSvg = document.getElementById("barcodeSvg");
   const message = document.getElementById("message");
-  const toast = document.getElementById("toast");
 
   const formatStat = document.getElementById("formatStat");
   const lengthStat = document.getElementById("lengthStat");
   const widthStat = document.getElementById("widthStat");
   const heightStat = document.getElementById("heightStat");
-let toastTimer = null;
-let messageTimer = null;
-let barcodeGenerated = false;
 
-const formatConfiguration = {
-  CODE128: {
-    label: "Code 128",
-    placeholder: "Example: XAVERT-123456",
-    sample: "XAVERT-123456",
-    filename: "code-128"
-  },
+  const requiredElements = {
+    barcodeValue,
+    barcodeFormat,
+    barcodeWidth,
+    barcodeHeight,
+    displayValue,
+    generateBtn,
+    checkDigitBtn,
+    downloadSvgBtn,
+    downloadPngBtn,
+    copySvgBtn,
+    clearBtn,
+    sampleBtn,
+    previewBox,
+    barcodeSvg,
+    message,
+    formatStat,
+    lengthStat,
+    widthStat,
+    heightStat,
+  };
 
-  CODE39: {
-    label: "Code 39",
-    placeholder: "Example: ABC-123",
-    sample: "XAVERT-123",
-    filename: "code-39"
-  },
+  const missingElements = Object.entries(requiredElements)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
 
-  EAN13: {
-    label: "EAN-13",
-    placeholder: "Example: 5901234123457",
-    sample: "5901234123457",
-    filename: "ean-13"
-  },
-
-  EAN8: {
-    label: "EAN-8",
-    placeholder: "Example: 96385074",
-    sample: "96385074",
-    filename: "ean-8"
-  },
-
-  UPC: {
-    label: "UPC-A",
-    placeholder: "Example: 036000291452",
-    sample: "036000291452",
-    filename: "upc-a"
-  },
-
-  ITF14: {
-    label: "ITF-14",
-    placeholder: "Example: 12345678901231",
-    sample: "12345678901231",
-    filename: "itf-14"
-  },
-
-  codabar: {
-    label: "Codabar",
-    placeholder: "Example: A123456A",
-    sample: "A123456A",
-    filename: "codabar"
+  if (missingElements.length > 0) {
+    console.error(
+      "Barcode Generator initialization failed. Missing elements:",
+      missingElements,
+    );
+    return;
   }
-};
+
+  let barcodeGenerated = false;
+
+  const checkDigitBodyLengths = {
+    EAN13: 12,
+    EAN8: 7,
+    UPC: 11,
+    ITF14: 13,
+  };
+
+  const formatConfiguration = {
+    CODE128: {
+      label: "Code 128",
+      placeholder: "Example: XAVERT-123456",
+      sample: "XAVERT-123456",
+      filename: "code-128",
+      libraryFormat: "CODE128",
+    },
+    CODE39: {
+      label: "Code 39",
+      placeholder: "Example: XAVERT-123",
+      sample: "XAVERT-123",
+      filename: "code-39",
+      libraryFormat: "CODE39",
+    },
+    CODE93: {
+      label: "Code 93",
+      placeholder: "Example: XAVERT-93",
+      sample: "XAVERT-93",
+      filename: "code-93",
+      libraryFormat: "CODE93",
+    },
+    CODE93FullASCII: {
+      label: "Code 93 Full ASCII",
+      placeholder: "Example: Xavert_93!",
+      sample: "Xavert_93!",
+      filename: "code-93-full-ascii",
+      libraryFormat: "CODE93FullASCII",
+    },
+    EAN13: {
+      label: "EAN-13",
+      placeholder: "12 digits or 13 with check digit",
+      sample: "5901234123457",
+      filename: "ean-13",
+      libraryFormat: "EAN13",
+    },
+    EAN8: {
+      label: "EAN-8",
+      placeholder: "7 digits or 8 with check digit",
+      sample: "96385074",
+      filename: "ean-8",
+      libraryFormat: "EAN8",
+    },
+    EAN5: {
+      label: "EAN-5 Supplement",
+      placeholder: "Exactly 5 digits",
+      sample: "51299",
+      filename: "ean-5",
+      libraryFormat: "EAN5",
+    },
+    EAN2: {
+      label: "EAN-2 Supplement",
+      placeholder: "Exactly 2 digits",
+      sample: "05",
+      filename: "ean-2",
+      libraryFormat: "EAN2",
+    },
+    UPC: {
+      label: "UPC-A",
+      placeholder: "11 digits or 12 with check digit",
+      sample: "036000291452",
+      filename: "upc-a",
+      libraryFormat: "UPC",
+    },
+    UPCE: {
+      label: "UPC-E",
+      placeholder:
+        "6 digits or 8 digits including number system and check digit",
+      sample: "123456",
+      filename: "upc-e",
+      libraryFormat: "UPCE",
+    },
+    ITF14: {
+      label: "ITF-14",
+      placeholder: "13 digits or 14 with check digit",
+      sample: "12345678901231",
+      filename: "itf-14",
+      libraryFormat: "ITF14",
+    },
+    ITF: {
+      label: "ITF",
+      placeholder: "Even number of digits, for example 12345678",
+      sample: "12345678",
+      filename: "itf",
+      libraryFormat: "ITF",
+    },
+    MSI: {
+      label: "MSI",
+      placeholder: "Numeric value, for example 1234567",
+      sample: "1234567",
+      filename: "msi",
+      libraryFormat: "MSI",
+    },
+    MSI10: {
+      label: "MSI Mod 10",
+      placeholder: "Numeric value; Mod 10 is added automatically",
+      sample: "1234567",
+      filename: "msi-mod-10",
+      libraryFormat: "MSI10",
+    },
+    MSI11: {
+      label: "MSI Mod 11",
+      placeholder: "Numeric value; Mod 11 is added automatically",
+      sample: "1234567",
+      filename: "msi-mod-11",
+      libraryFormat: "MSI11",
+    },
+    MSI1010: {
+      label: "MSI Mod 10/10",
+      placeholder: "Numeric value; checks are added automatically",
+      sample: "1234567",
+      filename: "msi-mod-10-10",
+      libraryFormat: "MSI1010",
+    },
+    MSI1110: {
+      label: "MSI Mod 11/10",
+      placeholder: "Numeric value; checks are added automatically",
+      sample: "1234567",
+      filename: "msi-mod-11-10",
+      libraryFormat: "MSI1110",
+    },
+    pharmacode: {
+      label: "Pharmacode",
+      placeholder: "Number from 3 to 131070",
+      sample: "1234",
+      filename: "pharmacode",
+      libraryFormat: "pharmacode",
+    },
+    codabar: {
+      label: "Codabar",
+      placeholder: "Example: A123456A or 123456",
+      sample: "A123456A",
+      filename: "codabar",
+      libraryFormat: "codabar",
+    },
+  };
+
   function getCurrentConfiguration() {
-    return formatConfiguration[barcodeFormat.value] || formatConfiguration.CODE128;
+    return (
+      formatConfiguration[barcodeFormat.value] || formatConfiguration.CODE128
+    );
   }
 
-function normalizeBarcodeValue(format, value) {
-  const trimmedValue = value.trim();
+  function setInlineMessage(text = "", type = "info") {
+    const allowedTypes = ["success", "error", "info"];
+    const safeType = allowedTypes.includes(type) ? type : "info";
 
-  switch (format) {
-    case "CODE39":
-      return trimmedValue.toUpperCase();
+    message.textContent = text;
+    message.classList.remove(
+      "message-success",
+      "message-error",
+      "message-info",
+    );
 
-    case "EAN13":
-    case "EAN8":
-    case "UPC":
-    case "ITF14":
-      return trimmedValue.replace(/\s+/g, "");
-
-    case "codabar":
-      return trimmedValue.toUpperCase().replace(/\s+/g, "");
-
-    case "CODE128":
-    default:
-      return trimmedValue;
+    if (text) {
+      message.classList.add(`message-${safeType}`);
+    }
   }
-}
+
+  function notify(text = "", type = "info", useToast = true) {
+    setInlineMessage(text, type);
+
+    if (text && useToast && typeof window.showMessage === "function") {
+      window.showMessage(text, type);
+    }
+  }
 
   function calculateCheckDigit(valueWithoutCheckDigit) {
     let sum = 0;
     let weight = 3;
 
-    for (let index = valueWithoutCheckDigit.length - 1; index >= 0; index -= 1) {
+    for (
+      let index = valueWithoutCheckDigit.length - 1;
+      index >= 0;
+      index -= 1
+    ) {
       sum += Number(valueWithoutCheckDigit[index]) * weight;
       weight = weight === 3 ? 1 : 3;
     }
@@ -121,298 +259,344 @@ function normalizeBarcodeValue(format, value) {
       return false;
     }
 
-    const body = value.slice(0, -1);
-    const suppliedCheckDigit = value.slice(-1);
-
-    return calculateCheckDigit(body) === suppliedCheckDigit;
+    return calculateCheckDigit(value.slice(0, -1)) === value.slice(-1);
   }
 
-function formatSupportsCheckDigit(format) {
-  return (
-    format === "EAN13" ||
-    format === "EAN8" ||
-    format === "UPC" ||
-    format === "ITF14"
-  );
-}
-
-function generateCheckDigit() {
-  const format = barcodeFormat.value;
-  const value = normalizeBarcodeValue(format, barcodeValue.value);
-
-  if (!formatSupportsCheckDigit(format)) {
-    showMessage(
-      "Check digit generation is not available for this format.",
-      "error"
-    );
-    return;
+  function formatSupportsCheckDigit(format) {
+    return Object.prototype.hasOwnProperty.call(checkDigitBodyLengths, format);
   }
 
-  const requiredBodyLengths = {
-    EAN13: 12,
-    EAN8: 7,
-    UPC: 11,
-    ITF14: 13
-  };
+  function completeCheckDigitIfNeeded(format, value) {
+    if (!formatSupportsCheckDigit(format) || !/^\d+$/.test(value)) {
+      return value;
+    }
 
-  const requiredLength = requiredBodyLengths[format];
+    if (value.length !== checkDigitBodyLengths[format]) {
+      return value;
+    }
 
-  if (!/^\d+$/.test(value)) {
-    showMessage("Enter numbers only.", "error");
-    barcodeValue.focus();
-    return;
+    return `${value}${calculateCheckDigit(value)}`;
   }
 
-  if (value.length !== requiredLength) {
-    const formatLabel = getCurrentConfiguration().label;
+  function expandUpceToUpca(middleDigits, numberSystem) {
+    const expansions = [
+      "XX00000XXX",
+      "XX10000XXX",
+      "XX20000XXX",
+      "XXX00000XX",
+      "XXXX00000X",
+      "XXXXX00005",
+      "XXXXX00006",
+      "XXXXX00007",
+      "XXXXX00008",
+      "XXXXX00009",
+    ];
 
-    showMessage(
-      `${formatLabel} requires exactly ${requiredLength} digits before generating the check digit.`,
-      "error"
-    );
+    const expansion = expansions[Number(middleDigits[middleDigits.length - 1])];
+    let result = "";
+    let digitIndex = 0;
 
-    barcodeValue.focus();
-    return;
+    for (const character of expansion) {
+      if (character === "X") {
+        result += middleDigits[digitIndex];
+        digitIndex += 1;
+      } else {
+        result += character;
+      }
+    }
+
+    return `${numberSystem}${result}`;
   }
 
-  const checkDigit = calculateCheckDigit(value);
-  const completedValue = `${value}${checkDigit}`;
+  function isValidUpce(value) {
+    if (/^\d{6}$/.test(value)) {
+      return true;
+    }
 
-barcodeValue.value = completedValue;
+    if (!/^[01]\d{7}$/.test(value)) {
+      return false;
+    }
 
-const generated = generateBarcode({ announce: false });
+    const numberSystem = value[0];
+    const middleDigits = value.slice(1, 7);
+    const suppliedCheckDigit = value[7];
+    const upcaBody = expandUpceToUpca(middleDigits, numberSystem);
 
-if (generated) {
-  showMessage(
-    `Check digit ${checkDigit} generated and barcode created successfully.`,
-    "success"
-  );
-}
-
-barcodeValue.focus();
-barcodeValue.select();
-}
-  
-function updateFormatInterface() {
-  const format = barcodeFormat.value;
-
-  barcodeValue.placeholder = getCurrentConfiguration().placeholder;
-
-  if (checkDigitBtn) {
-    checkDigitBtn.hidden = !formatSupportsCheckDigit(format);
-  }
-}
-
-function showToast(text, type = "info") {
-  if (!toast || !text) {
-    return;
+    return calculateCheckDigit(upcaBody) === suppliedCheckDigit;
   }
 
-  const allowedTypes = ["success", "error", "info"];
-  const safeType = allowedTypes.includes(type) ? type : "info";
+  function normalizeBarcodeValue(format, rawValue) {
+    let value = rawValue.trim();
 
-  window.clearTimeout(toastTimer);
+    if (
+      [
+        "EAN13",
+        "EAN8",
+        "EAN5",
+        "EAN2",
+        "UPC",
+        "UPCE",
+        "ITF14",
+        "ITF",
+        "MSI",
+        "MSI10",
+        "MSI11",
+        "MSI1010",
+        "MSI1110",
+        "pharmacode",
+      ].includes(format)
+    ) {
+      value = value.replace(/\s+/g, "");
+    }
 
-  toast.textContent = text;
+    if (["CODE39", "CODE93"].includes(format)) {
+      value = value.toUpperCase();
+    }
 
-  toast.classList.remove(
-    "xavert-toast-success",
-    "xavert-toast-error",
-    "xavert-toast-info"
-  );
+    if (format === "codabar") {
+      value = value.toUpperCase().replace(/\s+/g, "");
 
-  toast.classList.add("xavert-toast", `xavert-toast-${safeType}`);
-  toast.style.display = "block";
-  toast.setAttribute("aria-hidden", "false");
+      if (/^[0-9\-$:/.+]+$/.test(value)) {
+        value = `A${value}A`;
+      }
+    }
 
-  toastTimer = window.setTimeout(function () {
-    toast.style.display = "none";
-    toast.textContent = "";
-
-    toast.classList.remove(
-      "xavert-toast-success",
-      "xavert-toast-error",
-      "xavert-toast-info"
-    );
-
-    toast.setAttribute("aria-hidden", "true");
-  }, 2200);
-}
-
-function showMessage(text = "", type = "info", useToast = true) {
-  if (message) {
-    const allowedTypes = ["success", "error", "info"];
-    const safeType = allowedTypes.includes(type) ? type : "info";
-
-    message.textContent = text;
-
-    message.classList.remove(
-      "message-success",
-      "message-error",
-      "message-info"
-    );
-
-    message.classList.add(`message-${safeType}`);
+    return completeCheckDigitIfNeeded(format, value);
   }
 
-  if (text && useToast) {
-    showToast(text, type);
+  function validateBarcodeValue(format, value) {
+    if (!value) {
+      return `Enter a ${getCurrentConfiguration().label} value first.`;
+    }
+
+    switch (format) {
+      case "CODE128":
+        if (value.length > 120) {
+          return "Code 128 supports a maximum of 120 characters in this tool.";
+        }
+        if (/[^\x20-\x7E]/.test(value)) {
+          return "Code 128 accepts printable ASCII characters in this tool.";
+        }
+        return "";
+
+      case "CODE39":
+        if (!/^[0-9A-Z\-. $/+%]+$/.test(value)) {
+          return "Code 39 supports uppercase letters, numbers, spaces and - . $ / + %.";
+        }
+        if (value.length > 80) {
+          return "Code 39 supports a maximum of 80 characters in this tool.";
+        }
+        return "";
+
+      case "CODE93":
+        if (!/^[0-9A-Z\-. $/+%]+$/.test(value)) {
+          return "Code 93 supports uppercase letters, numbers, spaces and - . $ / + %.";
+        }
+        if (value.length > 80) {
+          return "Code 93 supports a maximum of 80 characters in this tool.";
+        }
+        return "";
+
+      case "CODE93FullASCII":
+        if (!/^[\x20-\x7E]+$/.test(value)) {
+          return "Code 93 Full ASCII accepts printable ASCII characters in this tool.";
+        }
+        if (value.length > 80) {
+          return "Code 93 Full ASCII supports a maximum of 80 characters in this tool.";
+        }
+        return "";
+
+      case "EAN13":
+        if (!/^\d{13}$/.test(value)) {
+          return "EAN-13 requires 12 digits, or 13 digits including the check digit.";
+        }
+        return isValidCheckDigit(value)
+          ? ""
+          : "The EAN-13 check digit is invalid.";
+
+      case "EAN8":
+        if (!/^\d{8}$/.test(value)) {
+          return "EAN-8 requires 7 digits, or 8 digits including the check digit.";
+        }
+        return isValidCheckDigit(value)
+          ? ""
+          : "The EAN-8 check digit is invalid.";
+
+      case "EAN5":
+        return /^\d{5}$/.test(value) ? "" : "EAN-5 requires exactly 5 digits.";
+
+      case "EAN2":
+        return /^\d{2}$/.test(value) ? "" : "EAN-2 requires exactly 2 digits.";
+
+      case "UPC":
+        if (!/^\d{12}$/.test(value)) {
+          return "UPC-A requires 11 digits, or 12 digits including the check digit.";
+        }
+        return isValidCheckDigit(value)
+          ? ""
+          : "The UPC-A check digit is invalid.";
+
+      case "UPCE":
+        return isValidUpce(value)
+          ? ""
+          : "UPC-E requires 6 digits, or 8 digits with number system 0/1 and a valid check digit.";
+
+      case "ITF14":
+        if (!/^\d{14}$/.test(value)) {
+          return "ITF-14 requires 13 digits, or 14 digits including the check digit.";
+        }
+        return isValidCheckDigit(value)
+          ? ""
+          : "The ITF-14 check digit is invalid.";
+
+      case "ITF":
+        if (!/^\d+$/.test(value)) {
+          return "ITF accepts numbers only.";
+        }
+        if (value.length % 2 !== 0) {
+          return "ITF requires an even number of digits.";
+        }
+        if (value.length > 100) {
+          return "ITF supports a maximum of 100 digits in this tool.";
+        }
+        return "";
+
+      case "MSI":
+      case "MSI10":
+      case "MSI11":
+      case "MSI1010":
+      case "MSI1110":
+        if (!/^\d+$/.test(value)) {
+          return `${getCurrentConfiguration().label} accepts numbers only.`;
+        }
+        if (value.length > 100) {
+          return `${getCurrentConfiguration().label} supports a maximum of 100 digits in this tool.`;
+        }
+        return "";
+
+      case "pharmacode": {
+        if (!/^\d+$/.test(value)) {
+          return "Pharmacode accepts a whole number only.";
+        }
+        const number = Number(value);
+        return number >= 3 && number <= 131070
+          ? ""
+          : "Pharmacode requires a number from 3 to 131070.";
+      }
+
+      case "codabar":
+        if (!/^[A-D][0-9\-$:/.+]+[A-D]$/.test(value)) {
+          return "Codabar must contain valid characters and start/end with A, B, C or D. Plain Codabar data is automatically wrapped with A.";
+        }
+        if (value.length > 80) {
+          return "Codabar supports a maximum of 80 characters in this tool.";
+        }
+        return "";
+
+      default:
+        return "The selected barcode format is not supported.";
+    }
   }
-}
 
   function resetStatistics() {
     formatStat.textContent = "-";
     lengthStat.textContent = "0";
-    widthStat.textContent = "0";
-    heightStat.textContent = "0";
+    widthStat.textContent = "0 px";
+    heightStat.textContent = "0 px";
+  }
+
+  function updateStatistics(value) {
+    formatStat.textContent = getCurrentConfiguration().label;
+    lengthStat.textContent = String(value.length);
+    widthStat.textContent = `${barcodeWidth.value} px`;
+    heightStat.textContent = `${barcodeHeight.value} px`;
   }
 
   function hidePreview() {
     barcodeGenerated = false;
-    barcodeSvg.replaceChildren();
-    previewBox.style.display = "none";
+    previewBox.hidden = true;
     resetStatistics();
+    barcodeSvg.replaceChildren();
   }
 
-  function updateStatistics(value) {
-    const selectedFormat =
-      barcodeFormat.options[barcodeFormat.selectedIndex].text;
+  function updateFormatInterface() {
+    const configuration = getCurrentConfiguration();
 
-    formatStat.textContent = selectedFormat;
-    lengthStat.textContent = String(value.length);
-    widthStat.textContent = barcodeWidth.value;
-    heightStat.textContent = barcodeHeight.value;
+    barcodeValue.placeholder = configuration.placeholder;
+    checkDigitBtn.hidden = !formatSupportsCheckDigit(barcodeFormat.value);
   }
 
-function validateBarcodeValue(format, value) {
-  if (!value) {
-    switch (format) {
-      case "EAN13":
-        return "Enter an EAN-13 value first.";
+  function validateCurrentInput() {
+    const value = normalizeBarcodeValue(
+      barcodeFormat.value,
+      barcodeValue.value,
+    );
 
-      case "EAN8":
-        return "Enter an EAN-8 value first.";
-
-      case "UPC":
-        return "Enter a UPC-A value first.";
-
-      case "ITF14":
-        return "Enter an ITF-14 value first.";
-
-      case "codabar":
-        return "Enter a Codabar value first.";
-
-      default:
-        return "Enter a barcode value first.";
+    if (!value) {
+      notify("", "info", false);
+      return;
     }
+
+    const validationError = validateBarcodeValue(barcodeFormat.value, value);
+
+    if (validationError) {
+      notify(validationError, "error", false);
+      return;
+    }
+
+    notify("Value looks valid.", "success", false);
   }
 
-  switch (format) {
-    case "CODE128":
-      if (value.length > 120) {
-        return "Code 128 supports a maximum of 120 characters in this tool.";
+  function generateCheckDigit() {
+    const format = barcodeFormat.value;
+    const value = barcodeValue.value.trim().replace(/\s+/g, "");
+
+    if (!formatSupportsCheckDigit(format)) {
+      notify(
+        "Check digit generation is not available for this format.",
+        "error",
+      );
+      return;
+    }
+
+    const requiredLength = checkDigitBodyLengths[format];
+
+    if (!/^\d+$/.test(value)) {
+      notify("Enter numbers only.", "error");
+      barcodeValue.focus();
+      return;
+    }
+
+    if (value.length !== requiredLength) {
+      notify(
+        `${getCurrentConfiguration().label} requires exactly ${requiredLength} digits before generating the check digit.`,
+        "error",
+      );
+      barcodeValue.focus();
+      return;
+    }
+
+    const checkDigit = calculateCheckDigit(value);
+    barcodeValue.value = `${value}${checkDigit}`;
+
+    if (generateBarcode({ announce: false })) {
+      setInlineMessage("Action completed successfully.", "success");
+
+      if (typeof window.showActionSuccess === "function") {
+        window.showActionSuccess();
+      } else if (typeof window.showMessage === "function") {
+        window.showMessage("Action completed successfully.", "success");
       }
+    }
 
-      if (/[\u0000-\u001F\u007F]/.test(value)) {
-        return "Code 128 cannot contain control characters.";
-      }
-
-      return "";
-
-    case "CODE39":
-      if (!/^[0-9A-Z\-. $/+%]+$/.test(value)) {
-        return "Code 39 supports uppercase letters, numbers, spaces and - . $ / + %";
-      }
-
-      if (value.length > 80) {
-        return "Code 39 supports a maximum of 80 characters in this tool.";
-      }
-
-      return "";
-
-    case "EAN13":
-      if (!/^\d{12,13}$/.test(value)) {
-        return "EAN-13 requires 12 digits, or 13 digits including the check digit.";
-      }
-
-      if (value.length === 13 && !isValidCheckDigit(value)) {
-        return "The EAN-13 check digit is invalid.";
-      }
-
-      return "";
-
-    case "EAN8":
-      if (!/^\d{7,8}$/.test(value)) {
-        return "EAN-8 requires 7 digits, or 8 digits including the check digit.";
-      }
-
-      if (value.length === 8 && !isValidCheckDigit(value)) {
-        return "The EAN-8 check digit is invalid.";
-      }
-
-      return "";
-
-    case "UPC":
-      if (!/^\d{11,12}$/.test(value)) {
-        return "UPC-A requires 11 digits, or 12 digits including the check digit.";
-      }
-
-      if (value.length === 12 && !isValidCheckDigit(value)) {
-        return "The UPC-A check digit is invalid.";
-      }
-
-      return "";
-
-    case "ITF14":
-      if (!/^\d{13,14}$/.test(value)) {
-        return "ITF-14 requires 13 digits, or 14 digits including the check digit.";
-      }
-
-      if (value.length === 14 && !isValidCheckDigit(value)) {
-        return "The ITF-14 check digit is invalid.";
-      }
-
-      return "";
-
-    case "codabar":
-      if (!/^[A-D][0-9\-$:/.+]+[A-D]$/.test(value)) {
-        return "Codabar must start and end with A, B, C or D and contain only valid Codabar characters.";
-      }
-
-      if (value.length > 80) {
-        return "Codabar supports a maximum of 80 characters in this tool.";
-      }
-
-      return "";
-
-    default:
-      return "The selected barcode format is not supported.";
-  }
-}
-
-function validateCurrentInput() {
-  const format = barcodeFormat.value;
-  const value = normalizeBarcodeValue(format, barcodeValue.value);
-
-  if (!value) {
-    showMessage("", "info", false);
-    return;
+    barcodeValue.focus();
+    barcodeValue.select();
   }
 
-  const validationError = validateBarcodeValue(format, value);
-
-  if (validationError) {
-    showMessage(validationError, "error", false);
-    return;
-  }
-
-  showMessage("Value looks valid.", "success", false);
-}
-  
   function generateBarcode(options = {}) {
     const announce = options.announce !== false;
-
     const format = barcodeFormat.value;
+    const configuration = getCurrentConfiguration();
     const value = normalizeBarcodeValue(format, barcodeValue.value);
     const width = Number(barcodeWidth.value);
     const height = Number(barcodeHeight.value);
@@ -424,16 +608,16 @@ function validateCurrentInput() {
 
     if (validationError) {
       hidePreview();
-      showMessage(validationError, "error", announce);
+      notify(validationError, "error", announce);
       return false;
     }
 
     if (typeof window.JsBarcode !== "function") {
       hidePreview();
-      showMessage(
+      notify(
         "The barcode library could not be loaded. Refresh the page and try again.",
         "error",
-        announce
+        announce,
       );
       return false;
     }
@@ -445,7 +629,7 @@ function validateCurrentInput() {
       barcodeSvg.replaceChildren();
 
       window.JsBarcode(barcodeSvg, value, {
-        format,
+        format: configuration.libraryFormat,
         width,
         height,
         displayValue: showText,
@@ -457,26 +641,32 @@ function validateCurrentInput() {
         fontOptions: "",
         textAlign: "center",
         textPosition: "bottom",
-        textMargin: 4
+        textMargin: 4,
       });
 
       barcodeGenerated = true;
-      previewBox.style.display = "block";
-
+      previewBox.hidden = false;
       updateStatistics(value);
-      showMessage("Barcode generated successfully.", "success", announce);
+
+      if (announce) {
+        setInlineMessage("Action completed successfully.", "success");
+
+        if (typeof window.showActionSuccess === "function") {
+          window.showActionSuccess();
+        } else if (typeof window.showMessage === "function") {
+          window.showMessage("Action completed successfully.", "success");
+        }
+      }
 
       return true;
     } catch (error) {
       console.error("Barcode generation failed:", error);
-
       hidePreview();
-      showMessage(
+      notify(
         "Could not generate the barcode. Check the value and selected format.",
         "error",
-        announce
+        announce,
       );
-
       return false;
     } finally {
       generateBtn.disabled = false;
@@ -497,7 +687,6 @@ function validateCurrentInput() {
       Number(svgElement.getAttribute("width")) ||
       Math.ceil(svgElement.getBoundingClientRect().width) ||
       600;
-
     const height =
       Number(svgElement.getAttribute("height")) ||
       Math.ceil(svgElement.getBoundingClientRect().height) ||
@@ -505,13 +694,13 @@ function validateCurrentInput() {
 
     return {
       width: Math.max(width, 1),
-      height: Math.max(height, 1)
+      height: Math.max(height, 1),
     };
   }
 
   function getSvgContent() {
     if (!ensureGeneratedBarcode()) {
-      showMessage("Generate a valid barcode first.", "error");
+      notify("Generate a valid barcode first.", "error");
       return "";
     }
 
@@ -525,14 +714,14 @@ function validateCurrentInput() {
     if (!clone.hasAttribute("viewBox")) {
       clone.setAttribute(
         "viewBox",
-        `0 0 ${dimensions.width} ${dimensions.height}`
+        `0 0 ${dimensions.width} ${dimensions.height}`,
       );
     }
 
     clone.setAttribute("role", "img");
     clone.setAttribute(
       "aria-label",
-      `${getCurrentConfiguration().label} barcode`
+      `${getCurrentConfiguration().label} barcode`,
     );
 
     return `<?xml version="1.0" encoding="UTF-8"?>\n${new XMLSerializer().serializeToString(clone)}`;
@@ -540,35 +729,16 @@ function validateCurrentInput() {
 
   function createSafeFilename(extension) {
     const configuration = getCurrentConfiguration();
-
-const cleanValue = normalizeBarcodeValue(
-  barcodeFormat.value,
-  barcodeValue.value
-)
-  .replace(/[^a-zA-Z0-9_-]+/g, "-")
-  .replace(/^-+|-+$/g, "")
-  .slice(0, 40);
-
+    const cleanValue = normalizeBarcodeValue(
+      barcodeFormat.value,
+      barcodeValue.value,
+    )
+      .replace(/[^a-zA-Z0-9_-]+/g, "-")
+      .replace(/^-+|-+$/g, "")
+      .slice(0, 40);
     const suffix = cleanValue ? `-${cleanValue}` : "";
 
     return `xavert-${configuration.filename}${suffix}.${extension}`;
-  }
-
-  function downloadBlob(filename, blob) {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = filename;
-    link.hidden = true;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
   }
 
   function downloadSvg() {
@@ -578,12 +748,11 @@ const cleanValue = normalizeBarcodeValue(
       return;
     }
 
-    const blob = new Blob([svgContent], {
-      type: "image/svg+xml;charset=utf-8"
-    });
-
-    downloadBlob(createSafeFilename("svg"), blob);
-    showMessage("SVG download started.", "success");
+    downloadFile(
+      createSafeFilename("svg"),
+      new Blob([svgContent], { type: "image/svg+xml;charset=utf-8" }),
+      "image/svg+xml;charset=utf-8",
+    );
   }
 
   function downloadPng() {
@@ -594,9 +763,8 @@ const cleanValue = normalizeBarcodeValue(
     }
 
     const svgBlob = new Blob([svgContent], {
-      type: "image/svg+xml;charset=utf-8"
+      type: "image/svg+xml;charset=utf-8",
     });
-
     const svgUrl = URL.createObjectURL(svgBlob);
     const image = new Image();
 
@@ -604,8 +772,8 @@ const cleanValue = normalizeBarcodeValue(
       const scale = 3;
       const sourceWidth = image.naturalWidth || image.width;
       const sourceHeight = image.naturalHeight || image.height;
-
       const canvas = document.createElement("canvas");
+
       canvas.width = Math.max(Math.round(sourceWidth * scale), 1);
       canvas.height = Math.max(Math.round(sourceHeight * scale), 1);
 
@@ -613,7 +781,7 @@ const cleanValue = normalizeBarcodeValue(
 
       if (!context) {
         URL.revokeObjectURL(svgUrl);
-        showMessage("PNG export failed.", "error");
+        notify("PNG export failed.", "error");
         return;
       }
 
@@ -627,21 +795,20 @@ const cleanValue = normalizeBarcodeValue(
           URL.revokeObjectURL(svgUrl);
 
           if (!blob) {
-            showMessage("PNG export failed.", "error");
+            notify("PNG export failed.", "error");
             return;
           }
 
-          downloadBlob(createSafeFilename("png"), blob);
-          showMessage("High-resolution PNG download started.", "success");
+          downloadFile(createSafeFilename("png"), blob, "image/png");
         },
         "image/png",
-        1
+        1,
       );
     };
 
     image.onerror = function () {
       URL.revokeObjectURL(svgUrl);
-      showMessage("PNG export failed.", "error");
+      notify("PNG export failed.", "error");
     };
 
     image.src = svgUrl;
@@ -654,43 +821,7 @@ const cleanValue = normalizeBarcodeValue(
       return;
     }
 
-    try {
-      if (typeof window.xavertCopyText === "function") {
-        const result = window.xavertCopyText(
-          svgContent,
-          "SVG code copied."
-        );
-
-        if (result instanceof Promise) {
-          await result;
-        }
-      } else if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(svgContent);
-        showMessage("SVG code copied.", "success");
-      } else {
-        const temporaryTextarea = document.createElement("textarea");
-
-        temporaryTextarea.value = svgContent;
-        temporaryTextarea.setAttribute("readonly", "");
-        temporaryTextarea.style.position = "fixed";
-        temporaryTextarea.style.opacity = "0";
-
-        document.body.appendChild(temporaryTextarea);
-        temporaryTextarea.select();
-
-        const copied = document.execCommand("copy");
-        temporaryTextarea.remove();
-
-        if (!copied) {
-          throw new Error("Clipboard command failed.");
-        }
-
-        showMessage("SVG code copied.", "success");
-      }
-    } catch (error) {
-      console.error("SVG copy failed:", error);
-      showMessage("Could not copy the SVG code.", "error");
-    }
+    await xavertCopyText(svgContent);
   }
 
   function clearTool() {
@@ -702,39 +833,38 @@ const cleanValue = normalizeBarcodeValue(
 
     hidePreview();
     updateFormatInterface();
-    window.clearTimeout(messageTimer);
 
-showMessage("Editor cleared.", "success");
-messageTimer = window.setTimeout(function () {
-  if (message.textContent === "Editor cleared.") {
-    showMessage("", "info", false);
-  }
-}, 1800);
+    if (typeof window.clearMessage === "function") {
+      window.clearMessage();
+    } else {
+      setInlineMessage("");
+    }
 
-barcodeValue.focus();
+    barcodeValue.focus();
   }
 
   function loadSample() {
-    const configuration = getCurrentConfiguration();
+    barcodeValue.value = getCurrentConfiguration().sample;
 
-barcodeValue.value = configuration.sample;
-generateBarcode();
+    if (generateBarcode({ announce: false })) {
+      if (typeof window.showSampleSuccess === "function") {
+        window.showSampleSuccess();
+      } else {
+        notify("Sample loaded successfully.", "success");
+      }
+    }
+
     barcodeValue.focus();
     barcodeValue.select();
   }
 
   function invalidateGeneratedBarcode() {
     if (!barcodeGenerated) {
-      showMessage("", "info", false);
       return;
     }
 
     hidePreview();
-    showMessage(
-      "Settings changed. Generate the barcode again.",
-      "info",
-      false
-    );
+    notify("Input changed. Generate the barcode again.", "info", false);
   }
 
   function regenerateWhenAvailable() {
@@ -746,11 +876,7 @@ generateBarcode();
   generateBtn.addEventListener("click", function () {
     generateBarcode();
   });
-
-if (checkDigitBtn) {
   checkDigitBtn.addEventListener("click", generateCheckDigit);
-}
-  
   downloadSvgBtn.addEventListener("click", downloadSvg);
   downloadPngBtn.addEventListener("click", downloadPng);
   copySvgBtn.addEventListener("click", copySvg);
@@ -758,23 +884,15 @@ if (checkDigitBtn) {
   sampleBtn.addEventListener("click", loadSample);
 
   barcodeValue.addEventListener("input", function () {
-  invalidateGeneratedBarcode();
-  validateCurrentInput();
-});
-
-  barcodeValue.addEventListener("keydown", function (event) {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      generateBarcode();
-    }
+    invalidateGeneratedBarcode();
+    validateCurrentInput();
   });
 
   barcodeFormat.addEventListener("change", function () {
     barcodeValue.value = "";
     updateFormatInterface();
     hidePreview();
-    showMessage("", "info", false);
-    validateCurrentInput();
+    notify("", "info", false);
     barcodeValue.focus();
   });
 

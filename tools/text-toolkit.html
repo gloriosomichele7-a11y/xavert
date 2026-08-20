@@ -1,844 +1,881 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Text Toolkit</title>
-
-<meta name="description" content="Free online Text Toolkit to count, clean, convert, sort, encode, decode and transform text directly in your browser. Process text instantly with privacy-first browser tools.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/text-toolkit.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-input,
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-select:focus,
-input:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-textarea{
-min-height:180px;
-resize:vertical;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-.tool-section{
-display:none;
-}
-
-.tool-section.active{
-display:block;
-}
-
-.info{
-color:#4b5563;
-font-size:14px;
-margin:8px 0 16px;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-.loading{color:#4b5563;}
-
-.result-box{
-display:none;
-margin-top:16px;
-padding:14px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-font-size:14px;
-color:#374151;
-line-height:1.6;
-}
-
-.output-area{
-margin-top:16px;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-font-size:14px;
-display:none;
-z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>Text Toolkit</h1>
-
-<p class="subtitle">
-Count, clean, convert, sort, encode and transform text directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Text is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-<label for="toolSelector">Select Tool</label>
-<select id="toolSelector">
-<option value="counter">Word & Character Counter</option>
-<option value="case">Case Converter</option>
-<option value="spaces">Remove Extra Spaces</option>
-<option value="duplicates">Remove Duplicate Lines</option>
-<option value="sort">Sort Lines</option>
-<option value="findreplace">Find & Replace</option>
-<option value="slug">Text to Slug</option>
-<option value="url">URL Encode / Decode</option>
-<option value="base64">Base64 Encode / Decode</option>
-</select>
-</div>
-
-<div class="card tool-section active" id="counterTool">
-<h2>Word & Character Counter</h2>
-<p class="info">Count words, characters, sentences, paragraphs and lines.</p>
-
-<label for="counterInput">Text</label>
-<textarea id="counterInput" placeholder="Paste or type your text here..."></textarea>
-
-<div class="button-group">
-
-<button onclick="countText()">
-Count Text
-</button>
-
-<button onclick="clearFields('counterInput',null,'counterMessage','counterResult')">
-Clear
-</button>
-
-</div>
-
-<div id="counterMessage" class="message"></div>
-<div id="counterResult" class="result-box"></div>
-</div>
-
-<div class="card tool-section" id="caseTool">
-<h2>Case Converter</h2>
-<p class="info">Convert text to uppercase, lowercase, title case, sentence case or alternating case.</p>
-
-<label for="caseInput">Text</label>
-<textarea id="caseInput" placeholder="Paste text here..."></textarea>
-
-<label for="caseMode">Case Mode</label>
-<select id="caseMode">
-<option value="upper">UPPERCASE</option>
-<option value="lower">lowercase</option>
-<option value="title">Title Case</option>
-<option value="sentence">Sentence case</option>
-<option value="alternating">aLtErNaTiNg CaSe</option>
-</select>
-
-<div class="button-group">
-
-<button onclick="convertCase()">
-Convert Case
-</button>
-
-<button onclick="clearFields('caseInput','caseOutput','caseMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="caseOutput">Output</label>
-<textarea id="caseOutput" readonly></textarea>
-</div>
-
-<div id="caseMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="spacesTool">
-<h2>Remove Extra Spaces</h2>
-<p class="info">Clean text by removing duplicated spaces and excessive blank lines.</p>
-
-<label for="spacesInput">Text</label>
-<textarea id="spacesInput" placeholder="Paste messy text here..."></textarea>
-
-<div class="button-group">
-
-<button onclick="removeExtraSpaces()">
-Clean Text
-</button>
-
-<button onclick="clearFields('spacesInput','spacesOutput','spacesMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="spacesOutput">Output</label>
-<textarea id="spacesOutput" readonly></textarea>
-</div>
-
-<div id="spacesMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="duplicatesTool">
-<h2>Remove Duplicate Lines</h2>
-<p class="info">Remove repeated lines while keeping the first occurrence.</p>
-
-<label for="duplicatesInput">Text</label>
-<textarea id="duplicatesInput" placeholder="Paste lines here..."></textarea>
-
-<div class="button-group">
-
-<button onclick="removeDuplicateLines()">
-Remove Duplicates
-</button>
-
-<button onclick="clearFields('duplicatesInput','duplicatesOutput','duplicatesMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="duplicatesOutput">Output</label>
-<textarea id="duplicatesOutput" readonly></textarea>
-</div>
-
-<div id="duplicatesMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="sortTool">
-<h2>Sort Lines</h2>
-<p class="info">Sort lines alphabetically from A to Z or Z to A.</p>
-
-<label for="sortInput">Text</label>
-<textarea id="sortInput" placeholder="Paste lines here..."></textarea>
-
-<label for="sortMode">Sort Mode</label>
-<select id="sortMode">
-<option value="az">A to Z</option>
-<option value="za">Z to A</option>
-</select>
-
-<div class="button-group">
-
-<button onclick="sortLines()">
-Sort Lines
-</button>
-
-<button onclick="clearFields('sortInput','sortOutput','sortMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="sortOutput">Output</label>
-<textarea id="sortOutput" readonly></textarea>
-</div>
-
-<div id="sortMessage" class="message"></div>
-</div>
-<div class="card tool-section" id="findreplaceTool">
-<h2>Find & Replace</h2>
-<p class="info">Find text and replace it with another value.</p>
-
-<label for="findReplaceInput">Text</label>
-<textarea id="findReplaceInput" placeholder="Paste text here..."></textarea>
-
-<label for="findText">Find</label>
-<input type="text" id="findText" placeholder="Text to find">
-
-<label for="replaceText">Replace With</label>
-<input type="text" id="replaceText" placeholder="Replacement text">
-
-<div class="button-group">
-
-<button onclick="findAndReplace()">
-Replace
-</button>
-
-<button onclick="clearFindReplace()">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="findReplaceOutput">Output</label>
-<textarea id="findReplaceOutput" readonly></textarea>
-</div>
-
-<div id="findReplaceMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="slugTool">
-<h2>Text to Slug</h2>
-
-<label for="slugInput">Text</label>
-<textarea id="slugInput"></textarea>
-
-<div class="button-group">
-
-<button onclick="textToSlug()">
-Generate Slug
-</button>
-
-<button onclick="clearFields('slugInput','slugOutput','slugMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="slugOutput">Output</label>
-<textarea id="slugOutput" readonly></textarea>
-</div>
-
-<div id="slugMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="urlTool">
-<h2>URL Encode / Decode</h2>
-
-<label for="urlInput">Text</label>
-<textarea id="urlInput"></textarea>
-
-<label for="urlMode">Mode</label>
-<select id="urlMode">
-<option value="encode">Encode</option>
-<option value="decode">Decode</option>
-</select>
-
-<div class="button-group">
-
-<button onclick="processUrl()">
-Process
-</button>
-
-<button onclick="clearFields('urlInput','urlOutput','urlMessage',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="urlOutput">Output</label>
-<textarea id="urlOutput" readonly></textarea>
-</div>
-
-<div id="urlMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="base64Tool">
-<h2>Base64 Encode / Decode</h2>
-
-<label for="base64Input">Text</label>
-<textarea id="base64Input"></textarea>
-
-<label for="base64Mode">Mode</label>
-<select id="base64Mode">
-<option value="encode">Encode</option>
-<option value="decode">Decode</option>
-</select>
-
-<div class="button-group">
-
-<button onclick="processBase64()">
-Process
-</button>
-
-<button onclick="clearFields('base64Input','base64Output','base64Message',null)">
-Clear
-</button>
-
-</div>
-
-<div class="output-area">
-<label for="base64Output">Output</label>
-<textarea id="base64Output" readonly></textarea>
-</div>
-
-<div id="base64Message" class="message"></div>
-</div>
-
-</div>
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-<script>
-const toolSelector=document.getElementById("toolSelector");
-const toast=document.getElementById("toast");
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-
-const selectedTool=toolSelector.value;
-
-if(selectedTool==="counter") countText();
-if(selectedTool==="case") convertCase();
-if(selectedTool==="spaces") removeExtraSpaces();
-if(selectedTool==="duplicates") removeDuplicateLines();
-if(selectedTool==="sort") sortLines();
-if(selectedTool==="findreplace") findAndReplace();
-if(selectedTool==="slug") textToSlug();
-if(selectedTool==="url") processUrl();
-if(selectedTool==="base64") processBase64();
-
-}
-
-});
-toolSelector.addEventListener("change",function(){
-document.querySelectorAll(".tool-section").forEach(section=>{
-section.classList.remove("active");
-});
-
-document.getElementById(toolSelector.value + "Tool").classList.add("active");
-});
-function showToast(text,type="info"){
-
-if(!text){
-return;
-}
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-clearTimeout(window.toastTimer);
-
-window.toastTimer=setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-function setMessage(id,text,type){
-const el=document.getElementById(id);
-
-if(!el){
-return;
-}
-
-el.textContent=text;
-el.className="message " + type;
-
-if(type==="error"){
-showToast(text,"error");
-}
-}
-
-function setResult(id,html){
-const el=document.getElementById(id);
-if(!el) return;
-el.innerHTML=html;
-el.style.display="block";
-}
-
-function clearFields(inputId,outputId,messageId,resultId){
-if(document.getElementById(inputId))
-document.getElementById(inputId).value="";
-
-if(outputId && document.getElementById(outputId))
-document.getElementById(outputId).value="";
-
-if(messageId){
-const m=document.getElementById(messageId);
-m.textContent="";
-m.className="message";
-}
-
-if(resultId){
-const r=document.getElementById(resultId);
-r.innerHTML="";
-r.style.display="none";
-}
-
-showToast("Cleared.","success");
-}
-
-function countText(){
-
-const text=document.getElementById("counterInput").value;
-
-const words=text.trim()?text.trim().split(/\s+/).length:0;
-const characters=text.length;
-const charactersNoSpaces=text.replace(/\s/g,"").length;
-const lines=text?text.split(/\r?\n/).length:0;
-const paragraphs=text.trim()?text.trim().split(/\n\s*\n/).length:0;
-const sentences=(text.match(/[.!?]+/g)||[]).length;
-
-const readingTime=Math.max(1,Math.ceil(words/200));
-
-setMessage("counterMessage","Analysis completed.","success");
-
-setResult(
-"counterResult",
-"Words: <strong>"+words+"</strong><br>"+
-"Characters: <strong>"+characters+"</strong><br>"+
-"Characters (no spaces): <strong>"+charactersNoSpaces+"</strong><br>"+
-"Sentences: <strong>"+sentences+"</strong><br>"+
-"Paragraphs: <strong>"+paragraphs+"</strong><br>"+
-"Lines: <strong>"+lines+"</strong><br>"+
-"Estimated reading time: <strong>"+readingTime+" min</strong>"
-);
-
-showToast("Analysis completed.","success");
-
-}
-
-function convertCase(){
-const text=document.getElementById("caseInput").value;
-const mode=document.getElementById("caseMode").value;
-
-let output=text;
-
-if(mode==="upper") output=text.toUpperCase();
-if(mode==="lower") output=text.toLowerCase();
-if(mode==="title"){
-output=text.toLowerCase().replace(/\b\w/g,c=>c.toUpperCase());
-}
-if(mode==="sentence"){
-output=text.toLowerCase().replace(/(^\s*\w|[.!?]\s*\w)/g,c=>c.toUpperCase());
-}
-if(mode==="alternating"){
-output=text.split("").map((c,i)=>i%2?c.toUpperCase():c.toLowerCase()).join("");
-}
-
-document.getElementById("caseOutput").value=output;
-
-setMessage(
-"caseMessage",
-"Text converted successfully.",
-"success"
-);
-
-showToast("Completed.","success"); 
-}
-  
-
-function removeExtraSpaces(){
-const text=document.getElementById("spacesInput").value;
-document.getElementById("spacesOutput").value=
-text.replace(/[ \t]+/g," ").replace(/\n{3,}/g,"\n\n").trim();
-setMessage(
-"spacesMessage",
-"Text cleaned successfully.",
-"success"
-);
-showToast("Completed.","success");
-}
-
-function removeDuplicateLines(){
-const text=document.getElementById("duplicatesInput").value;
-const unique=[...new Set(text.split(/\r?\n/))];
-document.getElementById("duplicatesOutput").value=unique.join("\n");
-setMessage(
-"duplicatesMessage",
-"Duplicate lines removed successfully.",
-"success"
-);
-showToast("Completed.","success");
-}
-
-function sortLines(){
-const text=document.getElementById("sortInput").value;
-const mode=document.getElementById("sortMode").value;
-
-const lines=text.split(/\r?\n/).sort();
-
-if(mode==="za"){
-lines.reverse();
-}
-
-document.getElementById("sortOutput").value=lines.join("\n");
-
-setMessage(
-"sortMessage",
-"Lines sorted successfully.",
-"success"
-);
-
-showToast("Completed.","success");
-}
-
-function findAndReplace(){
-const text=document.getElementById("findReplaceInput").value;
-const find=document.getElementById("findText").value;
-const replace=document.getElementById("replaceText").value;
-
-document.getElementById("findReplaceOutput").value=
-text.split(find).join(replace);
-
-setMessage(
-"findReplaceMessage",
-"Text replaced successfully.",
-"success"
-);
-
-showToast("Completed.","success");
-}
-
-function clearFindReplace(){
-document.getElementById("findReplaceInput").value="";
-document.getElementById("findText").value="";
-document.getElementById("replaceText").value="";
-document.getElementById("findReplaceOutput").value="";
-
-document.getElementById("findReplaceMessage").textContent="";
-document.getElementById("findReplaceMessage").className="message";
-
-showToast("Cleared.","success");
-}
-
-function textToSlug(){
-const text=document.getElementById("slugInput").value;
-
-document.getElementById("slugOutput").value=text
-.toLowerCase()
-.normalize("NFD")
-.replace(/[\u0300-\u036f]/g,"")
-.replace(/[^a-z0-9]+/g,"-")
-.replace(/^-+|-+$/g,"");
-
-setMessage(
-"slugMessage",
-"Slug generated successfully.",
-"success"
-);
-
-showToast("Completed.","success");
-}
-
-function processUrl(){
-
-const text=document.getElementById("urlInput").value;
-const mode=document.getElementById("urlMode").value;
-
-if(!text){
-setMessage("urlMessage","Please enter text.","error");
-return;
-}
-
-try{
-
-document.getElementById("urlOutput").value=
-mode==="encode"
-? encodeURIComponent(text)
-: decodeURIComponent(text);
-
-setMessage(
-"urlMessage",
-"URL processed successfully.",
-"success"
-);
-
-showToast("Completed.","success");
-
-}catch(error){
-
-setMessage(
-"urlMessage",
-"Invalid encoded URL.",
-"error"
-);
-
-}
-
-}
-
-function processBase64(){
-const text=document.getElementById("base64Input").value;
-const mode=document.getElementById("base64Mode").value;
-
-if(!text){
-setMessage(
-"base64Message",
-"Please enter text.",
-"error"
-);
-
-showToast("Please enter text.","error");
-return;
-}
-
-try{
-
-document.getElementById("base64Output").value=
-mode==="encode"
-? btoa(unescape(encodeURIComponent(text)))
-: decodeURIComponent(escape(atob(text)));
-
-setMessage(
-"base64Message",
-"Completed.",
-"success"
-);
-
-showToast("Completed.","success");
-
-}catch(error){
-
-setMessage(
-"base64Message",
-"Invalid Base64 string.",
-"error"
-);
-
-showToast("Invalid Base64.","error");
-
-}
-}
-</script>
-
-</body>
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Text Toolkit</title>
+
+    <meta
+      name="description"
+      content="Count, clean, convert, sort, encode, decode and transform text directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/text-toolkit.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .text-tool-panel[hidden] {
+        display: none !important;
+      }
+
+      .text-tool-editor {
+        min-height: 180px;
+        resize: vertical;
+        line-height: 1.6;
+      }
+
+      .text-tool-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .text-tool-result[hidden] {
+        display: none !important;
+      }
+
+      .text-tool-result-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      @media (max-width: 768px) {
+        .text-tool-result-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/text-toolkit.js" defer></script>
+  </head>
+
+  <body
+    data-tool="text-toolkit"
+    data-related-tools="text-diff-checker,regex-tester,base64-toolkit,json-toolkit,markdown-editor"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Text Toolkit</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="selector-title">
+          <header class="tool-card-header">
+            <h2 id="selector-title" class="tool-card-title">Select Tool</h2>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="toolSelector">Tool</label>
+
+              <select id="toolSelector">
+                <option value="counter">Word &amp; Character Counter</option>
+                <option value="case">Case Converter</option>
+                <option value="spaces">Remove Extra Spaces</option>
+                <option value="duplicates">Remove Duplicate Lines</option>
+                <option value="sort">Sort Lines</option>
+                <option value="findreplace">Find &amp; Replace</option>
+                <option value="slug">Text to Slug</option>
+                <option value="url">URL Encode / Decode</option>
+                <option value="base64">Base64 Encode / Decode</option>
+              </select>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="counterTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="counter-title"
+        >
+          <header class="tool-card-header">
+            <h2 id="counter-title" class="tool-card-title">
+              Word &amp; Character Counter
+            </h2>
+            <p class="tool-card-description">
+              Count words, characters, sentences, paragraphs and lines.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="counterInput">Text</label>
+              <textarea
+                id="counterInput"
+                class="text-tool-editor"
+                placeholder="Paste or type your text here..."
+              ></textarea>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="counterBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Count Text
+              </button>
+              <button
+                id="counterSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-counter"
+              >
+                Load Sample
+              </button>
+              <button
+                id="counterClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="counterResult"
+              class="tool-card-result text-tool-result"
+              hidden
+            >
+              <div class="text-tool-result-grid">
+                <div class="stat-card">
+                  <strong id="counterWords" class="stat-value">0</strong
+                  ><span class="stat-label">Words</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterCharacters" class="stat-value">0</strong
+                  ><span class="stat-label">Characters</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterNoSpaces" class="stat-value">0</strong
+                  ><span class="stat-label">No Spaces</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterSentences" class="stat-value">0</strong
+                  ><span class="stat-label">Sentences</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterParagraphs" class="stat-value">0</strong
+                  ><span class="stat-label">Paragraphs</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterLines" class="stat-value">0</strong
+                  ><span class="stat-label">Lines</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="counterReading" class="stat-value">0 min</strong
+                  ><span class="stat-label">Reading Time</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="caseTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="case-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="case-title" class="tool-card-title">Case Converter</h2>
+            <p class="tool-card-description">
+              Convert text to uppercase, lowercase, title, sentence or
+              alternating case.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="caseInput">Text</label>
+              <textarea
+                id="caseInput"
+                class="text-tool-editor"
+                placeholder="Paste text here..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="caseMode">Case Mode</label>
+              <select id="caseMode">
+                <option value="upper">UPPERCASE</option>
+                <option value="lower">lowercase</option>
+                <option value="title">Title Case</option>
+                <option value="sentence">Sentence case</option>
+                <option value="alternating">aLtErNaTiNg CaSe</option>
+              </select>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="caseBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Convert Case
+              </button>
+              <button
+                id="caseSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-case"
+              >
+                Load Sample
+              </button>
+              <button
+                id="caseClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="caseOutput">Output</label>
+              <textarea
+                id="caseOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="spacesTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="spaces-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="spaces-title" class="tool-card-title">
+              Remove Extra Spaces
+            </h2>
+            <p class="tool-card-description">
+              Remove duplicated spaces and excessive blank lines.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="spacesInput">Text</label>
+              <textarea
+                id="spacesInput"
+                class="text-tool-editor"
+                placeholder="Paste messy text here..."
+              ></textarea>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="spacesBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Clean Text
+              </button>
+              <button
+                id="spacesSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-spaces"
+              >
+                Load Sample
+              </button>
+              <button
+                id="spacesClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="spacesOutput">Output</label>
+              <textarea
+                id="spacesOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="duplicatesTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="duplicates-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="duplicates-title" class="tool-card-title">
+              Remove Duplicate Lines
+            </h2>
+            <p class="tool-card-description">
+              Remove repeated lines while keeping the first occurrence.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="duplicatesInput">Text</label>
+              <textarea
+                id="duplicatesInput"
+                class="text-tool-editor"
+                placeholder="Paste lines here..."
+              ></textarea>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="duplicatesBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Remove Duplicates
+              </button>
+              <button
+                id="duplicatesSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-duplicates"
+              >
+                Load Sample
+              </button>
+              <button
+                id="duplicatesClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="duplicatesOutput">Output</label>
+              <textarea
+                id="duplicatesOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="sortTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="sort-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="sort-title" class="tool-card-title">Sort Lines</h2>
+            <p class="tool-card-description">
+              Sort lines alphabetically from A to Z or Z to A.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="sortInput">Text</label>
+              <textarea
+                id="sortInput"
+                class="text-tool-editor"
+                placeholder="Paste lines here..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="sortMode">Sort Mode</label>
+              <select id="sortMode">
+                <option value="az">A to Z</option>
+                <option value="za">Z to A</option>
+              </select>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="sortBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Sort Lines
+              </button>
+              <button
+                id="sortSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-sort"
+              >
+                Load Sample
+              </button>
+              <button
+                id="sortClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="sortOutput">Output</label>
+              <textarea
+                id="sortOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="findreplaceTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="findreplace-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="findreplace-title" class="tool-card-title">
+              Find &amp; Replace
+            </h2>
+            <p class="tool-card-description">
+              Find literal text and replace every occurrence.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="findReplaceInput">Text</label>
+              <textarea
+                id="findReplaceInput"
+                class="text-tool-editor"
+                placeholder="Paste text here..."
+              ></textarea>
+            </div>
+
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="findText">Find</label>
+                <input id="findText" type="text" placeholder="Text to find" />
+              </div>
+
+              <div class="form-group">
+                <label for="replaceText">Replace With</label>
+                <input
+                  id="replaceText"
+                  type="text"
+                  placeholder="Replacement text"
+                />
+              </div>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="findReplaceBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Replace
+              </button>
+              <button
+                id="findReplaceSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-findreplace"
+              >
+                Load Sample
+              </button>
+              <button
+                id="findReplaceClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="findReplaceOutput">Output</label>
+              <textarea
+                id="findReplaceOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="slugTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="slug-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="slug-title" class="tool-card-title">Text to Slug</h2>
+            <p class="tool-card-description">
+              Convert text into a lowercase URL-friendly slug.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="slugInput">Text</label>
+              <textarea
+                id="slugInput"
+                class="text-tool-editor"
+                placeholder="Example: My Great Article Title"
+              ></textarea>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="slugBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate Slug
+              </button>
+              <button
+                id="slugClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="slugOutput">Output</label>
+              <textarea
+                id="slugOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="urlTool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="url-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="url-title" class="tool-card-title">URL Encode / Decode</h2>
+            <p class="tool-card-description">
+              Encode text for use in a URL component or decode encoded text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="urlInput">Text</label>
+              <textarea
+                id="urlInput"
+                class="text-tool-editor"
+                placeholder="Enter text or encoded URL component..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="urlMode">Mode</label>
+              <select id="urlMode">
+                <option value="encode">Encode</option>
+                <option value="decode">Decode</option>
+              </select>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button id="urlBtn" class="btn" type="button" data-primary-action>
+                Process
+              </button>
+              <button
+                id="urlSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-url"
+              >
+                Load Sample
+              </button>
+              <button
+                id="urlClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="urlOutput">Output</label>
+              <textarea
+                id="urlOutput"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <section
+          id="base64Tool"
+          class="tool-card text-tool-panel"
+          aria-labelledby="base64-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="base64-title" class="tool-card-title">
+              Base64 Encode / Decode
+            </h2>
+            <p class="tool-card-description">
+              Encode Unicode text to Base64 or decode Base64 back to text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="base64Input">Text</label>
+              <textarea
+                id="base64Input"
+                class="text-tool-editor"
+                placeholder="Enter text or Base64..."
+              ></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="base64Mode">Mode</label>
+              <select id="base64Mode">
+                <option value="encode">Encode</option>
+                <option value="decode">Decode</option>
+              </select>
+            </div>
+
+            <div class="button-grid text-tool-actions">
+              <button
+                id="base64Btn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Process
+              </button>
+              <button
+                id="base64SampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="text-base64"
+              >
+                Load Sample
+              </button>
+              <button
+                id="base64ClearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="form-group tool-card-result">
+              <label for="base64Output">Output</label>
+              <textarea
+                id="base64Output"
+                class="text-tool-editor"
+                readonly
+              ></textarea>
+            </div>
+          </div>
+        </section>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Text Toolkit combines common text analysis and
+          transformation tools in one browser-based workspace.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Count words, characters, sentences, paragraphs and lines.</li>
+          <li>Convert text case and clean extra whitespace.</li>
+          <li>Remove duplicate lines and sort text lines.</li>
+          <li>Find and replace literal text.</li>
+          <li>Create URL-friendly slugs.</li>
+          <li>Encode or decode URL components and Base64 text.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Text processing happens locally within your browser. Your content is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script type="application/json" id="xavert-sample-text-counter">
+      {
+        "fields": {
+          "counterInput": "XAVERT provides useful browser tools.\n\nEverything runs locally and your text stays private."
+        },
+        "focus": "counterInput",
+        "message": "Sample text loaded.",
+        "action": "counterBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-case">
+      {
+        "fields": {
+          "caseInput": "the quick brown fox jumps over the lazy dog.",
+          "caseMode": "title"
+        },
+        "focus": "caseInput",
+        "message": "Sample text loaded.",
+        "action": "caseBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-spaces">
+      {
+        "fields": {
+          "spacesInput": "This   sentence    contains extra spaces.\n\n\n\nThis line has too many blank lines."
+        },
+        "focus": "spacesInput",
+        "message": "Sample text loaded.",
+        "action": "spacesBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-duplicates">
+      {
+        "fields": {
+          "duplicatesInput": "apple\nbanana\napple\norange\nbanana\npear"
+        },
+        "focus": "duplicatesInput",
+        "message": "Sample lines loaded.",
+        "action": "duplicatesBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-sort">
+      {
+        "fields": {
+          "sortInput": "Zebra\nApple\nOrange\nBanana\nPear",
+          "sortMode": "az"
+        },
+        "focus": "sortInput",
+        "message": "Sample lines loaded.",
+        "action": "sortBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-findreplace">
+      {
+        "fields": {
+          "findReplaceInput": "XAVERT tools are fast. XAVERT tools run locally.",
+          "findText": "XAVERT",
+          "replaceText": "Browser"
+        },
+        "focus": "findReplaceInput",
+        "message": "Sample text loaded.",
+        "action": "findReplaceBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-url">
+      {
+        "fields": {
+          "urlInput": "hello world & XAVERT",
+          "urlMode": "encode"
+        },
+        "focus": "urlInput",
+        "message": "Sample text loaded.",
+        "action": "urlBtn"
+      }
+    </script>
+
+    <script type="application/json" id="xavert-sample-text-base64">
+      {
+        "fields": {
+          "base64Input": "Hello XAVERT ✓",
+          "base64Mode": "encode"
+        },
+        "focus": "base64Input",
+        "message": "Sample text loaded.",
+        "action": "base64Btn"
+      }
+    </script>
+  </body>
 </html>

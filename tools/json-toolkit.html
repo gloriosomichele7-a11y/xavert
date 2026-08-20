@@ -1,1044 +1,481 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | JSON Toolkit Pro</title>
+    <title>XAVERT | JSON Toolkit</title>
 
-<meta name="description" content="Free online JSON Toolkit Pro to format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser. Work with JSON instantly without uploading data.">
+    <meta
+      name="description"
+      content="Format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/json-toolkit.html">
+    <link rel="canonical" href="https://xavert.com/tools/json-toolkit.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | JSON Toolkit" />
+    <meta
+      property="og:description"
+      content="Format, validate, minify, escape, unescape and compare JSON data directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/json-toolkit.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | JSON Toolkit" />
+    <meta
+      name="twitter:description"
+      content="Process JSON locally in your browser without uploading data."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | JSON Toolkit Pro">
-<meta property="og:description" content="Format, validate, minify, escape, unescape and compare JSON data directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/json-toolkit.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | JSON Toolkit Pro">
-<meta name="twitter:description" content="Process JSON locally in your browser without uploading data.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"JSON Toolkit Pro",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/json-toolkit.html",
-  "description":"Format, validate, minify, escape, unescape and compare JSON data directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Is my JSON uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. All JSON processing happens locally inside your browser."
+    <style>
+      .json-editor {
+        min-height: 240px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I validate JSON?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The toolkit validates JSON syntax and reports parsing errors."
+
+      .json-drop-zone {
+        display: flex;
+        min-height: 120px;
+        padding: 20px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I compare two JSON files?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The comparison tool highlights added, removed and modified values."
+
+      .json-drop-zone:hover,
+      .json-drop-zone:focus-visible,
+      .json-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-  
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-textarea,
-input{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-
-select:focus,
-textarea:focus,
-input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-textarea{
-min-height:220px;
-resize:vertical;
-line-height:1.6;
-font-family:monospace;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-
-.tool-section{
-display:none;
-}
-
-.tool-section.active{
-display:block;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-.loading{color:#4b5563;}
-
-.result-box{
-display:none;
-margin-top:16px;
-padding:16px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-line-height:1.7;
-word-break:break-word;
-}
-
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-  
-.drop-zone{
-border:2px dashed #d1d5db;
-border-radius:16px;
-padding:26px;
-text-align:center;
-background:#f9fafb;
-cursor:pointer;
-margin-top:12px;
-}
-
-.drop-zone:hover,
-.drop-zone.dragover{
-border-color:#dc2626;
-background:#fff5f5;
-}
-
-.file-count{
-margin-top:10px;
-font-size:14px;
-font-weight:700;
-color:#374151;
-}
-
-.diff-added{
-background:#dcfce7;
-color:#166534;
-padding:6px;
-border-radius:6px;
-margin-bottom:6px;
-}
-
-.diff-removed{
-background:#fee2e2;
-color:#991b1b;
-padding:6px;
-border-radius:6px;
-margin-bottom:6px;
-}
-
-.diff-changed{
-background:#fef3c7;
-color:#92400e;
-padding:6px;
-border-radius:6px;
-margin-bottom:6px;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-
-.footer-note{
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-}
-  
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-h1{font-size:34px;}
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>JSON Toolkit Pro</h1>
-
-<p class="subtitle">
-Format, validate, minify, escape, unescape and compare JSON data directly in your browser.
-</p>
-<div class="success-banner">
-✓ JSON data is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-<label for="toolSelector">Select Tool</label>
-<select id="toolSelector">
-<option value="formatter">JSON Formatter</option>
-<option value="minifier">JSON Minifier</option>
-<option value="validator">JSON Validator</option>
-<option value="escape">JSON Escape</option>
-<option value="unescape">JSON Unescape</option>
-<option value="compare">JSON Compare</option>
-</select>
-</div>
-
-<div class="card tool-section active" id="formatterTool">
-<h2>JSON Formatter</h2>
-
-<label for="jsonInput">JSON Input</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadSampleJson();return false;">Load Sample JSON</a>
-</div>
-
-<textarea id="jsonInput" placeholder='Paste JSON here, for example: {"name":"XAVERT"}'></textarea>
-<div class="drop-zone" id="dropZone">
-Click or drag a JSON file here
-</div>
-
-<input type="file" id="jsonFile" accept=".json,application/json" hidden>
-<div id="fileCount" class="file-count">No file selected</div>
-
-<div class="button-group">
-<button onclick="formatJson()">Format JSON</button>
-<button onclick="minifyJson()">Minify JSON</button>
-<button onclick="validateJson()">Validate JSON</button>
-<button onclick="clearMain()">Clear</button>
-</div>
-
-<label for="jsonOutput">Result</label>
-<textarea id="jsonOutput" readonly></textarea>
-
-<div class="button-group">
-<button onclick="copyResult()">Copy Result</button>
-<button onclick="downloadResult()">Download Result</button>
-</div>
-
-<div id="mainMessage" class="message"></div>
-<div id="jsonStats" class="result-box"></div>
-</div>
-
-<div class="card tool-section" id="minifierTool">
-<h2>JSON Minifier</h2>
-<p class="subtitle">Use the main input area above or switch back to Formatter. Minify is available there.</p>
-</div>
-
-<div class="card tool-section" id="validatorTool">
-<h2>JSON Validator</h2>
-<p class="subtitle">Use the main input area above or press Ctrl + Enter to validate the current JSON.</p>
-</div>
-
-<div class="card tool-section" id="escapeTool">
-<h2>JSON Escape / Unescape</h2>
-
-<label for="escapeInput">Text Input</label>
-<textarea id="escapeInput" placeholder="Paste text or escaped JSON string here..."></textarea>
-
-<div class="button-group">
-<button onclick="escapeJsonText()">Escape</button>
-<button onclick="unescapeJsonText()">Unescape</button>
-<button onclick="clearEscape()">Clear</button>
-</div>
-
-<label for="escapeOutput">Result</label>
-<textarea id="escapeOutput" readonly></textarea>
-
-<div class="button-group">
-<button onclick="copyText(document.getElementById('escapeOutput').value)">Copy Result</button>
-<button onclick="downloadText(document.getElementById('escapeOutput').value,'xavert-json-escaped.txt')">Download TXT</button>
-</div>
-
-<div id="escapeMessage" class="message"></div>
-</div>
-
-<div class="card tool-section" id="unescapeTool">
-<h2>JSON Unescape</h2>
-<p class="subtitle">Use the Escape / Unescape section above.</p>
-</div>
-
-<div class="card tool-section" id="compareTool">
-<h2>JSON Compare</h2>
-
-<label for="compareA">JSON A</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadCompareSample();return false;">Load Compare Sample</a>
-</div>
-
-<textarea id="compareA" placeholder='{"name":"XAVERT","version":1}'></textarea>
-
-<label for="compareB">JSON B</label>
-<textarea id="compareB" placeholder='{"name":"XAVERT","version":2}'></textarea>
-
-<div class="button-group">
-<button onclick="compareJson()">Compare JSON</button>
-<button onclick="clearCompare()">Clear</button>
-</div>
-
-<div id="compareMessage" class="message"></div>
-<div id="compareResult" class="result-box"></div>
-</div>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Is my JSON uploaded?</h3>
-<p>No. All JSON processing happens locally inside your browser.</p>
-
-<h3>Can I validate JSON?</h3>
-<p>Yes. The validator checks JSON syntax and reports parsing errors.</p>
-
-<h3>Can I compare two JSON documents?</h3>
-<p>Yes. The compare tool highlights added, removed and modified values.</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="regex-tester.html">Regex Tester</a></li>
-<li><a href="diff-checker.html">Diff Checker</a></li>
-<li><a href="data-converter.html">Data Converter</a></li>
-</ul>
-
-</section>
-
-</main>
-
-<div class="footer-note">
-Powered by XAVERT
-</div>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const toolSelector=document.getElementById("toolSelector");
-const jsonInput=document.getElementById("jsonInput");
-const jsonOutput=document.getElementById("jsonOutput");
-const mainMessage=document.getElementById("mainMessage");
-const jsonStats=document.getElementById("jsonStats");
-const dropZone=document.getElementById("dropZone");
-const jsonFile=document.getElementById("jsonFile");
-const fileCount=document.getElementById("fileCount");
-const toast=document.getElementById("toast");
-
-toolSelector.addEventListener("change",function(){
-
-document.querySelectorAll(".tool-section").forEach(section=>{
-section.classList.remove("active");
-});
-
-const selected=document.getElementById(toolSelector.value + "Tool");
-
-if(selected){
-selected.classList.add("active");
-}
-
-if(toolSelector.value==="minifier" || toolSelector.value==="validator"){
-document.getElementById("formatterTool").classList.add("active");
-}
-
-if(toolSelector.value==="unescape"){
-document.getElementById("escapeTool").classList.add("active");
-}
-
-});
-
-dropZone.addEventListener("click",function(){
-jsonFile.click();
-});
-
-dropZone.addEventListener("dragover",function(e){
-e.preventDefault();
-dropZone.classList.add("dragover");
-});
-
-dropZone.addEventListener("dragleave",function(){
-dropZone.classList.remove("dragover");
-});
-
-dropZone.addEventListener("drop",function(e){
-e.preventDefault();
-dropZone.classList.remove("dragover");
-jsonFile.files=e.dataTransfer.files;
-loadJsonFile();
-});
-
-jsonFile.addEventListener("change",loadJsonFile);
-
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-const tool=toolSelector.value;
-
-if(tool==="formatter") formatJson();
-if(tool==="minifier") minifyJson();
-if(tool==="validator") validateJson();
-if(tool==="escape") escapeJsonText();
-if(tool==="unescape") unescapeJsonText();
-if(tool==="compare") compareJson();
-}
-
-});
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(element,text,type){
-element.textContent=text;
-element.className="message " + type;
-}
-
-async function copyText(text){
-
-if(!text){
-showToast("Nothing to copy.","error");
-return;
-}
-
-try{
-
-await navigator.clipboard.writeText(text);
-
-showToast("Copied.","success");
-
-}catch(error){
-
-showToast("Copy failed.","error");
-
-}
-
-}
-
-function copyResult(){
-copyText(jsonOutput.value);
-}
-
-function downloadText(text,fileName){
-
-if(!text){
-showToast("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
-
-const url=URL.createObjectURL(blob);
-
-const link=document.createElement("a");
-
-link.href=url;
-link.download=fileName;
-
-document.body.appendChild(link);
-
-link.click();
-
-document.body.removeChild(link);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-showToast("Download started.","success");
-}
-
-function downloadResult(){
-
-let fileName="xavert-json-result.json";
-
-if(mainMessage.textContent.includes("formatted")){
-fileName="xavert-json-formatted.json";
-}
-
-if(mainMessage.textContent.includes("minified")){
-fileName="xavert-json-minified.json";
-}
-
-if(mainMessage.textContent.includes("valid")){
-fileName="xavert-json-validation.txt";
-}
-
-downloadText(jsonOutput.value,fileName);
-
-}
-
-async function loadJsonFile(){
-
-const file=jsonFile.files[0];
-
-if(!file){
-fileCount.textContent="No file selected";
-return;
-}
-
-fileCount.textContent=
-file.name + " • " + (file.size/1024/1024).toFixed(2) + " MB";
-
-try{
-const text=await file.text();
-
-if(!text.trim()){
-
-throw new Error("Empty file.");
-
-}
-
-jsonInput.value=text;
-
-setMessage(
-mainMessage,
-"JSON file loaded successfully. You can now format, minify or validate it.",
-"success"
-);
-
-showToast("JSON file loaded.","success");
-}catch(error){
-setMessage(mainMessage,"Unable to read file.","error");
-}
-
-}
-
-function getJsonInput(){
-
-const text=jsonInput.value.trim();
-
-if(!text){
-setMessage(mainMessage,"Please enter JSON data.","error");
-showToast("Please enter JSON data.","error");
-return null;
-}
-
-try{
-return JSON.parse(text);
-}catch(error){
-setMessage(mainMessage,"Invalid JSON: " + error.message,"error");
-showToast("Invalid JSON.","error");
-return null;
-}
-
-}
-
-function updateStats(text,json=null){
-
-text=text || "";
-
-const lines=text ? text.split(/\r?\n/).length : 0;
-const characters=text.length;
-const bytes=new Blob([text]).size;
-const prettySize=(bytes/1024).toFixed(2);
-let type="-";
-let keys="-";
-
-if(json!==null){
-type=Array.isArray(json) ? "Array" : typeof json;
-
-if(Array.isArray(json)){
-keys=json.length + " items";
-}else if(typeof json==="object"){
-keys=Object.keys(json).length + " keys";
-}
-}
-
-jsonStats.style.display="block";
-jsonStats.innerHTML=
-"<strong>JSON Stats</strong><br>" +
-"Type: <strong>" + type + "</strong><br>" +
-"Structure: <strong>" + keys + "</strong><br>" +
-"Lines: <strong>" + lines + "</strong><br>" +
-"Characters: <strong>" + characters + "</strong><br>" +
-"Size: <strong>" + bytes + " bytes (" + prettySize + " KB)</strong>";
-
-}
-function loadSampleJson(){
-
-jsonInput.value=`{"name":"XAVERT","type":"JSON Toolkit","version":1,"features":["format","minify","validate","compare"],"active":true}`;
-
-jsonOutput.value="";
-jsonStats.style.display="none";
-
-setMessage(mainMessage,"Sample JSON loaded.","success");
-showToast("Sample JSON loaded.","success");
-
-}
-function formatJson(){
 
-const json=getJsonInput();
-
-if(!json){
-jsonOutput.value="";
-jsonStats.style.display="none";
-return;
-}
-
-const result=JSON.stringify(json,null,2);
-
-jsonOutput.value=result;
-
-updateStats(result,json);
-
-setMessage(mainMessage,"JSON formatted successfully.","success");
-showToast("JSON formatted.","success");
-}
-
-function minifyJson(){
-
-const json=getJsonInput();
-
-if(!json){
-jsonOutput.value="";
-jsonStats.style.display="none";
-return;
-}
-
-const result=JSON.stringify(json);
-
-jsonOutput.value=result;
-
-updateStats(result,json);
-
-setMessage(mainMessage,"JSON minified successfully.","success");
-showToast("JSON minified.","success");
-}
-
-function validateJson(){
-
-const json=getJsonInput();
-
-if(!json){
-jsonStats.style.display="none";
-return;
-}
-
-jsonOutput.value="Valid JSON";
-
-jsonStats.style.display="block";
-jsonStats.innerHTML=
-"<strong>Validation</strong><br>" +
-"Status: <strong>Valid JSON</strong><br>" +
-"Top-level type: <strong>" +
-(Array.isArray(json) ? "Array" : typeof json) +
-"</strong>";
-
-setMessage(mainMessage,"JSON is valid.","success");
-showToast("JSON is valid.","success");
-}
-
-function escapeJsonText(){
-
-const input=document.getElementById("escapeInput").value;
-
-if(!input){
-setMessage(document.getElementById("escapeMessage"),"Please enter text to escape.","error");
-showToast("Please enter text to escape.","error");
-return;
-}
-
-document.getElementById("escapeOutput").value=JSON.stringify(input).slice(1,-1);
-
-setMessage(document.getElementById("escapeMessage"),"Text escaped successfully.","success");
-showToast("Text escaped.","success");
-}
-
-function unescapeJsonText(){
-
-const input=document.getElementById("escapeInput").value;
-
-if(!input){
-setMessage(document.getElementById("escapeMessage"),"Please enter text to unescape.","error");
-showToast("Please enter text to unescape.","error");
-return;
-}
-
-try{
-document.getElementById("escapeOutput").value=JSON.parse('"' + input.replace(/"/g,'\\"') + '"');
-setMessage(document.getElementById("escapeMessage"),"Text unescaped successfully.","success");
-showToast("Text unescaped.","success");
-}catch(error){
-setMessage(document.getElementById("escapeMessage"),"Invalid escaped text.","error");
-}
-
-}
-
-function clearMain(){
-
-jsonInput.value="";
-jsonOutput.value="";
-jsonFile.value="";
-fileCount.textContent="No file selected";
-
-mainMessage.textContent="";
-mainMessage.className="message";
-
-jsonStats.innerHTML="";
-jsonStats.style.display="none";
-showToast("Cleared.","success");
-}
-
-function clearEscape(){
-
-document.getElementById("escapeInput").value="";
-document.getElementById("escapeOutput").value="";
-document.getElementById("escapeMessage").textContent="";
-document.getElementById("escapeMessage").className="message";
-showToast("Cleared.","success");
-}
-
-function flattenObject(obj,prefix="",result={}){
-
-if(typeof obj!=="object" || obj===null){
-result[prefix || "value"]=obj;
-return result;
-}
-
-Object.keys(obj).forEach(key=>{
-
-const path=Array.isArray(obj)
-? (prefix ? prefix + "[" + key + "]" : "[" + key + "]")
-: (prefix ? prefix + "." + key : key);
-
-flattenObject(obj[key],path,result);
-
-});
-
-return result;
-
-}
-function loadCompareSample(){
-
-document.getElementById("compareA").value=
-`{"name":"XAVERT","version":1,"active":true}`;
-
-document.getElementById("compareB").value=
-`{"name":"XAVERT","version":2,"active":true,"plan":"pro"}`;
-
-document.getElementById("compareResult").style.display="none";
-document.getElementById("compareResult").innerHTML="";
-
-setMessage(
-document.getElementById("compareMessage"),
-"Compare sample loaded.",
-"success"
-);
-
-showToast("Compare sample loaded.","success");
-
-}
-function compareJson(){
-
-const aText=document.getElementById("compareA").value.trim();
-const bText=document.getElementById("compareB").value.trim();
-const compareMessage=document.getElementById("compareMessage");
-const compareResult=document.getElementById("compareResult");
-
-if(!aText || !bText){
-setMessage(compareMessage,"Please enter both JSON values.","error");
-showToast("Please enter both JSON values.","error");
-return;
-}
-
-try{
-
-const a=flattenObject(JSON.parse(aText));
-const b=flattenObject(JSON.parse(bText));
-
-let html="";
-let changes=0;
-
-const keys=[...new Set([...Object.keys(a),...Object.keys(b)])];
-
-keys.forEach(key=>{
-
-if(!(key in b)){
-changes++;
-html+='<div class="diff-removed">Removed: <strong>' + key + '</strong> = ' + JSON.stringify(a[key]) + '</div>';
-}else if(!(key in a)){
-changes++;
-html+='<div class="diff-added">Added: <strong>' + key + '</strong> = ' + JSON.stringify(b[key]) + '</div>';
-}else if(JSON.stringify(a[key])!==JSON.stringify(b[key])){
-changes++;
-html+='<div class="diff-changed">Changed: <strong>' + key + '</strong><br>A: ' + JSON.stringify(a[key]) + '<br>B: ' + JSON.stringify(b[key]) + '</div>';
-}
-
-});
-
-compareResult.style.display="block";
-
-if(changes===0){
-compareResult.innerHTML="<strong>No differences found.</strong>";
-}else{
-compareResult.innerHTML=
-"<strong>Differences found: " + changes + "</strong><br><br>" +
-html;
-}
-
-setMessage(compareMessage,"JSON comparison completed.","success");
-showToast("JSON comparison completed.","success");
-}catch(error){
-compareResult.style.display="none";
-setMessage(compareMessage,"Invalid JSON in one or both inputs.","error");
-showToast("Invalid JSON in one or both inputs.","error");
-}
-
-}
-
-function clearCompare(){
-
-document.getElementById("compareA").value="";
-document.getElementById("compareB").value="";
-document.getElementById("compareMessage").textContent="";
-document.getElementById("compareMessage").className="message";
-document.getElementById("compareResult").innerHTML="";
-document.getElementById("compareResult").style.display="none";
-showToast("Compare cleared.","success");
-}
-toolSelector.dispatchEvent(new Event("change"));  
-</script>
-
-</body>
+      .json-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .json-file-info {
+        margin-top: 10px;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .json-actions,
+      .json-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .json-diff-list {
+        display: grid;
+        gap: 10px;
+        margin-top: 16px;
+      }
+
+      .json-diff-item {
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+      }
+
+      .json-diff-added {
+        border-color: #bbf7d0;
+        background: #f0fdf4;
+      }
+
+      .json-diff-removed {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
+
+      .json-diff-changed {
+        border-color: #fde68a;
+        background: #fffbeb;
+      }
+
+      .json-diff-title {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 800;
+      }
+
+      .json-diff-value {
+        margin: 0;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/json-toolkit.js" defer></script>
+  </head>
+
+  <body
+    data-tool="json-toolkit"
+    data-related-tools="data-converter,base64-toolkit,regex-tester,text-diff-checker,text-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">JSON Toolkit</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="main-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="main-workspace-title" class="tool-card-title">
+              Format, Minify and Validate JSON
+            </h2>
+            <p class="tool-card-description">
+              Paste JSON or load a local file, then format, minify or validate
+              it.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="jsonInput">JSON Input</label>
+                <textarea
+                  id="jsonInput"
+                  class="json-editor"
+                  placeholder='{"name":"XAVERT"}'
+                  spellcheck="false"
+                  aria-describedby="mainMessage"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="jsonOutput">Result</label>
+                <textarea
+                  id="jsonOutput"
+                  class="json-editor"
+                  readonly
+                  spellcheck="false"
+                  placeholder="Processed JSON will appear here"
+                ></textarea>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="jsonFile">JSON File</label>
+
+                <label
+                  id="dropZone"
+                  class="json-drop-zone"
+                  for="jsonFile"
+                  tabindex="0"
+                  aria-describedby="fileInfo mainMessage"
+                >
+                  Click or drag one JSON file here
+                </label>
+
+                <input
+                  id="jsonFile"
+                  class="json-file-input"
+                  type="file"
+                  accept=".json,application/json"
+                />
+
+                <div id="fileInfo" class="json-file-info">No file selected</div>
+              </div>
+            </div>
+
+            <div class="button-grid json-actions">
+              <button
+                id="formatBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Format JSON
+              </button>
+              <button id="minifyBtn" class="btn" type="button">
+                Minify JSON
+              </button>
+              <button id="validateBtn" class="btn" type="button">
+                Validate JSON
+              </button>
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+              <button
+                id="clearMainBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div id="jsonStats" class="stats-grid" hidden>
+              <div class="stat-card">
+                <strong id="jsonType" class="stat-value">—</strong>
+                <span class="stat-label">Type</span>
+              </div>
+              <div class="stat-card">
+                <strong id="jsonStructure" class="stat-value">—</strong>
+                <span class="stat-label">Structure</span>
+              </div>
+              <div class="stat-card">
+                <strong id="jsonLines" class="stat-value">0</strong>
+                <span class="stat-label">Lines</span>
+              </div>
+              <div class="stat-card">
+                <strong id="jsonChars" class="stat-value">0</strong>
+                <span class="stat-label">Characters</span>
+              </div>
+            </div>
+
+            <div class="button-grid json-result-actions">
+              <button id="copyMainBtn" class="btn" type="button">
+                Copy Result
+              </button>
+              <button
+                id="downloadMainBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Download Result
+              </button>
+            </div>
+
+            <div
+              id="mainMessage"
+              class="message"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="escape-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="escape-workspace-title" class="tool-card-title">
+              Escape / Unescape JSON Text
+            </h2>
+            <p class="tool-card-description">
+              Escape plain text for a JSON string or unescape a JSON string
+              fragment.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="escapeInput">Text Input</label>
+                <textarea
+                  id="escapeInput"
+                  class="json-editor"
+                  spellcheck="false"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="escapeOutput">Result</label>
+                <textarea
+                  id="escapeOutput"
+                  class="json-editor"
+                  readonly
+                  spellcheck="false"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid json-actions">
+              <button id="escapeBtn" class="btn" type="button">Escape</button>
+              <button id="unescapeBtn" class="btn" type="button">
+                Unescape
+              </button>
+              <button
+                id="clearEscapeBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div class="button-grid json-result-actions">
+              <button id="copyEscapeBtn" class="btn" type="button">
+                Copy Result
+              </button>
+              <button
+                id="downloadEscapeBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Download TXT
+              </button>
+            </div>
+
+            <div
+              id="escapeMessage"
+              class="message"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="compare-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="compare-workspace-title" class="tool-card-title">
+              Compare JSON
+            </h2>
+            <p class="tool-card-description">
+              Compare two JSON values and inspect added, removed and changed
+              paths.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="compareA">JSON A</label>
+                <textarea
+                  id="compareA"
+                  class="json-editor"
+                  spellcheck="false"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="compareB">JSON B</label>
+                <textarea
+                  id="compareB"
+                  class="json-editor"
+                  spellcheck="false"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid json-actions">
+              <button id="compareBtn" class="btn" type="button">
+                Compare JSON
+              </button>
+              <button
+                id="compareSampleBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Load Sample
+              </button>
+              <button
+                id="clearCompareBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Clear
+              </button>
+            </div>
+
+            <div id="compareResult" class="json-diff-list" hidden></div>
+            <div
+              id="compareMessage"
+              class="message"
+              role="status"
+              aria-live="polite"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          The XAVERT JSON Toolkit provides browser-based formatting, validation,
+          minification, escaping and structural comparison.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Format and minify valid JSON.</li>
+          <li>Validate syntax and report parsing errors.</li>
+          <li>Load local JSON files without uploading them.</li>
+          <li>Escape and unescape JSON string fragments.</li>
+          <li>Compare nested objects and arrays by path.</li>
+          <li>Copy or download generated results.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your JSON data is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

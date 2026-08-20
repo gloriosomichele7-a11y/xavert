@@ -1,1598 +1,1064 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | Free Online Developer, PDF, Image, SEO & Data Conversion Tools</title>
-<meta name="description" content="Free online browser-based tools for developers, PDF editing, image processing, SEO, JSON, QR codes, passwords, data conversion and productivity. Fast, private and no sign-up required.">
-<meta name="application-name" content="XAVERT">
-<meta name="robots" content="index, follow">
-<meta name="referrer" content="strict-origin-when-cross-origin">
-<meta name="author" content="XAVERT">
-<meta name="keywords" content="online tools, developer tools, PDF tools, image tools, JSON formatter, QR code generator, UUID generator, Base64, regex tester, SEO tools, data converter, browser tools">
-<meta name="theme-color" content="#dc2626">
-<meta name="color-scheme" content="light">
-<link rel="canonical" href="https://xavert.com/">
-<meta name="format-detection" content="telephone=no">
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@graph": [
-    {
-      "@type": "WebApplication",
-      "name": "XAVERT",
-      "url": "https://xavert.com/",
-      "description": "Free online browser-based tools for developers, PDF editing, image processing, SEO, JSON, QR codes, passwords, data conversion and productivity.",
-      "applicationCategory": "UtilitiesApplication",
-      "browserRequirements": "Requires JavaScript",
-      "inLanguage": "en",
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "USD"
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | Free Online Developer, SEO, PDF & Utility Tools</title>
+    <meta
+      name="description"
+      content="Free browser-based tools for developers, SEO, PDF, images, JSON, QR codes, data conversion and everyday productivity. Fast, private and no sign-up required."
+    />
+    <meta name="application-name" content="XAVERT" />
+    <meta name="robots" content="index, follow" />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+    <meta name="color-scheme" content="light" />
+    <link rel="canonical" href="https://xavert.com/" />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
+    />
+    <meta
+      property="og:description"
+      content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
+    />
+    <meta property="og:url" content="https://xavert.com/" />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
+    />
+    <meta
+      name="twitter:description"
+      content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta name="format-detection" content="telephone=no" />
+    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@graph": [
+          {
+            "@type": "WebApplication",
+            "name": "XAVERT",
+            "url": "https://xavert.com/",
+            "description": "Free online browser-based tools for developers, PDF editing, image processing, SEO, JSON, QR codes, passwords, data conversion and productivity.",
+            "applicationCategory": "UtilitiesApplication",
+            "browserRequirements": "Requires JavaScript",
+            "inLanguage": "en",
+            "operatingSystem": "Web Browser",
+            "offers": {
+              "@type": "Offer",
+              "price": "0",
+              "priceCurrency": "USD"
+            }
+          },
+          {
+            "@type": "WebSite",
+            "name": "XAVERT",
+            "url": "https://xavert.com/",
+            "description": "Free online browser-based tools for developers, designers and everyday productivity.",
+            "inLanguage": "en"
+          }
+        ]
       }
-    },
-    {
-      "@type": "WebSite",
-      "name": "XAVERT",
-      "url": "https://xavert.com/",
-      "description": "Free online browser-based tools for developers, designers and everyday productivity.",
-      "inLanguage": "en"
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-html{
-scroll-behavior:smooth;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-}
-  
-.intro{
-text-align:center;
-padding:10px 20px 10px;
-}
-
-.intro img{
-width:420px;
-max-width:85%;
-height:auto;
-display:block;
-margin:0 auto 4px;
-}
-.intro h1{
-font-size:32px;
-line-height:1.08;
-margin:10px 0 18px;
-font-weight:800;
-letter-spacing:1px;
-}
-.intro p{
-font-size:18px;
-line-height:1.75;
-color:#4b5563;
-max-width:780px;
-margin:0 auto;
-}
-.hero-button{
-display:inline-block;
-margin-top:16px;
-background:#dc2626;
-color:white;
-text-decoration:none;
-font-weight:700;
-padding:14px 24px;
-border-radius:12px;
-box-shadow:0 10px 24px rgba(220,38,38,.18);
-transition:
-background-color .25s ease,
-color .25s ease,
-transform .25s ease,
-box-shadow .25s ease,
-border-color .25s ease;
-}
-
-.hero-button:hover{
-background:#b91c1c;
-transform:translateY(-2px);
-box-shadow:0 16px 32px rgba(220,38,38,.22);
-}
-
-.search-box{
-max-width:620px;
-margin:22px auto 0;
-}
-
-.search-box input{
-width:100%;
-padding:16px 18px;
-border:1px solid #d1d5db;
-border-radius:14px;
-font-size:15px;
-background:white;
-box-shadow:0 10px 28px rgba(0,0,0,.05);
-}
-
-.search-box input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-.search-results{
-margin-top:14px;
-font-size:14px;
-font-weight:700;
-color:#6b7280;
-min-height:20px;
-}
-  
-.services{
-padding:24px 6% 45px;
-max-width:1400px;
-margin:0 auto;
-}
-
-.tool-category{
-margin-top:28px;
-background:#ffffff;
-border:1px solid #eceff3;
-border-radius:24px;
-padding:34px;
-box-shadow:0 10px 28px rgba(15,23,42,.04);
-}
-
-.tool-category:first-child{
-margin-top:0;
-}
-
-.category-title{
-font-size:34px;
-font-weight:800;
-margin-bottom:12px;
-letter-spacing:-1px;
-line-height:1.15;
-color:#111827;
-cursor:pointer;
-display:inline-block;
-transition:.25s;
-}
-
-.category-title:hover{
-color:#dc2626;
-transform:translateX(4px);
-}
-.category-description{
-font-size:15px;
-color:#6b7280;
-margin-bottom:18px;
-max-width:760px;
-line-height:1.6;
-}
-.category-footer{
-margin-top:26px;
-text-align:center;
-}
-
-.category-button{
-background:#ffffff;
-border:1px solid #dc2626;
-color:#dc2626;
-padding:12px 28px;
-border-radius:999px;
-font-size:14px;
-font-weight:700;
-cursor:pointer;
-box-shadow:0 8px 20px rgba(220,38,38,.08);
-transition:
-background-color .25s ease,
-color .25s ease,
-transform .25s ease,
-box-shadow .25s ease;
-}
-
-.category-button:hover{
-background:#dc2626;
-color:#ffffff;
-transform:translateY(-2px);
-}
-.grid{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:22px;
-align-items:stretch;
-}
-.card-link{
-text-decoration:none;
-color:inherit;
-display:block;
-height:100%;
-}
-
-.card{
-background:#ffffff;
-border:1px solid #eceff3;
-border-top:4px solid transparent;
-border-radius:20px;
-padding:22px;
-height:100%;
-display:flex;
-flex-direction:column;
-box-shadow:0 8px 24px rgba(15,23,42,.05);
-transition:
-transform .25s ease,
-box-shadow .25s ease,
-border-color .25s ease;
-}
-
-.card-link:hover .card,
-.card:hover{
-border-color:#dc2626;
-border-top-color:#dc2626;
-transform:translateY(-6px);
-box-shadow:0 20px 40px rgba(15,23,42,.10);
-}
-.card h3{
-font-size:21px;
-font-weight:800;
-line-height:1.3;
-letter-spacing:-0.4px;
-margin-bottom:14px;
-padding-bottom:10px;
-position:relative;
-min-height:56px;
-display:flex;
-align-items:flex-end;
-}
-
-.card h3::after{
-content:"";
-position:absolute;
-left:0;
-bottom:0;
-width:48px;
-height:3px;
-background:#dc2626;
-border-radius:999px;
-}
-
-.card p{
-font-size:14px;
-color:#4b5563;
-margin-bottom:18px;
-line-height:1.65;
-min-height:76px;
-flex-shrink:0;
-}
-.card h4{
-font-size:12px;
-margin:16px 0 7px;
-color:#dc2626;
-text-transform:uppercase;
-letter-spacing:.1px;
-font-weight:800;
-}
-
-.card h4:last-of-type{
-margin-top:auto;
-padding-top:18px;
-}
-
-.card ul{
-list-style:none;
-padding-left:0;
-margin-bottom:18px;
-}
-
-.card li{
-position:relative;
-padding-left:18px;
-margin:7px 0;
-font-size:13.5px;
-color:#374151;
-line-height:1.6;
-}
-
-.card li::before{
-content:"•";
-position:absolute;
-left:0;
-top:0;
-color:#dc2626;
-font-weight:700;
-}
-
-.footer{
-background:#ffffff;
-border-top:1px solid #e5e7eb;
-padding:24px 20px;
-margin-top:30px;
-}
-
-.footer-bottom{
-text-align:center;
-font-size:13px;
-color:#6b7280;
-}
-
-@media(max-width:1300px){
-.grid{
-grid-template-columns:repeat(3,1fr);
-}
-}
-
-@media(max-width:980px){
-.grid{
-grid-template-columns:repeat(2,1fr);
-}
-}
-  
-@media(max-width:768px){
-.faq{
-padding:8px 20px 38px;
-}
-
-.faq h2{
-font-size:26px;
-}
-
-.intro h1{
-font-size:28px;
-line-height:1.15;
-}
-
-.intro img{
-width:180px;
-}
-
-.services{
-padding:14px 20px 38px;
-}
-.tool-category{
-padding:22px;
-border-radius:18px;
-}
-.grid{
-grid-template-columns:1fr;
-}
-}
-
-</style>
-</head>
-
-<body>
-  
-
-<section class="intro">
-
-<img
-src="logo-hero.svg"
-alt="XAVERT Free Online Tools"
-width="420"
-height="420"
-fetchpriority="high"
-loading="eager"
-decoding="async">
-
-<h1>Free Online Tools for Developers, Designers and Everyday Productivity</h1>
-
-<p>
-Explore a complete collection of free online tools for development, SEO, documents, images, design, data conversion, security and everyday productivity. XAVERT brings practical digital utilities together in one clear, fast and easy-to-use platform, with no installation or account required.
-</p>
-
-<div class="search-box">
-<input
-type="search"
-id="toolSearch"
-placeholder="Search tools: PDF, JSON, QR, colors, SEO..."
-autocomplete="off"
-spellcheck="false"
-aria-label="Search XAVERT tools">
-</div>
-<div id="searchResults" class="search-results"></div>
-
-<a href="#services" class="hero-button" aria-label="Browse all XAVERT online tools">
-Explore Tools
-</a>
-</section>
-
-<section class="services" id="services">
-
-<div class="tool-category">
-<h2 class="category-title" id="developer-tools">
-Developer Tools
-</h2>
-<p class="category-description">
-Build, format, test and manage code-related workflows with practical tools for developers, SEO tasks, structured data and web projects.
-</p>
-
-<div class="grid">
-
-<a href="tools/json-toolkit.html" class="card-link">
-<div class="card">
-<h3>JSON Toolkit Pro</h3>
-<p>Format, validate, minify, escape, unescape and compare JSON data directly in your browser.</p>
-<h4>Main Features</h4>
-<ul>
-<li>JSON Formatter</li>
-<li>JSON Minifier</li>
-<li>JSON Validator</li>
-<li>JSON Escape / Unescape</li>
-<li>JSON Compare</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Upload JSON Files</li>
-<li>Copy & Download Results</li>
-<li>JSON Statistics</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/xml-json-converter.html" class="card-link">
-<div class="card">
-
-<h3>XML ↔ JSON Converter</h3>
-
-<p>Convert XML to JSON and JSON to XML instantly with validation and browser-side processing.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>XML → JSON</li>
-<li>JSON → XML</li>
-<li>Live Validation</li>
-<li>Pretty Format</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download Output</li>
-<li>Instant Conversion</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-  
-<a href="tools/xml-formatter-validator.html" class="card-link">
-<div class="card">
-<h3>XML Formatter & Validator</h3>
-<p>Format, minify and validate XML code directly in your browser with clear error detection.</p>
-<h4>Main Features</h4>
-<ul>
-<li>XML Formatter</li>
-<li>XML Minifier</li>
-<li>XML Validator</li>
-<li>Syntax Error Detection</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download XML</li>
-<li>Line & Character Count</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/yaml-json-converter.html" class="card-link">
-<div class="card">
-
-<h3>YAML ↔ JSON Converter</h3>
-
-<p>Convert YAML and JSON in both directions with validation, formatting and browser-side processing.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>YAML → JSON</li>
-<li>JSON → YAML</li>
-<li>Formatter</li>
-<li>Validator</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download File</li>
-<li>Character Statistics</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-  
-<a href="tools/markdown-editor.html" class="card-link">
-<div class="card">
-
-<h3>Markdown Editor</h3>
-
-<p>Create Markdown content with live preview, HTML conversion and export options.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Live Preview</li>
-<li>Markdown to HTML</li>
-<li>HTML Export</li>
-<li>Word Counter</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Copy Markdown</li>
-<li>Copy HTML</li>
-<li>Download .md</li>
-<li>Download .html</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/jwt-decoder.html" class="card-link">
-<div class="card">
-
-<h3>JWT Decoder</h3>
-
-<p>Decode, inspect and validate JSON Web Tokens directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>JWT Decode</li>
-<li>Header Viewer</li>
-<li>Payload Viewer</li>
-<li>Expiration Check</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>JSON Formatting</li>
-<li>Copy Header</li>
-<li>Copy Payload</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/jwt-generator.html" class="card-link">
-<div class="card">
-
-<h3>JWT Generator</h3>
-
-<p>Create secure JSON Web Tokens with custom headers, payloads and secrets directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>HS256 Token Generation</li>
-<li>Header Editor</li>
-<li>Payload Editor</li>
-<li>Secret Key</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Live JWT Preview</li>
-<li>Copy Token</li>
-<li>Download JWT</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-<a href="tools/meta-tag-generator.html" class="card-link">
-<div class="card">
-
-<h3>Meta Tag Generator</h3>
-
-<p>Generate clean SEO metadata, canonical tags and social sharing snippets for web pages.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Meta Title</li>
-<li>Meta Description</li>
-<li>Meta Keywords</li>
-<li>Canonical URL</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Open Graph Tags</li>
-<li>Twitter Cards</li>
-<li>Copy HTML</li>
-<li>Instant Preview</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/open-graph-generator.html" class="card-link">
-<div class="card">
-
-<h3>Open Graph Generator</h3>
-
-<p>Build Open Graph and Twitter Card tags with a clear preview for social platforms.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>OG Title</li>
-<li>OG Description</li>
-<li>OG URL</li>
-<li>OG Image</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Facebook Preview</li>
-<li>LinkedIn Preview</li>
-<li>Twitter Card Tags</li>
-<li>Copy HTML</li>
-</ul>
-
-</div>
-</a>
-  
-<a href="tools/robots-generator.html" class="card-link">
-<div class="card">
-
-<h3>Robots.txt Generator</h3>
-
-<p>Control crawler access with simple robots.txt rules for search engines and site indexing.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>User-Agent Rules</li>
-<li>Allow & Disallow Paths</li>
-<li>Crawl Delay</li>
-<li>Sitemap Reference</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Robots.txt</li>
-<li>Download File</li>
-<li>SEO Friendly</li>
-<li>Instant Generation</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/sitemap-generator.html" class="card-link">
-<div class="card">
-
-<h3>Sitemap Generator</h3>
-
-<p>Prepare XML sitemaps with URL lists, priority settings and update frequency options.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>XML Sitemap</li>
-<li>URL Management</li>
-<li>Priority Settings</li>
-<li>Change Frequency</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy XML</li>
-<li>Download Sitemap</li>
-<li>SEO Friendly</li>
-<li>Instant Generation</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/lorem-ipsum-generator.html" class="card-link">
-<div class="card">
-
-<h3>Lorem Ipsum Generator</h3>
-
-<p>Create placeholder copy for layouts, mockups, landing pages and interface prototypes.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Paragraphs</li>
-<li>Sentences</li>
-<li>Words</li>
-<li>Custom Length</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Text</li>
-<li>Download TXT</li>
-<li>Instant Generation</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/css-minifier.html" class="card-link">
-<div class="card">
-
-<h3>CSS Minifier & Beautifier</h3>
-
-<p>Clean, compress and reformat CSS code for lighter files and better readability.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>CSS Minifier</li>
-<li>CSS Beautifier</li>
-<li>Code Formatter</li>
-<li>Whitespace Cleanup</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download CSS</li>
-<li>Instant Processing</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
- <a href="tools/html-minifier.html" class="card-link">
-<div class="card">
-
-<h3>HTML Minifier</h3>
-
-<p>Optimize HTML markup by reducing whitespace or improving code structure.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>HTML Minifier</li>
-<li>HTML Beautifier</li>
-<li>Whitespace Cleanup</li>
-<li>Code Formatting</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download HTML</li>
-<li>Compression Statistics</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/sql-formatter.html" class="card-link">
-<div class="card">
-
-<h3>SQL Formatter</h3>
-
-<p>Turn dense SQL queries into cleaner, easier-to-read statements for debugging and review.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>SQL Formatter</li>
-<li>Query Beautifier</li>
-<li>Keyword Formatting</li>
-<li>Readability Enhancement</li>
-</ul>
-
-
-<h4>Highlights</h4>  
-<ul>
-<li>Copy Result</li>
-<li>Download SQL</li>
-<li>Instant Formatting</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/sql-minifier.html" class="card-link">
-<div class="card">
-
-<h3>SQL Minifier</h3>
-
-<p>Minify SQL queries by removing comments, extra spaces and unnecessary line breaks directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>SQL Minifier</li>
-<li>Comment Removal</li>
-<li>Whitespace Cleanup</li>
-<li>Query Compression</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download SQL</li>
-<li>Compression Stats</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-  
-<a href="tools/cron-expression-generator.html" class="card-link">
-<div class="card">
-
-<h3>Cron Expression Generator</h3>
-
-<p>Build cron schedules, preview timing rules and copy expressions for server automation.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Cron Builder</li>
-<li>Schedule Generator</li>
-<li>Cron Preview</li>
-<li>Expression Helper</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Expression</li>
-<li>Human Readable Output</li>
-<li>Instant Generation</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/htaccess-generator.html" class="card-link">
-<div class="card">
-
-<h3>HTACCESS Generator</h3>
-<p>Generate ready-to-use .htaccess rules for redirects, HTTPS, caching and website security.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>301 Redirects</li>
-<li>Force HTTPS</li>
-<li>WWW Redirects</li>
-<li>Security Rules</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download .htaccess</li>
-<li>Instant Generation</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-
-<a href="tools/env-generator.html" class="card-link">
-<div class="card">
-
-<h3>.ENV Generator</h3>
-
-<p>Create structured environment configuration files for applications, APIs and databases.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>APP Configuration</li>
-<li>Database Variables</li>
-<li>API Keys Structure</li>
-<li>Environment Templates</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download .env</li>
-<li>Instant Generation</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>  
-  
-<a href="tools/regex-tester.html" class="card-link">
-<div class="card">
-<h3>Regex Tester</h3>
-<p>Test regular expressions with live matching, highlighting and pattern validation.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Live Regex Testing</li>
-<li>Match Highlighting</li>
-<li>Flags Support</li>
-<li>Match Count</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Copy Matches</li>
-<li>Clear Inputs</li>
-<li>Browser-Side Processing</li>
-<li>No Data Uploads</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/base64-toolkit.html" class="card-link">
-<div class="card">
-<h3>Base64 Toolkit</h3>
-<p>Encode and decode Base64 text instantly with UTF-8 support and local processing.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Base64 Encode</li>
-<li>Base64 Decode</li>
-<li>Copy Result</li>
-<li>Download Result</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Instant Conversion</li>
-<li>UTF-8 Support</li>
-<li>Browser-Side Processing</li>
-<li>No Data Uploads</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/html-entity-encoder-decoder.html" class="card-link">
-<div class="card">
-<h3>HTML Entity Encoder / Decoder</h3>
-<p>Encode and decode HTML entities for safe web content, symbols and special characters.</p>
-<h4>Main Features</h4>
-<ul>
-<li>HTML Entity Encode</li>
-<li>HTML Entity Decode</li>
-<li>Special Character Support</li>
-<li>Named & Numeric Entities</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Copy Result</li>
-<li>Download Result</li>
-<li>Live Character Count</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-  
-<a href="tools/uuid-generator.html" class="card-link">
-<div class="card">
-<h3>UUID Generator</h3>
-<p>Generate UUID v4 and UUID v7 identifiers for applications, APIs and software development.</p>
-<h4>Main Features</h4>
-<ul>
-<li>UUID v4 Generator</li>
-<li>UUID v7 Generator</li>
-<li>Bulk UUID Generation</li>
-<li>Copy All UUIDs</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Custom Quantity</li>
-<li>TXT / CSV / JSON Export</li>
-<li>Clear Results</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/file-hash-checker.html" class="card-link">
-<div class="card">
-<h3>File Hash Checker</h3>
-<p>Calculate and verify SHA-256, SHA-384 and SHA-512 hashes to check file integrity directly in your browser.</p>
-<h4>Main Features</h4>
-<ul>
-<li>SHA-256</li>
-<li>SHA-384</li>
-<li>SHA-512</li>
-<li>Checksum Verification</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Drag & Drop Files</li>
-<li>Match / No Match Check</li>
-<li>Copy Results</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/hash-generator.html" class="card-link">
-<div class="card">
-<h3>Hash Generator</h3>
-<p>Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from text directly in your browser.</p>
-<h4>Main Features</h4>
-<ul>
-<li>MD5 Hash</li>
-<li>SHA-1 Hash</li>
-<li>SHA-256 Hash</li>
-<li>SHA-384 Hash</li>
-<li>SHA-512 Hash</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Text Hashing</li>
-<li>Copy Results</li>
-<li>Download Results</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-  
-<a href="tools/diff-checker.html" class="card-link">
-<div class="card">
-<h3>Text Diff Checker</h3>
-<p>Compare two texts and instantly identify line-by-line differences directly in your browser.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Text Comparison</li>
-<li>Difference Detection</li>
-<li>Character Count</li>
-<li>Line Comparison</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Highlight Differences</li>
-<li>Copy Result</li>
-<li>Download Result</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/url-toolkit.html" class="card-link">
-<div class="card">
-<h3>URL Toolkit</h3>
-<p>Encode, decode, inspect and build URLs, query strings and UTM parameters with browser-based tools.</p>
-<h4>Main Features</h4>
-<ul>
-<li>URL Encoder</li>
-<li>URL Decoder</li>
-<li>URL Parser</li>
-<li>UTM Builder</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Query Parameter Reader</li>
-<li>Copy Results</li>
-<li>Download Results</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/http-header-analyzer.html" class="card-link">
-<div class="card">
-
-<h3>HTTP Header Analyzer</h3>
-
-<p>Analyze HTTP response headers, security policies, caching rules and server information directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Header Parser</li>
-<li>Security Header Check</li>
-<li>Cache Header Analysis</li>
-<li>Server Info Detection</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Security Score</li>
-<li>Missing Header Warnings</li>
-<li>Copy Report</li>
-<li>Browser-Side Processing</li>
-</ul>
-</div>
-</a>
-
- <a href="tools/user-agent-parser.html" class="card-link">
-<div class="card">
-
-<h3>User-Agent Parser</h3>
-
-<p>Analyze User-Agent strings to detect browser, operating system, rendering engine, device type and bots directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Browser Detection</li>
-<li>OS Detection</li>
-<li>Device Detection</li>
-<li>Bot Detection</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Rendering Engine</li>
-<li>Version Detection</li>
-<li>Copy Report</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a> 
- 
-</div>
-
-</div>
-
-<div class="tool-category">
-<h2 class="category-title" id="document-tools">
-Document Tools
-</h2>
-<p class="category-description">
-Organize, convert and prepare documents with PDF utilities designed for everyday file management and professional workflows.
-</p>
-
-<div class="grid">
-
-<a href="tools/pdf-toolkit.html" class="card-link">
-<div class="card">
-<h3>PDF Toolkit</h3>
-<p>Edit, convert, compress, merge, split and secure PDF documents with fast browser-based tools.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Merge & Split PDF</li>
-<li>Compress & Rotate PDF</li>
-<li>Page Management</li>
-<li>Watermark & Numbering</li>
-<li>Sign PDF</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>PDF → JPG / PNG</li>
-<li>Images → PDF</li>
-</ul>
-</div>
-</a>
-
-</div>
-
-</div>
-
-<div class="tool-category">
-<h2 class="category-title" id="image-tools">
-Image & Design Tools
-</h2>
-<p class="category-description">
-Create, optimize and analyze visual assets with image, color and palette tools for design, content and web projects.
-</p>
-
-<div class="grid">
-
-<a href="tools/image-toolkit.html" class="card-link">
-<div class="card">
-<h3>Image Toolkit</h3>
-<p>Resize, compress, convert, crop and optimize images directly in your browser without uploading files.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Resize & Compress</li>
-<li>JPG / PNG / WEBP Conversion</li>
-<li>Rotate & Flip</li>
-<li>Image to PDF</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/color-toolkit.html" class="card-link">
-<div class="card">
-<h3>Color Toolkit</h3>
-<p>Convert color formats, create palettes and check accessibility with professional color tools.</p>
-<h4>Main Features</h4>
-<ul>
-<li>HEX / RGB / HSL Converter</li>
-<li>Random Color Generator</li>
-<li>Contrast Checker</li>
-<li>Palette Generator</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Color Preview</li>
-<li>Copy Color Values</li>
-<li>Saved Palettes</li>
-<li>Download Palette</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/color-palette-extractor.html" class="card-link">
-<div class="card">
-
-<h3>Color Palette Extractor</h3>
-
-<p>Extract dominant colors from images and generate reusable palettes for branding, design and web projects.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Image Color Extraction</li>
-<li>Dominant Colors</li>
-<li>HEX & RGB Values</li>
-<li>Custom Palette Size</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Copy Colors</li>
-<li>Download Palette TXT</li>
-<li>Download Palette JSON</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>  
-
-</div>
-
-</div>
-
-<div class="tool-category">
-<h2 class="category-title" id="utility-tools">
-Utility Tools
-</h2>
-<p class="category-description">
-Handle common daily tasks faster with calculators, generators, converters and text utilities built for quick results.
-</p>
-
-<div class="grid">
-
-<a href="tools/qr-generator.html" class="card-link">
-<div class="card">
-<h3>QR Code Generator</h3>
-<p>Create QR codes for websites, Wi-Fi, contacts, events, email, SMS and more with instant browser-based generation.</p>
-<h4>Main Features</h4>
-<ul>
-<li>URL & Website QR Codes</li>
-<li>Wi-Fi QR Codes</li>
-<li>Email QR Codes</li>
-<li>Phone & SMS QR Codes</li>
-<li>Contact vCard QR Codes</li>
-<li>Event QR Codes</li>
-<li>Text QR Codes</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>PNG & PNG HD</li>
-<li>SVG Vector</li>
-<li>PDF & PDF HD</li>
-<li>Copy QR Image</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/barcode-generator.html" class="card-link">
-<div class="card">
-
-<h3>Barcode Generator</h3>
-
-<p>Create professional barcodes for products, inventory, logistics and retail directly in your browser.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>Code 128</li>
-<li>Code 39</li>
-<li>EAN-13</li>
-<li>EAN-8</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>SVG Export</li>
-<li>PNG Download</li>
-<li>Instant Preview</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-  
-<a href="tools/date-time-toolkit.html" class="card-link">
-<div class="card">
-<h3>Date & Time Toolkit</h3>
-<p>Calculate dates, ages, countdowns, timestamps and time differences with accurate browser-based tools.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Date Difference Calculator</li>
-<li>Age Calculator</li>
-<li>Timestamp Converter</li>
-<li>Add / Subtract Days</li>
-<li>Countdown Calculator</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Copy Results</li>
-<li>Calculation History</li>
-<li>Clear History</li>
-<li>Keyboard Shortcut</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/unit-converter.html" class="card-link">
-<div class="card">
-<h3>Unit Converter</h3>
-<p>Convert length, weight, temperature, volume, area and many other units with instant calculations.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Length</li>
-<li>Weight</li>
-<li>Temperature</li>
-<li>Area</li>
-<li>Volume</li>
-<li>Speed</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Favorite Conversions</li>
-<li>Swap Units</li>
-<li>Copy Results</li>
-<li>Conversion History</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/password-toolkit.html" class="card-link">
-<div class="card">
-<h3>Password Toolkit</h3>
-<p>Generate strong passwords, secure passphrases and cryptographic hashes to improve account security.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Password Generator</li>
-<li>Password Strength Checker</li>
-<li>Passphrase Generator</li>
-<li>SHA-256 / SHA-512 Hash Generator</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Custom Password Length</li>
-<li>Password History</li>
-<li>Copy Password & Passphrase</li>
-<li>Secure Hash Generation</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/text-toolkit.html" class="card-link">
-<div class="card">
-<h3>Text Toolkit</h3>
-<p>Edit, format, clean, convert and analyze text with fast browser-based utilities for everyday work.</p>
-<h4>Main Features</h4>
-<ul>
-<li>Word & Character Counter</li>
-<li>Case Converter</li>
-<li>Text Cleanup Tools</li>
-<li>Find & Replace</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>Text to Slug</li>
-<li>URL Encode / Decode</li>
-<li>Base64 Encode / Decode</li>
-</ul>
-</div>
-</a>
-
-</div>
-
-<div class="category-footer">
-<button class="category-button" type="button">
-Show All Utility Tools
-</button>
-</div>
-
-</div>
-
-<div class="tool-category">
-<h2 class="category-title" id="data-tools">
-Data Conversion Tools
-</h2>
-<p class="category-description">
-Transform CSV, XLSX, JSON and XML files into cleaner, more useful formats for analysis, development and reporting.
-</p>
-
-<div class="grid">
-
-<a href="tools/data-converter.html" class="card-link">
-<div class="card">
-<h3>Data Converter</h3>
-<p>Convert CSV, XLSX, JSON and XML files quickly with secure browser-based processing and no uploads.</p>
-<h4>Main Features</h4>
-<ul>
-<li>CSV ↔ XLSX</li>
-<li>XLSX ↔ JSON</li>
-<li>CSV ↔ JSON</li>
-<li>JSON ↔ XML</li>
-</ul>
-<h4>Highlights</h4>
-<ul>
-<li>JSON Tools</li>
-<li>XML Tools</li>
-<li>Copy Results</li>
-<li>Download Results</li>
-</ul>
-</div>
-</a>
-
-<a href="tools/csv-viewer-editor.html" class="card-link">
-<div class="card">
-
-<h3>CSV Viewer & Editor</h3>
-
-<p>Open, view, search and edit CSV data directly in your browser with export options.</p>
-
-<h4>Main Features</h4>
-<ul>
-<li>CSV File Viewer</li>
-<li>Editable Table</li>
-<li>Search Rows</li>
-<li>Sort Columns</li>
-</ul>
-
-<h4>Highlights</h4>
-<ul>
-<li>Add & Delete Rows</li>
-<li>Download CSV</li>
-<li>Copy Table</li>
-<li>Browser-Side Processing</li>
-</ul>
-
-</div>
-</a>
-  
-</div>
-
-</div>
-
-</section>
-  
-<footer class="footer" id="footer">
-
-<div class="footer-bottom">
-© 2026 XAVERT. All rights reserved.
-</div>
-
-</footer>
-<script>
-const toolSearch=document.getElementById("toolSearch");
-const searchResults=document.getElementById("searchResults");
-
-if(toolSearch){
-
-toolSearch.addEventListener("input",function(){
-
-const query=toolSearch.value.toLowerCase().trim();
-let totalResults=0;
-
-document.querySelectorAll(".tool-category").forEach(function(cat){
-cat.classList.remove("focused");
-});
-
-document.querySelectorAll(".tool-category").forEach(function(category){
-
-let hasResults=false;
-const categoryButton=category.querySelector(".category-footer");
-
-category.querySelectorAll(".card-link").forEach(function(cardLink){
-
-const text=cardLink.textContent.toLowerCase();
-const match=text.includes(query);
-
-cardLink.style.display=match ? "block" : "none";
-
-if(match){
-hasResults=true;
-totalResults++;
-}
-
-});
-
-category.style.display=hasResults ? "block" : "none";
-
-if(query!=="" && hasResults && !document.querySelector(".tool-category.focused")){
-category.classList.add("focused");
-category.scrollIntoView({
-behavior:"smooth",
-block:"center"
-});
-}
-
-if(categoryButton){
-categoryButton.style.display=query ? "none" : "block";
-}
-
-});
-
-if(!searchResults){
-return;
-}
-
-if(query===""){
-searchResults.textContent="";
-
-document.querySelectorAll(".tool-category").forEach(function(category){
-
-const cards=category.querySelectorAll(".card-link");
-const button=category.querySelector(".category-button");
-
-category.classList.remove("expanded");
-
-cards.forEach(function(card,index){
-
-if(button && index>=4){
-card.style.display="none";
-}else{
-card.style.display="block";
-}
-
-});
-
-if(button){
-button.textContent=button.textContent.includes("Show Less") ? "Show All " + category.querySelector(".category-title").textContent.trim() : button.textContent;
-}
-
-});
-
-}else{
-searchResults.textContent=totalResults + " tool" + (totalResults!==1 ? "s" : "") + " found";
-}
-});
-
-}
-document.querySelectorAll(".tool-category").forEach(function(category){
-
-const cards=category.querySelectorAll(".card-link");
-const button=category.querySelector(".category-button");
-
-if(!button || cards.length<=4){
-if(button){
-button.style.display="none";
-}
-return;
-}
-
-cards.forEach(function(card,index){
-if(index>=4){
-card.style.display="none";
-}
-});
-
-const originalButtonText=button.textContent.trim();
-
-button.addEventListener("click",function(){
-
-const isExpanded=category.classList.toggle("expanded");
-
-cards.forEach(function(card,index){
-if(index>=4){
-card.style.display=isExpanded ? "block" : "none";
-}
-});
-
-button.textContent=isExpanded ? "Show Less" : originalButtonText;
-
-});
-
-});
-document.querySelectorAll(".category-title").forEach(function(title){
-
-title.addEventListener("click",function(){
-
-this.scrollIntoView({
-behavior:"smooth",
-block:"start"
-});
-
-});
-
-});
-</script>
-</body>
+    </script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: #f7f8fb;
+        color: #111827;
+      }
+
+      .intro {
+        text-align: center;
+        padding: 18px 20px 10px;
+      }
+
+      .intro img {
+        width: 150px;
+        max-width: 48%;
+        height: auto;
+        display: block;
+        margin: 0 auto 2px;
+      }
+
+      .intro h1 {
+        max-width: 760px;
+        margin: 0 auto 8px;
+        font-size: 30px;
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -0.7px;
+        color: #111827;
+      }
+
+      .intro p {
+        max-width: 660px;
+        margin: 0 auto;
+        color: #64748b;
+        font-size: 15.5px;
+        line-height: 1.6;
+        font-weight: 500;
+      }
+
+      .trust-row {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 7px;
+        margin: 12px auto 0;
+        color: #64748b;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+
+      .trust-row span {
+        display: inline;
+      }
+
+      .trust-row span[aria-hidden="true"] {
+        color: #dc2626;
+      }
+
+      .card-link:focus-visible {
+        outline: 3px solid rgba(220, 38, 38, 0.2);
+        outline-offset: 3px;
+      }
+
+      .search-box {
+        position: relative;
+        max-width: 720px;
+        margin: 20px auto 0;
+      }
+
+      .search-box::before {
+        content: "";
+        position: absolute;
+        left: 20px;
+        top: 50%;
+        width: 18px;
+        height: 18px;
+        border: 2px solid #64748b;
+        border-radius: 50%;
+        transform: translateY(-58%);
+        pointer-events: none;
+        transition:
+          border-color 0.2s ease,
+          opacity 0.2s ease;
+      }
+
+      .search-box::after {
+        content: "";
+        position: absolute;
+        left: 36px;
+        top: calc(50% + 7px);
+        width: 7px;
+        height: 2px;
+        border-radius: 999px;
+        background: #64748b;
+        transform: rotate(45deg);
+        transform-origin: left center;
+        pointer-events: none;
+        transition:
+          background 0.2s ease,
+          opacity 0.2s ease;
+      }
+
+      .search-box:focus-within::before {
+        border-color: #dc2626;
+      }
+
+      .search-box:focus-within::after {
+        background: #dc2626;
+      }
+
+      .search-box input {
+        width: 100%;
+        min-height: 58px;
+        padding: 0 22px 0 54px;
+        border: 1px solid #d7dde5;
+        border-radius: 18px;
+        font: inherit;
+        font-size: 15px;
+        font-weight: 500;
+        color: #111827;
+        background: rgba(255, 255, 255, 0.96);
+        box-shadow:
+          0 1px 2px rgba(15, 23, 42, 0.03),
+          0 10px 30px rgba(15, 23, 42, 0.055);
+        transition:
+          border-color 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+        -webkit-appearance: none;
+        appearance: none;
+      }
+
+      .search-box input::placeholder {
+        color: #8b95a5;
+        font-weight: 450;
+      }
+
+      .search-box input:focus {
+        outline: none;
+        border-color: rgba(220, 38, 38, 0.72);
+        box-shadow:
+          0 0 0 4px rgba(220, 38, 38, 0.08),
+          0 14px 36px rgba(15, 23, 42, 0.08);
+      }
+
+      .search-box input::-webkit-search-cancel-button {
+        cursor: pointer;
+      }
+
+      .search-results {
+        margin-top: 9px;
+        min-height: 18px;
+        color: #64748b;
+        font-size: 12.5px;
+        font-weight: 650;
+        letter-spacing: 0.01em;
+      }
+
+      .services {
+        max-width: 1280px;
+        margin: 0 auto;
+        padding: 18px 4% 48px;
+      }
+
+      .tool-category {
+        margin-top: 34px;
+        padding: 30px 0 4px;
+        border-top: 1px solid #e5e7eb;
+      }
+
+      .tool-category:first-child {
+        margin-top: 0;
+        padding-top: 10px;
+        border-top: 0;
+      }
+
+      .category-title {
+        margin-bottom: 6px;
+        color: #111827;
+        font-size: 26px;
+        font-weight: 800;
+        line-height: 1.2;
+        letter-spacing: -0.55px;
+      }
+
+      .category-description {
+        max-width: 720px;
+        margin-bottom: 16px;
+        color: #64748b;
+        font-size: 14px;
+        line-height: 1.55;
+      }
+
+      .category-footer {
+        margin-top: 18px;
+        text-align: center;
+      }
+
+      .category-button {
+        padding: 9px 18px;
+        border: 1px solid #d9dee6;
+        border-radius: 999px;
+        background: #ffffff;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .category-button:hover {
+        border-color: #dc2626;
+        background: #fff7f7;
+        color: #b91c1c;
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+        align-items: stretch;
+      }
+
+      .card-link {
+        display: block;
+        height: 100%;
+        border-radius: 14px;
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .card {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        min-height: 154px;
+        height: 100%;
+        padding: 18px 18px 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #ffffff;
+        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+        transition:
+          transform 0.2s ease,
+          box-shadow 0.2s ease,
+          border-color 0.2s ease;
+      }
+
+      .card-link:hover .card,
+      .card:hover {
+        border-color: #f0b4b4;
+        transform: translateY(-3px);
+        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.075);
+      }
+
+      .card h3 {
+        margin: 0 0 8px;
+        color: #111827;
+        font-size: 17px;
+        font-weight: 800;
+        line-height: 1.3;
+        letter-spacing: -0.25px;
+      }
+
+      .card p {
+        display: -webkit-box;
+        margin: 0 0 16px;
+        overflow: hidden;
+        color: #64748b;
+        font-size: 13.5px;
+        line-height: 1.55;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 3;
+      }
+
+      .card::after {
+        content: "Open tool  →";
+        margin-top: auto;
+        color: #dc2626;
+        font-size: 12.5px;
+        font-weight: 800;
+        letter-spacing: 0.05px;
+      }
+
+      .footer {
+        background: #ffffff;
+        border-top: 1px solid #e5e7eb;
+        padding: 24px 20px;
+        margin-top: 30px;
+      }
+
+      .footer-bottom {
+        text-align: center;
+        font-size: 13px;
+        color: #6b7280;
+      }
+
+      @media (max-width: 1180px) {
+        .grid {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 860px) {
+        .grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 640px) {
+        .intro {
+          padding: 12px 16px 8px;
+        }
+
+        .intro img {
+          width: 104px;
+          max-width: 42%;
+        }
+
+        .intro h1 {
+          max-width: 94%;
+          margin-bottom: 7px;
+          font-size: 23px;
+          line-height: 1.18;
+          letter-spacing: -0.35px;
+        }
+
+        .intro p {
+          max-width: 94%;
+          font-size: 14px;
+          line-height: 1.5;
+        }
+
+        .trust-row {
+          gap: 6px;
+          margin-top: 11px;
+        }
+
+        .trust-row span {
+          font-size: 11.5px;
+        }
+
+        .search-box {
+          margin-top: 16px;
+        }
+
+        .search-box::before {
+          left: 17px;
+          width: 16px;
+          height: 16px;
+        }
+
+        .search-box::after {
+          left: 31px;
+          top: calc(50% + 6px);
+          width: 6px;
+        }
+
+        .search-box input {
+          min-height: 52px;
+          padding: 0 16px 0 47px;
+          border-radius: 15px;
+          font-size: 14px;
+        }
+
+        .services {
+          padding: 8px 16px 34px;
+        }
+
+        .tool-category {
+          margin-top: 26px;
+          padding-top: 24px;
+        }
+
+        .tool-category:first-child {
+          padding-top: 8px;
+        }
+
+        .category-title {
+          font-size: 22px;
+        }
+
+        .category-description {
+          margin-bottom: 13px;
+          font-size: 13.5px;
+        }
+
+        .grid {
+          grid-template-columns: 1fr;
+          gap: 10px;
+        }
+
+        .card {
+          min-height: 132px;
+          padding: 16px;
+        }
+
+        .card h3 {
+          font-size: 16.5px;
+        }
+
+        .card p {
+          margin-bottom: 12px;
+          -webkit-line-clamp: 2;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <section class="intro">
+      <img
+        src="logo-hero.svg"
+        alt="XAVERT Free Online Tools"
+        width="150"
+        height="150"
+        fetchpriority="high"
+        loading="eager"
+        decoding="async"
+      />
+
+      <h1>Digital Utility Ecosystem</h1>
+
+      <p>
+        A growing collection of fast, practical browser tools for developers,
+        creators and everyday tasks, built to keep your workflow simple and your
+        data private.
+      </p>
+
+      <div class="trust-row" aria-label="XAVERT advantages">
+        <span>Browser-based</span>
+        <span aria-hidden="true">·</span>
+        <span>Privacy-first</span>
+        <span aria-hidden="true">·</span>
+        <span>No sign-up</span>
+      </div>
+
+      <div class="search-box">
+        <input
+          type="search"
+          id="toolSearch"
+          placeholder="Search tools, formats or tasks..."
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search XAVERT tools"
+        />
+      </div>
+      <div
+        id="searchResults"
+        class="search-results"
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      ></div>
+    </section>
+
+    <section class="services" id="services">
+      <div class="tool-category">
+        <h2 class="category-title" id="developer-tools">Developer Tools</h2>
+        <p class="category-description">
+          Build, format, test and manage code-related workflows with practical
+          tools for developers, SEO tasks, structured data and web projects.
+        </p>
+
+        <div class="grid">
+          <a href="tools/json-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>JSON Toolkit Pro</h3>
+              <p>
+                Format, validate, minify, escape, unescape and compare JSON data
+                directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/xml-json-converter.html" class="card-link">
+            <div class="card">
+              <h3>XML ↔ JSON Converter</h3>
+
+              <p>
+                Convert XML to JSON and JSON to XML instantly with validation
+                and browser-side processing.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/xml-formatter-validator.html" class="card-link">
+            <div class="card">
+              <h3>XML Formatter & Validator</h3>
+              <p>
+                Format, minify and validate XML code directly in your browser
+                with clear error detection.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/yaml-json-converter.html" class="card-link">
+            <div class="card">
+              <h3>YAML ↔ JSON Converter</h3>
+
+              <p>
+                Convert YAML and JSON in both directions with validation,
+                formatting and browser-side processing.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/markdown-editor.html" class="card-link">
+            <div class="card">
+              <h3>Markdown Editor</h3>
+
+              <p>
+                Create Markdown content with live preview, HTML conversion and
+                export options.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/jwt-decoder.html" class="card-link">
+            <div class="card">
+              <h3>JWT Decoder</h3>
+
+              <p>
+                Decode, inspect and validate JSON Web Tokens directly in your
+                browser.
+              </p>
+            </div>
+          </a>
+          <a href="tools/jwt-generator.html" class="card-link">
+            <div class="card">
+              <h3>JWT Generator</h3>
+
+              <p>
+                Create secure JSON Web Tokens with custom headers, payloads and
+                secrets directly in your browser.
+              </p>
+            </div>
+          </a>
+          <a href="tools/meta-tag-generator.html" class="card-link">
+            <div class="card">
+              <h3>Meta Tag Generator</h3>
+
+              <p>
+                Generate clean SEO metadata, canonical tags and social sharing
+                snippets for web pages.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/open-graph-generator.html" class="card-link">
+            <div class="card">
+              <h3>Open Graph Generator</h3>
+
+              <p>
+                Build Open Graph and Twitter Card tags with a clear preview for
+                social platforms.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/robots-generator.html" class="card-link">
+            <div class="card">
+              <h3>Robots.txt Generator</h3>
+
+              <p>
+                Control crawler access with simple robots.txt rules for search
+                engines and site indexing.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/sitemap-generator.html" class="card-link">
+            <div class="card">
+              <h3>Sitemap Generator</h3>
+
+              <p>
+                Prepare XML sitemaps with URL lists, priority settings and
+                update frequency options.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/lorem-ipsum-generator.html" class="card-link">
+            <div class="card">
+              <h3>Lorem Ipsum Generator</h3>
+
+              <p>
+                Create placeholder copy for layouts, mockups, landing pages and
+                interface prototypes.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/css-minifier.html" class="card-link">
+            <div class="card">
+              <h3>CSS Minifier & Beautifier</h3>
+
+              <p>
+                Clean, compress and reformat CSS code for lighter files and
+                better readability.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/html-minifier.html" class="card-link">
+            <div class="card">
+              <h3>HTML Minifier</h3>
+
+              <p>
+                Optimize HTML markup by reducing whitespace or improving code
+                structure.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/sql-formatter.html" class="card-link">
+            <div class="card">
+              <h3>SQL Formatter</h3>
+
+              <p>
+                Turn dense SQL queries into cleaner, easier-to-read statements
+                for debugging and review.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/sql-minifier.html" class="card-link">
+            <div class="card">
+              <h3>SQL Minifier</h3>
+
+              <p>
+                Minify SQL queries by removing comments, extra spaces and
+                unnecessary line breaks directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/cron-expression-generator.html" class="card-link">
+            <div class="card">
+              <h3>Cron Expression Generator</h3>
+
+              <p>
+                Build cron schedules, preview timing rules and copy expressions
+                for server automation.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/htaccess-generator.html" class="card-link">
+            <div class="card">
+              <h3>HTACCESS Generator</h3>
+              <p>
+                Generate ready-to-use .htaccess rules for redirects, HTTPS,
+                caching and website security.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/env-generator.html" class="card-link">
+            <div class="card">
+              <h3>.ENV Generator</h3>
+
+              <p>
+                Create structured environment configuration files for
+                applications, APIs and databases.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/regex-tester.html" class="card-link">
+            <div class="card">
+              <h3>Regex Tester</h3>
+              <p>
+                Test regular expressions with live matching, highlighting and
+                pattern validation.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/base64-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Base64 Toolkit</h3>
+              <p>
+                Encode and decode Base64 text instantly with UTF-8 support and
+                local processing.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/html-entity-encoder-decoder.html" class="card-link">
+            <div class="card">
+              <h3>HTML Entity Encoder / Decoder</h3>
+              <p>
+                Encode and decode HTML entities for safe web content, symbols
+                and special characters.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/uuid-generator.html" class="card-link">
+            <div class="card">
+              <h3>UUID Generator</h3>
+              <p>
+                Generate UUID v4 and UUID v7 identifiers for applications, APIs
+                and software development.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/file-hash-checker.html" class="card-link">
+            <div class="card">
+              <h3>File Hash Checker</h3>
+              <p>
+                Calculate and verify SHA-256, SHA-384 and SHA-512 hashes to
+                check file integrity directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/hash-generator.html" class="card-link">
+            <div class="card">
+              <h3>Hash Generator</h3>
+              <p>
+                Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from
+                text directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/diff-checker.html" class="card-link">
+            <div class="card">
+              <h3>Text Diff Checker</h3>
+              <p>
+                Compare two texts and instantly identify line-by-line
+                differences directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/url-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>URL Toolkit</h3>
+              <p>
+                Encode, decode, inspect and build URLs, query strings and UTM
+                parameters with browser-based tools.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/http-header-analyzer.html" class="card-link">
+            <div class="card">
+              <h3>HTTP Header Analyzer</h3>
+
+              <p>
+                Analyze HTTP response headers, security policies, caching rules
+                and server information directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/user-agent-parser.html" class="card-link">
+            <div class="card">
+              <h3>User-Agent Parser</h3>
+
+              <p>
+                Analyze User-Agent strings to detect browser, operating system,
+                rendering engine, device type and bots directly in your browser.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h2 class="category-title" id="document-tools">Document Tools</h2>
+        <p class="category-description">
+          Organize, convert and prepare documents with PDF utilities designed
+          for everyday file management and professional workflows.
+        </p>
+
+        <div class="grid">
+          <a href="tools/pdf-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>PDF Toolkit</h3>
+              <p>
+                Edit, convert, compress, merge, split and secure PDF documents
+                with fast browser-based tools.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h2 class="category-title" id="image-tools">Image & Design Tools</h2>
+        <p class="category-description">
+          Create, optimize and analyze visual assets with image, color and
+          palette tools for design, content and web projects.
+        </p>
+
+        <div class="grid">
+          <a href="tools/image-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Image Toolkit</h3>
+              <p>
+                Resize, compress, convert, crop and optimize images directly in
+                your browser without uploading files.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/color-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Color Toolkit</h3>
+              <p>
+                Convert color formats, create palettes and check accessibility
+                with professional color tools.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/color-palette-extractor.html" class="card-link">
+            <div class="card">
+              <h3>Color Palette Extractor</h3>
+
+              <p>
+                Extract dominant colors from images and generate reusable
+                palettes for branding, design and web projects.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h2 class="category-title" id="utility-tools">Utility Tools</h2>
+        <p class="category-description">
+          Handle common daily tasks faster with calculators, generators,
+          converters and text utilities built for quick results.
+        </p>
+
+        <div class="grid" id="utility-tools-grid">
+          <a href="tools/qr-generator.html" class="card-link">
+            <div class="card">
+              <h3>QR Code Generator</h3>
+              <p>
+                Create QR codes for websites, Wi-Fi, contacts, events, email,
+                SMS and more with instant browser-based generation.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/barcode-generator.html" class="card-link">
+            <div class="card">
+              <h3>Barcode Generator</h3>
+
+              <p>
+                Create professional barcodes for products, inventory, logistics
+                and retail directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/date-time-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Date & Time Toolkit</h3>
+              <p>
+                Calculate dates, ages, countdowns, timestamps and time
+                differences with accurate browser-based tools.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/unix-timestamp-converter.html" class="card-link">
+            <div class="card">
+              <h3>Unix Timestamp Converter</h3>
+              <p>
+                Convert Unix timestamps to readable dates and convert dates back
+                to Unix time in seconds or milliseconds.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/unit-converter.html" class="card-link">
+            <div class="card">
+              <h3>Unit Converter</h3>
+              <p>
+                Convert length, weight, temperature, volume, area and many other
+                units with instant calculations.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/password-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Password Toolkit</h3>
+              <p>
+                Generate strong passwords, secure passphrases and cryptographic
+                hashes to improve account security.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/text-toolkit.html" class="card-link">
+            <div class="card">
+              <h3>Text Toolkit</h3>
+              <p>
+                Edit, format, clean, convert and analyze text with fast
+                browser-based utilities for everyday work.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/word-character-counter.html" class="card-link">
+            <div class="card">
+              <h3>Word & Character Counter</h3>
+              <p>
+                Count words, characters, sentences, paragraphs, lines and
+                reading time directly in your browser.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/case-converter.html" class="card-link">
+            <div class="card">
+              <h3>Case Converter</h3>
+              <p>
+                Convert text to uppercase, lowercase, title case, camelCase,
+                snake_case, kebab-case and other common formats.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+
+      <div class="tool-category">
+        <h2 class="category-title" id="data-tools">Data Conversion Tools</h2>
+        <p class="category-description">
+          Transform CSV, XLSX, JSON and XML files into cleaner, more useful
+          formats for analysis, development and reporting.
+        </p>
+
+        <div class="grid">
+          <a href="tools/data-converter.html" class="card-link">
+            <div class="card">
+              <h3>Data Converter</h3>
+              <p>
+                Convert CSV, XLSX, JSON and XML files quickly with secure
+                browser-based processing and no uploads.
+              </p>
+            </div>
+          </a>
+
+          <a href="tools/csv-viewer-editor.html" class="card-link">
+            <div class="card">
+              <h3>CSV Viewer & Editor</h3>
+
+              <p>
+                Open, view, search and edit CSV data directly in your browser
+                with export options.
+              </p>
+            </div>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer" id="footer">
+      <div class="footer-bottom">© 2026 XAVERT. All rights reserved.</div>
+    </footer>
+    <script src="assets/js/index.js" defer></script>
+  </body>
 </html>

@@ -1,579 +1,307 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | HTACCESS Generator</title>
+    <title>XAVERT | HTACCESS Generator</title>
 
-<meta name="description" content="Free online HTACCESS Generator to create .htaccess rules for HTTPS redirects, WWW redirects, 301 redirects and basic security headers directly in your browser.">
+    <meta
+      name="description"
+      content="Generate common Apache .htaccess rules for HTTPS redirects, WWW redirects, 301 redirects and security headers directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/htaccess-generator.html">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/htaccess-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | HTACCESS Generator" />
+    <meta
+      property="og:description"
+      content="Generate common Apache .htaccess rules directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/htaccess-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | HTACCESS Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate common Apache .htaccess rules locally in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | HTACCESS Generator">
-<meta property="og:description" content="Generate .htaccess rules for HTTPS redirects, WWW redirects, 301 redirects and basic security headers directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/htaccess-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | HTACCESS Generator">
-<meta name="twitter:description" content="Generate .htaccess rules locally in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"HTACCESS Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/htaccess-generator.html",
-  "description":"Generate common .htaccess rules locally in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my rules generated locally?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. All .htaccess rules are generated locally in your browser."
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "HTACCESS Generator",
+        "alternateName": "XAVERT HTACCESS Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/htaccess-generator.html",
+        "description": "Generate common Apache .htaccess rules locally in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which configurations are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool can generate HTTPS redirects, WWW redirects, non-WWW redirects, 301 redirects and basic security headers."
+    </script>
+
+    <style>
+      /* HTACCESS Generator-specific presentation only. */
+
+      .htaccess-output {
+        min-height: 260px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Do I need Apache?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The generated .htaccess rules are intended for Apache web servers with mod_rewrite enabled where applicable."
+
+      .htaccess-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+        gap: 12px;
+        margin-top: 20px;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1000px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-}
-
-h1{
-text-align:center;
-font-size:42px;
-margin-bottom:10px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-  
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-input,
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-}
-
-textarea{
-min-height:260px;
-font-family:monospace;
-resize:vertical;
-}
-
-select:focus,
-input:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-top:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>HTACCESS Generator</h1>
-
-<p class="subtitle">
-Generate common .htaccess rules for redirects, HTTPS and security.
-</p>
-<div class="success-banner">
-✓ .htaccess rules are generated locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<label>Configuration Type</label>
-<div style="margin-bottom:12px;color:#6b7280;font-size:14px;">
-Popular: Force HTTPS, WWW Redirect, Security Headers
-</div>
-<select id="configType" onchange="generateHtaccess()">
-<option value="https">Force HTTPS</option>
-<option value="www">Redirect non-WWW → WWW</option>
-<option value="nonwww">Redirect WWW → non-WWW</option>
-<option value="redirect301">301 Redirect</option>
-<option value="security">Basic Security Headers</option>
-</select>
-
-<label>Domain (only for redirects)</label>
-
-<input
-id="domain"
-placeholder="mydomain.com"
->
-
-<div class="button-group">
-<button onclick="loadExample()">
-Load Example
-</button>
-</div>
-
-<div class="button-group">
-<button onclick="generateHtaccess()">Generate .htaccess</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<label style="margin-top:20px;">Generated .htaccess</label>
-
-<textarea
-id="output"
-readonly
-placeholder=".htaccess code will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadOutput()">Download .htaccess</button>
-</div>
-
-</div>
-
-<section class="info">
-
-<h2>About HTACCESS Generator</h2>
-
-<p>
-This tool generates common Apache <code>.htaccess</code> rules directly in your browser. It helps create HTTPS redirects, WWW redirects, 301 redirects and basic security headers without manually writing Apache directives.
-</p>
-
-<p>
-All generated rules remain on your device and are never uploaded to any server.
-</p>
-
-</section>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Are the rules generated locally?</h3>
-<p>Yes. Everything is generated directly inside your browser.</p>
-
-<h3>Which configurations are supported?</h3>
-<p>The generator supports HTTPS redirects, WWW redirects, non-WWW redirects, 301 redirects and basic security headers.</p>
-
-<h3>Can I use it with every web server?</h3>
-<p>No. The generated rules are intended for Apache web servers that support <code>.htaccess</code>.</p>
 
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="hash-generator.html">Hash Generator</a></li>
-<li><a href="env-generator.html">ENV Generator</a></li>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="file-hash-checker.html">File Hash Checker</a></li>
-</ul>
-
-</section>
-
-</main>
-
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-
-<script>
-
-const toast=document.getElementById("toast");
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-function loadExample(){
-
-document.getElementById("domain").value="example.com";
-document.getElementById("configType").value="https";
-
-showToast("Example loaded.","success");
-
-}
-function generateHtaccess(){
-
-const type=document.getElementById("configType").value;
-const domain=document.getElementById("domain").value.trim();
-
-let code="# Generated by XAVERT HTACCESS Generator\n\n";
-
-if(
-(type==="www" || type==="nonwww" || type==="redirect301") &&
-!domain
-){
-showToast("Please enter a domain.","error");
-return;
-}
-
-if(type==="https"){
-
-code +=
-"# Force HTTPS\n\n" +
-"RewriteEngine On\n\n" +
-"RewriteCond %{HTTPS} !=on\n" +
-"RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]";
-
-}
-
-else if(type==="www"){
-
-code +=
-"# Redirect non-WWW to WWW\n\n" +
-"RewriteEngine On\n\n" +
-"RewriteCond %{HTTP_HOST} !^www\\. [NC]\n" +
-"RewriteRule ^(.*)$ https://www." + domain + "/$1 [L,R=301]";
-
-}
-
-else if(type==="nonwww"){
-
-code +=
-"# Redirect WWW to non-WWW\n\n" +
-"RewriteEngine On\n\n" +
-"RewriteCond %{HTTP_HOST} ^www\\.(.*)$ [NC]\n" +
-"RewriteRule ^(.*)$ https://" + domain + "/$1 [L,R=301]";
-
-}
-
-else if(type==="redirect301"){
-
-code +=
-"# 301 Redirect\n\n" +
-"Redirect 301 / https://" + domain + "/";
-
-}
-
-else if(type==="security"){
-
-code +=
-"# Basic Security Headers\n\n" +
-"Header always set X-Frame-Options SAMEORIGIN\n" +
-"Header always set X-Content-Type-Options nosniff\n" +
-"Header always set Referrer-Policy strict-origin-when-cross-origin\n" +
-"Header always set X-XSS-Protection \"1; mode=block\"";
-
-}
-
-document.getElementById("output").value=code;
-showToast(".htaccess generated.","success");
-
-}
-
-function copyOutput(){
-
-const text=document.getElementById("output").value;
-
-if(!text){
-showToast("Nothing to copy","error");
-return;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-
-showToast("Copied.","success");
-
-})
-.catch(function(){
-
-showToast("Copy failed.","error");
-
-});
-
-}
-
-function downloadOutput(){
-
-const text=document.getElementById("output").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-const blob=new Blob([text],{
-type:"text/plain;charset=utf-8"
-});
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download=".htaccess";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Download started.","success");
-
-}
-
-function clearAll(){
-
-document.getElementById("configType").value="https";
-document.getElementById("domain").value="";
-document.getElementById("output").value="";
-
-showToast("Cleared.","success");
-
-}
-
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-generateHtaccess();
-}
-
-});
-
-</script>
-
-</body>
+      .htaccess-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .htaccess-help {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/htaccess-generator.js" defer></script>
+  </head>
+
+  <body
+    data-tool="htaccess-generator"
+    data-related-tools="env-generator,regex-tester,robots-generator,url-toolkit,meta-tag-generator"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">HTACCESS Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="htaccess-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="htaccess-workspace-title" class="tool-card-title">
+              Generate Apache Rules
+            </h2>
+
+            <p class="tool-card-description">
+              Choose a configuration, provide the required values and generate a
+              ready-to-copy .htaccess snippet.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="configType">Configuration Type</label>
+
+                <select id="configType">
+                  <option value="https">Force HTTPS</option>
+                  <option value="www">Redirect non-WWW → WWW</option>
+                  <option value="nonwww">Redirect WWW → non-WWW</option>
+                  <option value="redirect301">301 Redirect</option>
+                  <option value="security">Basic Security Headers</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="domain">Domain</label>
+
+                <input
+                  id="domain"
+                  type="text"
+                  placeholder="example.com"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="domainHelp message"
+                />
+
+                <p id="domainHelp" class="htaccess-help">
+                  Required only for WWW and 301 redirect configurations.
+                </p>
+              </div>
+            </div>
+
+            <div class="button-grid htaccess-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate .htaccess
+              </button>
+
+              <button
+                id="sampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader
+              >
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="resultBox"
+              class="card tool-card-result"
+              aria-labelledby="resultTitle"
+              hidden
+            >
+              <h2 id="resultTitle">Generated .htaccess</h2>
+
+              <textarea
+                id="output"
+                class="htaccess-output"
+                readonly
+                spellcheck="false"
+                aria-label="Generated .htaccess rules"
+              ></textarea>
+
+              <div class="button-grid htaccess-result-actions">
+                <button id="copyBtn" class="btn" type="button">Copy</button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download .htaccess
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT HTACCESS Generator creates common Apache configuration
+          snippets for redirects and basic HTTP security headers.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Generate Force HTTPS rewrite rules.</li>
+          <li>Redirect non-WWW traffic to WWW.</li>
+          <li>Redirect WWW traffic to non-WWW.</li>
+          <li>Create a basic 301 redirect to a target domain.</li>
+          <li>Generate common HTTP security header directives.</li>
+          <li>Copy or download the generated .htaccess file.</li>
+        </ul>
+
+        <h3>Server Compatibility</h3>
+
+        <p>
+          Generated rewrite rules are intended for Apache installations where
+          <code>mod_rewrite</code> is available. Security header directives
+          require <code>mod_headers</code>.
+        </p>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is generated locally within your browser. Your domain and
+          generated rules are never uploaded, transmitted, shared or stored on
+          any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

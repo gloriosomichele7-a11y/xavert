@@ -1,558 +1,268 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | HTML Minifier & Beautifier</title>
-
-<meta name="description" content="Free online HTML Minifier and Beautifier to minify, format, clean and optimize HTML code directly in your browser. Reduce file size, improve readability and download HTML instantly.">
-
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/html-minifier.html">
-
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-textarea{
-width:100%;
-min-height:350px;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:14px;
-font-family:monospace;
-resize:vertical;
-line-height:1.6;
-}
-
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:16px;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-}
-
-button:hover{
-background:#b91c1c;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(6,1fr);
-gap:12px;
-margin-top:20px;
-}
-
-.stat-box{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-padding:14px;
-text-align:center;
-}
-
-.stat-box strong{
-display:block;
-font-size:20px;
-margin-bottom:4px;
-}
-
-.stat-box span{
-font-size:13px;
-color:#6b7280;
-}
-
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.success{
-color:#047857;
-}
-
-.error{
-color:#dc2626;
-}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:900px){
-
-.grid{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:repeat(2,1fr);
-}
-
-}
-
-@media(max-width:768px){
-
-body{
-padding:24px 14px;
-}
-
-.logo img{
-width:150px;
-}
-
-.card{
-padding:20px;
-}
-
-button{
-width:100%;
-}
-
-h1{
-font-size:34px;
-}
-
-.stats{
-grid-template-columns:1fr;
-}
-
-}
-</style>
-</head>
-
-<body>
-
-<div class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>HTML Minifier & Beautifier</h1>
-
-<p class="subtitle">
-Minify and beautify HTML code directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ HTML is processed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<div class="grid">
-
-<div>
-
-<label>Input HTML</label>
-
-<div style="margin-bottom:10px;font-size:13px;color:#6b7280;">
-<a href="#" onclick="loadExampleHtml();return false;">Load Sample HTML</a>
-</div>
-
-<textarea
-id="inputHtml"
-placeholder="Paste your HTML here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="minifyHtml()">Minify HTML</button>
-<button onclick="beautifyHtml()">Beautify HTML</button>
-<button onclick="swapHtml()">Swap</button>
-<button onclick="clearAll()">Clear</button>
-</div>
-
-<div id="message" class="message"></div>
-
-</div>
-
-<div>
-
-<label>Output HTML</label>
-
-<textarea
-id="outputHtml"
-readonly
-placeholder="Processed HTML will appear here..."
-></textarea>
-
-<div class="button-group">
-<button onclick="copyOutput()">Copy</button>
-<button onclick="downloadHtml()">Download HTML</button>
-</div>
-
-</div>
-
-</div>
-
-<div class="stats">
-
-<div class="stat-box">
-<strong id="inputChars">0</strong>
-<span>Input Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="outputChars">0</strong>
-<span>Output Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="savedChars">0</strong>
-<span>Saved Chars</span>
-</div>
-
-<div class="stat-box">
-<strong id="compression">0%</strong>
-<span>Compression</span>
-</div>
-  
-<div class="stat-box">
-<strong id="lineCount">0</strong>
-<span>Lines</span>
-</div>
-
-<div class="stat-box">
-<strong id="operationType">-</strong>
-<span>Operation</span>
-</div>
-</div>
-
-</div>
-
-</div>
-
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
-Powered by XAVERT
-</div>
-
-<div id="toast"></div>
-
-<script>
-
-const toast=document.getElementById("toast");
-
-document.addEventListener("keydown",function(e){
-if(e.ctrlKey && e.key==="Enter"){
-minifyHtml();
-}
-});
-
-function showToast(text,type="success"){
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-}
-
-function setMessage(text,type){
-const message=document.getElementById("message");
-message.textContent=text;
-message.className="message " + type;
-}
-
-function updateStats(input,output,operation="-"){
-
-const inputLength=input.length;
-const outputLength=output.length;
-
-const saved=Math.max(0,inputLength-outputLength);
-
-const compression=inputLength
-? ((saved/inputLength)*100).toFixed(1)
-: 0;
-
-const lines=input
-? input.split(/\r?\n/).length
-: 0;
-
-document.getElementById("inputChars").textContent=inputLength;
-document.getElementById("outputChars").textContent=outputLength;
-document.getElementById("savedChars").textContent=saved;
-document.getElementById("compression").textContent=compression + "%";
-document.getElementById("lineCount").textContent=lines;
-document.getElementById("operationType").textContent=operation;
-
-}
-function loadExampleHtml(){
-
-document.getElementById("inputHtml").value=
-`<!DOCTYPE html>
-<html>
   <head>
-    <title>XAVERT</title>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | HTML Minifier &amp; Beautifier</title>
+    <meta
+      name="description"
+      content="Minify, beautify and optimize HTML code directly in your browser. Reduce file size, improve readability and download processed HTML instantly."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+    <link rel="canonical" href="https://xavert.com/tools/html-minifier.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="XAVERT | HTML Minifier &amp; Beautifier"
+    />
+    <meta
+      property="og:description"
+      content="Minify and beautify HTML code directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/html-minifier.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="XAVERT | HTML Minifier &amp; Beautifier"
+    />
+    <meta
+      name="twitter:description"
+      content="Minify and beautify HTML locally in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "HTML Minifier & Beautifier",
+        "alternateName": "XAVERT HTML Minifier & Beautifier",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/html-minifier.html",
+        "description": "Minify and beautify HTML code directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "XAVERT" }
+      }
+    </script>
+    <style>
+      .html-editor {
+        min-height: 320px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
+      }
+      .html-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+      .html-output-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/html-minifier.js" defer></script>
   </head>
-  <body>
-    <h1>Hello XAVERT</h1>
-    <p>Free online tools.</p>
+  <body
+    data-tool="html-minifier"
+    data-related-tools="css-minifier,text-toolkit,regex-tester,html-entity-encoder-decoder"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">
+          HTML Minifier &amp; Beautifier
+        </h1>
+      </section>
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="html-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="html-workspace-title" class="tool-card-title">
+              Process HTML
+            </h2>
+            <p class="tool-card-description">
+              Minify or beautify HTML while preserving comments, scripts, styles
+              and preformatted content as safely as possible.
+            </p>
+          </header>
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="inputHtml">Input HTML</label>
+                <textarea
+                  id="inputHtml"
+                  class="html-editor"
+                  placeholder="Paste your HTML here"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="message"
+                ></textarea>
+                <div class="button-grid html-actions">
+                  <button
+                    id="minifyBtn"
+                    class="btn"
+                    type="button"
+                    data-primary-action
+                  >
+                    Minify HTML
+                  </button>
+                  <button id="beautifyBtn" class="btn" type="button">
+                    Beautify HTML
+                  </button>
+                  <button
+                    id="sampleBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Load Sample
+                  </button>
+                  <button id="swapBtn" class="btn btn-secondary" type="button">
+                    Swap
+                  </button>
+                  <button
+                    id="clearBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    data-clear-action
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="outputHtml">Output HTML</label>
+                <textarea
+                  id="outputHtml"
+                  class="html-editor"
+                  readonly
+                  placeholder="Processed HTML will appear here"
+                  spellcheck="false"
+                ></textarea>
+                <div class="button-grid html-output-actions">
+                  <button id="copyBtn" class="btn" type="button">
+                    Copy Output
+                  </button>
+                  <button
+                    id="downloadBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Download HTML
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="stats-grid">
+              <div class="stat-card">
+                <strong id="inputChars" class="stat-value">0</strong
+                ><span class="stat-label">Input Chars</span>
+              </div>
+              <div class="stat-card">
+                <strong id="outputChars" class="stat-value">0</strong
+                ><span class="stat-label">Output Chars</span>
+              </div>
+              <div class="stat-card">
+                <strong id="savedChars" class="stat-value">0</strong
+                ><span class="stat-label">Saved Chars</span>
+              </div>
+              <div class="stat-card">
+                <strong id="compression" class="stat-value">0%</strong
+                ><span class="stat-label">Compression</span>
+              </div>
+              <div class="stat-card">
+                <strong id="lineCount" class="stat-value">0</strong
+                ><span class="stat-label">Input Lines</span>
+              </div>
+              <div class="stat-card">
+                <strong id="operationType" class="stat-value">—</strong
+                ><span class="stat-label">Operation</span>
+              </div>
+            </div>
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          The XAVERT HTML Minifier &amp; Beautifier helps reduce unnecessary
+          whitespace or reformat HTML for easier reading directly in your
+          browser.
+        </p>
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>
+            Minify HTML conservatively without flattening raw-text content.
+          </li>
+          <li>Beautify HTML with structured indentation.</li>
+          <li>Preserve comments, script, style, pre and textarea content.</li>
+          <li>Track characters saved and compression percentage.</li>
+          <li>Copy or download processed HTML.</li>
+          <li>Process everything locally in the browser.</li>
+        </ul>
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your HTML code
+          and generated output are never uploaded, transmitted, shared or stored
+          on any server.
+        </p>
+      </section>
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
   </body>
-</html>`;
-
-showToast("Sample HTML loaded.","success");
-
-}
-function minifyHtml(){
-
-const input=document.getElementById("inputHtml").value;
-
-if(!input.trim()){
-setMessage("Please enter HTML code.","error");
-showToast("Please enter HTML code.","error");
-return;
-}
-
-let output=input
-.replace(/>\s+</g,"><")
-.replace(/\n/g,"")
-.replace(/\t/g,"")
-.replace(/\s{2,}/g," ")
-.trim();
-
-document.getElementById("outputHtml").value=output;
-
-updateStats(input,output,"Minify");
-
-setMessage(
-"HTML minified successfully.",
-"success"
-);
-showToast("HTML minified successfully.","success");
-}
-
-function beautifyHtml(){
-
-const input=document.getElementById("inputHtml").value;
-
-if(!input.trim()){
-setMessage("Please enter HTML code.","error");
-showToast("Please enter HTML code.","error");
-return;
-}
-
-let output=input
-.replace(/></g,">\n<");
-
-document.getElementById("outputHtml").value=output;
-
-updateStats(input,output,"Beautify");
-
-setMessage(
-"HTML beautified successfully.",
-"success"
-);
-showToast("HTML beautified successfully.","success");
-}
-
-function copyOutput(){
-
-const text=document.getElementById("outputHtml").value;
-
-if(!text){
-showToast("Nothing to copy","error");
-return;
-}
-
-navigator.clipboard.writeText(text);
-showToast("Copied.","success");
-
-}
-
-function downloadHtml(){
-
-const text=document.getElementById("outputHtml").value;
-
-if(!text){
-showToast("Nothing to download","error");
-return;
-}
-
-const blob=new Blob(
-[text],
-{
-type:"text/html;charset=utf-8"
-}
-);
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-const operation=
-document.getElementById("operationType").textContent
-.toLowerCase();
-
-link.download=
-"xavert-html-" + operation + ".html";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Download started.","success");
-
-}
-function swapHtml(){
-
-const input=document.getElementById("inputHtml");
-const output=document.getElementById("outputHtml");
-const operation=document.getElementById("operationType").textContent;
-
-if(!output.value){
-showToast("Nothing to swap","error");
-return;
-}
-
-input.value=output.value;
-
-updateStats(
-input.value,
-output.value,
-operation
-);
-
-showToast("Output moved to input.","success");
-
-}
-function clearAll(){
-
-document.getElementById("inputHtml").value="";
-document.getElementById("outputHtml").value="";
-
-document.getElementById("inputChars").textContent="0";
-document.getElementById("outputChars").textContent="0";
-document.getElementById("savedChars").textContent="0";
-document.getElementById("compression").textContent="0%";
-document.getElementById("lineCount").textContent="0";
-document.getElementById("operationType").textContent="-";
-
-document.getElementById("message").textContent="";
-document.getElementById("message").className="message";
-showToast("Cleared.","success");
-}
-
-</script>
-
-</body>
 </html>

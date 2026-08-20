@@ -1,495 +1,401 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | Barcode Generator</title>
-
-<meta
-  name="description"
-  content="Generate professional barcodes online for products, inventory, logistics and retail. Create Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser."
->
-
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<link
-  rel="canonical"
-  href="https://xavert.com/tools/barcode-generator.html"
->
-
-<link
-  rel="icon"
-  href="../favicon.svg"
-  type="image/svg+xml"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/global.css"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/components.css"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/responsive.css"
->
-
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | Barcode Generator">
-<meta
-  property="og:description"
-  content="Generate professional barcodes online for products, inventory, logistics and retail directly in your browser."
->
-<meta
-  property="og:url"
-  content="https://xavert.com/tools/barcode-generator.html"
->
-<meta
-  property="og:image"
-  content="https://xavert.com/assets/images/og-image.png"
->
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | Barcode Generator">
-<meta
-  name="twitter:description"
-  content="Generate professional barcodes online directly in your browser."
->
-<meta
-  name="twitter:image"
-  content="https://xavert.com/assets/images/og-image.png"
->
-
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "WebApplication",
-  "name": "Barcode Generator",
-  "applicationCategory": "BusinessApplication",
-  "operatingSystem": "Any",
-  "browserRequirements": "Requires JavaScript",
-  "url": "https://xavert.com/tools/barcode-generator.html",
-  "description": "Generate Code 128, Code 39, EAN, UPC, ITF and Codabar barcodes directly in your browser.",
-  "inLanguage": "en",
-  "isAccessibleForFree": true,
-  "offers": {
-    "@type": "Offer",
-    "price": "0",
-    "priceCurrency": "USD"
-  },
-  "publisher": {
-    "@type": "Organization",
-    "name": "XAVERT"
-  }
-}
-</script>
-
-<style>
-.barcode-actions{
-grid-template-columns:repeat(6,minmax(0,1fr));
-margin-top:22px;
-}
-
-.preview-box{
-display:none;
-margin-top:24px;
-padding:24px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:18px;
-text-align:center;
-}
-
-.preview-box h2{
-margin-bottom:18px;
-font-size:22px;
-}
-
-.barcode-wrap{
-padding:24px;
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-overflow:auto;
-}
-
-#barcodeSvg{
-display:block;
-max-width:100%;
-height:auto;
-margin:auto;
-}
-
-.xavert-footer-note{
-color:#111827;
-font-size:12px;
-}
-
-#toast{
-display:none;
-}
-
-@media (max-width:992px){
-
-.barcode-actions{
-grid-template-columns:repeat(3,minmax(0,1fr));
-}
-
-}
-
-@media (max-width:768px){
-
-.barcode-actions{
-grid-template-columns:repeat(2,minmax(0,1fr));
-}
-
-.preview-box,
-.barcode-wrap{
-padding:20px;
-}
-
-}
-
-@media (max-width:576px){
-
-.barcode-actions{
-grid-template-columns:1fr;
-}
-
-.preview-box,
-.barcode-wrap{
-padding:16px;
-border-radius:14px;
-}
-
-}
-</style>
-
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-
-<script
-  src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"
-  defer>
-</script>
-
-<script
-  src="../assets/js/barcode-generator.js"
-  defer>
-</script>
-
-</head>
-
-<body data-tool="barcode-generator">
-
-<main class="container">
-
-<a href="../index.html" class="back-link">
-  ← Back to Home
-</a>
-
-<section class="hero">
-
-<img
-  src="../logo-hero.svg"
-  alt="XAVERT"
-  class="tool-logo"
-  width="210"
-  height="210"
-  fetchpriority="high"
-  decoding="async"
->
-
-<h1 id="tool-title" class="tool-title">
-  Barcode Generator
-</h1>
-
-</section>
-
-<section
-  class="tool-card"
-  aria-labelledby="tool-title"
->
-
-<div class="form-grid">
-
-<div class="form-group full-width">
-
-<label for="barcodeValue">
-  Barcode value
-</label>
-
-<input
-  type="text"
-  id="barcodeValue"
-  placeholder="Example: XAVERT-123456"
-  autocomplete="off"
-  autocapitalize="off"
-  spellcheck="false"
-  maxlength="120"
->
-
-</div>
-
-<div class="form-group">
-
-<label for="barcodeFormat">
-  Barcode format
-</label>
-
-<select id="barcodeFormat">
-  <option value="CODE128">Code 128</option>
-  <option value="CODE39">Code 39</option>
-  <option value="EAN13">EAN-13</option>
-  <option value="EAN8">EAN-8</option>
-  <option value="UPC">UPC-A</option>
-  <option value="ITF14">ITF-14</option>
-  <option value="codabar">Codabar</option>
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label for="barcodeWidth">
-  Bar width
-</label>
-
-<select id="barcodeWidth">
-  <option value="1">Thin</option>
-  <option value="2" selected>Standard</option>
-  <option value="3">Thick</option>
-  <option value="4">Extra Thick</option>
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label for="barcodeHeight">
-  Bar height
-</label>
-
-<select id="barcodeHeight">
-  <option value="60">Small</option>
-  <option value="90" selected>Standard</option>
-  <option value="120">Large</option>
-  <option value="150">Extra Large</option>
-</select>
-
-</div>
-
-<div class="form-group">
-
-<label for="displayValue">
-  Show text
-</label>
-
-<select id="displayValue">
-  <option value="true" selected>Yes</option>
-  <option value="false">No</option>
-</select>
-
-</div>
-
-</div>
-
-<div class="button-grid barcode-actions">
-
-<button
-  id="generateBtn"
-  class="btn"
-  type="button"
->
-  Generate
-</button>
-
-<button
-  id="checkDigitBtn"
-  class="btn btn-secondary"
-  type="button"
-  hidden
->
-  Generate Check Digit
-</button>
-  
-<button
-  id="downloadSvgBtn"
-  class="btn btn-secondary"
-  type="button"
->
-  Download SVG
-</button>
-
-<button
-  id="downloadPngBtn"
-  class="btn btn-secondary"
-  type="button"
->
-  Download PNG
-</button>
-
-<button
-  id="copySvgBtn"
-  class="btn btn-secondary"
-  type="button"
->
-  Copy SVG
-</button>
-
-<button
-  id="clearBtn"
-  class="btn btn-secondary"
-  type="button"
->
-  Clear
-</button>
-
-<button
-  id="sampleBtn"
-  class="btn btn-secondary"
-  type="button"
->
-  Load Sample
-</button>
-
-</div>
-
-<div
-  class="preview-box"
-  id="previewBox"
->
-
-<h2>
-  Barcode Preview
-</h2>
-
-<div class="barcode-wrap">
-
-<svg
-  id="barcodeSvg"
-  role="img"
-  aria-label="Generated barcode preview"
-></svg>
-
-</div>
-
-<div class="stats-grid">
-
-<div class="stat-card">
-  <strong id="formatStat" class="stat-value">-</strong>
-  <span class="stat-label">Format</span>
-</div>
-
-<div class="stat-card">
-  <strong id="lengthStat" class="stat-value">0</strong>
-  <span class="stat-label">Characters</span>
-</div>
-
-<div class="stat-card">
-  <strong id="widthStat" class="stat-value">0</strong>
-  <span class="stat-label">Bar Width</span>
-</div>
-
-<div class="stat-card">
-  <strong id="heightStat" class="stat-value">0</strong>
-  <span class="stat-label">Height</span>
-</div>
-
-</div>
-
-</div>
-
-<div
-  class="message"
-  id="message"
-  role="status"
-  aria-live="polite"
-  aria-atomic="true"
-></div>
-
-</section>
-
-<section class="info about-card">
-
-<h2>
-  About
-</h2>
-
-<p class="about-intro">
-  The XAVERT Barcode Generator creates professional barcodes for products,
-  inventory management, warehouses, logistics, retail labels and asset
-  tracking.
-</p>
-
-<h3>
-  Main Features
-</h3>
-
-<ul class="about-features">
-  <li>
-    Generate Code 128, Code 39, EAN-13, EAN-8, UPC-A, ITF-14 and Codabar
-    barcodes.
-  </li>
-  <li>
-    Validate supported formats and verify existing check digits.
-  </li>
-  <li>
-    Customize barcode width, height and visible text.
-  </li>
-  <li>
-    Preview the generated barcode directly in the browser.
-  </li>
-  <li>
-    Download the result as a scalable SVG or high-resolution PNG file.
-  </li>
-  <li>
-    Copy the complete SVG source code to the clipboard.
-  </li>
-</ul>
-
-<h3>
-  Privacy First
-</h3>
-
-<p class="about-privacy">
-  Everything is processed locally within your browser. Your barcode data is
-  never uploaded, transmitted, shared or stored on any server.
-</p>
-
-</section>
-
-<section class="info" hidden>
-
-<h2>
-  Related Tools
-</h2>
-
-<div id="related-tools"></div>
-
-</section>
-
-</main>
-
-<footer class="xavert-footer-note">
-  Powered by XAVERT
-</footer>
-
-<div
-  id="toast"
-  class="xavert-toast"
-  aria-hidden="true"
-></div>
-
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Barcode Generator</title>
+
+    <meta
+      name="description"
+      content="Generate professional barcodes online in Code 128, Code 39, Code 93, EAN, UPC, ITF, MSI, Pharmacode and Codabar formats directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/barcode-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Barcode Generator" />
+    <meta
+      property="og:description"
+      content="Generate professional barcodes online for products, inventory, logistics and retail directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/barcode-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Barcode Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate professional barcodes online directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Barcode Generator",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/barcode-generator.html",
+        "description": "Generate Code 128, Code 39, Code 93, EAN, UPC, ITF, MSI, Pharmacode and Codabar barcodes directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
+      }
+    </script>
+
+    <style>
+      /* Barcode-specific presentation only. Shared UI remains in XAVERT assets. */
+
+      .barcode-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .preview-box {
+        margin-top: 24px;
+        text-align: center;
+      }
+
+      .preview-box h2 {
+        margin: 0 0 18px;
+        font-size: 22px;
+      }
+
+      .barcode-wrap {
+        padding: 24px;
+        background: #ffffff;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        overflow: auto;
+      }
+
+      #barcodeSvg {
+        display: block;
+        max-width: 100%;
+        height: auto;
+        margin: 0 auto;
+      }
+
+      @media (max-width: 576px) {
+        .barcode-wrap {
+          padding: 16px;
+          border-radius: 14px;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/vendor/JsBarcode.all.min.js" defer></script>
+    <script src="../assets/js/barcode-generator.js" defer></script>
+  </head>
+
+  <body
+    data-tool="barcode-generator"
+    data-related-tools="qr-generator,image-toolkit,data-converter,text-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Barcode Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="barcode-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="barcode-workspace-title" class="tool-card-title">
+              Create a Barcode
+            </h2>
+
+            <p class="tool-card-description">
+              Enter a value, choose a supported format and customize the barcode
+              before generating the preview.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="barcodeValue">Barcode value</label>
+
+                <input
+                  type="text"
+                  id="barcodeValue"
+                  placeholder="Example: XAVERT-123456"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  spellcheck="false"
+                  maxlength="120"
+                  aria-describedby="message"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="barcodeFormat">Barcode format</label>
+
+                <select id="barcodeFormat">
+                  <optgroup label="General-purpose">
+                    <option value="CODE128">Code 128</option>
+                    <option value="CODE39">Code 39</option>
+                    <option value="CODE93">Code 93</option>
+                    <option value="CODE93FullASCII">Code 93 Full ASCII</option>
+                  </optgroup>
+                  <optgroup label="Retail and publishing">
+                    <option value="EAN13">EAN-13</option>
+                    <option value="EAN8">EAN-8</option>
+                    <option value="EAN5">EAN-5 Supplement</option>
+                    <option value="EAN2">EAN-2 Supplement</option>
+                    <option value="UPC">UPC-A</option>
+                    <option value="UPCE">UPC-E</option>
+                  </optgroup>
+                  <optgroup label="Logistics and inventory">
+                    <option value="ITF14">ITF-14</option>
+                    <option value="ITF">ITF</option>
+                    <option value="MSI">MSI</option>
+                    <option value="MSI10">MSI Mod 10</option>
+                    <option value="MSI11">MSI Mod 11</option>
+                    <option value="MSI1010">MSI Mod 10/10</option>
+                    <option value="MSI1110">MSI Mod 11/10</option>
+                  </optgroup>
+                  <optgroup label="Specialized">
+                    <option value="pharmacode">Pharmacode</option>
+                    <option value="codabar">Codabar</option>
+                  </optgroup>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="barcodeWidth">Bar width</label>
+
+                <select id="barcodeWidth">
+                  <option value="1">Thin</option>
+                  <option value="2" selected>Standard</option>
+                  <option value="3">Thick</option>
+                  <option value="4">Extra Thick</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="barcodeHeight">Bar height</label>
+
+                <select id="barcodeHeight">
+                  <option value="60">Small</option>
+                  <option value="90" selected>Standard</option>
+                  <option value="120">Large</option>
+                  <option value="150">Extra Large</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="displayValue">Show text</label>
+
+                <select id="displayValue">
+                  <option value="true" selected>Yes</option>
+                  <option value="false">No</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="button-grid barcode-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate
+              </button>
+
+              <button
+                id="checkDigitBtn"
+                class="btn btn-secondary"
+                type="button"
+                hidden
+              >
+                Generate Check Digit
+              </button>
+
+              <button
+                id="downloadSvgBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Download SVG
+              </button>
+
+              <button
+                id="downloadPngBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Download PNG
+              </button>
+
+              <button id="copySvgBtn" class="btn btn-secondary" type="button">
+                Copy SVG
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+
+              <button
+                id="sampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader
+              >
+                Load Sample
+              </button>
+            </div>
+
+            <div class="card preview-box" id="previewBox" hidden>
+              <h2>Barcode Preview</h2>
+
+              <div class="barcode-wrap">
+                <svg
+                  id="barcodeSvg"
+                  role="img"
+                  aria-label="Generated barcode preview"
+                ></svg>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="formatStat" class="stat-value">-</strong>
+                  <span class="stat-label">Format</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="lengthStat" class="stat-value">0</strong>
+                  <span class="stat-label">Characters</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="widthStat" class="stat-value">0 px</strong>
+                  <span class="stat-label">Bar Width</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="heightStat" class="stat-value">0 px</strong>
+                  <span class="stat-label">Height</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="message"
+              id="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Barcode Generator creates professional barcodes for
+          products, inventory management, warehouses, logistics, retail labels
+          and asset tracking.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Generate Code 128, Code 39, Code 93, EAN, UPC, ITF, MSI, Pharmacode
+            and Codabar barcodes with practical variants.
+          </li>
+          <li>
+            Validate format-specific input, verify existing check digits and
+            generate missing check digits for EAN-13, EAN-8, UPC-A and ITF-14.
+          </li>
+          <li>Customize barcode width, height and visible text.</li>
+          <li>Preview the generated barcode directly in the browser.</li>
+          <li>
+            Download the result as a scalable SVG or high-resolution PNG file.
+          </li>
+          <li>Copy the complete SVG source code to the clipboard.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your barcode data
+          is never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

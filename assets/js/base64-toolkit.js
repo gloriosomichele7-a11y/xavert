@@ -1,9 +1,14 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (document.body.dataset.tool !== "base64-toolkit") {
+    return;
+  }
+
   const inputText = document.getElementById("inputText");
   const inputInfo = document.getElementById("inputInfo");
   const inputType = document.getElementById("inputType");
+  const base64Variant = document.getElementById("base64Variant");
 
   const encodeBtn = document.getElementById("encodeBtn");
   const decodeBtn = document.getElementById("decodeBtn");
@@ -21,74 +26,70 @@ document.addEventListener("DOMContentLoaded", function () {
   const downloadBtn = document.getElementById("downloadBtn");
 
   const message = document.getElementById("message");
-  const toast = document.getElementById("toast");
 
-  let toastTimer = null;
-  let messageTimer = null;
+  const requiredElements = {
+    inputText,
+    inputInfo,
+    inputType,
+    base64Variant,
+    encodeBtn,
+    decodeBtn,
+    clearBtn,
+    sampleBtn,
+    resultBox,
+    outputLabel,
+    outputText,
+    outputInfo,
+    conversionStats,
+    utfInfo,
+    copyBtn,
+    downloadBtn,
+    message,
+  };
+
+  const missingElements = Object.entries(requiredElements)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
+
+  if (missingElements.length > 0) {
+    console.error(
+      "Base64 Toolkit initialization failed. Missing elements:",
+      missingElements,
+    );
+
+    return;
+  }
+
   let lastAction = "result";
   let resultAvailable = false;
 
   const sampleText =
     "XAVERT makes browser-side tools simple, fast and private.";
 
-  function showToast(text, type = "info") {
-    if (!toast || !text) {
-      return;
-    }
+  function setInlineMessage(text = "", type = "info") {
+    if (!message) return;
 
     const allowedTypes = ["success", "error", "info"];
     const safeType = allowedTypes.includes(type) ? type : "info";
 
-    window.clearTimeout(toastTimer);
+    message.textContent = text;
 
-    toast.textContent = text;
-
-    toast.classList.remove(
-      "xavert-toast-success",
-      "xavert-toast-error",
-      "xavert-toast-info"
+    message.classList.remove(
+      "message-success",
+      "message-error",
+      "message-info",
     );
 
-    toast.classList.add(
-      "xavert-toast",
-      `xavert-toast-${safeType}`
-    );
-
-    toast.style.display = "block";
-    toast.setAttribute("aria-hidden", "false");
-
-    toastTimer = window.setTimeout(function () {
-      toast.style.display = "none";
-      toast.textContent = "";
-
-      toast.classList.remove(
-        "xavert-toast-success",
-        "xavert-toast-error",
-        "xavert-toast-info"
-      );
-
-      toast.setAttribute("aria-hidden", "true");
-    }, 2200);
-  }
-
-  function showMessage(text = "", type = "info", useToast = true) {
-    if (message) {
-      const allowedTypes = ["success", "error", "info"];
-      const safeType = allowedTypes.includes(type) ? type : "info";
-
-      message.textContent = text;
-
-      message.classList.remove(
-        "message-success",
-        "message-error",
-        "message-info"
-      );
-
+    if (text) {
       message.classList.add(`message-${safeType}`);
     }
+  }
 
-    if (text && useToast) {
-      showToast(text, type);
+  function notify(text = "", type = "info", useToast = true) {
+    setInlineMessage(text, type);
+
+    if (text && useToast && typeof window["showMessage"] === "function") {
+      window["showMessage"](text, type);
     }
   }
 
@@ -109,8 +110,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const characters = getCharacterCount(value);
     const bytes = getUtf8ByteLength(value);
 
-    inputInfo.textContent =
-      `Characters: ${formatNumber(characters)} • UTF-8 bytes: ${formatNumber(bytes)}`;
+    inputInfo.textContent = `Characters: ${formatNumber(characters)} • UTF-8 bytes: ${formatNumber(bytes)}`;
 
     updateDetectedInputType();
   }
@@ -120,14 +120,21 @@ document.addEventListener("DOMContentLoaded", function () {
     const characters = getCharacterCount(value);
     const bytes = getUtf8ByteLength(value);
 
-    outputInfo.textContent =
-      `Characters: ${formatNumber(characters)} • UTF-8 bytes: ${formatNumber(bytes)}`;
+    outputInfo.textContent = `Characters: ${formatNumber(characters)} • UTF-8 bytes: ${formatNumber(bytes)}`;
+  }
+
+  function stripBase64Whitespace(value) {
+    return value.replace(/\s+/g, "");
+  }
+
+  function isUrlSafeBase64(value) {
+    const compact = stripBase64Whitespace(value.trim());
+
+    return /[-_]/.test(compact) && !/[+/]/.test(compact);
   }
 
   function normalizeBase64(value) {
-    return value
-      .trim()
-      .replace(/\s+/g, "")
+    return stripBase64Whitespace(value.trim())
       .replace(/-/g, "+")
       .replace(/_/g, "/");
   }
@@ -167,10 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const paddingIndex = normalized.indexOf("=");
 
-    if (
-      paddingIndex !== -1 &&
-      paddingIndex < normalized.length - 2
-    ) {
+    if (paddingIndex !== -1 && paddingIndex < normalized.length - 2) {
       return false;
     }
 
@@ -195,7 +199,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (isValidBase64(value)) {
-      inputType.textContent = "Detected: Valid Base64";
+      inputType.textContent = isUrlSafeBase64(value)
+        ? "Detected: Valid Base64URL"
+        : "Detected: Valid Base64";
       return;
     }
 
@@ -207,11 +213,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const chunkSize = 32768;
     let binary = "";
 
-    for (
-      let index = 0;
-      index < bytes.length;
-      index += chunkSize
-    ) {
+    for (let index = 0; index < bytes.length; index += chunkSize) {
       const chunk = bytes.subarray(index, index + chunkSize);
       binary += String.fromCharCode(...chunk);
     }
@@ -236,7 +238,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const bytes = decodeBase64ToBytes(value);
 
     return new TextDecoder("utf-8", {
-      fatal: true
+      fatal: true,
     }).decode(bytes);
   }
 
@@ -259,14 +261,8 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showResult(options) {
-    const {
-      value,
-      label,
-      action,
-      inputBytes,
-      outputBytes,
-      encodingLabel
-    } = options;
+    const { value, label, action, inputBytes, outputBytes, encodingLabel } =
+      options;
 
     outputText.value = value;
     outputLabel.textContent = label;
@@ -275,20 +271,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     updateOutputInformation();
 
-    const percentageDifference =
-      calculatePercentageDifference(inputBytes, outputBytes);
+    const percentageDifference = calculatePercentageDifference(
+      inputBytes,
+      outputBytes,
+    );
 
     conversionStats.textContent =
       `Input: ${formatNumber(inputBytes)} bytes` +
       ` • Output: ${formatNumber(outputBytes)} bytes` +
       ` • Difference: ${formatSignedPercentage(percentageDifference)}`;
 
-    conversionStats.style.display = "block";
-
     utfInfo.textContent = encodingLabel;
-    utfInfo.style.display = "block";
 
-    resultBox.style.display = "block";
+    resultBox.hidden = false;
   }
 
   function hideResult() {
@@ -297,16 +292,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
     outputText.value = "";
     outputLabel.textContent = "Output";
-    outputInfo.textContent =
-      "Characters: 0 • UTF-8 bytes: 0";
+    outputInfo.textContent = "Characters: 0 • UTF-8 bytes: 0";
 
     conversionStats.textContent = "";
-    conversionStats.style.display = "none";
-
     utfInfo.textContent = "";
-    utfInfo.style.display = "none";
 
-    resultBox.style.display = "none";
+    resultBox.hidden = true;
   }
 
   function encodeBase64(options = {}) {
@@ -315,11 +306,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (!value) {
       hideResult();
-      showMessage(
-        "Enter text to encode first.",
-        "error",
-        announce
-      );
+      notify("Enter text to encode first.", "error", announce);
 
       inputText.focus();
       return false;
@@ -329,24 +316,41 @@ document.addEventListener("DOMContentLoaded", function () {
     encodeBtn.setAttribute("aria-busy", "true");
 
     try {
-      const encoded = encodeUtf8ToBase64(value);
+      const standardEncoded = encodeUtf8ToBase64(value);
+      const encoded =
+        base64Variant.value === "url"
+          ? standardEncoded
+              .replace(/\+/g, "-")
+              .replace(/\//g, "_")
+              .replace(/=+$/g, "")
+          : standardEncoded;
       const inputBytes = getUtf8ByteLength(value);
       const outputBytes = getUtf8ByteLength(encoded);
 
       showResult({
         value: encoded,
-        label: "Encoded Output",
-        action: "encoded",
+        label:
+          base64Variant.value === "url"
+            ? "Base64URL Encoded Output"
+            : "Encoded Output",
+        action: base64Variant.value === "url" ? "encoded-url" : "encoded",
         inputBytes,
         outputBytes,
-        encodingLabel: "Encoded from UTF-8 text to standard Base64"
+        encodingLabel:
+          base64Variant.value === "url"
+            ? "Encoded from UTF-8 text to Base64URL without padding"
+            : "Encoded from UTF-8 text to standard Base64",
       });
 
-      showMessage(
-        "Text encoded successfully.",
-        "success",
-        announce
-      );
+      setInlineMessage("Action completed successfully.", "success");
+
+      if (announce) {
+        if (typeof window.showActionSuccess === "function") {
+          window.showActionSuccess();
+        } else if (typeof window.showMessage === "function") {
+          window.showMessage("Action completed successfully.", "success");
+        }
+      }
 
       return true;
     } catch (error) {
@@ -354,11 +358,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       hideResult();
 
-      showMessage(
-        "Could not encode the text.",
-        "error",
-        announce
-      );
+      notify("Could not encode the text.", "error", announce);
 
       return false;
     } finally {
@@ -374,11 +374,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!value) {
       hideResult();
 
-      showMessage(
-        "Enter Base64 data to decode first.",
-        "error",
-        announce
-      );
+      notify("Enter Base64 data to decode first.", "error", announce);
 
       inputText.focus();
       return false;
@@ -387,11 +383,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!isValidBase64(value)) {
       hideResult();
 
-      showMessage(
-        "Enter valid Base64 data.",
-        "error",
-        announce
-      );
+      notify("Enter valid Base64 data.", "error", announce);
 
       inputText.focus();
       return false;
@@ -402,8 +394,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     try {
       const decoded = decodeBase64ToUtf8(value);
-      const inputBytes =
-        getUtf8ByteLength(normalizeBase64(value));
+      const inputBytes = getUtf8ByteLength(normalizeBase64(value));
       const outputBytes = getUtf8ByteLength(decoded);
 
       showResult({
@@ -412,15 +403,18 @@ document.addEventListener("DOMContentLoaded", function () {
         action: "decoded",
         inputBytes,
         outputBytes,
-        encodingLabel:
-          "Decoded from Base64 as valid UTF-8 text"
+        encodingLabel: "Decoded from Base64 as valid UTF-8 text",
       });
 
-      showMessage(
-        "Base64 decoded successfully.",
-        "success",
-        announce
-      );
+      setInlineMessage("Action completed successfully.", "success");
+
+      if (announce) {
+        if (typeof window.showActionSuccess === "function") {
+          window.showActionSuccess();
+        } else if (typeof window.showMessage === "function") {
+          window.showMessage("Action completed successfully.", "success");
+        }
+      }
 
       return true;
     } catch (error) {
@@ -428,10 +422,10 @@ document.addEventListener("DOMContentLoaded", function () {
 
       hideResult();
 
-      showMessage(
+      notify(
         "The Base64 data does not contain valid UTF-8 text.",
         "error",
-        announce
+        announce,
       );
 
       return false;
@@ -445,151 +439,60 @@ document.addEventListener("DOMContentLoaded", function () {
     const value = inputText.value.trim();
 
     if (!value) {
-      showMessage("", "info", false);
+      notify("", "info", false);
       return;
     }
 
     if (isValidBase64(value)) {
-      showMessage(
-        "Valid Base64 detected. It is ready to decode.",
-        "success",
-        false
-      );
+      notify("Valid Base64 detected. It is ready to decode.", "success", false);
 
       return;
     }
 
-    showMessage(
-      "Plain text detected. It is ready to encode.",
-      "info",
-      false
-    );
+    notify("Plain text detected. It is ready to encode.", "info", false);
   }
 
   async function copyResult() {
     if (!resultAvailable || !outputText.value) {
-      showMessage("Nothing to copy.", "error");
+      notify("Nothing to copy.", "error");
       return;
     }
 
-    try {
-      if (typeof window.xavertCopyText === "function") {
-        const result = window.xavertCopyText(
-          outputText.value,
-          "Result copied."
-        );
-
-        if (result instanceof Promise) {
-          await result;
-        }
-
-        return;
-      }
-
-      if (navigator.clipboard && window.isSecureContext) {
-        await navigator.clipboard.writeText(outputText.value);
-        showMessage("Result copied.", "success");
-        return;
-      }
-
-      const temporaryTextarea =
-        document.createElement("textarea");
-
-      temporaryTextarea.value = outputText.value;
-      temporaryTextarea.setAttribute("readonly", "");
-      temporaryTextarea.style.position = "fixed";
-      temporaryTextarea.style.opacity = "0";
-      temporaryTextarea.style.pointerEvents = "none";
-
-      document.body.appendChild(temporaryTextarea);
-      temporaryTextarea.select();
-
-      const copied = document.execCommand("copy");
-      temporaryTextarea.remove();
-
-      if (!copied) {
-        throw new Error("Clipboard command failed.");
-      }
-
-      showMessage("Result copied.", "success");
-    } catch (error) {
-      console.error("Base64 result copy failed:", error);
-
-      showMessage(
-        "Could not copy the result.",
-        "error"
-      );
-    }
+    await xavertCopyText(outputText.value);
   }
 
   function createSafeFilename() {
     const suffix =
-      lastAction === "encoded"
-        ? "encoded"
-        : lastAction === "decoded"
-          ? "decoded"
-          : "result";
+      lastAction === "encoded-url"
+        ? "encoded-url"
+        : lastAction === "encoded"
+          ? "encoded"
+          : lastAction === "decoded"
+            ? "decoded"
+            : "result";
 
     return `xavert-base64-${suffix}.txt`;
   }
 
-  function downloadBlob(filename, blob) {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = filename;
-    link.hidden = true;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
-  }
-
   function downloadResult() {
     if (!resultAvailable || !outputText.value) {
-      showMessage("Nothing to download.", "error");
+      notify("Nothing to download.", "error");
       return;
     }
 
-    const blob = new Blob([outputText.value], {
-      type: "text/plain;charset=utf-8"
-    });
-
-    downloadBlob(createSafeFilename(), blob);
-
-    showMessage(
-      "Download started.",
-      "success"
+    downloadFile(
+      createSafeFilename(),
+      outputText.value,
+      "text/plain;charset=utf-8",
     );
   }
 
   function clearTool() {
     inputText.value = "";
+    base64Variant.value = "standard";
 
     hideResult();
     updateInputInformation();
-
-    window.clearTimeout(messageTimer);
-
-    showMessage(
-      "Editor cleared.",
-      "success"
-    );
-
-    messageTimer = window.setTimeout(function () {
-      if (
-        message &&
-        message.textContent === "Editor cleared."
-      ) {
-        showMessage("", "info", false);
-      }
-    }, 1800);
-
     inputText.focus();
   }
 
@@ -597,7 +500,14 @@ document.addEventListener("DOMContentLoaded", function () {
     inputText.value = sampleText;
 
     updateInputInformation();
-    encodeBase64();
+
+    if (encodeBase64({ announce: false })) {
+      if (typeof window.showSampleSuccess === "function") {
+        window.showSampleSuccess();
+      } else {
+        notify("Sample loaded successfully.", "success");
+      }
+    }
 
     inputText.focus();
     inputText.select();
@@ -610,11 +520,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     hideResult();
 
-    showMessage(
-      "Input changed. Run the conversion again.",
-      "info",
-      false
-    );
+    notify("Input changed. Run the conversion again.", "info", false);
   }
 
   function handleInputChange() {
@@ -637,20 +543,9 @@ document.addEventListener("DOMContentLoaded", function () {
   sampleBtn.addEventListener("click", loadSample);
 
   inputText.addEventListener("input", handleInputChange);
-
-  inputText.addEventListener("keydown", function (event) {
-    if (
-      event.key === "Enter" &&
-      (event.ctrlKey || event.metaKey)
-    ) {
-      event.preventDefault();
-
-      if (isValidBase64(inputText.value)) {
-        decodeBase64();
-      } else {
-        encodeBase64();
-      }
-    }
+  base64Variant.addEventListener("change", function () {
+    invalidateResult();
+    validateCurrentInput();
   });
 
   updateInputInformation();

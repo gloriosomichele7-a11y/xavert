@@ -1,0 +1,281 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Case Converter</title>
+
+    <meta
+      name="description"
+      content="Convert text to uppercase, lowercase, sentence case, title case, camelCase, PascalCase, snake_case, kebab-case and more directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/case-converter.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .case-editor {
+        min-height: 300px;
+        resize: vertical;
+        line-height: 1.7;
+      }
+
+      .case-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .case-options {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 12px;
+        margin-top: 16px;
+      }
+
+      .case-result[hidden] {
+        display: none !important;
+      }
+
+      .case-preview {
+        min-height: 120px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.7;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/case-converter.js" defer></script>
+  </head>
+
+  <body
+    data-tool="case-converter"
+    data-related-tools="text-toolkit,word-character-counter,lorem-ipsum-generator,text-diff-checker,regex-tester,html-entity-encoder-decoder"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Case Converter</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="case-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="case-workspace-title" class="tool-card-title">
+              Convert Text Case
+            </h2>
+
+            <p class="tool-card-description">
+              Transform text into writing, programming and identifier case
+              styles.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-group">
+              <label for="inputText">Input Text</label>
+
+              <textarea
+                id="inputText"
+                class="case-editor"
+                placeholder="Paste or type text here..."
+                spellcheck="true"
+              ></textarea>
+            </div>
+
+            <div class="case-options">
+              <div class="form-group">
+                <label for="caseType">Case Type</label>
+                <select id="caseType">
+                  <option value="sentence">Sentence case</option>
+                  <option value="lower">lowercase</option>
+                  <option value="upper">UPPERCASE</option>
+                  <option value="title">Title Case</option>
+                  <option value="capitalized">Capitalized Case</option>
+                  <option value="camel">camelCase</option>
+                  <option value="pascal">PascalCase</option>
+                  <option value="snake">snake_case</option>
+                  <option value="screaming-snake">SCREAMING_SNAKE_CASE</option>
+                  <option value="kebab">kebab-case</option>
+                  <option value="screaming-kebab">SCREAMING-KEBAB-CASE</option>
+                  <option value="dot">dot.case</option>
+                  <option value="path">path/case</option>
+                  <option value="constant">CONSTANT_CASE</option>
+                  <option value="alternating">aLtErNaTiNg cAsE</option>
+                  <option value="inverse">iNVERSE cASE</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="titleStyle">Title Case Style</label>
+                <select id="titleStyle">
+                  <option value="standard">Standard</option>
+                  <option value="headline">Headline Style</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="button-grid case-actions">
+              <button
+                id="convertBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Convert Case
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button id="swapBtn" class="btn btn-secondary" type="button">
+                Use Result as Input
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <section
+              id="resultBox"
+              class="tool-card-result case-result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <h3 id="result-title">Converted Text</h3>
+
+              <div class="form-group">
+                <label for="outputText">Result</label>
+                <textarea
+                  id="outputText"
+                  class="case-preview"
+                  readonly
+                  spellcheck="false"
+                ></textarea>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="inputChars" class="stat-value">0</strong>
+                  <span class="stat-label">Input Chars</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="outputChars" class="stat-value">0</strong>
+                  <span class="stat-label">Output Chars</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="wordCount" class="stat-value">0</strong>
+                  <span class="stat-label">Words</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="lineCount" class="stat-value">0</strong>
+                  <span class="stat-label">Lines</span>
+                </div>
+              </div>
+
+              <div class="button-grid case-actions">
+                <button id="copyBtn" class="btn" type="button">
+                  Copy Result
+                </button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download TXT
+                </button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Case Converter transforms text into common writing and
+          programming case styles directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Convert text to lowercase, UPPERCASE and sentence case.</li>
+          <li>Generate Title Case and Capitalized Case.</li>
+          <li>Generate camelCase and PascalCase identifiers.</li>
+          <li>Generate snake_case and SCREAMING_SNAKE_CASE.</li>
+          <li>Generate kebab-case and SCREAMING-KEBAB-CASE.</li>
+          <li>Generate dot.case and path/case.</li>
+          <li>Create alternating and inverse case text.</li>
+          <li>Copy or download the converted result.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Case conversion happens locally within your browser. Your text is
+          never uploaded, transmitted, shared or stored on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

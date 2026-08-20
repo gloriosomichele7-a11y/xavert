@@ -1,729 +1,617 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>XAVERT | Color Palette Extractor</title>
-
-<meta
-  name="description"
-  content="Extract dominant colors from images and generate HEX, RGB and HSL color palettes directly in your browser. Copy or download palettes instantly."
->
-
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
-
-<link
-  rel="canonical"
-  href="https://xavert.com/tools/color-palette-extractor.html"
->
-
-<link
-  rel="icon"
-  href="../favicon.svg"
-  type="image/svg+xml"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/global.css"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/components.css"
->
-
-<link
-  rel="stylesheet"
-  href="../assets/css/responsive.css"
->
-
-<meta property="og:type" content="website">
-
-<meta
-  property="og:title"
-  content="XAVERT | Color Palette Extractor"
->
-
-<meta
-  property="og:description"
-  content="Extract dominant colors from images and generate HEX, RGB and HSL palettes directly in your browser."
->
-
-<meta
-  property="og:url"
-  content="https://xavert.com/tools/color-palette-extractor.html"
->
-
-<meta
-  property="og:image"
-  content="https://xavert.com/assets/images/og-image.png"
->
-
-<meta property="og:site_name" content="XAVERT">
-
-<meta name="twitter:card" content="summary_large_image">
-
-<meta
-  name="twitter:title"
-  content="XAVERT | Color Palette Extractor"
->
-
-<meta
-  name="twitter:description"
-  content="Extract beautiful color palettes from images directly in your browser."
->
-
-<meta
-  name="twitter:image"
-  content="https://xavert.com/assets/images/og-image.png"
->
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"Color Palette Extractor",
-  "applicationCategory":"DesignApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/color-palette-extractor.html",
-  "description":"Extract dominant colors from images and generate HEX, RGB and HSL palettes directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-
-<style>
-
-.palette-controls{
-grid-template-columns:minmax(0,1fr) 240px;
-align-items:start;
-}
-
-.dropzone{
-display:flex;
-min-height:190px;
-padding:30px;
-border:2px dashed #d1d5db;
-border-radius:16px;
-background:#f9fafb;
-cursor:pointer;
-align-items:center;
-justify-content:center;
-text-align:center;
-transition:
-border-color .2s ease,
-background-color .2s ease,
-transform .2s ease;
-}
-
-.dropzone:hover,
-.dropzone:focus-visible,
-.dropzone.drag{
-border-color:#dc2626;
-background:#fef2f2;
-outline:none;
-}
-
-.dropzone:focus-visible{
-box-shadow:0 0 0 4px rgba(220,38,38,.12);
-}
-
-.dropzone.drag{
-transform:scale(1.005);
-}
-
-.dropzone-content strong{
-display:block;
-margin-bottom:8px;
-font-size:18px;
-color:#111827;
-}
-
-.dropzone-content span{
-display:block;
-color:#6b7280;
-font-size:14px;
-line-height:1.6;
-}
-
-.palette-settings{
-display:flex;
-flex-direction:column;
-gap:18px;
-}
-
-.palette-primary-actions{
-grid-template-columns:1fr;
-}
-
-.preview-box,
-.palette-box{
-display:none;
-margin-top:24px;
-padding:24px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:18px;
-}
-
-.preview-box h2,
-.palette-box h2{
-margin-bottom:18px;
-font-size:22px;
-}
-
-.image-preview-wrap{
-display:flex;
-min-height:220px;
-padding:20px;
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-align-items:center;
-justify-content:center;
-overflow:hidden;
-}
-
-#previewImage{
-display:block;
-max-width:100%;
-max-height:420px;
-width:auto;
-height:auto;
-border-radius:10px;
-}
-
-.image-info{
-margin-top:14px;
-color:#6b7280;
-font-size:14px;
-line-height:1.6;
-text-align:center;
-overflow-wrap:anywhere;
-}
-
-.palette-actions{
-grid-template-columns:repeat(5,minmax(0,1fr));
-margin-top:22px;
-}
-
-.palette{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
-gap:18px;
-}
-
-.color-card{
-min-width:0;
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:16px;
-overflow:hidden;
-}
-
-.color-preview{
-display:flex;
-height:120px;
-padding:14px;
-align-items:flex-start;
-justify-content:space-between;
-}
-
-.color-position{
-display:flex;
-width:30px;
-height:30px;
-border:1px solid currentColor;
-border-radius:999px;
-align-items:center;
-justify-content:center;
-font-size:13px;
-font-weight:700;
-}
-
-.color-percentage{
-padding:6px 9px;
-border:1px solid currentColor;
-border-radius:999px;
-font-size:12px;
-}
-
-.color-info{
-padding:16px;
-}
-
-.color-info h3{
-margin-bottom:14px;
-font-size:19px;
-}
-
-.color-values{
-display:flex;
-flex-direction:column;
-gap:10px;
-}
-
-.color-value-row{
-display:flex;
-min-width:0;
-gap:10px;
-align-items:flex-start;
-justify-content:space-between;
-font-size:13px;
-}
-
-.color-value-label{
-color:#6b7280;
-font-weight:700;
-}
-
-.color-value-row code{
-min-width:0;
-color:#111827;
-font-family:monospace;
-text-align:right;
-overflow-wrap:anywhere;
-}
-
-.color-card-actions{
-display:grid;
-grid-template-columns:1fr;
-gap:8px;
-margin-top:16px;
-}
-
-.color-copy-btn{
-padding:10px 12px;
-font-size:13px;
-}
-
-.xavert-footer-note{
-color:#111827;
-font-size:12px;
-}
-
-#toast{
-display:none;
-}
-
-@media (max-width:992px){
-
-.palette-actions{
-grid-template-columns:repeat(3,minmax(0,1fr));
-}
-
-}
-
-@media (max-width:768px){
-
-.palette-controls{
-grid-template-columns:1fr;
-}
-
-.palette-settings{
-display:grid;
-grid-template-columns:1fr;
-}
-
-.palette-actions{
-grid-template-columns:repeat(2,minmax(0,1fr));
-}
-
-.preview-box,
-.palette-box{
-padding:20px;
-}
-
-}
-
-@media (max-width:576px){
-
-.dropzone{
-min-height:170px;
-padding:22px 16px;
-}
-
-.preview-box,
-.palette-box{
-padding:16px;
-border-radius:14px;
-}
-
-.image-preview-wrap{
-min-height:180px;
-padding:14px;
-}
-
-.palette-actions{
-grid-template-columns:1fr;
-}
-
-.palette{
-grid-template-columns:1fr;
-}
-
-}
-
-</style>
-
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
-<script src="../assets/js/color-palette-extractor.js" defer></script>
-
-</head>
-
-<body data-tool="color-palette-extractor">
-
-<main class="container">
-
-<a href="../index.html" class="back-link">
-← Back to Home
-</a>
-
-<section class="hero">
-
-<img
-src="../logo-hero.svg"
-alt="XAVERT"
-class="tool-logo"
-width="210"
-height="210"
-fetchpriority="high"
-decoding="async">
-
-<h1 id="tool-title" class="tool-title">
-Color Palette Extractor
-</h1>
-
-</section>
-
-<section
-class="tool-card"
-aria-labelledby="tool-title">
-
-<div class="form-grid palette-controls">
-
-<div class="form-group">
-
-<label for="fileInput">
-Image
-</label>
-
-<div
-id="dropzone"
-class="dropzone"
-role="button"
-tabindex="0"
-aria-label="Select or drop an image"
-aria-describedby="uploadHelp message">
-
-<div class="dropzone-content">
-
-<strong>
-Drop an image here
-</strong>
-
-<span>
-or click to select a JPG, PNG, WebP, GIF, BMP or AVIF file
-</span>
-
-<span id="uploadHelp">
-Maximum file size: 25 MB
-</span>
-
-</div>
-
-<input
-id="fileInput"
-type="file"
-accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/avif"
-hidden>
-
-</div>
-
-</div>
-
-<div class="palette-settings">
-
-<div class="form-group">
-
-<label for="paletteSize">
-Palette size
-</label>
-
-<select id="paletteSize">
-<option value="5" selected>5 Colors</option>
-<option value="8">8 Colors</option>
-<option value="10">10 Colors</option>
-</select>
-
-</div>
-
-<div class="button-grid palette-primary-actions">
-
-<button
-id="extractBtn"
-class="btn"
-type="button">
-Extract Palette
-</button>
-
-<button
-id="clearBtn"
-class="btn btn-secondary"
-type="button">
-Clear
-</button>
-
-<button
-id="sampleBtn"
-class="btn btn-secondary"
-type="button">
-Select Image
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-<div
-id="previewBox"
-class="preview-box">
-
-<h2>
-Image Preview
-</h2>
-
-<div class="image-preview-wrap">
-
-<img
-id="previewImage"
-alt="Selected image preview">
-
-</div>
-
-<div
-id="imageInfo"
-class="image-info"
-aria-live="polite">
-</div>
-
-<div class="stats-grid">
-
-<div class="stat-card">
-<strong
-id="colorCountStat"
-class="stat-value">
-0
-</strong>
-<span class="stat-label">
-Colors
-</span>
-</div>
-
-<div class="stat-card">
-<strong
-id="imageWidthStat"
-class="stat-value">
-0
-</strong>
-<span class="stat-label">
-Width
-</span>
-</div>
-
-<div class="stat-card">
-<strong
-id="imageHeightStat"
-class="stat-value">
-0
-</strong>
-<span class="stat-label">
-Height
-</span>
-</div>
-
-<div class="stat-card">
-<strong
-id="fileSizeStat"
-class="stat-value">
-0 KB
-</strong>
-<span class="stat-label">
-File Size
-</span>
-</div>
-
-</div>
-
-</div>
-
-<div
-id="paletteBox"
-class="palette-box">
-
-<h2>
-Extracted Palette
-</h2>
-
-<div
-id="palette"
-class="palette"
-aria-live="polite">
-</div>
-
-<div class="button-grid palette-actions">
-
-<button
-id="copyPaletteBtn"
-class="btn"
-type="button">
-Copy Palette
-</button>
-
-<button
-id="downloadTxtBtn"
-class="btn btn-secondary"
-type="button">
-Download TXT
-</button>
-
-<button
-id="downloadJsonBtn"
-class="btn btn-secondary"
-type="button">
-Download JSON
-</button>
-
-<button
-id="downloadCssBtn"
-class="btn btn-secondary"
-type="button">
-Download CSS
-</button>
-
-<button
-id="downloadSvgBtn"
-class="btn btn-secondary"
-type="button">
-Download SVG
-</button>
-
-</div>
-
-</div>
-
-<div
-id="message"
-class="message"
-role="status"
-aria-live="polite"
-aria-atomic="true">
-</div>
-
-</section>
-
-<section class="info about-card">
-
-<h2>
-About
-</h2>
-
-<p class="about-intro">
-The XAVERT Color Palette Extractor analyzes an image and identifies its dominant colors for graphic design, branding, user interfaces, websites and digital artwork.
-</p>
-
-<h3>
-Main Features
-</h3>
-
-<ul class="about-features">
-
-<li>
-Extract 5, 8 or 10 visually distinct dominant colors.
-</li>
-
-<li>
-View every color in HEX, RGB and HSL formats.
-</li>
-
-<li>
-See the estimated visual coverage of each extracted color.
-</li>
-
-<li>
-Copy individual colors or the complete palette.
-</li>
-
-<li>
-Download palettes as TXT, JSON, CSS or SVG files.
-</li>
-
-<li>
-Process JPG, PNG, WebP, GIF, BMP and AVIF images.
-</li>
-
-</ul>
-
-<h3>
-Privacy First
-</h3>
-
-<p class="about-privacy">
-Everything is processed locally within your browser. Your images and extracted colors are never uploaded, transmitted, shared or stored on any server.
-</p>
-
-</section>
-
-<section
-class="info"
-hidden>
-
-<h2>
-Related Tools
-</h2>
-
-<div id="related-tools"></div>
-
-</section>
-
-</main>
-
-<canvas
-id="canvas"
-width="1"
-height="1"
-hidden>
-</canvas>
-
-<footer class="xavert-footer-note">
-Powered by XAVERT
-</footer>
-
-<div
-id="toast"
-class="xavert-toast"
-aria-hidden="true">
-</div>
-
-</body>
-</html> 
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Color Palette Extractor</title>
+
+    <meta
+      name="description"
+      content="Extract dominant colors from images and generate HEX, RGB and HSL color palettes directly in your browser. Copy or download palettes instantly."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/color-palette-extractor.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Color Palette Extractor" />
+    <meta
+      property="og:description"
+      content="Extract dominant colors from images and generate HEX, RGB and HSL palettes directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/color-palette-extractor.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Color Palette Extractor" />
+    <meta
+      name="twitter:description"
+      content="Extract beautiful color palettes from images directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Color Palette Extractor",
+        "applicationCategory": "DesignApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/color-palette-extractor.html",
+        "description": "Extract dominant colors from images and generate HEX, RGB and HSL palettes directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
+      }
+    </script>
+
+    <style>
+      /* Tool-specific presentation only. Shared shell remains in XAVERT assets. */
+
+      .palette-controls {
+        grid-template-columns: minmax(0, 1fr) minmax(220px, 260px);
+        align-items: start;
+      }
+
+      .dropzone {
+        display: flex;
+        min-height: 210px;
+        padding: 30px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        cursor: pointer;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          box-shadow 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .dropzone:hover,
+      .dropzone.drag {
+        border-color: #dc2626;
+        background: #fef2f2;
+      }
+
+      .dropzone:focus-visible {
+        outline: none;
+        border-color: #dc2626;
+        background: #fef2f2;
+        box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.12);
+      }
+
+      .dropzone.drag {
+        transform: scale(1.005);
+      }
+
+      .dropzone-icon {
+        display: flex;
+        width: 52px;
+        height: 52px;
+        margin: 0 auto 14px;
+        border: 1px solid #fecaca;
+        border-radius: 14px;
+        background: #ffffff;
+        color: #dc2626;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .dropzone-icon svg {
+        width: 27px;
+        height: 27px;
+      }
+
+      .dropzone-title {
+        display: block;
+        margin-bottom: 8px;
+        color: #111827;
+        font-size: 18px;
+        font-weight: 800;
+      }
+
+      .dropzone-instruction,
+      .dropzone-formats,
+      .dropzone-limit {
+        display: block;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .dropzone-formats {
+        margin-top: 12px;
+        color: #4b5563;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .dropzone-limit {
+        margin-top: 2px;
+        font-size: 13px;
+      }
+
+      .palette-settings {
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .palette-primary-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 12px;
+        margin-top: 0;
+      }
+
+      .preview-box,
+      .palette-box {
+        margin-top: 24px;
+      }
+
+      .preview-box h2,
+      .palette-box h2 {
+        margin: 0 0 18px;
+        font-size: 22px;
+      }
+
+      .image-preview-wrap {
+        display: flex;
+        min-height: 220px;
+        padding: 20px;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: #ffffff;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      #previewImage {
+        display: block;
+        width: auto;
+        max-width: 100%;
+        height: auto;
+        max-height: 420px;
+        border-radius: 10px;
+      }
+
+      .image-info {
+        margin-top: 14px;
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+
+      .palette {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 210px), 1fr));
+        gap: 18px;
+      }
+
+      .palette-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+        gap: 12px;
+        margin-top: 22px;
+      }
+
+      .color-card {
+        min-width: 0;
+        border: 1px solid #e5e7eb;
+        border-radius: 16px;
+        background: #ffffff;
+        overflow: hidden;
+      }
+
+      .color-preview {
+        display: flex;
+        height: 120px;
+        padding: 14px;
+        align-items: flex-start;
+        justify-content: space-between;
+      }
+
+      .color-position {
+        display: flex;
+        width: 30px;
+        height: 30px;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        align-items: center;
+        justify-content: center;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .color-percentage {
+        padding: 6px 9px;
+        border: 1px solid currentColor;
+        border-radius: 999px;
+        font-size: 12px;
+      }
+
+      .color-info {
+        padding: 16px;
+      }
+
+      .color-info h3 {
+        margin: 0 0 14px;
+        font-size: 19px;
+      }
+
+      .color-values {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .color-value-row {
+        display: flex;
+        min-width: 0;
+        gap: 10px;
+        align-items: flex-start;
+        justify-content: space-between;
+        font-size: 13px;
+      }
+
+      .color-value-label {
+        color: #6b7280;
+        font-weight: 700;
+      }
+
+      .color-value-row code {
+        min-width: 0;
+        color: #111827;
+        font-family: monospace;
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+
+      .color-card-actions {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 8px;
+        margin-top: 16px;
+      }
+
+      .color-copy-btn {
+        padding: 10px 12px;
+        font-size: 13px;
+      }
+
+      @media (max-width: 768px) {
+        .palette-controls {
+          grid-template-columns: 1fr;
+        }
+
+        .palette-settings {
+          display: grid;
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 576px) {
+        .dropzone {
+          min-height: 185px;
+          padding: 22px 16px;
+        }
+
+        .image-preview-wrap {
+          min-height: 180px;
+          padding: 14px;
+        }
+
+        .palette {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/color-palette-extractor.js" defer></script>
+  </head>
+
+  <body
+    data-tool="color-palette-extractor"
+    data-related-tools="color-toolkit,image-toolkit,qr-generator"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Color Palette Extractor</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="palette-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="palette-workspace-title" class="tool-card-title">
+              Extract a Color Palette
+            </h2>
+
+            <p class="tool-card-description">
+              Upload an image, choose the number of colors and generate a
+              downloadable palette directly in your browser.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid palette-controls">
+              <div class="form-group">
+                <label for="fileInput">Image</label>
+
+                <div
+                  id="dropzone"
+                  class="dropzone"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Choose or drop an image"
+                  aria-describedby="uploadHelp message"
+                >
+                  <div class="dropzone-content">
+                    <span class="dropzone-icon" aria-hidden="true">
+                      <svg
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.8"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                      >
+                        <path d="M12 16V4"></path>
+                        <path d="m7 9 5-5 5 5"></path>
+                        <path
+                          d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"
+                        ></path>
+                      </svg>
+                    </span>
+
+                    <strong class="dropzone-title"
+                      >Choose or Drop an Image</strong
+                    >
+                    <span class="dropzone-instruction"
+                      >Click anywhere here or drag and drop an image</span
+                    >
+                    <span class="dropzone-formats"
+                      >JPG • PNG • WebP • GIF • BMP • AVIF</span
+                    >
+                    <span id="uploadHelp" class="dropzone-limit"
+                      >Maximum file size: 25 MB</span
+                    >
+                  </div>
+
+                  <input
+                    id="fileInput"
+                    type="file"
+                    accept="image/jpeg,image/png,image/webp,image/gif,image/bmp,image/avif"
+                    hidden
+                  />
+                </div>
+              </div>
+
+              <div class="palette-settings">
+                <div class="form-group">
+                  <label for="paletteSize">Palette size</label>
+
+                  <select id="paletteSize">
+                    <option value="3">3 Colors</option>
+                    <option value="5" selected>5 Colors</option>
+                    <option value="8">8 Colors</option>
+                    <option value="10">10 Colors</option>
+                    <option value="12">12 Colors</option>
+                    <option value="custom">Custom…</option>
+                  </select>
+                </div>
+
+                <div id="customPaletteSizeGroup" class="form-group" hidden>
+                  <label for="customPaletteSize">Custom colors</label>
+                  <input id="customPaletteSize" type="number" min="2" max="20" value="6" inputmode="numeric" />
+                  <small>Choose from 2 to 20 colors.</small>
+                </div>
+                </div>
+
+                <div class="button-grid palette-primary-actions">
+                  <button
+                    id="extractBtn"
+                    class="btn"
+                    type="button"
+                    data-primary-action
+                  >
+                    Extract Palette
+                  </button>
+                  <button
+                    id="clearBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    data-clear-action
+                  >
+                    Clear
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="previewBox"
+              class="card preview-box"
+              aria-labelledby="preview-heading"
+              hidden
+            >
+              <h2 id="preview-heading">Image Preview</h2>
+
+              <div class="image-preview-wrap">
+                <img id="previewImage" alt="Selected image preview" />
+              </div>
+
+              <div id="imageInfo" class="image-info" aria-live="polite"></div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="colorCountStat" class="stat-value">0</strong>
+                  <span class="stat-label">Colors</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="imageWidthStat" class="stat-value">0</strong>
+                  <span class="stat-label">Width</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="imageHeightStat" class="stat-value">0</strong>
+                  <span class="stat-label">Height</span>
+                </div>
+                <div class="stat-card">
+                  <strong id="fileSizeStat" class="stat-value">0 KB</strong>
+                  <span class="stat-label">File Size</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="paletteBox"
+              class="card palette-box"
+              aria-labelledby="palette-heading"
+              hidden
+            >
+              <h2 id="palette-heading">Extracted Palette</h2>
+              <div id="palette" class="palette" aria-live="polite"></div>
+
+              <div class="button-grid palette-actions">
+                <button id="copyPaletteBtn" class="btn" type="button">
+                  Copy Palette
+                </button>
+                <button
+                  id="downloadTxtBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download TXT
+                </button>
+                <button
+                  id="downloadJsonBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download JSON
+                </button>
+                <button
+                  id="downloadCssBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download CSS
+                </button>
+                <button
+                  id="downloadSvgBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download SVG
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">
+          The XAVERT Color Palette Extractor analyzes an image and identifies
+          its dominant colors for graphic design, branding, user interfaces,
+          websites and digital artwork.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Extract from 2 to 20 visually distinct dominant colors.</li>
+          <li>View every color in HEX, RGB and HSL formats.</li>
+          <li>See the estimated visual coverage of each extracted color.</li>
+          <li>Copy individual colors or the complete palette.</li>
+          <li>Download palettes as TXT, JSON, CSS or SVG files.</li>
+          <li>Process JPG, PNG, WebP, GIF, BMP and AVIF images.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your images and
+          extracted colors are never uploaded, transmitted, shared or stored on
+          any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <canvas id="canvas" width="1" height="1" hidden></canvas>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

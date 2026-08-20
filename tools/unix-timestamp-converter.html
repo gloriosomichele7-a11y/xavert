@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Unix Timestamp Converter</title>
+
+    <meta
+      name="description"
+      content="Convert Unix timestamps to readable dates and convert dates back to Unix time in seconds or milliseconds directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/unix-timestamp-converter.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <style>
+      .timestamp-actions,
+      .timestamp-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .timestamp-result[hidden] {
+        display: none !important;
+      }
+
+      .timestamp-output {
+        min-height: 220px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.7;
+      }
+
+      .timestamp-note {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/unix-timestamp-converter.js" defer></script>
+  </head>
+
+  <body
+    data-tool="unix-timestamp-converter"
+    data-related-tools="date-time-toolkit,jwt-decoder,data-converter,unit-converter,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Unix Timestamp Converter</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="timestamp-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="timestamp-workspace-title" class="tool-card-title">
+              Convert Unix Time and Dates
+            </h2>
+
+            <p class="tool-card-description">
+              Convert Unix timestamps to readable dates or convert dates back to
+              Unix timestamps in seconds and milliseconds.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="conversionMode">Conversion Mode</label>
+                <select id="conversionMode">
+                  <option value="timestamp-date">Unix Timestamp → Date</option>
+                  <option value="date-timestamp">Date → Unix Timestamp</option>
+                </select>
+              </div>
+
+              <div
+                id="timestampPanel"
+                class="form-group"
+                data-conversion-panel="timestamp-date"
+              >
+                <label for="timestampInput">Unix Timestamp</label>
+                <input
+                  id="timestampInput"
+                  type="text"
+                  inputmode="numeric"
+                  placeholder="Example: 1735689600"
+                  autocomplete="off"
+                  spellcheck="false"
+                />
+                <p class="timestamp-note">
+                  Enter seconds or milliseconds. Auto-detect is available.
+                </p>
+              </div>
+
+              <div
+                id="timestampUnitGroup"
+                class="form-group"
+                data-conversion-panel="timestamp-date"
+              >
+                <label for="timestampUnit">Timestamp Unit</label>
+                <select id="timestampUnit">
+                  <option value="auto">Auto Detect</option>
+                  <option value="seconds">Seconds</option>
+                  <option value="milliseconds">Milliseconds</option>
+                </select>
+              </div>
+
+              <div
+                id="datePanel"
+                class="form-group"
+                data-conversion-panel="date-timestamp"
+                hidden
+              >
+                <label for="dateInput">Date and Time</label>
+                <input id="dateInput" type="datetime-local" step="1" />
+              </div>
+
+              <div
+                id="timezoneGroup"
+                class="form-group"
+                data-conversion-panel="date-timestamp"
+                hidden
+              >
+                <label for="dateInterpretation">Interpret Date As</label>
+                <select id="dateInterpretation">
+                  <option value="local">Local Time</option>
+                  <option value="utc">UTC</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="button-grid timestamp-actions">
+              <button
+                id="convertBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Convert Timestamp
+              </button>
+
+              <button id="nowBtn" class="btn btn-secondary" type="button">
+                Use Current Time
+              </button>
+
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <section
+              id="resultBox"
+              class="tool-card-result timestamp-result"
+              aria-labelledby="result-title"
+              hidden
+            >
+              <h3 id="result-title">Conversion Result</h3>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="secondsStat" class="stat-value">—</strong>
+                  <span class="stat-label">Unix Seconds</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="millisecondsStat" class="stat-value">—</strong>
+                  <span class="stat-label">Unix Milliseconds</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="isoStat" class="stat-value">—</strong>
+                  <span class="stat-label">ISO Date</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="timezoneStat" class="stat-value">—</strong>
+                  <span class="stat-label">Local Time Zone</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="output">Detailed Result</label>
+                <textarea
+                  id="output"
+                  class="timestamp-output"
+                  readonly
+                  spellcheck="false"
+                ></textarea>
+              </div>
+
+              <div class="button-grid timestamp-result-actions">
+                <button id="copyBtn" class="btn" type="button">
+                  Copy Result
+                </button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download TXT
+                </button>
+              </div>
+            </section>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Unix Timestamp Converter converts Unix time and calendar
+          dates directly in your browser.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Convert Unix timestamps to readable dates.</li>
+          <li>Convert dates to Unix seconds and milliseconds.</li>
+          <li>Automatically detect second and millisecond timestamps.</li>
+          <li>View local time, UTC, ISO 8601 and Unix values together.</li>
+          <li>Interpret entered dates as local time or UTC.</li>
+          <li>Use the current time instantly.</li>
+          <li>Copy or download the complete conversion result.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          All conversions happen locally within your browser. Dates and
+          timestamps are never uploaded, transmitted, shared or stored on any
+          server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

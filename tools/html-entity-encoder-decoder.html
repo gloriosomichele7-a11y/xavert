@@ -1,733 +1,334 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>XAVERT | HTML Entity Encoder / Decoder</title>
+    <title>XAVERT | HTML Entity Encoder / Decoder</title>
 
-<meta name="description" content="Encode and decode HTML entities online. Convert special characters into HTML entities and decode entities back into readable text directly in your browser.">
+    <meta
+      name="description"
+      content="Encode and decode HTML entities directly in your browser. Convert special characters into HTML entities and decode entities back into readable text."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/html-entity-encoder-decoder.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<link rel="canonical" href="https://xavert.com/tools/html-entity-encoder-decoder.html">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="XAVERT | HTML Entity Encoder / Decoder"
+    />
+    <meta
+      property="og:description"
+      content="Encode and decode HTML entities directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/html-entity-encoder-decoder.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | HTML Entity Encoder / Decoder">
-<meta property="og:description" content="Encode and decode HTML entities directly in your browser. Convert special characters into HTML entities or decode entities back into readable text.">
-<meta property="og:url" content="https://xavert.com/tools/html-entity-encoder-decoder.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="XAVERT | HTML Entity Encoder / Decoder"
+    />
+    <meta
+      name="twitter:description"
+      content="Encode and decode HTML entities locally in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | HTML Entity Encoder / Decoder">
-<meta name="twitter:description" content="Encode and decode HTML entities locally in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"HTML Entity Encoder / Decoder",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/html-entity-encoder-decoder.html",
-  "description":"Encode and decode HTML entities directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Is my text uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. Encoding and decoding are performed entirely inside your browser."
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "HTML Entity Encoder / Decoder",
+        "alternateName": "XAVERT HTML Entity Encoder / Decoder",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/html-entity-encoder-decoder.html",
+        "description": "Encode and decode HTML entities directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which entities are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool supports common HTML named entities and numeric entities."
+    </script>
+
+    <style>
+      /* HTML Entity tool-specific presentation only. */
+
+      .entity-input {
+        min-height: 220px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.65;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I decode HTML entities back into normal text?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. The decoder converts HTML entities back into readable characters instantly."
+
+      .entity-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 20px;
       }
-    }
-  ]
-}
-</script>
-<style>
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-}
-
-.container{
-max-width:1100px;
-margin:auto;
-padding:36px 20px 60px;
-}
-
-.back-link{
-display:inline-block;
-margin-bottom:24px;
-color:#dc2626;
-text-decoration:none;
-font-weight:700;
-font-size:14px;
-}
-
-.back-link:hover{
-color:#b91c1c;
-}
-
-.hero{
-text-align:center;
-margin-bottom:30px;
-}
-
-.hero h1{
-font-size:38px;
-font-weight:800;
-letter-spacing:-1px;
-margin-bottom:12px;
-}
-
-.hero p{
-max-width:760px;
-margin:auto;
-font-size:17px;
-line-height:1.7;
-color:#4b5563;
-}
-
-.tool-card{
-background:#ffffff;
-border:1px solid #eceff3;
-border-radius:22px;
-padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.05);
-}
-
-label{
-display:block;
-font-size:14px;
-font-weight:700;
-margin-bottom:8px;
-}
-
-textarea{
-width:100%;
-min-height:220px;
-resize:vertical;
-padding:16px;
-font-size:15px;
-line-height:1.7;
-border:1px solid #d1d5db;
-border-radius:14px;
-background:#ffffff;
-margin-bottom:18px;
-}
-
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-
-.button-grid{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:12px;
-margin-bottom:24px;
-}
-
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-font-size:14px;
-font-weight:700;
-cursor:pointer;
-transition:.25s;
-}
-
-.primary{
-background:#dc2626;
-color:white;
-}
-
-.primary:hover{
-background:#b91c1c;
-transform:translateY(-2px);
-}
-
-.secondary{
-background:white;
-color:#dc2626;
-border:1px solid #dc2626;
-}
-
-.secondary:hover{
-background:#dc2626;
-color:white;
-}
-
-.output-box{
-display:none;
-margin-top:18px;
-}
-
-.output-box h2{
-font-size:22px;
-margin-bottom:12px;
-}
-
-.result{
-background:#111827;
-color:#f9fafb;
-border-radius:16px;
-padding:18px;
-font-family:Consolas,monospace;
-font-size:14px;
-line-height:1.7;
-word-break:break-word;
-white-space:pre-wrap;
-min-height:100px;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-top:20px;
-}
-
-.stat{
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:14px;
-padding:14px;
-}
-
-.stat strong{
-display:block;
-font-size:18px;
-margin-bottom:4px;
-}
-
-.stat span{
-font-size:12px;
-font-weight:700;
-color:#6b7280;
-}
-
-.message{
-margin-top:16px;
-font-weight:700;
-font-size:14px;
-min-height:20px;
-color:#6b7280;
-}
-
-.info{
-margin-top:36px;
-background:white;
-border:1px solid #eceff3;
-border-radius:22px;
-padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.04);
-}
-
-.info h2{
-font-size:28px;
-margin-bottom:14px;
-}
-
-.info h3{
-margin:18px 0 8px;
-font-size:18px;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:700;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-  
-.info p{
-line-height:1.8;
-margin-bottom:14px;
-color:#4b5563;
-}
-
-.info ul{
-list-style:none;
-}
-
-.info li{
-padding-left:18px;
-position:relative;
-margin:8px 0;
-line-height:1.7;
-}
-
-.info li::before{
-content:"•";
-position:absolute;
-left:0;
-color:#dc2626;
-font-weight:700;
-}
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:768px){
-
-.hero h1{
-font-size:32px;
-}
-
-.button-grid{
-grid-template-columns:1fr;
-}
-
-.stats{
-grid-template-columns:1fr 1fr;
-}
-
-.tool-card,
-.info{
-padding:20px;
-}
-
-}
-
-</style>
-
-</head>
-
-<body>
-
-<main class="container">
-
-<a class="back-link" href="../index.html">
-← Back to Home
-</a>
-
-<section class="hero">
-
-<h1>HTML Entity Encoder / Decoder</h1>
-
-<p>
-Encode special characters into HTML entities or decode HTML entities back into readable text directly in your browser.
-</p>
-
-</section>
-
-<section class="tool-card">
-
-<label for="inputText">
-Input
-</label>
-
-<textarea
-id="inputText"
-placeholder="Paste your HTML or text here..."></textarea>
-
-<div class="button-grid">
-
-<button
-id="encodeBtn"
-class="primary">
-Encode
-</button>
-
-<button
-id="decodeBtn"
-class="primary">
-Decode
-</button>
-
-<button
-id="copyBtn"
-class="secondary">
-Copy
-</button>
-
-<button
-id="downloadBtn"
-class="secondary">
-Download
-</button>
-
-<button
-id="clearBtn"
-class="secondary">
-Clear
-</button>
-
-</div>
-
-<div
-class="output-box"
-id="outputBox">
-
-<h2>Result</h2>
-
-<div
-class="result"
-id="result"></div>
-
-<div class="stats">
-
-<div class="stat">
-<strong id="charCount">0</strong>
-<span>Characters</span>
-</div>
-
-<div class="stat">
-<strong id="entityCount">0</strong>
-<span>Entities</span>
-</div>
-
-<div class="stat">
-<strong id="lineCount">0</strong>
-<span>Lines</span>
-</div>
-
-<div class="stat">
-<strong id="sizeCount">0</strong>
-<span>Bytes</span>
-</div>
-
-</div>
-
-</div>
-
-<div
-class="message"
-id="message"></div>
-
-</section>
-
-<section class="info">
-
-<h2>About HTML Entities</h2>
-
-<p>
-HTML entities represent reserved or special characters that cannot always be written directly inside HTML documents.
-</p>
-
-<ul>
-
-<li>Encode special characters safely.</li>
-
-<li>Decode HTML entities instantly.</li>
-
-<li>Supports named and numeric entities.</li>
-
-<li>Everything runs locally in your browser.</li>
-
-<li>No uploads or external servers.</li>
-
-</ul>
-
-</section>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Is my text uploaded?</h3>
-<p>No. All encoding and decoding are performed locally in your browser.</p>
-
-<h3>Which entities are supported?</h3>
-<p>The tool supports common HTML named entities and numeric entities.</p>
-
-<h3>Can I decode HTML entities back into normal text?</h3>
-<p>Yes. The decoder instantly converts HTML entities back into readable text.</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="json-toolkit.html">JSON Toolkit</a></li>
-<li><a href="url-encoder-decoder.html">URL Encoder / Decoder</a></li>
-<li><a href="regex-tester.html">Regex Tester</a></li>
-</ul>
-
-</section>
-
-<div style="text-align:center;color:#6b7280;font-size:13px;margin-top:28px;">
-Powered by XAVERT
-</div>
-
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const inputText=document.getElementById("inputText");
-const encodeBtn=document.getElementById("encodeBtn");
-const decodeBtn=document.getElementById("decodeBtn");
-const copyBtn=document.getElementById("copyBtn");
-const downloadBtn=document.getElementById("downloadBtn");
-const clearBtn=document.getElementById("clearBtn");
-const outputBox=document.getElementById("outputBox");
-const result=document.getElementById("result");
-const message=document.getElementById("message");
-
-const charCount=document.getElementById("charCount");
-const entityCount=document.getElementById("entityCount");
-const lineCount=document.getElementById("lineCount");
-const sizeCount=document.getElementById("sizeCount");
-const toast=document.getElementById("toast");
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-
-toast.style.display="none";
-toast.className="";
-
-},2200);
-
-}
-function showMessage(text,type){
-
-message.textContent=text;
-
-switch(type){
-
-case "success":
-message.style.color="#047857";
-break;
-
-case "error":
-message.style.color="#dc2626";
-break;
-
-default:
-message.style.color="#6b7280";
-
-}
-
-}
-
-function encodeEntities(text){
-return text
-.replace(/&/g,"&amp;")
-.replace(/</g,"&lt;")
-.replace(/>/g,"&gt;")
-.replace(/"/g,"&quot;")
-.replace(/'/g,"&#39;")
-.replace(/©/g,"&copy;")
-.replace(/®/g,"&reg;")
-.replace(/™/g,"&trade;")
-.replace(/€/g,"&euro;")
-.replace(/£/g,"&pound;")
-.replace(/¥/g,"&yen;")
-.replace(/¢/g,"&cent;")
-.replace(/§/g,"&sect;")
-.replace(/¶/g,"&para;")
-.replace(/•/g,"&bull;")
-.replace(/–/g,"&ndash;")
-.replace(/—/g,"&mdash;")
-.replace(/…/g,"&hellip;")
-.replace(/×/g,"&times;")
-.replace(/÷/g,"&divide;");
-}
-
-function decodeEntities(text){
-const textarea=document.createElement("textarea");
-textarea.innerHTML=text;
-return textarea.value;
-}
-
-function countEntities(text){
-const matches=text.match(/&[a-zA-Z0-9#]+;/g);
-return matches ? matches.length : 0;
-}
-
-function updateStats(original,output){
-charCount.textContent=output.length;
-entityCount.textContent=countEntities(output);
-lineCount.textContent=output.split(/\r\n|\r|\n/).length;
-sizeCount.textContent=new TextEncoder().encode(output).length;
-}
-
-function renderOutput(text,action){
-result.textContent=text;
-outputBox.style.display="block";
-updateStats(inputText.value,text);
-showMessage(action+" completed.","success");
-showToast(action+" completed.","success");
-}
-
-function encodeText(){
-const text=inputText.value;
-
-if(!text.trim()){
-showMessage("Enter text first.","error");
-return;
-}
-
-renderOutput(encodeEntities(text),"Encoding");
-}
-
-function decodeText(){
-const text=inputText.value;
-
-if(!text.trim()){
-showMessage("Enter text first.","error");
-return;
-}
-
-renderOutput(decodeEntities(text),"Decoding");
-}
-
-function copyResult(){
-
-if(!result.textContent.trim()){
-showMessage("Nothing to copy.","error");
-showToast("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(result.textContent)
-.then(function(){
-
-showMessage("Result copied.","success");
-showToast("Result copied.","success");
-
-})
-.catch(function(){
-
-showMessage("Copy failed. Select and copy manually.","error");
-showToast("Copy failed.","error");
-
-});
-
-}
-
-function downloadResult(){
-if(!result.textContent.trim()){
-showMessage("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob([result.textContent],{type:"text/plain"});
-const url=URL.createObjectURL(blob);
-const a=document.createElement("a");
-
-a.href=url;
-a.download="xavert-html-entity-result.txt";
-document.body.appendChild(a);
-a.click();
-a.remove();
-
-URL.revokeObjectURL(url);
-showMessage("Download started.","success");
-showToast("Download started.","success");
-}
-
-function clearTool(){
-inputText.value="";
-result.textContent="";
-outputBox.style.display="none";
-charCount.textContent="0";
-entityCount.textContent="0";
-lineCount.textContent="0";
-sizeCount.textContent="0";
-showMessage("");
-}
-
-encodeBtn.addEventListener("click",encodeText);
-decodeBtn.addEventListener("click",decodeText);
-copyBtn.addEventListener("click",copyResult);
-downloadBtn.addEventListener("click",downloadResult);
-clearBtn.addEventListener("click",clearTool);
-</script>
-
-</body>
+
+      .entity-result {
+        margin-top: 20px;
+      }
+
+      .entity-output {
+        min-height: 110px;
+        margin-top: 16px;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #111827;
+        color: #f9fafb;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .entity-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 180px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/html-entity-encoder-decoder.js" defer></script>
+  </head>
+
+  <body
+    data-tool="html-entity-encoder-decoder"
+    data-related-tools="html-minifier,text-toolkit,url-toolkit,base64-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">
+          HTML Entity Encoder / Decoder
+        </h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="entity-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="entity-workspace-title" class="tool-card-title">
+              Encode and Decode HTML Entities
+            </h2>
+
+            <p class="tool-card-description">
+              Convert special characters to HTML entities or decode named and
+              numeric entities back into readable text.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="inputText">Input</label>
+                <textarea
+                  id="inputText"
+                  class="entity-input"
+                  placeholder="Paste HTML entities or text here"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="message"
+                ></textarea>
+              </div>
+
+              <div class="form-group">
+                <label for="encodeMode">Encode Mode</label>
+                <select id="encodeMode">
+                  <option value="named">Named where available</option>
+                  <option value="decimal">Decimal numeric entities</option>
+                  <option value="hex">Hexadecimal numeric entities</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="button-grid entity-actions">
+              <button
+                id="encodeBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Encode
+              </button>
+
+              <button id="decodeBtn" class="btn btn-secondary" type="button">
+                Decode
+              </button>
+
+              <button
+                id="sampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader
+              >
+                Load Sample
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="resultBox"
+              class="card entity-result"
+              aria-labelledby="resultTitle"
+              hidden
+            >
+              <h2 id="resultTitle">Result</h2>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="charCount" class="stat-value">0</strong>
+                  <span class="stat-label">Characters</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="entityCount" class="stat-value">0</strong>
+                  <span class="stat-label">Entities</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="lineCount" class="stat-value">0</strong>
+                  <span class="stat-label">Lines</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="sizeCount" class="stat-value">0</strong>
+                  <span class="stat-label">Bytes</span>
+                </div>
+              </div>
+
+              <pre id="result" class="entity-output"></pre>
+
+              <div class="button-grid entity-result-actions">
+                <button id="copyBtn" class="btn" type="button">
+                  Copy Result
+                </button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download Result
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT HTML Entity Encoder / Decoder converts reserved and special
+          characters to HTML entities and decodes named or numeric entities back
+          into Unicode text.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>Encode reserved HTML characters safely.</li>
+          <li>Choose named, decimal or hexadecimal entity encoding.</li>
+          <li>Decode named, decimal and hexadecimal numeric entities.</li>
+          <li>Count output characters, entities, lines and UTF-8 bytes.</li>
+          <li>Copy or download the generated result.</li>
+          <li>Process all text locally in the browser.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your text and
+          generated output are never uploaded, transmitted, shared or stored on
+          any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

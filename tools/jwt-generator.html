@@ -1,1142 +1,442 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>XAVERT | JWT Generator</title>
 
-<title>XAVERT | JWT Generator</title>
+    <meta
+      name="description"
+      content="Generate HS256 JSON Web Tokens with custom header, payload and secret key directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<meta name="description" content="Generate JSON Web Tokens online with custom header, payload and secret key. Create HS256 JWT tokens directly in your browser.">
+    <link rel="canonical" href="https://xavert.com/tools/jwt-generator.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<meta name="robots" content="index, follow">
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<link rel="canonical" href="https://xavert.com/tools/jwt-generator.html">
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | JWT Generator" />
+    <meta
+      property="og:description"
+      content="Generate HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/jwt-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | JWT Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate HS256 JWT tokens locally without uploading your data or secret key."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | JWT Generator">
-<meta property="og:description" content="Generate HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/jwt-generator.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <style>
+      /* JWT Generator-specific presentation only. */
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | JWT Generator">
-<meta name="twitter:description" content="Generate HS256 JWT tokens locally without uploading your data or secret key.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"JWT Generator",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript and Web Crypto API",
-  "url":"https://xavert.com/tools/jwt-generator.html",
-  "description":"Generate HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Is my JWT secret key uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. JWT generation and signing happen locally inside your browser."
+      .jwt-editor {
+        min-height: 220px;
+        resize: vertical;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        line-height: 1.6;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which signing algorithm is supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The JWT Generator supports HMAC SHA-256, commonly identified as HS256."
+
+      .jwt-secret {
+        font-family: Consolas, Monaco, "Courier New", monospace;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I customize the JWT header and payload?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. You can provide custom JSON objects for both the JWT header and payload."
+
+      .jwt-field-counter {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial,Helvetica,sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-}
-
-.container{
-max-width:1200px;
-margin:auto;
-padding:36px 20px 60px;
-}
-
-.back-link{
-display:inline-block;
-margin-bottom:24px;
-font-size:14px;
-font-weight:700;
-text-decoration:none;
-color:#dc2626;
-}
-
-.back-link:hover{
-color:#b91c1c;
-}
-
-.hero{
-text-align:center;
-margin-bottom:30px;
-}
-
-.hero h1{
-font-size:38px;
-font-weight:800;
-letter-spacing:-1px;
-margin-bottom:12px;
-}
-
-.hero p{
-max-width:780px;
-margin:auto;
-font-size:17px;
-line-height:1.7;
-color:#4b5563;
-}
-
-.tool-card{
-background:#ffffff;
-border:1px solid #eceff3;
-border-radius:22px;
-padding:26px;
-box-shadow:0 10px 28px rgba(15,23,42,.05);
-}
-
-.editor-grid{
-display:grid;
-grid-template-columns:1fr 1fr;
-gap:18px;
-}
-
-.full-width{
-grid-column:1/-1;
-}
-
-label{
-display:block;
-font-size:14px;
-font-weight:800;
-margin-bottom:8px;
-color:#111827;
-}
-
-textarea,
-input{
-width:100%;
-padding:16px;
-border:1px solid #d1d5db;
-border-radius:14px;
-font-size:15px;
-line-height:1.6;
-background:#ffffff;
-color:#111827;
-}
-
-textarea{
-min-height:220px;
-resize:vertical;
-font-family:Consolas,monospace;
-}
-
-input{
-font-family:Consolas,monospace;
-}
-
-textarea:focus,
-input:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-.valid-json{
-border-color:#16a34a !important;
-box-shadow:0 0 0 3px rgba(22,163,74,.12) !important;
-}
-
-.invalid-json{
-border-color:#dc2626 !important;
-box-shadow:0 0 0 3px rgba(220,38,38,.12) !important;
-}
-.button-grid{
-display:grid;
-grid-template-columns:repeat(5,1fr);
-gap:12px;
-margin-top:22px;
-}
-
-button{
-padding:14px;
-border:none;
-border-radius:12px;
-font-size:14px;
-font-weight:800;
-cursor:pointer;
-transition:.25s;
-}
-
-.primary{
-background:#dc2626;
-color:#ffffff;
-box-shadow:0 10px 24px rgba(220,38,38,.16);
-}
-
-.primary:hover{
-background:#b91c1c;
-transform:translateY(-2px);
-}
-
-button:disabled{
-opacity:.5;
-cursor:not-allowed;
-transform:none !important;
-box-shadow:none !important;
-}
-  
-.secondary{
-background:#ffffff;
-border:1px solid #dc2626;
-color:#dc2626;
-}
-
-.secondary:hover{
-background:#dc2626;
-color:#ffffff;
-transform:translateY(-2px);
-}
-
-.output-box{
-display:none;
-margin-top:26px;
-}
-
-.output-box h2{
-font-size:22px;
-font-weight:800;
-margin-bottom:12px;
-}
-
-.jwt-output{
-background:#111827;
-color:#f9fafb;
-padding:18px;
-border-radius:16px;
-font-family:Consolas,monospace;
-font-size:14px;
-line-height:1.7;
-word-break:break-all;
-white-space:pre-wrap;
-min-height:120px;
-}
-
-.token-parts{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:12px;
-margin-top:18px;
-}
-
-.part{
-border-radius:14px;
-padding:14px;
-border:1px solid #e5e7eb;
-background:#f9fafb;
-}
-
-.part strong{
-display:block;
-font-size:14px;
-margin-bottom:8px;
-}
-
-.part span{
-display:block;
-font-family:Consolas,monospace;
-font-size:12px;
-line-height:1.5;
-word-break:break-all;
-color:#4b5563;
-}
-
-.stats{
-display:grid;
-grid-template-columns:repeat(4,1fr);
-gap:12px;
-margin-top:18px;
-}
-
-.stat{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:14px;
-padding:14px;
-}
-
-.stat strong{
-display:block;
-font-size:18px;
-margin-bottom:4px;
-}
-
-.stat span{
-font-size:12px;
-font-weight:700;
-color:#6b7280;
-}
-  
-.field-counter{
-margin-top:8px;
-font-size:12px;
-font-weight:700;
-color:#6b7280;
-}
-  
-.message{
-margin-top:18px;
-font-size:14px;
-font-weight:700;
-min-height:20px;
-color:#6b7280;
-}
-
-.success-banner{
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-border-radius:12px;
-padding:14px;
-margin-bottom:20px;
-text-align:center;
-font-size:14px;
-font-weight:700;
-color:#047857;
-}
-  
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-.footer-note{
-margin-top:30px;
-text-align:center;
-font-size:14px;
-color:#6b7280;
-}
-
-.footer-note a{
-color:#dc2626;
-font-weight:700;
-text-decoration:none;
-}
-
-.footer-note a:hover{
-text-decoration:underline;
-}
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:#ffffff;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-pointer-events:none;
-z-index:9999;
-}
-
-.toast-success{
-background:#047857!important;
-}
-
-.toast-error{
-background:#dc2626!important;
-}
-
-.toast-info{
-background:#111827!important;
-}
-@media(max-width:768px){
-.container{
-padding:24px 16px 46px;
-}
-
-.hero h1{
-font-size:32px;
-}
-
-.editor-grid{
-grid-template-columns:1fr;
-}
-
-.button-grid{
-grid-template-columns:1fr;
-}
-
-.token-parts,
-.stats{
-grid-template-columns:1fr;
-}
-
-.tool-card,
-.info{
-padding:20px;
-}
-}
-</style>
-
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back-link">
-← Back to Home
-</a>
-
-<section class="hero">
-
-<h1>JWT Generator</h1>
-
-<p>
-Create HS256 JSON Web Tokens with custom headers, payloads and secret keys directly in your browser.
-</p>
-
-</section>
-<div class="success-banner">
-JWT generation and signing happen locally in your browser. Your secret key is never uploaded.
-</div>
-<section class="tool-card">
-
-<div class="editor-grid">
-
-<div>
-<label for="jwtHeader">JWT Header</label>
-<textarea
-id="jwtHeader"
-placeholder='Example: {"alg":"HS256","typ":"JWT"}'></textarea>
-<div class="field-counter" id="headerCounter">0 characters</div>
-</div>
-
-<div>
-<label for="jwtPayload">JWT Payload</label>
-<textarea
-id="jwtPayload"
-placeholder='Example: {"sub":"1234567890","name":"John Doe","iat":1710000000}'></textarea>
-<div class="field-counter" id="payloadCounter">0 characters</div>
-</div>
-
-<div class="full-width">
-<label for="jwtSecret">Secret Key</label>
-<input
-type="text"
-id="jwtSecret"
-placeholder="Example: your-256-bit-secret">
-</div>
-
-</div>
-
-<div class="button-grid">
-
-<button id="generateBtn" class="primary" type="button">
-Generate JWT
-</button>
-
-<button id="copyBtn" class="secondary" type="button">
-Copy Token
-</button>
-
-<button id="downloadBtn" class="secondary" type="button">
-Download JWT
-</button>
-
-<button id="formatBtn" class="secondary" type="button">
-Format JSON
-</button>
-
-<button id="clearBtn" class="secondary" type="button">
-Clear
-</button>
-
-</div>
-
-<div class="output-box" id="outputBox">
-
-<h2>Generated Token</h2>
-
-<div class="jwt-output" id="jwtOutput"></div>
-
-<div class="token-parts">
-
-<div class="part">
-
-<strong>Header</strong>
-
-<span id="headerPart">-</span>
-
-<button
-id="copyHeaderBtn"
-class="secondary"
-type="button">
-Copy Header
-</button>
-
-</div>
-
-<div class="part">
-
-<strong>Payload</strong>
-
-<span id="payloadPart">-</span>
-
-<button
-id="copyPayloadBtn"
-class="secondary"
-type="button">
-Copy Payload
-</button>
-
-</div>
-
-<div class="part">
-
-<strong>Signature</strong>
-
-<span id="signaturePart">-</span>
-
-<button
-id="copySignatureBtn"
-class="secondary"
-type="button">
-Copy Signature
-</button>
-
-</div>
-
-</div>
-
-<div class="stats">
-
-<div class="stat">
-<strong id="tokenLength">0</strong>
-<span>Token Length</span>
-</div>
-
-<div class="stat">
-<strong id="headerSize">0</strong>
-<span>Header Chars</span>
-</div>
-
-<div class="stat">
-<strong id="payloadSize">0</strong>
-<span>Payload Chars</span>
-</div>
-
-<div class="stat">
-<strong id="algorithmStat">HS256</strong>
-<span>Algorithm</span>
-</div>
-
-</div>
-
-</div>
-
-<div class="message" id="message"></div>
-
-</section>
-
-<section class="info">
-
-<h2>About JWT Generator</h2>
-
-<p>
-A JSON Web Token is a compact token format commonly used for authentication, authorization and API communication.
-</p>
-
-<ul>
-<li>Create HS256 JWT tokens from custom JSON headers and payloads.</li>
-<li>Use placeholders as examples without prefilled text.</li>
-<li>Copy or download generated tokens.</li>
-<li>All token generation happens locally in your browser.</li>
-<li>Your secret key is never uploaded to a server.</li>
-</ul>
-
-</section>
-
-<section class="info">
-
-<h2>Frequently Asked Questions</h2>
-
-<h3>Is my JWT secret key uploaded?</h3>
-<p>
-No. The secret key, header, payload and generated token remain inside your browser.
-</p>
-
-<h3>Which algorithm does this tool support?</h3>
-<p>
-The generator creates JWT signatures using HMAC SHA-256, also known as HS256.
-</p>
-
-<h3>Does this tool verify generated tokens?</h3>
-<p>
-No. It generates signed tokens but does not verify their validity on an external server.
-</p>
-
-</section>
-
-<section class="info">
-
-<h2>Related Tools</h2>
-
-<div id="relatedTools"></div>
-
-</section>
-
-<p class="footer-note">
-Powered by <a href="../index.html">XAVERT</a>
-</p>
-
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-const jwtHeader=document.getElementById("jwtHeader");
-const jwtPayload=document.getElementById("jwtPayload");
-const jwtSecret=document.getElementById("jwtSecret");
-
-const generateBtn=document.getElementById("generateBtn");
-const copyBtn=document.getElementById("copyBtn");
-const downloadBtn=document.getElementById("downloadBtn");
-const formatBtn=document.getElementById("formatBtn");
-const clearBtn=document.getElementById("clearBtn");
-
-const outputBox=document.getElementById("outputBox");
-const jwtOutput=document.getElementById("jwtOutput");
-
-const headerPart=document.getElementById("headerPart");
-const payloadPart=document.getElementById("payloadPart");
-const signaturePart=document.getElementById("signaturePart");
-
-const copyHeaderBtn=document.getElementById("copyHeaderBtn");
-const copyPayloadBtn=document.getElementById("copyPayloadBtn");
-const copySignatureBtn=document.getElementById("copySignatureBtn");
-
-const tokenLength=document.getElementById("tokenLength");
-const headerSize=document.getElementById("headerSize");
-const payloadSize=document.getElementById("payloadSize");
-const algorithmStat=document.getElementById("algorithmStat");
-
-const message=document.getElementById("message");
-const headerCounter=document.getElementById("headerCounter");
-const payloadCounter=document.getElementById("payloadCounter");
-const toast=document.getElementById("toast");
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-
-toast.style.display="none";
-toast.className="";
-
-},2200);
-
-}
-
-function showMessage(text,type="info"){
-
-message.textContent=text;
-
-if(type==="error"){
-
-message.style.color="#dc2626";
-
-}else if(type==="success"){
-
-message.style.color="#047857";
-
-}else{
-
-message.style.color="#6b7280";
-
-}
-
-if(text){
-
-showToast(text,type);
-
-}
-
-}
-
-function validateJSONField(field){
-
-if(field.value.trim()===""){
-field.classList.remove("valid-json","invalid-json");
-return false;
-}
-
-try{
-JSON.parse(field.value);
-field.classList.add("valid-json");
-field.classList.remove("invalid-json");
-return true;
-}catch{
-field.classList.add("invalid-json");
-field.classList.remove("valid-json");
-return false;
-}
-
-}
-function updateCounters(){
-
-headerCounter.textContent=
-jwtHeader.value.length+" characters";
-
-payloadCounter.textContent=
-jwtPayload.value.length+" characters";
-
-}
-
-function updateGenerateButton(){
-
-let headerValid=false;
-let payloadValid=false;
-
-try{
-JSON.parse(jwtHeader.value);
-headerValid=true;
-}catch{}
-
-try{
-JSON.parse(jwtPayload.value);
-payloadValid=true;
-}catch{}
-
-const enabled =
-headerValid &&
-payloadValid &&
-jwtSecret.value.trim()!=="";
-
-generateBtn.disabled=!enabled;
-
-}
-  
-function base64UrlEncode(text){
-const bytes=new TextEncoder().encode(text);
-
-let binary="";
-
-bytes.forEach(function(byte){
-binary+=String.fromCharCode(byte);
-});
-
-return btoa(binary)
-.replace(/\+/g,"-")
-.replace(/\//g,"_")
-.replace(/=+$/,"");
-}
-
-function arrayBufferToBase64Url(buffer){
-
-const bytes=new Uint8Array(buffer);
-
-let binary="";
-
-bytes.forEach(function(byte){
-binary+=String.fromCharCode(byte);
-});
-
-return btoa(binary)
-.replace(/\+/g,"-")
-.replace(/\//g,"_")
-.replace(/=+$/,"");
-
-}
 
-async function signHS256(messageToSign,secret){
-
-const key=await crypto.subtle.importKey(
-"raw",
-new TextEncoder().encode(secret),
-{
-name:"HMAC",
-hash:"SHA-256"
-},
-false,
-["sign"]
-);
-
-const signature=await crypto.subtle.sign(
-"HMAC",
-key,
-new TextEncoder().encode(messageToSign)
-);
-
-return arrayBufferToBase64Url(signature);
-
-}
-
-async function generateJWT(){
-
-let headerObject;
-let payloadObject;
-
-try{
-
-headerObject=JSON.parse(jwtHeader.value);
-
-}catch{
-
-showMessage("Invalid Header JSON.","error");
-return;
-
-}
-
-try{
-
-payloadObject=JSON.parse(jwtPayload.value);
-
-}catch{
-
-showMessage("Invalid Payload JSON.","error");
-return;
-
-}
-
-if(jwtSecret.value.trim()===""){
-
-showMessage("Enter a secret key.","error");
-return;
-
-}
-
-const headerJSON=JSON.stringify(headerObject);
-const payloadJSON=JSON.stringify(payloadObject);
-
-const encodedHeader=base64UrlEncode(headerJSON);
-const encodedPayload=base64UrlEncode(payloadJSON);
-
-const unsignedToken=encodedHeader+"."+encodedPayload;
-
-try{
-
-const signature=await signHS256(unsignedToken,jwtSecret.value);
-
-const token=unsignedToken+"."+signature;
-
-jwtOutput.textContent=token;
-
-headerPart.textContent=encodedHeader;
-payloadPart.textContent=encodedPayload;
-signaturePart.textContent=signature;
-
-tokenLength.textContent=token.length;
-headerSize.textContent=headerJSON.length;
-payloadSize.textContent=payloadJSON.length;
-algorithmStat.textContent="HS256";
-
-outputBox.style.display="block";
-
-showMessage("JWT generated successfully.","success");
-
-}catch{
-
-showMessage("Token generation failed.","error");
-
-}
-
-}
-
-function formatJSON(){
-
-try{
-
-if(jwtHeader.value.trim()!==""){
-jwtHeader.value=JSON.stringify(JSON.parse(jwtHeader.value),null,2);
-}
-
-if(jwtPayload.value.trim()!==""){
-jwtPayload.value=JSON.stringify(JSON.parse(jwtPayload.value),null,2);
-}
-updateCounters();
-
-validateJSONField(jwtHeader);
-validateJSONField(jwtPayload);
-updateGenerateButton();
-showMessage("JSON formatted.","success");
-
-}catch{
-
-showMessage("Invalid JSON.","error");
-
-}
-
-}
-
-async function copyToken(){
-
-const token=jwtOutput.textContent.trim();
-
-if(token===""){
-
-showMessage("Nothing to copy.","error");
-return;
-
-}
-
-try{
-
-await navigator.clipboard.writeText(token);
-
-showMessage("Token copied.","success");
-
-}catch{
-
-showMessage("Copy failed.","error");
-
-}
-
-}
-
-async function copyPart(element,name){
-
-if(element.textContent==="-" || element.textContent===""){
-
-showMessage("Nothing to copy.","error");
-
-return;
-
-}
-
-try{
-
-await navigator.clipboard.writeText(element.textContent);
-
-showMessage(name+" copied.","success");
-
-}catch{
-
-showMessage("Copy failed.","error");
-
-}
-
-}
-  
-function downloadToken(){
-
-if(jwtOutput.textContent===""){
-showMessage("Nothing to download.","error");
-return;
-}
-
-const blob=new Blob(
-[jwtOutput.textContent],
-{type:"text/plain"}
-);
-
-const url=URL.createObjectURL(blob);
-
-const a=document.createElement("a");
-
-a.href=url;
-a.download="xavert-jwt.txt";
-
-document.body.appendChild(a);
-
-a.click();
-
-document.body.removeChild(a);
-
-setTimeout(function(){
-
-URL.revokeObjectURL(url);
-
-},1000);
-
-showMessage("Download started.","success");
-
-}
-
-function clearTool(){
-
-jwtHeader.value="";
-jwtPayload.value="";
-jwtSecret.value="";
-
-jwtOutput.textContent="";
-
-headerPart.textContent="-";
-payloadPart.textContent="-";
-signaturePart.textContent="-";
-
-tokenLength.textContent="0";
-headerSize.textContent="0";
-payloadSize.textContent="0";
-algorithmStat.textContent="HS256";
-
-outputBox.style.display="none";
-
-jwtHeader.classList.remove("valid-json","invalid-json");
-jwtPayload.classList.remove("valid-json","invalid-json");
-headerCounter.textContent="0 characters";
-payloadCounter.textContent="0 characters";
-
-message.textContent="";
-message.style.color="#6b7280";
-updateCounters();
-updateGenerateButton();
-
-showMessage("");
-
-}
-
-generateBtn.addEventListener("click",generateJWT);
-copyBtn.addEventListener("click",copyToken);
-downloadBtn.addEventListener("click",downloadToken);
-formatBtn.addEventListener("click",formatJSON);
-clearBtn.addEventListener("click",clearTool);
-copyHeaderBtn.addEventListener("click",function(){
-copyPart(headerPart,"Header");
-});
-
-copyPayloadBtn.addEventListener("click",function(){
-copyPart(payloadPart,"Payload");
-});
-
-copySignatureBtn.addEventListener("click",function(){
-copyPart(signaturePart,"Signature");
-});
-jwtHeader.addEventListener("input",function(){
-
-validateJSONField(jwtHeader);
-
-updateCounters();
-updateGenerateButton();
-
-showMessage("Tool cleared.","success");
-
-});
-
-jwtPayload.addEventListener("input",function(){
-
-validateJSONField(jwtPayload);
-
-updateCounters();
-
-updateGenerateButton();
-
-});
-jwtSecret.addEventListener("input",function(){
-
-updateGenerateButton();
-
-});
-jwtSecret.addEventListener("keydown",function(event){
-
-if(event.key==="Enter"){
-
-event.preventDefault();
-
-generateJWT();
-
-}
-
-});
-updateCounters();
-
-updateGenerateButton();
-</script>
-
-</body>
+      .jwt-valid {
+        border-color: #16a34a !important;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.12) !important;
+      }
+
+      .jwt-invalid {
+        border-color: #dc2626 !important;
+        box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.12) !important;
+      }
+
+      .jwt-actions,
+      .jwt-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .jwt-token-output {
+        margin-top: 16px;
+        min-height: 120px;
+        padding: 16px;
+        border-radius: 12px;
+        background: #111827;
+        color: #f9fafb;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+        white-space: pre-wrap;
+      }
+
+      .jwt-parts-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .jwt-part-card {
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f9fafb;
+      }
+
+      .jwt-part-card strong {
+        display: block;
+        margin-bottom: 8px;
+        font-size: 14px;
+      }
+
+      .jwt-part-value {
+        display: block;
+        min-height: 48px;
+        color: #4b5563;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 12px;
+        line-height: 1.5;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 768px) {
+        .jwt-parts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+  </head>
+
+  <body
+    data-tool="jwt-generator"
+    data-related-tools="jwt-decoder,json-toolkit,base64-toolkit,hash-generator,password-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">JWT Generator</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="jwt-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="jwt-workspace-title" class="tool-card-title">
+              Generate HS256 JWT
+            </h2>
+
+            <p class="tool-card-description">
+              Enter a JSON header, JSON payload and secret key to generate an
+              HMAC SHA-256 signed JWT locally in your browser.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="jwtHeader">JWT Header</label>
+
+                <textarea
+                  id="jwtHeader"
+                  class="jwt-editor"
+                  placeholder='{"alg":"HS256","typ":"JWT"}'
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="headerCounter message"
+                ></textarea>
+
+                <div id="headerCounter" class="jwt-field-counter">
+                  0 characters
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="jwtPayload">JWT Payload</label>
+
+                <textarea
+                  id="jwtPayload"
+                  class="jwt-editor"
+                  placeholder='{"sub":"1234567890","name":"John Doe","iat":1710000000}'
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="payloadCounter message"
+                ></textarea>
+
+                <div id="payloadCounter" class="jwt-field-counter">
+                  0 characters
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="jwtSecret">Secret Key</label>
+
+                <input
+                  id="jwtSecret"
+                  class="jwt-secret"
+                  type="password"
+                  placeholder="Enter your signing secret"
+                  autocomplete="off"
+                  spellcheck="false"
+                  aria-describedby="message"
+                />
+              </div>
+            </div>
+
+            <div class="button-grid jwt-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate JWT
+              </button>
+
+              <button
+                id="sampleBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-sample-loader="jwt-default"
+              >
+                Load Sample
+              </button>
+
+              <button id="formatBtn" class="btn btn-secondary" type="button">
+                Format JSON
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="outputBox"
+              class="card tool-card-result"
+              aria-labelledby="resultTitle"
+              hidden
+            >
+              <h2 id="resultTitle">Generated Token</h2>
+
+              <pre id="jwtOutput" class="jwt-token-output"></pre>
+
+              <div class="button-grid jwt-result-actions">
+                <button id="copyBtn" class="btn" type="button">
+                  Copy Token
+                </button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download JWT
+                </button>
+              </div>
+
+              <div class="jwt-parts-grid">
+                <div class="jwt-part-card">
+                  <strong>Header</strong>
+                  <span id="headerPart" class="jwt-part-value">—</span>
+
+                  <div class="button-grid jwt-result-actions">
+                    <button
+                      id="copyHeaderBtn"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      Copy Header
+                    </button>
+                  </div>
+                </div>
+
+                <div class="jwt-part-card">
+                  <strong>Payload</strong>
+                  <span id="payloadPart" class="jwt-part-value">—</span>
+
+                  <div class="button-grid jwt-result-actions">
+                    <button
+                      id="copyPayloadBtn"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      Copy Payload
+                    </button>
+                  </div>
+                </div>
+
+                <div class="jwt-part-card">
+                  <strong>Signature</strong>
+                  <span id="signaturePart" class="jwt-part-value">—</span>
+
+                  <div class="button-grid jwt-result-actions">
+                    <button
+                      id="copySignatureBtn"
+                      class="btn btn-secondary"
+                      type="button"
+                    >
+                      Copy Signature
+                    </button>
+                  </div>
+                </div>
+              </div>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="tokenLength" class="stat-value">0</strong>
+                  <span class="stat-label">Token Length</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="headerSize" class="stat-value">0</strong>
+                  <span class="stat-label">Header Chars</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="payloadSize" class="stat-value">0</strong>
+                  <span class="stat-label">Payload Chars</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="algorithmStat" class="stat-value">HS256</strong>
+                  <span class="stat-label">Algorithm</span>
+                </div>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message message-info"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT JWT Generator creates HS256 JSON Web Tokens directly in
+          your browser using the Web Crypto API.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Generate HS256 JWT tokens from custom JSON header and payload data.
+          </li>
+          <li>Sign tokens using HMAC SHA-256 through Web Crypto.</li>
+          <li>Handle UTF-8 and Unicode JSON content correctly.</li>
+          <li>Format and validate header and payload JSON before signing.</li>
+          <li>Copy the complete token or individual token segments.</li>
+          <li>Download the generated JWT as a text file.</li>
+        </ul>
+
+        <h3>Algorithm</h3>
+
+        <p>
+          This generator supports HS256 only. The JWT header must therefore use
+          <code>"alg": "HS256"</code>; other algorithm declarations are
+          rejected.
+        </p>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Header, payload, secret key and generated token remain inside your
+          browser and are never uploaded, transmitted, shared or stored on any
+          server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script type="application/json" id="xavert-sample-jwt-default">
+      {
+        "fields": {
+          "jwtHeader": "{\n  \"alg\": \"HS256\",\n  \"typ\": \"JWT\"\n}",
+          "jwtPayload": "{\n  \"sub\": \"1234567890\",\n  \"name\": \"XAVERT User\",\n  \"iat\": 1710000000\n}",
+          "jwtSecret": "xavert-demo-secret"
+        },
+        "focus": "jwtHeader",
+        "message": "Sample loaded.",
+        "action": "generateBtn"
+      }
+    </script>
+    <script src="../assets/js/jwt-generator.js"></script>
+  </body>
 </html>

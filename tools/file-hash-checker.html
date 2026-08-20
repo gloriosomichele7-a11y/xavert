@@ -1,696 +1,430 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en" dir="ltr">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>XAVERT | File Hash Checker</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<meta name="description" content="Free online File Hash Checker to generate and verify SHA-256, SHA-384 and SHA-512 checksums directly in your browser. Compare file hashes instantly without uploading files.">
+    <title>XAVERT | File Hash Checker</title>
 
-<meta name="robots" content="index, follow">
-<link rel="canonical" href="https://xavert.com/tools/file-hash-checker.html">
+    <meta
+      name="description"
+      content="Generate and verify SHA-256, SHA-384, SHA-512 and legacy SHA-1 file checksums directly in your browser without uploading files."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
 
-<link rel="icon" href="../favicon.svg" type="image/svg+xml">
-<link rel="stylesheet" href="../assets/css/global.css">
-<link rel="stylesheet" href="../assets/css/components.css">
-<link rel="stylesheet" href="../assets/css/responsive.css">
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/file-hash-checker.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
-<script src="../assets/js/global.js" defer></script>
-<script src="../assets/js/utils.js" defer></script>
-<script src="../assets/js/related-tools.js" defer></script>
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
 
-<meta name="author" content="XAVERT">
-<meta name="theme-color" content="#dc2626">
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | File Hash Checker" />
+    <meta
+      property="og:description"
+      content="Generate and verify SHA-256, SHA-384, SHA-512 and legacy SHA-1 file checksums directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/file-hash-checker.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
 
-<meta property="og:type" content="website">
-<meta property="og:title" content="XAVERT | File Hash Checker">
-<meta property="og:description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file checksums directly in your browser.">
-<meta property="og:url" content="https://xavert.com/tools/file-hash-checker.html">
-<meta property="og:image" content="https://xavert.com/assets/images/og-image.png">
-<meta property="og:site_name" content="XAVERT">
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | File Hash Checker" />
+    <meta
+      name="twitter:description"
+      content="Generate and verify file checksums locally in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
 
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="XAVERT | File Hash Checker">
-<meta name="twitter:description" content="Generate and verify SHA-256, SHA-384 and SHA-512 file checksums directly in your browser.">
-<meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png">
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"WebApplication",
-  "name":"File Hash Checker",
-  "applicationCategory":"DeveloperApplication",
-  "operatingSystem":"Any",
-  "browserRequirements":"Requires JavaScript",
-  "url":"https://xavert.com/tools/file-hash-checker.html",
-  "description":"Generate and verify SHA-256, SHA-384 and SHA-512 file checksums locally in your browser.",
-  "inLanguage":"en",
-  "isAccessibleForFree":true,
-  "offers":{
-    "@type":"Offer",
-    "price":"0",
-    "priceCurrency":"USD"
-  },
-  "publisher":{
-    "@type":"Organization",
-    "name":"XAVERT"
-  }
-}
-</script>
-
-<script type="application/ld+json">
-{
-  "@context":"https://schema.org",
-  "@type":"FAQPage",
-  "mainEntity":[
-    {
-      "@type":"Question",
-      "name":"Are my files uploaded?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"No. Files are processed locally in your browser and are never uploaded."
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "File Hash Checker",
+        "alternateName": "XAVERT File Hash Checker",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript and Web Crypto",
+        "url": "https://xavert.com/tools/file-hash-checker.html",
+        "description": "Generate and verify SHA-256, SHA-384, SHA-512 and legacy SHA-1 file checksums locally in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Which hash algorithms are supported?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"The tool supports SHA-256, SHA-384 and SHA-512."
+    </script>
+
+    <style>
+      /* File Hash Checker-specific presentation only. */
+
+      .hash-drop-zone {
+        display: flex;
+        min-height: 150px;
+        padding: 24px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
       }
-    },
-    {
-      "@type":"Question",
-      "name":"Can I verify a downloaded file?",
-      "acceptedAnswer":{
-        "@type":"Answer",
-        "text":"Yes. Paste the expected checksum and generate the file hash to check whether they match."
+
+      .hash-drop-zone:hover,
+      .hash-drop-zone:focus-visible {
+        border-color: #dc2626;
+        background: #fef2f2;
+        transform: translateY(-1px);
+        outline: none;
       }
-    }
-  ]
-}
-</script>
-<style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, Helvetica, sans-serif;
-}
-
-body{
-background:#f7f8fb;
-color:#111827;
-padding:40px 20px;
-}
-
-.container{
-max-width:900px;
-margin:auto;
-}
-
-.back{
-display:inline-block;
-margin-bottom:20px;
-text-decoration:none;
-color:#dc2626;
-font-weight:700;
-}
-
-.logo{
-text-align:center;
-margin-bottom:25px;
-}
-
-.logo img{
-width:180px;
-height:auto;
-}
-
-h1{
-text-align:center;
-margin-bottom:10px;
-font-size:42px;
-line-height:1.1;
-}
-
-.subtitle{
-text-align:center;
-color:#6b7280;
-margin-bottom:28px;
-}
-
-.card{
-background:white;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-margin-bottom:20px;
-}
-
-label{
-display:block;
-margin:14px 0 8px;
-font-weight:700;
-}
-
-select,
-input,
-textarea{
-width:100%;
-padding:14px;
-border:1px solid #d1d5db;
-border-radius:10px;
-font-size:15px;
-background:white;
-}
-select:focus,
-input:focus,
-textarea:focus{
-outline:none;
-border-color:#dc2626;
-box-shadow:0 0 0 3px rgba(220,38,38,.12);
-}
-textarea{
-min-height:120px;
-resize:vertical;
-}
-
-button{
-background:#dc2626;
-color:white;
-border:none;
-padding:14px 22px;
-border-radius:10px;
-cursor:pointer;
-font-size:15px;
-font-weight:700;
-margin-top:14px;
-}
-
-button:hover{
-background:#b91c1c;
-}
-.button-group{
-display:flex;
-gap:10px;
-flex-wrap:wrap;
-margin-top:14px;
-}
-.drop-zone{
-border:2px dashed #d1d5db;
-border-radius:16px;
-padding:30px;
-text-align:center;
-background:#f9fafb;
-cursor:pointer;
-margin-top:14px;
-}
-
-.drop-zone:hover,
-.drop-zone.dragover{
-border-color:#dc2626;
-background:#fff5f5;
-}
-
-.file-count{
-margin-top:12px;
-font-size:14px;
-font-weight:700;
-color:#374151;
-}
-
-.result-box{
-display:none;
-margin-top:20px;
-padding:20px;
-background:#f9fafb;
-border:1px solid #e5e7eb;
-border-radius:12px;
-line-height:1.9;
-word-break:break-all;
-overflow-wrap:anywhere;
-}
-
-.info{
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:18px;
-padding:26px;
-margin-bottom:20px;
-box-shadow:0 6px 18px rgba(0,0,0,.04);
-}
-
-.info h2{
-margin-bottom:16px;
-}
-
-.info h3{
-margin:18px 0 8px;
-}
-
-.info p{
-line-height:1.7;
-margin-bottom:12px;
-color:#374151;
-}
-
-.info ul{
-padding-left:20px;
-line-height:1.8;
-}
-
-.info a{
-color:#dc2626;
-text-decoration:none;
-font-weight:600;
-}
-
-.info a:hover{
-text-decoration:underline;
-}
-  
-.message{
-margin-top:14px;
-font-size:14px;
-font-weight:600;
-}
-
-.error{color:#dc2626;}
-.success{color:#047857;}
-.loading{color:#4b5563;}
-
-#toast{
-position:fixed;
-bottom:22px;
-left:50%;
-transform:translateX(-50%);
-background:#111827;
-color:white;
-padding:12px 20px;
-border-radius:10px;
-display:none;
-z-index:9999;
-}
-.toast-success{
-background:#047857 !important;
-}
-
-.toast-error{
-background:#dc2626 !important;
-}
-
-.toast-info{
-background:#111827 !important;
-}
-@media(max-width:768px){
-body{padding:24px 14px;}
-.logo img{width:150px;}
-.card{padding:20px;}
-button{width:100%;}
-}
-code{
-display:block;
-margin-top:8px;
-padding:12px;
-background:#ffffff;
-border:1px solid #e5e7eb;
-border-radius:8px;
-font-size:13px;
-font-family:monospace;
-word-break:break-all;
-}
-</style>
-</head>
-
-<body>
-
-<main class="container">
-
-<a href="../index.html" class="back">← Back to Home</a>
-
-<div class="logo">
-<img src="../logo-hero.svg" alt="XAVERT">
-</div>
-
-<h1>File Hash Checker</h1>
-
-<p class="subtitle">
-Generate and verify file hashes directly in your browser.
-</p>
-<div style="
-background:#ecfdf5;
-border:1px solid #a7f3d0;
-padding:14px;
-border-radius:12px;
-text-align:center;
-margin-bottom:20px;
-font-size:14px;
-font-weight:700;
-color:#047857;
-">
-✓ Files are hashed locally in your browser. Nothing is uploaded or stored.
-</div>
-<div class="card">
-
-<h2>Hash Generator</h2>
-
-<p class="subtitle">
-Upload a file and generate SHA-256, SHA-384 or SHA-512 hashes.
-</p>
-
-<div class="drop-zone" id="dropZone">
-Click or drag a file here
-</div>
-
-<input type="file" id="fileInput" hidden>
-
-<div id="fileCount" class="file-count">No file selected</div>
-<label for="hashAlgorithm">Hash Algorithm</label>
-
-<select id="hashAlgorithm">
-<option value="SHA-256">SHA-256</option>
-<option value="SHA-384">SHA-384</option>
-<option value="SHA-512">SHA-512</option>
-</select>
-<div class="button-group">
-
-<button onclick="generateHash()">
-Generate Hash
-</button>
-<button onclick="downloadHashReport()">
-Download Report
-</button>
-<button onclick="clearAll()">
-Clear
-</button>
-
-</div>
-
-<label for="expectedHash">Expected Hash / Checksum</label>
-<textarea id="expectedHash" placeholder="Paste the expected hash here to verify the file..."></textarea>
-
-<div id="message" class="message"></div>
-<div id="resultBox" class="result-box"></div>
-
-</div>
-
-<section class="info">
-<h2>About File Hash Checker</h2>
-
-<p>
-Generate and verify SHA-256, SHA-384 and SHA-512 file hashes directly in your browser. Files never leave your device, making the verification process private and secure.
-</p>
-
-<ul>
-<li>SHA-256, SHA-384 and SHA-512 support</li>
-<li>Drag & drop file upload</li>
-<li>Hash verification against expected checksums</li>
-<li>Downloadable hash report</li>
-<li>Local browser processing</li>
-</ul>
-</section>
-
-<section class="info">
-<h2>FAQ</h2>
-
-<h3>Are my files uploaded?</h3>
-<p>No. Files are processed entirely inside your browser.</p>
-
-<h3>Which algorithms are supported?</h3>
-<p>SHA-256, SHA-384 and SHA-512.</p>
-
-<h3>Can I verify a downloaded file?</h3>
-<p>Yes. Paste the expected checksum and compare it with the generated hash.</p>
-</section>
-
-<section class="info">
-<h2>Related Tools</h2>
-
-<ul>
-<li><a href="password-toolkit.html">Password Toolkit</a></li>
-<li><a href="base64-toolkit.html">Base64 Toolkit</a></li>
-<li><a href="env-generator.html">.ENV Generator</a></li>
-<li><a href="uuid-generator.html">UUID Generator</a></li>
-</ul>
-</section>
-
-<div style="
-text-align:center;
-color:#6b7280;
-font-size:13px;
-margin-top:28px;
-">
-Powered by XAVERT
-</div>
-
-</main>
-
-<div
-id="toast"
-role="status"
-aria-live="polite"
-aria-atomic="true"></div>
-
-<script>
-
-const dropZone=document.getElementById("dropZone");
-const fileInput=document.getElementById("fileInput");
-const fileCount=document.getElementById("fileCount");
-const message=document.getElementById("message");
-const resultBox=document.getElementById("resultBox");
-const toast=document.getElementById("toast");
-
-dropZone.addEventListener("click",function(){
-fileInput.click();
-});
-
-dropZone.addEventListener("dragover",function(e){
-e.preventDefault();
-dropZone.classList.add("dragover");
-});
-
-dropZone.addEventListener("dragleave",function(){
-dropZone.classList.remove("dragover");
-});
-
-dropZone.addEventListener("drop",function(e){
-e.preventDefault();
-dropZone.classList.remove("dragover");
-fileInput.files=e.dataTransfer.files;
-updateFileCount();
-});
-
-fileInput.addEventListener("change",function(){
-
-updateFileCount();
-
-if(fileInput.files.length){
-generateHash();
-}
-
-});
-function formatFileSize(bytes){
-
-const mb=bytes/(1024*1024);
-
-if(mb>=1){
-return mb.toFixed(2) + " MB";
-}
-
-return (bytes/1024).toFixed(1) + " KB";
-
-}
-function updateFileCount(){
-
-const file=fileInput.files[0];
-
-fileCount.textContent=file
-? file.name + " • " + formatFileSize(file.size)
-: "No file selected";
-
-}
-
-function showToast(text,type="info"){
-
-toast.textContent=text;
-toast.className="toast-" + type;
-toast.style.display="block";
-
-setTimeout(function(){
-toast.style.display="none";
-toast.className="";
-},2200);
-
-}
-
-function setMessage(text,type){
-
-message.textContent=text;
-message.className="message " + type;
-
-}
-
-function clearAll(){
-
-fileInput.value="";
-fileCount.textContent="No file selected";
-document.getElementById("expectedHash").value="";
-message.textContent="";
-message.className="message";
-
-resultBox.innerHTML="";
-resultBox.style.display="none";
-resultBox.scrollTop=0;
-dropZone.classList.remove("dragover");
-showToast("Cleared.","success");
-
-}
-function downloadHashReport(){
-
-if(!resultBox.innerText.trim()){
-showToast("Generate a hash first.","error");
-return;
-}
-
-const blob=new Blob(
-[resultBox.innerText],
-{
-type:"text/plain;charset=utf-8"
-}
-);
-
-const link=document.createElement("a");
-
-link.href=URL.createObjectURL(blob);
-link.download="xavert-file-hash-report.txt";
-
-document.body.appendChild(link);
-link.click();
-document.body.removeChild(link);
-
-URL.revokeObjectURL(link.href);
-
-showToast("Report downloaded.","success");
-
-}
-function copyText(text){
-
-if(!text){
-showToast("Nothing to copy.","error");
-return;
-}
-
-navigator.clipboard.writeText(text)
-.then(function(){
-showToast("Copied.","success");
-})
-.catch(function(){
-showToast("Copy failed.","error");
-});
-
-}
-
-async function generateHash(){
-
-const file=fileInput.files[0];
-
-if(!file){
-setMessage("Please select a file.","error");
-showToast("Please select a file.","error");
-return;
-}
-
-try{
-
-const algorithm=document.getElementById("hashAlgorithm").value;
-
-setMessage(
-"Generating " + algorithm + " hash...",
-"loading"
-);
-
-const buffer=await file.arrayBuffer();
-
-const hashBuffer=await crypto.subtle.digest(
-algorithm,
-buffer
-);
-
-const hashArray=Array.from(new Uint8Array(hashBuffer));
-
-const hashHex=hashArray
-.map(byte=>byte.toString(16).padStart(2,"0"))
-.join("");
-const fileSize=formatFileSize(file.size);
-const generatedAt=new Date().toLocaleString();
-const expectedHash=document.getElementById("expectedHash").value.trim().toLowerCase();
-
-let verificationHtml="";
-
-if(expectedHash){
-
-if(expectedHash===hashHex.toLowerCase()){
-verificationHtml=
-"<strong>Verification</strong><br>" +
-'<span style="color:#047857;font-weight:700;">✓ Match</span><br><br>';
-}else{
-verificationHtml=
-"<strong>Verification</strong><br>" +
-'<span style="color:#dc2626;font-weight:700;">✗ No Match</span><br><br>';
-}
-
-}
-
-resultBox.style.display="block";
-
-resultBox.innerHTML=
-"<strong>File</strong><br>" +
-file.name +
-"<br><br>" +
-"<strong>Size</strong><br>" +
-fileSize +
-"<br><br>" +
-"<strong>Algorithm</strong><br>" +
-algorithm +
-"<br><br>" +
-"<strong>Generated</strong><br>" +
-generatedAt +
-"<br><br>" +
-verificationHtml +
-"<strong>Length</strong><br>" +
-hashHex.length +
-" characters<br><br>" +
-"<strong>Hash Lowercase</strong><br><code>" +
-hashHex +
-"</code>" +
-"<br><br>" +
-"<strong>Hash Uppercase</strong><br><code>" +
-hashHex.toUpperCase() +
-"</code>" +
-"<br><br>" +
-'<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex + '\')">Copy Lowercase</button> ' +
-'<button style="width:auto;margin-top:12px;" onclick="copyText(\'' + hashHex.toUpperCase() + '\')">Copy Uppercase</button>';
-setMessage("Hash generated successfully.","success");
-showToast("Hash generated successfully.","success");
-}catch(error){
-
-console.error(error);
-setMessage("Unable to generate hash.","error");
-showToast("Unable to generate hash.","error");
-
-}
-
-}
-document.addEventListener("keydown",function(e){
-
-if(e.ctrlKey && e.key==="Enter"){
-generateHash();
-}
-
-});
-</script>
-
-</body>
+
+      .hash-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fee2e2;
+      }
+
+      .hash-drop-zone strong {
+        display: block;
+        margin-bottom: 6px;
+        color: #111827;
+        font-size: 17px;
+      }
+
+      .hash-drop-zone span {
+        color: #6b7280;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .hash-file-input {
+        display: none;
+      }
+
+      .hash-file-info {
+        margin-top: 12px;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .hash-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .hash-result {
+        margin-top: 20px;
+      }
+
+      .hash-value {
+        display: block;
+        margin-top: 8px;
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #ffffff;
+        font-family: Consolas, Monaco, "Courier New", monospace;
+        font-size: 13px;
+        line-height: 1.6;
+        overflow-wrap: anywhere;
+        word-break: break-all;
+        user-select: all;
+      }
+
+      .hash-verification {
+        margin-top: 16px;
+      }
+
+      .hash-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      @media (max-width: 576px) {
+        .hash-drop-zone {
+          min-height: 120px;
+          padding: 18px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .hash-drop-zone {
+          transition: none;
+        }
+
+        .hash-drop-zone:hover,
+        .hash-drop-zone:focus-visible {
+          transform: none;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/file-hash-checker.js" defer></script>
+  </head>
+
+  <body
+    data-tool="file-hash-checker"
+    data-related-tools="base64-toolkit,password-toolkit,text-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">File Hash Checker</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="hash-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="hash-workspace-title" class="tool-card-title">
+              Generate and Verify File Hashes
+            </h2>
+
+            <p class="tool-card-description">
+              Select a file, choose a SHA-2 algorithm and optionally compare the
+              generated checksum with an expected value.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div class="form-group full-width">
+                <label for="fileInput">File</label>
+
+                <div
+                  id="dropZone"
+                  class="hash-drop-zone"
+                  role="button"
+                  tabindex="0"
+                  aria-label="Choose or drop a file"
+                  aria-describedby="fileInfo message"
+                >
+                  <div>
+                    <strong>Choose or Drop a File</strong>
+                    <span>Click here or drag and drop one file.</span>
+                  </div>
+                </div>
+
+                <input id="fileInput" class="hash-file-input" type="file" />
+
+                <div id="fileInfo" class="hash-file-info">No file selected</div>
+              </div>
+
+              <div class="form-group">
+                <label for="hashAlgorithm">Hash Algorithm</label>
+
+                <select id="hashAlgorithm">
+                  <option value="SHA-256">SHA-256</option>
+                  <option value="SHA-384">SHA-384</option>
+                  <option value="SHA-512">SHA-512</option>
+                  <option value="SHA-1">SHA-1 (legacy verification)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="expectedHash">Expected Hash / Checksum</label>
+
+                <textarea
+                  id="expectedHash"
+                  placeholder="Paste an expected checksum to verify the file"
+                  autocomplete="off"
+                  autocapitalize="off"
+                  autocorrect="off"
+                  spellcheck="false"
+                  aria-describedby="message"
+                ></textarea>
+              </div>
+            </div>
+
+            <div class="button-grid hash-actions">
+              <button
+                id="generateBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+              >
+                Generate Hash
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div
+              id="resultBox"
+              class="card hash-result"
+              aria-labelledby="resultTitle"
+              hidden
+            >
+              <h2 id="resultTitle">Hash Result</h2>
+
+              <div class="stats-grid">
+                <div class="stat-card">
+                  <strong id="algorithmStat" class="stat-value">—</strong>
+                  <span class="stat-label">Algorithm</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="fileSizeStat" class="stat-value">0 B</strong>
+                  <span class="stat-label">File Size</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="hashLengthStat" class="stat-value">0</strong>
+                  <span class="stat-label">Characters</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="verificationStat" class="stat-value">—</strong>
+                  <span class="stat-label">Verification</span>
+                </div>
+              </div>
+
+              <div class="result-box hash-verification">
+                <strong>File</strong>
+                <div id="resultFileName"></div>
+
+                <strong>Generated</strong>
+                <div id="generatedAt"></div>
+
+                <strong>Hash Lowercase</strong>
+                <code id="hashLowercase" class="hash-value"></code>
+
+                <strong>Hash Uppercase</strong>
+                <code id="hashUppercase" class="hash-value"></code>
+              </div>
+
+              <div class="button-grid hash-result-actions">
+                <button id="copyLowerBtn" class="btn" type="button">
+                  Copy Lowercase
+                </button>
+
+                <button
+                  id="copyUpperBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Copy Uppercase
+                </button>
+
+                <button
+                  id="downloadBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download Report
+                </button>
+              </div>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+          </div>
+        </section>
+      </div>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT File Hash Checker calculates SHA-256, SHA-384, SHA-512 and
+          legacy SHA-1 checksums locally in your browser for file integrity
+          verification.
+        </p>
+
+        <h3>Main Features</h3>
+
+        <ul class="about-features">
+          <li>
+            Generate SHA-256, SHA-384 and SHA-512 checksums, plus SHA-1 for
+            legacy verification.
+          </li>
+          <li>Choose files with the file picker or drag and drop.</li>
+          <li>Compare generated hashes with expected checksums.</li>
+          <li>Copy lowercase or uppercase hash values.</li>
+          <li>Download a plain-text verification report.</li>
+          <li>Process files locally with the browser Web Crypto API.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+
+        <p class="about-privacy">
+          Everything is processed locally within your browser. Your files and
+          generated checksums are never uploaded, transmitted, shared or stored
+          on any server.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
 </html>

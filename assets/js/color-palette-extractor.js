@@ -1,13 +1,20 @@
 "use strict";
 
 document.addEventListener("DOMContentLoaded", function () {
+  if (document.body.dataset.tool !== "color-palette-extractor") {
+    return;
+  }
+
   const dropzone = document.getElementById("dropzone");
   const fileInput = document.getElementById("fileInput");
   const paletteSize = document.getElementById("paletteSize");
+  const customPaletteSizeGroup = document.getElementById(
+    "customPaletteSizeGroup",
+  );
+  const customPaletteSize = document.getElementById("customPaletteSize");
 
   const extractBtn = document.getElementById("extractBtn");
   const clearBtn = document.getElementById("clearBtn");
-  const sampleBtn = document.getElementById("sampleBtn");
 
   const copyPaletteBtn = document.getElementById("copyPaletteBtn");
   const downloadTxtBtn = document.getElementById("downloadTxtBtn");
@@ -28,11 +35,49 @@ document.addEventListener("DOMContentLoaded", function () {
   const fileSizeStat = document.getElementById("fileSizeStat");
 
   const message = document.getElementById("message");
-  const toast = document.getElementById("toast");
   const canvas = document.getElementById("canvas");
 
+  const requiredElements = {
+    dropzone,
+    fileInput,
+    paletteSize,
+    customPaletteSizeGroup,
+    customPaletteSize,
+    extractBtn,
+    clearBtn,
+    copyPaletteBtn,
+    downloadTxtBtn,
+    downloadJsonBtn,
+    downloadCssBtn,
+    downloadSvgBtn,
+    previewBox,
+    previewImage,
+    imageInfo,
+    paletteBox,
+    palette,
+    colorCountStat,
+    imageWidthStat,
+    imageHeightStat,
+    fileSizeStat,
+    message,
+    canvas,
+  };
+
+  const missingElements = Object.entries(requiredElements)
+    .filter(([, element]) => !element)
+    .map(([name]) => name);
+
+  if (missingElements.length) {
+    console.error(
+      "Color Palette Extractor initialization failed.",
+      missingElements,
+    );
+
+    return;
+  }
+
   const context = canvas.getContext("2d", {
-    willReadFrequently: true
+    willReadFrequently: true,
   });
 
   const supportedMimeTypes = [
@@ -41,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
     "image/webp",
     "image/gif",
     "image/bmp",
-    "image/avif"
+    "image/avif",
   ];
 
   const maximumFileSize = 25 * 1024 * 1024;
@@ -52,72 +97,49 @@ document.addEventListener("DOMContentLoaded", function () {
   let extractedColors = [];
   let imageLoaded = false;
   let paletteGenerated = false;
-  let toastTimer = null;
-  let messageTimer = null;
 
-  function showToast(text, type = "info") {
-    if (!toast || !text) {
-      return;
-    }
+  function setInlineMessage(text = "", type = "info") {
+    if (!message) return;
 
     const allowedTypes = ["success", "error", "info"];
     const safeType = allowedTypes.includes(type) ? type : "info";
 
-    window.clearTimeout(toastTimer);
+    message.textContent = text;
 
-    toast.textContent = text;
-
-    toast.classList.remove(
-      "xavert-toast-success",
-      "xavert-toast-error",
-      "xavert-toast-info"
+    message.classList.remove(
+      "message-success",
+      "message-error",
+      "message-info",
     );
 
-    toast.classList.add(
-      "xavert-toast",
-      `xavert-toast-${safeType}`
-    );
-
-    toast.style.display = "block";
-    toast.setAttribute("aria-hidden", "false");
-
-    toastTimer = window.setTimeout(function () {
-      toast.style.display = "none";
-      toast.textContent = "";
-
-      toast.classList.remove(
-        "xavert-toast-success",
-        "xavert-toast-error",
-        "xavert-toast-info"
-      );
-
-      toast.setAttribute("aria-hidden", "true");
-    }, 2200);
-  }
-
-  function showMessage(text = "", type = "info", useToast = true) {
-    if (message) {
-      const allowedTypes = ["success", "error", "info"];
-      const safeType = allowedTypes.includes(type) ? type : "info";
-
-      message.textContent = text;
-
-      message.classList.remove(
-        "message-success",
-        "message-error",
-        "message-info"
-      );
-
+    if (text) {
       message.classList.add(`message-${safeType}`);
     }
+  }
 
-    if (text && useToast) {
-      showToast(text, type);
+  function notify(text = "", type = "info", useToast = true) {
+    setInlineMessage(text, type);
+
+    if (text && useToast && typeof window.showMessage === "function") {
+      window.showMessage(text, type);
     }
   }
 
   function formatNumber(value) {
     return new Intl.NumberFormat("en-US").format(value);
+  }
+
+  function getRequestedPaletteSize() {
+    if (paletteSize.value !== "custom") return Number(paletteSize.value);
+    const value = Number.parseInt(customPaletteSize.value, 10);
+    if (!Number.isFinite(value)) return 6;
+    return Math.max(2, Math.min(20, value));
+  }
+
+  function syncCustomPaletteSize() {
+    const isCustom = paletteSize.value === "custom";
+    customPaletteSizeGroup.hidden = !isCustom;
+    customPaletteSize.disabled = !isCustom;
   }
 
   function formatFileSize(bytes) {
@@ -128,10 +150,10 @@ document.addEventListener("DOMContentLoaded", function () {
     const units = ["B", "KB", "MB", "GB"];
     const unitIndex = Math.min(
       Math.floor(Math.log(bytes) / Math.log(1024)),
-      units.length - 1
+      units.length - 1,
     );
 
-    const value = bytes / (1024 ** unitIndex);
+    const value = bytes / 1024 ** unitIndex;
     const decimals = unitIndex === 0 || value >= 10 ? 0 : 2;
 
     return `${value.toFixed(decimals)} ${units[unitIndex]}`;
@@ -155,12 +177,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function updateImageStatistics(file) {
     colorCountStat.textContent = "0";
-    imageWidthStat.textContent = formatNumber(
-      previewImage.naturalWidth
-    );
-    imageHeightStat.textContent = formatNumber(
-      previewImage.naturalHeight
-    );
+    imageWidthStat.textContent = formatNumber(previewImage.naturalWidth);
+    imageHeightStat.textContent = formatNumber(previewImage.naturalHeight);
     fileSizeStat.textContent = formatFileSize(file.size);
   }
 
@@ -169,7 +187,7 @@ document.addEventListener("DOMContentLoaded", function () {
     extractedColors = [];
 
     palette.replaceChildren();
-    paletteBox.style.display = "none";
+    paletteBox.hidden = true;
     colorCountStat.textContent = "0";
   }
 
@@ -181,7 +199,7 @@ document.addEventListener("DOMContentLoaded", function () {
     previewImage.onerror = null;
     previewImage.removeAttribute("src");
 
-    previewBox.style.display = "none";
+    previewBox.hidden = true;
     imageInfo.textContent = "";
 
     canvas.width = 1;
@@ -194,6 +212,8 @@ document.addEventListener("DOMContentLoaded", function () {
   function resetToolState() {
     fileInput.value = "";
     paletteSize.value = "5";
+    customPaletteSize.value = "6";
+    syncCustomPaletteSize();
     dropzone.classList.remove("drag");
 
     hidePalette();
@@ -213,10 +233,7 @@ document.addEventListener("DOMContentLoaded", function () {
       return "The image must be smaller than 25 MB.";
     }
 
-    if (
-      file.type &&
-      !supportedMimeTypes.includes(file.type)
-    ) {
+    if (file.type && !supportedMimeTypes.includes(file.type)) {
       return "Select a JPG, PNG, WebP, GIF, BMP or AVIF image.";
     }
 
@@ -228,7 +245,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (validationError) {
       fileInput.value = "";
-      showMessage(validationError, "error");
+      notify(validationError, "error");
       return;
     }
 
@@ -241,7 +258,7 @@ document.addEventListener("DOMContentLoaded", function () {
     previewImage.onload = function () {
       imageLoaded = true;
 
-      previewBox.style.display = "block";
+      previewBox.hidden = false;
 
       imageInfo.textContent =
         `${file.name} • ${formatFileSize(file.size)} • ` +
@@ -250,20 +267,14 @@ document.addEventListener("DOMContentLoaded", function () {
 
       updateImageStatistics(file);
 
-      showMessage(
-        "Image loaded. Extract the palette when ready.",
-        "success"
-      );
+      notify("Image loaded. Extract the palette when ready.", "success");
     };
 
     previewImage.onerror = function () {
       hidePreview();
       fileInput.value = "";
 
-      showMessage(
-        "The selected image could not be loaded.",
-        "error"
-      );
+      notify("The selected image could not be loaded.", "error");
     };
 
     previewImage.src = currentObjectUrl;
@@ -276,9 +287,7 @@ document.addEventListener("DOMContentLoaded", function () {
   function rgbToHex(red, green, blue) {
     return `#${[red, green, blue]
       .map(function (value) {
-        return clampChannel(value)
-          .toString(16)
-          .padStart(2, "0");
+        return clampChannel(value).toString(16).padStart(2, "0");
       })
       .join("")
       .toUpperCase()}`;
@@ -289,17 +298,9 @@ document.addEventListener("DOMContentLoaded", function () {
     const normalizedGreen = green / 255;
     const normalizedBlue = blue / 255;
 
-    const maximum = Math.max(
-      normalizedRed,
-      normalizedGreen,
-      normalizedBlue
-    );
+    const maximum = Math.max(normalizedRed, normalizedGreen, normalizedBlue);
 
-    const minimum = Math.min(
-      normalizedRed,
-      normalizedGreen,
-      normalizedBlue
-    );
+    const minimum = Math.min(normalizedRed, normalizedGreen, normalizedBlue);
 
     const lightness = (maximum + minimum) / 2;
 
@@ -316,19 +317,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (maximum === normalizedRed) {
         hue =
-          (normalizedGreen - normalizedBlue) /
-            difference +
+          (normalizedGreen - normalizedBlue) / difference +
           (normalizedGreen < normalizedBlue ? 6 : 0);
       } else if (maximum === normalizedGreen) {
-        hue =
-          (normalizedBlue - normalizedRed) /
-            difference +
-          2;
+        hue = (normalizedBlue - normalizedRed) / difference + 2;
       } else {
-        hue =
-          (normalizedRed - normalizedGreen) /
-            difference +
-          4;
+        hue = (normalizedRed - normalizedGreen) / difference + 4;
       }
 
       hue /= 6;
@@ -337,7 +331,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return {
       h: Math.round(hue * 360),
       s: Math.round(saturation * 100),
-      l: Math.round(lightness * 100)
+      l: Math.round(lightness * 100),
     };
   }
 
@@ -350,11 +344,7 @@ document.addEventListener("DOMContentLoaded", function () {
         : ((normalized + 0.055) / 1.055) ** 2.4;
     });
 
-    return (
-      0.2126 * channels[0] +
-      0.7152 * channels[1] +
-      0.0722 * channels[2]
-    );
+    return 0.2126 * channels[0] + 0.7152 * channels[1] + 0.0722 * channels[2];
   }
 
   function getReadableTextColor(red, green, blue) {
@@ -365,14 +355,11 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function getColorDistance(firstColor, secondColor) {
     const redDifference = firstColor.red - secondColor.red;
-    const greenDifference =
-      firstColor.green - secondColor.green;
+    const greenDifference = firstColor.green - secondColor.green;
     const blueDifference = firstColor.blue - secondColor.blue;
 
     return Math.sqrt(
-      redDifference ** 2 +
-        greenDifference ** 2 +
-        blueDifference ** 2
+      redDifference ** 2 + greenDifference ** 2 + blueDifference ** 2,
     );
   }
 
@@ -389,36 +376,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const scale = Math.min(
       1,
-      maximumAnalysisDimension /
-        previewImage.naturalWidth,
-      maximumAnalysisDimension /
-        previewImage.naturalHeight
+      maximumAnalysisDimension / previewImage.naturalWidth,
+      maximumAnalysisDimension / previewImage.naturalHeight,
     );
 
-    canvas.width = Math.max(
-      1,
-      Math.round(previewImage.naturalWidth * scale)
-    );
+    canvas.width = Math.max(1, Math.round(previewImage.naturalWidth * scale));
 
-    canvas.height = Math.max(
-      1,
-      Math.round(previewImage.naturalHeight * scale)
-    );
+    canvas.height = Math.max(1, Math.round(previewImage.naturalHeight * scale));
 
-    context.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+    context.clearRect(0, 0, canvas.width, canvas.height);
 
-    context.drawImage(
-      previewImage,
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
+    context.drawImage(previewImage, 0, 0, canvas.width, canvas.height);
 
     return true;
   }
@@ -428,19 +396,12 @@ document.addEventListener("DOMContentLoaded", function () {
     const pixelCount = imageData.length / 4;
     const targetSamples = 70000;
 
-    const pixelStep = Math.max(
-      1,
-      Math.floor(pixelCount / targetSamples)
-    );
+    const pixelStep = Math.max(1, Math.floor(pixelCount / targetSamples));
 
     const channelStep = 24;
     let analyzedPixels = 0;
 
-    for (
-      let pixelIndex = 0;
-      pixelIndex < pixelCount;
-      pixelIndex += pixelStep
-    ) {
+    for (let pixelIndex = 0; pixelIndex < pixelCount; pixelIndex += pixelStep) {
       const index = pixelIndex * 4;
       const alpha = imageData[index + 3];
 
@@ -454,24 +415,21 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const quantizedRed = Math.min(
         255,
-        Math.round(red / channelStep) * channelStep
+        Math.round(red / channelStep) * channelStep,
       );
 
       const quantizedGreen = Math.min(
         255,
-        Math.round(green / channelStep) *
-          channelStep
+        Math.round(green / channelStep) * channelStep,
       );
 
       const quantizedBlue = Math.min(
         255,
-        Math.round(blue / channelStep) * channelStep
+        Math.round(blue / channelStep) * channelStep,
       );
 
       const key =
-        `${quantizedRed},` +
-        `${quantizedGreen},` +
-        `${quantizedBlue}`;
+        `${quantizedRed},` + `${quantizedGreen},` + `${quantizedBlue}`;
 
       const existingBucket = buckets.get(key);
 
@@ -485,7 +443,7 @@ document.addEventListener("DOMContentLoaded", function () {
           count: 1,
           redTotal: red,
           greenTotal: green,
-          blueTotal: blue
+          blueTotal: blue,
         });
       }
 
@@ -494,7 +452,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     return {
       buckets,
-      analyzedPixels
+      analyzedPixels,
     };
   }
 
@@ -502,145 +460,140 @@ document.addEventListener("DOMContentLoaded", function () {
     const rankedColors = Array.from(buckets.values())
       .map(function (bucket) {
         return {
-          red: Math.round(
-            bucket.redTotal / bucket.count
-          ),
-          green: Math.round(
-            bucket.greenTotal / bucket.count
-          ),
-          blue: Math.round(
-            bucket.blueTotal / bucket.count
-          ),
-          count: bucket.count
+          red: bucket.redTotal / bucket.count,
+          green: bucket.greenTotal / bucket.count,
+          blue: bucket.blueTotal / bucket.count,
+          count: bucket.count,
         };
       })
       .sort(function (firstColor, secondColor) {
         return secondColor.count - firstColor.count;
       });
 
-    const selectedColors = [];
-    const minimumDistance = 58;
+    if (rankedColors.length === 0) {
+      return [];
+    }
+
+    const centroids = [];
+    const minimumSeedDistance = 42;
 
     for (const color of rankedColors) {
-      const isDistinct = selectedColors.every(
-        function (selectedColor) {
-          return (
-            getColorDistance(color, selectedColor) >=
-            minimumDistance
-          );
-        }
-      );
+      const isDistinct = centroids.every(function (centroid) {
+        return getColorDistance(color, centroid) >= minimumSeedDistance;
+      });
 
-      if (!isDistinct) {
-        continue;
+      if (isDistinct) {
+        centroids.push({
+          red: color.red,
+          green: color.green,
+          blue: color.blue,
+        });
       }
 
-      selectedColors.push(color);
-
-      if (selectedColors.length >= requestedSize) {
+      if (centroids.length >= requestedSize) {
         break;
       }
     }
 
-    if (selectedColors.length < requestedSize) {
-      for (const color of rankedColors) {
-        const alreadySelected = selectedColors.includes(color);
+    for (const color of rankedColors) {
+      if (centroids.length >= requestedSize) {
+        break;
+      }
 
-        if (alreadySelected) {
-          continue;
-        }
+      const alreadyRepresented = centroids.some(function (centroid) {
+        return getColorDistance(color, centroid) < 1;
+      });
 
-        selectedColors.push(color);
-
-        if (selectedColors.length >= requestedSize) {
-          break;
-        }
+      if (!alreadyRepresented) {
+        centroids.push({
+          red: color.red,
+          green: color.green,
+          blue: color.blue,
+        });
       }
     }
 
-    return selectedColors.map(function (color) {
-      const hex = rgbToHex(
-        color.red,
-        color.green,
-        color.blue
-      );
+    const iterations = 7;
+    let clusters = [];
 
-      const hsl = rgbToHsl(
-        color.red,
-        color.green,
-        color.blue
-      );
+    for (let iteration = 0; iteration < iterations; iteration += 1) {
+      clusters = centroids.map(function () {
+        return {
+          count: 0,
+          redTotal: 0,
+          greenTotal: 0,
+          blueTotal: 0,
+        };
+      });
 
-      return {
-        hex,
-        rgb:
-          `rgb(${color.red}, ${color.green}, ` +
-          `${color.blue})`,
-        hsl:
-          `hsl(${hsl.h}, ${hsl.s}%, ` +
-          `${hsl.l}%)`,
-        percentage:
-          analyzedPixels > 0
-            ? (color.count / analyzedPixels) * 100
-            : 0,
-        red: color.red,
-        green: color.green,
-        blue: color.blue,
-        textColor: getReadableTextColor(
-          color.red,
-          color.green,
-          color.blue
-        )
-      };
-    });
-  }
+      rankedColors.forEach(function (color) {
+        let closestIndex = 0;
+        let closestDistance = Infinity;
 
-  async function copyText(value, successMessage) {
-    try {
-      if (typeof window.xavertCopyText === "function") {
-        const result = window.xavertCopyText(
-          value,
-          successMessage
-        );
+        centroids.forEach(function (centroid, index) {
+          const distance = getColorDistance(color, centroid);
 
-        if (result instanceof Promise) {
-          await result;
+          if (distance < closestDistance) {
+            closestDistance = distance;
+            closestIndex = index;
+          }
+        });
+
+        const cluster = clusters[closestIndex];
+        cluster.count += color.count;
+        cluster.redTotal += color.red * color.count;
+        cluster.greenTotal += color.green * color.count;
+        cluster.blueTotal += color.blue * color.count;
+      });
+
+      clusters.forEach(function (cluster, index) {
+        if (cluster.count === 0) {
+          return;
         }
 
-        return;
-      }
+        centroids[index] = {
+          red: cluster.redTotal / cluster.count,
+          green: cluster.greenTotal / cluster.count,
+          blue: cluster.blueTotal / cluster.count,
+        };
+      });
+    }
 
-      if (
-        navigator.clipboard &&
-        window.isSecureContext
-      ) {
-        await navigator.clipboard.writeText(value);
-        showMessage(successMessage, "success");
-        return;
-      }
+    return clusters
+      .filter(function (cluster) {
+        return cluster.count > 0;
+      })
+      .map(function (cluster, index) {
+        const centroid = centroids[index];
+        const red = clampChannel(centroid.red);
+        const green = clampChannel(centroid.green);
+        const blue = clampChannel(centroid.blue);
+        const hex = rgbToHex(red, green, blue);
+        const hsl = rgbToHsl(red, green, blue);
 
-      const temporaryTextarea =
-        document.createElement("textarea");
+        return {
+          hex,
+          rgb: `rgb(${red}, ${green}, ${blue})`,
+          hsl: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`,
+          percentage:
+            analyzedPixels > 0 ? (cluster.count / analyzedPixels) * 100 : 0,
+          red,
+          green,
+          blue,
+          textColor: getReadableTextColor(red, green, blue),
+        };
+      })
+      .sort(function (firstColor, secondColor) {
+        return secondColor.percentage - firstColor.percentage;
+      });
+  }
 
-      temporaryTextarea.value = value;
-      temporaryTextarea.setAttribute("readonly", "");
-      temporaryTextarea.style.position = "fixed";
-      temporaryTextarea.style.opacity = "0";
-
-      document.body.appendChild(temporaryTextarea);
-      temporaryTextarea.select();
-
-      const copied = document.execCommand("copy");
-      temporaryTextarea.remove();
-
-      if (!copied) {
-        throw new Error("Clipboard command failed.");
-      }
-
-      showMessage(successMessage, "success");
+  async function copyText(value) {
+    try {
+      await xavertCopyText(value);
     } catch (error) {
       console.error("Color copy failed:", error);
-      showMessage("Could not copy the color.", "error");
+      notify("Could not copy the color.", "error");
     }
   }
 
@@ -660,7 +613,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return row;
   }
 
-  function createCopyButton(label, value, messageText) {
+  function createCopyButton(label, value) {
     const button = document.createElement("button");
 
     button.type = "button";
@@ -668,7 +621,7 @@ document.addEventListener("DOMContentLoaded", function () {
     button.textContent = label;
 
     button.addEventListener("click", function () {
-      copyText(value, messageText);
+      copyText(value);
     });
 
     return button;
@@ -692,8 +645,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       const percentage = document.createElement("strong");
       percentage.className = "color-percentage";
-      percentage.textContent =
-        `${color.percentage.toFixed(1)}%`;
+      percentage.textContent = `${color.percentage.toFixed(1)}%`;
 
       swatch.append(position, percentage);
 
@@ -709,28 +661,16 @@ document.addEventListener("DOMContentLoaded", function () {
       details.append(
         createColorDetail("HEX", color.hex),
         createColorDetail("RGB", color.rgb),
-        createColorDetail("HSL", color.hsl)
+        createColorDetail("HSL", color.hsl),
       );
 
       const actions = document.createElement("div");
       actions.className = "color-card-actions";
 
       actions.append(
-        createCopyButton(
-          "Copy HEX",
-          color.hex,
-          "HEX color copied."
-        ),
-        createCopyButton(
-          "Copy RGB",
-          color.rgb,
-          "RGB color copied."
-        ),
-        createCopyButton(
-          "Copy HSL",
-          color.hsl,
-          "HSL color copied."
-        )
+        createCopyButton("Copy HEX", color.hex),
+        createCopyButton("Copy RGB", color.rgb),
+        createCopyButton("Copy HSL", color.hsl),
       );
 
       information.append(colorTitle, details, actions);
@@ -738,31 +678,21 @@ document.addEventListener("DOMContentLoaded", function () {
       palette.appendChild(card);
     });
 
-    paletteBox.style.display = "block";
-    colorCountStat.textContent = String(
-      extractedColors.length
-    );
+    paletteBox.hidden = false;
+    colorCountStat.textContent = String(extractedColors.length);
   }
 
   function extractColors(options = {}) {
     const announce = options.announce !== false;
 
     if (!imageLoaded || !currentFile) {
-      showMessage(
-        "Upload an image first.",
-        "error",
-        announce
-      );
+      notify("Upload an image first.", "error", announce);
 
       return false;
     }
 
     if (!prepareCanvas()) {
-      showMessage(
-        "The image is not ready for processing.",
-        "error",
-        announce
-      );
+      notify("The image is not ready for processing.", "error", announce);
 
       return false;
     }
@@ -775,42 +705,31 @@ document.addEventListener("DOMContentLoaded", function () {
         0,
         0,
         canvas.width,
-        canvas.height
+        canvas.height,
       ).data;
 
       const result = collectColorBuckets(imageData);
 
-      if (
-        result.analyzedPixels === 0 ||
-        result.buckets.size === 0
-      ) {
+      if (result.analyzedPixels === 0 || result.buckets.size === 0) {
         hidePalette();
 
-        showMessage(
-          "No visible colors could be extracted.",
-          "error",
-          announce
-        );
+        notify("No visible colors could be extracted.", "error", announce);
 
         return false;
       }
 
-      const requestedSize = Number(paletteSize.value);
+      const requestedSize = getRequestedPaletteSize();
 
       extractedColors = rankColors(
         result.buckets,
         result.analyzedPixels,
-        requestedSize
+        requestedSize,
       );
 
       if (extractedColors.length === 0) {
         hidePalette();
 
-        showMessage(
-          "No colors could be extracted.",
-          "error",
-          announce
-        );
+        notify("No colors could be extracted.", "error", announce);
 
         return false;
       }
@@ -818,11 +737,15 @@ document.addEventListener("DOMContentLoaded", function () {
       paletteGenerated = true;
       renderPalette();
 
-      showMessage(
-        `${extractedColors.length} dominant colors extracted.`,
-        "success",
-        announce
-      );
+      if (announce) {
+        setInlineMessage("Action completed successfully.", "success");
+
+        if (typeof window.showActionSuccess === "function") {
+          window.showActionSuccess();
+        } else if (typeof window.showMessage === "function") {
+          window.showMessage("Action completed successfully.", "success");
+        }
+      }
 
       return true;
     } catch (error) {
@@ -830,11 +753,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       hidePalette();
 
-      showMessage(
-        "The image could not be processed.",
-        "error",
-        announce
-      );
+      notify("The image could not be processed.", "error", announce);
 
       return false;
     } finally {
@@ -844,15 +763,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function ensurePalette() {
-    if (
-      paletteGenerated &&
-      extractedColors.length > 0
-    ) {
+    if (paletteGenerated && extractedColors.length > 0) {
       return true;
     }
 
     return extractColors({
-      announce: false
+      announce: false,
     });
   }
 
@@ -864,7 +780,7 @@ document.addEventListener("DOMContentLoaded", function () {
           `HEX: ${color.hex}`,
           `RGB: ${color.rgb}`,
           `HSL: ${color.hsl}`,
-          `Coverage: ${color.percentage.toFixed(1)}%`
+          `Coverage: ${color.percentage.toFixed(1)}%`,
         ].join("\n");
       })
       .join("\n\n");
@@ -885,8 +801,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const swatchHeight = 180;
     const labelHeight = 74;
 
-    const width =
-      swatchWidth * extractedColors.length;
+    const width = swatchWidth * extractedColors.length;
 
     const height = swatchHeight + labelHeight;
 
@@ -898,7 +813,7 @@ document.addEventListener("DOMContentLoaded", function () {
         return [
           `<rect x="${x}" y="0" width="${swatchWidth}" height="${swatchHeight}" fill="${color.hex}"/>`,
           `<text x="${center}" y="${swatchHeight + 30}" text-anchor="middle" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#111827">${color.hex}</text>`,
-          `<text x="${center}" y="${swatchHeight + 54}" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#6B7280">${color.percentage.toFixed(1)}%</text>`
+          `<text x="${center}" y="${swatchHeight + 54}" text-anchor="middle" font-family="Arial, sans-serif" font-size="13" fill="#6B7280">${color.percentage.toFixed(1)}%</text>`,
         ].join("");
       })
       .join("");
@@ -908,66 +823,35 @@ document.addEventListener("DOMContentLoaded", function () {
       `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}" role="img" aria-label="Extracted color palette">`,
       `<rect width="100%" height="100%" fill="#FFFFFF"/>`,
       swatches,
-      `</svg>`
+      `</svg>`,
     ].join("");
-  }
-
-  function downloadBlob(filename, blob) {
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = url;
-    link.download = filename;
-    link.hidden = true;
-
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-
-    window.setTimeout(function () {
-      URL.revokeObjectURL(url);
-    }, 1000);
   }
 
   function downloadContent(filename, content, mimeType) {
     if (!ensurePalette()) {
-      showMessage(
-        "Extract a valid palette first.",
-        "error"
-      );
+      notify("Extract a valid palette first.", "error");
 
       return;
     }
 
-    const blob = new Blob([content()], {
-      type: mimeType
-    });
-
-    downloadBlob(filename, blob);
-    showMessage("Download started.", "success");
+    downloadFile(filename, content(), mimeType);
   }
 
   function copyPalette() {
     if (!ensurePalette()) {
-      showMessage(
-        "Extract a valid palette first.",
-        "error"
-      );
+      notify("Extract a valid palette first.", "error");
 
       return;
     }
 
-    copyText(
-      getTextPaletteContent(),
-      "Palette copied."
-    );
+    copyText(getTextPaletteContent());
   }
 
   function downloadTxt() {
     downloadContent(
       "xavert-color-palette.txt",
       getTextPaletteContent,
-      "text/plain;charset=utf-8"
+      "text/plain;charset=utf-8",
     );
   }
 
@@ -977,27 +861,21 @@ document.addEventListener("DOMContentLoaded", function () {
       function () {
         return JSON.stringify(
           {
-            source: currentFile
-              ? currentFile.name
-              : null,
-            colors: extractedColors.map(
-              function (color) {
-                return {
-                  hex: color.hex,
-                  rgb: color.rgb,
-                  hsl: color.hsl,
-                  percentage: Number(
-                    color.percentage.toFixed(1)
-                  )
-                };
-              }
-            )
+            source: currentFile ? currentFile.name : null,
+            colors: extractedColors.map(function (color) {
+              return {
+                hex: color.hex,
+                rgb: color.rgb,
+                hsl: color.hsl,
+                percentage: Number(color.percentage.toFixed(1)),
+              };
+            }),
           },
           null,
-          2
+          2,
         );
       },
-      "application/json;charset=utf-8"
+      "application/json;charset=utf-8",
     );
   }
 
@@ -1005,7 +883,7 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadContent(
       "xavert-color-palette.css",
       getCssPaletteContent,
-      "text/css;charset=utf-8"
+      "text/css;charset=utf-8",
     );
   }
 
@@ -1013,36 +891,14 @@ document.addEventListener("DOMContentLoaded", function () {
     downloadContent(
       "xavert-color-palette.svg",
       getSvgPaletteContent,
-      "image/svg+xml;charset=utf-8"
+      "image/svg+xml;charset=utf-8",
     );
   }
 
   function clearTool() {
     resetToolState();
-
-    window.clearTimeout(messageTimer);
-
-    showMessage("Editor cleared.", "success");
-
-    messageTimer = window.setTimeout(function () {
-      if (
-        message &&
-        message.textContent === "Editor cleared."
-      ) {
-        showMessage("", "info", false);
-      }
-    }, 1800);
-
+    setInlineMessage("");
     dropzone.focus();
-  }
-
-  function loadSample() {
-    showMessage(
-      "Select an image from your device to generate a palette.",
-      "info"
-    );
-
-    fileInput.click();
   }
 
   function handleDroppedFiles(fileList) {
@@ -1051,10 +907,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     if (fileList.length > 1) {
-      showMessage(
-        "Only the first image will be used.",
-        "info"
-      );
+      notify("Only the first image will be used.", "info");
     }
 
     loadImage(fileList[0]);
@@ -1108,43 +961,33 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   clearBtn.addEventListener("click", clearTool);
-  sampleBtn.addEventListener("click", loadSample);
 
-  copyPaletteBtn.addEventListener(
-    "click",
-    copyPalette
-  );
+  copyPaletteBtn.addEventListener("click", copyPalette);
 
-  downloadTxtBtn.addEventListener(
-    "click",
-    downloadTxt
-  );
+  downloadTxtBtn.addEventListener("click", downloadTxt);
 
-  downloadJsonBtn.addEventListener(
-    "click",
-    downloadJson
-  );
+  downloadJsonBtn.addEventListener("click", downloadJson);
 
-  downloadCssBtn.addEventListener(
-    "click",
-    downloadCss
-  );
+  downloadCssBtn.addEventListener("click", downloadCss);
 
-  downloadSvgBtn.addEventListener(
-    "click",
-    downloadSvg
-  );
+  downloadSvgBtn.addEventListener("click", downloadSvg);
 
   paletteSize.addEventListener("change", function () {
-    if (paletteGenerated) {
-      extractColors({
-        announce: false
-      });
+    syncCustomPaletteSize();
 
-      showMessage(
-        "Palette size updated.",
-        "success"
-      );
+    if (paletteGenerated) {
+      extractColors({ announce: false });
+      setInlineMessage("Palette size updated.", "success");
+    }
+  });
+
+  customPaletteSize.addEventListener("change", function () {
+    const normalized = getRequestedPaletteSize();
+    customPaletteSize.value = String(normalized);
+
+    if (paletteGenerated) {
+      extractColors({ announce: false });
+      setInlineMessage("Palette size updated.", "success");
     }
   });
 
@@ -1152,5 +995,8 @@ document.addEventListener("DOMContentLoaded", function () {
     revokeCurrentObjectUrl();
   });
 
+  previewBox.hidden = true;
+  paletteBox.hidden = true;
+  syncCustomPaletteSize();
   resetStatistics();
 });
