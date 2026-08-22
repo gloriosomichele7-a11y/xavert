@@ -35,7 +35,6 @@
 
     button.hidden = false;
     button.setAttribute("aria-expanded", String(expanded));
-
     category.classList.toggle("expanded", expanded);
 
     cards.forEach((card, index) => {
@@ -43,60 +42,6 @@
     });
 
     button.textContent = expanded ? "Show Less" : button.dataset.originalText;
-  }
-
-  function resetCategories() {
-    categories.forEach((category) => {
-      category.hidden = false;
-
-      const button = getCategoryButton(category);
-
-      if (button) {
-        button.hidden = false;
-      }
-
-      setCategoryExpanded(category, category.classList.contains("expanded"));
-    });
-
-    searchResults.textContent = "";
-  }
-
-  function filterTools() {
-    const query = toolSearch.value.trim().toLocaleLowerCase();
-
-    if (!query) {
-      resetCategories();
-      return;
-    }
-
-    let totalResults = 0;
-
-    categories.forEach((category) => {
-      let categoryMatches = 0;
-
-      getCards(category).forEach((card) => {
-        const searchableText = card.textContent.toLocaleLowerCase();
-
-        const matches = searchableText.includes(query);
-
-        card.hidden = !matches;
-
-        if (matches) {
-          categoryMatches += 1;
-          totalResults += 1;
-        }
-      });
-
-      category.hidden = categoryMatches === 0;
-
-      const button = getCategoryButton(category);
-
-      if (button) {
-        button.hidden = true;
-      }
-    });
-
-    searchResults.textContent = `${totalResults} tool${totalResults === 1 ? "" : "s"} found`;
   }
 
   categories.forEach((category) => {
@@ -119,20 +64,187 @@
 
     button.addEventListener("click", () => {
       const expanded = button.getAttribute("aria-expanded") === "true";
-
       setCategoryExpanded(category, !expanded);
     });
   });
 
-  toolSearch.addEventListener("input", filterTools);
+  const tools = categories.flatMap((category) => {
+    const categoryTitle =
+      category.querySelector(".category-title")?.textContent.trim() || "XAVERT";
 
-  toolSearch.addEventListener("keydown", (event) => {
-    if (event.key !== "Escape" || !toolSearch.value) {
+    return getCards(category).map((card) => {
+      const title = card.querySelector("h3")?.textContent.trim() || "Tool";
+      const description =
+        card.querySelector("p")?.textContent.replace(/\s+/g, " ").trim() || "";
+      const href = card.getAttribute("href") || "#";
+
+      return {
+        title,
+        description,
+        category: categoryTitle,
+        href,
+        searchable: `${title} ${description} ${categoryTitle}`.toLocaleLowerCase(),
+      };
+    });
+  });
+
+  let visibleResults = [];
+  let activeIndex = -1;
+
+  function closeResults() {
+    visibleResults = [];
+    activeIndex = -1;
+    searchResults.innerHTML = "";
+    searchResults.hidden = true;
+    toolSearch.setAttribute("aria-expanded", "false");
+    toolSearch.removeAttribute("aria-activedescendant");
+  }
+
+  function scoreTool(tool, query) {
+    const title = tool.title.toLocaleLowerCase();
+    const category = tool.category.toLocaleLowerCase();
+
+    if (title === query) return 100;
+    if (title.startsWith(query)) return 80;
+    if (title.includes(query)) return 60;
+    if (category.startsWith(query)) return 40;
+    if (tool.searchable.includes(query)) return 20;
+
+    return 0;
+  }
+
+  function setActive(index) {
+    const items = Array.from(
+      searchResults.querySelectorAll(".search-result-item"),
+    );
+
+    if (!items.length) {
+      activeIndex = -1;
       return;
     }
 
-    toolSearch.value = "";
-    resetCategories();
-    toolSearch.focus();
+    activeIndex = Math.max(0, Math.min(index, items.length - 1));
+
+    items.forEach((item, itemIndex) => {
+      const active = itemIndex === activeIndex;
+      item.classList.toggle("is-active", active);
+      item.setAttribute("aria-selected", String(active));
+    });
+
+    const activeItem = items[activeIndex];
+
+    if (activeItem) {
+      toolSearch.setAttribute("aria-activedescendant", activeItem.id);
+      activeItem.scrollIntoView({ block: "nearest" });
+    }
+  }
+
+  function renderResults() {
+    const query = toolSearch.value.trim().toLocaleLowerCase();
+
+    if (!query) {
+      closeResults();
+      return;
+    }
+
+    visibleResults = tools
+      .map((tool) => ({
+        ...tool,
+        score: scoreTool(tool, query),
+      }))
+      .filter((tool) => tool.score > 0)
+      .sort((a, b) => b.score - a.score || a.title.localeCompare(b.title))
+      .slice(0, 8);
+
+    activeIndex = -1;
+    searchResults.innerHTML = "";
+
+    if (!visibleResults.length) {
+      const empty = document.createElement("div");
+      empty.className = "search-empty";
+      empty.textContent = "No matching tools";
+      searchResults.appendChild(empty);
+    } else {
+      visibleResults.forEach((tool, index) => {
+        const link = document.createElement("a");
+        link.className = "search-result-item";
+        link.href = tool.href;
+        link.id = `search-result-${index}`;
+        link.setAttribute("role", "option");
+        link.setAttribute("aria-selected", "false");
+
+        const title = document.createElement("span");
+        title.className = "search-result-title";
+        title.textContent = tool.title;
+
+        const meta = document.createElement("span");
+        meta.className = "search-result-meta";
+        meta.textContent = tool.category;
+
+        link.append(title, meta);
+        searchResults.appendChild(link);
+      });
+    }
+
+    searchResults.hidden = false;
+    toolSearch.setAttribute("aria-expanded", "true");
+  }
+
+  toolSearch.addEventListener("input", renderResults);
+
+  toolSearch.addEventListener("focus", () => {
+    if (toolSearch.value.trim()) {
+      renderResults();
+    }
+  });
+
+  toolSearch.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeResults();
+      toolSearch.select();
+      return;
+    }
+
+    if (searchResults.hidden || !visibleResults.length) {
+      if (event.key === "Enter" && toolSearch.value.trim()) {
+        renderResults();
+
+        if (visibleResults.length) {
+          window.location.href = visibleResults[0].href;
+        }
+      }
+
+      return;
+    }
+
+    if (event.key === "ArrowDown") {
+      event.preventDefault();
+      setActive(activeIndex + 1);
+      return;
+    }
+
+    if (event.key === "ArrowUp") {
+      event.preventDefault();
+      setActive(
+        activeIndex <= 0 ? visibleResults.length - 1 : activeIndex - 1,
+      );
+      return;
+    }
+
+    if (event.key === "Enter") {
+      event.preventDefault();
+
+      const target = visibleResults[activeIndex >= 0 ? activeIndex : 0];
+
+      if (target) {
+        window.location.href = target.href;
+      }
+    }
+  });
+
+  document.addEventListener("click", (event) => {
+    if (event.target !== toolSearch && !searchResults.contains(event.target)) {
+      closeResults();
+    }
   });
 })();
