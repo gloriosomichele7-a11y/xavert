@@ -1,0 +1,14 @@
+{
+  "redirects": [
+    {
+      "source": "/tools/url-encoder-decoder.html",
+      "destination": "/tools/url-toolkit.html",
+      "permanent": true
+    },
+    {
+      "source": "/tools/color-converter.html",
+      "destination": "/tools/color-toolkit.html",
+      "permanent": true
+    }
+  ]
+}
