@@ -1,1288 +1,1295 @@
-<!doctype html>
-<html lang="en" dir="ltr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>XAVERT | Free Online Developer, SEO, PDF & Utility Tools</title>
-    <meta
-      name="description"
-      content="Free browser-based tools for developers, SEO, PDF, images, JSON, QR codes, data conversion and everyday productivity. Fast, private and no sign-up required."
-    />
-    <meta name="application-name" content="XAVERT" />
-    <meta name="robots" content="index, follow" />
-    <meta name="referrer" content="strict-origin-when-cross-origin" />
-    <meta name="author" content="XAVERT" />
-    <meta name="theme-color" content="#dc2626" />
-    <meta name="color-scheme" content="light" />
-    <link rel="canonical" href="https://xavert.com/" />
-
-    <meta property="og:type" content="website" />
-    <meta
-      property="og:title"
-      content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
-    />
-    <meta
-      property="og:description"
-      content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
-    />
-    <meta property="og:url" content="https://xavert.com/" />
-    <meta
-      property="og:image"
-      content="https://xavert.com/assets/images/og-image.png"
-    />
-    <meta property="og:site_name" content="XAVERT" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta
-      name="twitter:title"
-      content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
-    />
-    <meta
-      name="twitter:description"
-      content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
-    />
-    <meta
-      name="twitter:image"
-      content="https://xavert.com/assets/images/og-image.png"
-    />
-    <meta name="format-detection" content="telephone=no" />
-    <link rel="icon" href="favicon.svg" type="image/svg+xml" />
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@graph": [
-          {
-            "@type": "WebApplication",
-            "name": "XAVERT",
-            "url": "https://xavert.com/",
-            "description": "Free online browser-based tools for developers, PDF editing, image processing, SEO, JSON, QR codes, passwords, data conversion and productivity.",
-            "applicationCategory": "UtilitiesApplication",
-            "browserRequirements": "Requires JavaScript",
-            "inLanguage": "en",
-            "operatingSystem": "Web Browser",
-            "offers": {
-              "@type": "Offer",
-              "price": "0",
-              "priceCurrency": "USD"
-            },
-            "contactPoint": {
-              "@type": "ContactPoint",
-              "contactType": "customer support",
-              "email": "support@xavert.com",
-              "availableLanguage": ["en", "it"]
-            }
-          },
-          {
-            "@type": "WebSite",
-            "name": "XAVERT",
-            "url": "https://xavert.com/",
-            "description": "Free online browser-based tools for developers, designers and everyday productivity.",
-            "inLanguage": "en"
-          }
-        ]
-      }
-    </script>
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-        font-family: Arial, Helvetica, sans-serif;
-      }
-
-      html {
-        scroll-behavior: smooth;
-      }
-
-      body {
-        background: #f7f8fb;
-        color: #111827;
-      }
-
-      .intro {
-        text-align: center;
-        padding: 18px 20px 10px;
-      }
-
-      .intro img {
-        width: 150px;
-        max-width: 48%;
-        height: auto;
-        display: block;
-        margin: 0 auto 2px;
-      }
-
-      .intro h1 {
-        max-width: 760px;
-        margin: 0 auto 8px;
-        font-size: 30px;
-        line-height: 1.15;
-        font-weight: 800;
-        letter-spacing: -0.7px;
-        color: #111827;
-      }
-
-      .intro p {
-        max-width: 660px;
-        margin: 0 auto;
-        color: #64748b;
-        font-size: 15.5px;
-        line-height: 1.6;
-        font-weight: 500;
-      }
-
-      .trust-row {
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: center;
-        gap: 7px;
-        margin: 12px auto 0;
-        color: #64748b;
-        font-size: 12.5px;
-        font-weight: 700;
-      }
-
-      .trust-row span {
-        display: inline;
-      }
-
-      .trust-row span[aria-hidden="true"] {
-        color: #dc2626;
-      }
-
-      .card-link:focus-visible {
-        outline: 3px solid rgba(220, 38, 38, 0.2);
-        outline-offset: 3px;
-      }
-
-      .search-box {
-        position: relative;
-        z-index: 20;
-        max-width: 720px;
-        margin: 20px auto 0;
-      }
-
-      .search-box::before {
-        content: "";
-        position: absolute;
-        left: 20px;
-        top: 50%;
-        width: 18px;
-        height: 18px;
-        border: 2px solid #64748b;
-        border-radius: 50%;
-        transform: translateY(-58%);
-        pointer-events: none;
-        transition:
-          border-color 0.2s ease,
-          opacity 0.2s ease;
-      }
-
-      .search-box::after {
-        content: "";
-        position: absolute;
-        left: 36px;
-        top: calc(50% + 7px);
-        width: 7px;
-        height: 2px;
-        border-radius: 999px;
-        background: #64748b;
-        transform: rotate(45deg);
-        transform-origin: left center;
-        pointer-events: none;
-        transition:
-          background 0.2s ease,
-          opacity 0.2s ease;
-      }
-
-      .search-box:focus-within::before {
-        border-color: #dc2626;
-      }
-
-      .search-box:focus-within::after {
-        background: #dc2626;
-      }
-
-      .search-box input {
-        width: 100%;
-        min-height: 58px;
-        padding: 0 22px 0 54px;
-        border: 1px solid #d7dde5;
-        border-radius: 18px;
-        font: inherit;
-        font-size: 15px;
-        font-weight: 500;
-        color: #111827;
-        background: rgba(255, 255, 255, 0.96);
-        box-shadow:
-          0 1px 2px rgba(15, 23, 42, 0.03),
-          0 10px 30px rgba(15, 23, 42, 0.055);
-        transition:
-          border-color 0.2s ease,
-          box-shadow 0.2s ease,
-          transform 0.2s ease;
-        -webkit-appearance: none;
-        appearance: none;
-      }
-
-      .search-box input::placeholder {
-        color: #8b95a5;
-        font-weight: 450;
-      }
-
-      .search-box input:focus {
-        outline: none;
-        border-color: rgba(220, 38, 38, 0.72);
-        box-shadow:
-          0 0 0 4px rgba(220, 38, 38, 0.08),
-          0 14px 36px rgba(15, 23, 42, 0.08);
-      }
-
-      .search-box input::-webkit-search-cancel-button {
-        cursor: pointer;
-      }
-
-      .search-results {
-        position: absolute;
-        top: calc(100% + 8px);
-        left: 0;
-        right: 0;
-        z-index: 30;
-        max-height: 390px;
-        overflow-y: auto;
-        border: 1px solid #e5e7eb;
-        border-radius: 16px;
-        background: #ffffff;
-        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-        text-align: left;
-      }
-
-      .search-results[hidden] {
-        display: none;
-      }
-
-      .search-result-item {
-        display: block;
-        padding: 13px 16px;
-        border-bottom: 1px solid #eef1f5;
-        color: inherit;
-        text-decoration: none;
-        transition:
-          background-color 0.16s ease,
-          color 0.16s ease;
-      }
-
-      .search-result-item:last-child {
-        border-bottom: 0;
-      }
-
-      .search-result-item:hover,
-      .search-result-item:focus-visible,
-      .search-result-item.is-active {
-        outline: none;
-        background: #fff7f7;
-      }
-
-      .search-result-title {
-        display: block;
-        color: #111827;
-        font-size: 14px;
-        font-weight: 800;
-        line-height: 1.3;
-      }
-
-      .search-result-meta {
-        display: block;
-        margin-top: 3px;
-        color: #64748b;
-        font-size: 12px;
-        font-weight: 600;
-        line-height: 1.35;
-      }
-
-      .search-empty {
-        padding: 14px 16px;
-        color: #64748b;
-        font-size: 13px;
-        font-weight: 650;
-      }
-
-      .services {
-        max-width: 1280px;
-        margin: 0 auto;
-        padding: 18px 4% 48px;
-      }
-
-      .tool-category {
-        margin-top: 34px;
-        padding: 30px 0 4px;
-        border-top: 1px solid #e5e7eb;
-      }
-
-      .tool-category:first-child {
-        margin-top: 0;
-        padding-top: 10px;
-        border-top: 0;
-      }
-
-      .category-title {
-        margin-bottom: 6px;
-        color: #111827;
-        font-size: 26px;
-        font-weight: 800;
-        line-height: 1.2;
-        letter-spacing: -0.55px;
-      }
-
-      .category-description {
-        max-width: 720px;
-        margin-bottom: 16px;
-        color: #64748b;
-        font-size: 14px;
-        line-height: 1.55;
-      }
-
-      .category-footer {
-        margin-top: 18px;
-        text-align: center;
-      }
-
-      .category-button {
-        padding: 9px 18px;
-        border: 1px solid #d9dee6;
-        border-radius: 999px;
-        background: #ffffff;
-        color: #475569;
-        font-size: 13px;
-        font-weight: 700;
-        cursor: pointer;
-        transition:
-          border-color 0.2s ease,
-          color 0.2s ease,
-          background-color 0.2s ease;
-      }
-
-      .category-button:hover {
-        border-color: #dc2626;
-        background: #fff7f7;
-        color: #b91c1c;
-      }
-
-      .grid {
-        display: grid;
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-        gap: 14px;
-        align-items: stretch;
-      }
-
-      .card-link {
-        display: block;
-        height: 100%;
-        border-radius: 14px;
-        color: inherit;
-        text-decoration: none;
-      }
-
-      .card {
-        position: relative;
-        display: flex;
-        flex-direction: column;
-        min-height: 154px;
-        height: 100%;
-        padding: 18px 18px 16px;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        background: #ffffff;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-        transition:
-          transform 0.2s ease,
-          box-shadow 0.2s ease,
-          border-color 0.2s ease;
-      }
-
-      .card-link:hover .card,
-      .card:hover {
-        border-color: #f0b4b4;
-        transform: translateY(-3px);
-        box-shadow: 0 10px 26px rgba(15, 23, 42, 0.075);
-      }
-
-      .card h3 {
-        margin: 0 0 8px;
-        color: #111827;
-        font-size: 17px;
-        font-weight: 800;
-        line-height: 1.3;
-        letter-spacing: -0.25px;
-      }
-
-      .card p {
-        display: -webkit-box;
-        margin: 0 0 16px;
-        overflow: hidden;
-        color: #64748b;
-        font-size: 13.5px;
-        line-height: 1.55;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 3;
-      }
-
-      .card::after {
-        content: "Open tool  →";
-        margin-top: auto;
-        color: #dc2626;
-        font-size: 12.5px;
-        font-weight: 800;
-        letter-spacing: 0.05px;
-      }
-
-      .footer {
-        width: min(1180px, calc(100% - 32px));
-        margin: 30px auto 18px;
-        padding: 18px 20px;
-        border: 1px solid #e5e7eb;
-        border-radius: 14px;
-        background: #ffffff;
-        box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-      }
-
-      .footer-inner {
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        gap: 24px;
-        width: min(1180px, 100%);
-        margin: 0 auto;
-      }
-
-      .footer-contact {
-        display: flex;
-        align-items: center;
-        gap: 11px;
-        min-width: 0;
-      }
-
-      .footer-contact-icon {
-        display: grid;
-        flex: 0 0 38px;
-        width: 38px;
-        height: 38px;
-        place-items: center;
-        border-radius: 10px;
-        background: #fff1f2;
-        color: #dc2626;
-      }
-
-      .footer-contact-icon svg {
-        width: 19px;
-        height: 19px;
-        fill: none;
-        stroke: currentColor;
-        stroke-width: 2;
-        stroke-linecap: round;
-        stroke-linejoin: round;
-      }
-
-      .footer-contact-copy {
-        min-width: 0;
-      }
-
-      .footer-contact-title {
-        margin: 0 0 2px;
-        color: #111827;
-        font-size: 13px;
-        font-weight: 800;
-        line-height: 1.2;
-      }
-
-      .footer-contact-email {
-        color: #dc2626;
-        font-size: 13px;
-        font-weight: 700;
-        line-height: 1.3;
-        text-decoration: none;
-        overflow-wrap: anywhere;
-      }
-
-      .footer-contact-email:hover,
-      .footer-contact-email:focus-visible {
-        color: #b91c1c;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        outline: none;
-      }
-
-      .footer-legal {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        flex-wrap: wrap;
-      }
-
-      .footer-legal a {
-        color: #475569;
-        font-size: 12.5px;
-        font-weight: 700;
-        text-decoration: none;
-      }
-
-      .footer-legal a:hover,
-      .footer-legal a:focus-visible {
-        color: #dc2626;
-        text-decoration: underline;
-        text-underline-offset: 3px;
-        outline: none;
-      }
-
-      .footer-bottom {
-        flex: 0 0 auto;
-        color: #111827;
-        font-size: 13px;
-        font-weight: 800;
-        text-align: right;
-      }
-
-      @media (max-width: 1180px) {
-        .grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 860px) {
-        .grid {
-          grid-template-columns: repeat(2, minmax(0, 1fr));
-        }
-      }
-
-      @media (max-width: 640px) {
-        .intro {
-          padding: 12px 16px 8px;
-        }
-
-        .intro img {
-          width: 104px;
-          max-width: 42%;
-        }
-
-        .intro h1 {
-          max-width: 94%;
-          margin-bottom: 7px;
-          font-size: 23px;
-          line-height: 1.18;
-          letter-spacing: -0.35px;
-        }
-
-        .intro p {
-          max-width: 94%;
-          font-size: 14px;
-          line-height: 1.5;
-        }
-
-        .trust-row {
-          gap: 6px;
-          margin-top: 11px;
-        }
-
-        .trust-row span {
-          font-size: 11.5px;
-        }
-
-        .search-box {
-          margin-top: 16px;
-        }
-
-        .search-box::before {
-          left: 17px;
-          width: 16px;
-          height: 16px;
-        }
-
-        .search-box::after {
-          left: 31px;
-          top: calc(50% + 6px);
-          width: 6px;
-        }
-
-        .search-box input {
-          min-height: 52px;
-          padding: 0 16px 0 47px;
-          border-radius: 15px;
-          font-size: 14px;
-        }
-
-        .services {
-          padding: 8px 16px 34px;
-        }
-
-        .tool-category {
-          margin-top: 26px;
-          padding-top: 24px;
-        }
-
-        .tool-category:first-child {
-          padding-top: 8px;
-        }
-
-        .category-title {
-          font-size: 22px;
-        }
-
-        .category-description {
-          margin-bottom: 13px;
-          font-size: 13.5px;
-        }
-
-        .grid {
-          grid-template-columns: 1fr;
-          gap: 10px;
-        }
-
-        .card {
-          min-height: 132px;
-          padding: 16px;
-        }
-
-        .card h3 {
-          font-size: 16.5px;
-        }
-
-        .card p {
-          margin-bottom: 12px;
-          -webkit-line-clamp: 2;
-        }
-
-        .contact-section {
-          width: calc(100% - 24px);
-          margin-top: 22px;
-        }
-
-        .contact-card {
-          display: flex;
-          width: fit-content;
-          max-width: 100%;
-        }
-
-        .contact-section {
-          width: min(100% - 24px, 1100px);
-          margin-top: 26px;
-        }
-
-        .contact-card {
-          align-items: flex-start;
-          flex-direction: column;
-          gap: 16px;
-          padding: 20px;
-        }
-
-        .contact-main {
-          align-items: flex-start;
-        }
-
-        .contact-email {
-          width: 100%;
-          justify-content: center;
-        }
-
-        .footer-inner {
-          justify-content: center;
-          text-align: center;
-        }
-      }
-    </style>
-  </head>
-
-  <body>
-    <section class="intro">
-      <img
-        src="logo-hero.svg"
-        alt="XAVERT Free Online Tools"
-        width="150"
-        height="150"
-        fetchpriority="high"
-        loading="eager"
-        decoding="async"
-      />
-
-      <h1>Digital Utility Ecosystem</h1>
-
-      <p>
-        A growing collection of fast, practical browser tools for developers,
-        creators and everyday tasks, built to keep your workflow simple and your
-        data private.
-      </p>
-
-      <div class="trust-row" aria-label="XAVERT advantages">
-        <span>Browser-based</span>
-        <span aria-hidden="true">·</span>
-        <span>Privacy-first</span>
-        <span aria-hidden="true">·</span>
-        <span>No sign-up</span>
-      </div>
-
-      <div class="search-box">
-        <input
-          type="search"
-          id="toolSearch"
-          placeholder="Search tools, formats or tasks..."
-          autocomplete="off"
-          spellcheck="false"
-          aria-label="Search XAVERT tools"
-          aria-controls="searchResults"
-          aria-expanded="false"
+    <!doctype html>
+    <html lang="en" dir="ltr">
+      <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>XAVERT | Free Online Developer, SEO, PDF & Utility Tools</title>
+        <meta
+          name="description"
+          content="Free browser-based tools for developers, SEO, PDF, images, JSON, QR codes, data conversion and everyday productivity. Fast, private and no sign-up required."
         />
-        <div
-          id="searchResults"
-          class="search-results"
-          role="listbox"
-          aria-label="Tool search suggestions"
-          hidden
-        ></div>
-      </div>
-    </section>
-
-    <section class="services" id="services">
-      <div class="tool-category">
-        <h2 class="category-title" id="developer-tools">Developer Tools</h2>
-        <p class="category-description">
-          Build, format, test and manage code-related workflows with practical
-          tools for developers, SEO tasks, structured data and web projects.
-        </p>
-
-        <div class="grid">
-          <a href="tools/json-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>JSON Toolkit Pro</h3>
-              <p>
-                Format, validate, minify, escape, unescape and compare JSON data
-                directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/xml-json-converter.html" class="card-link">
-            <div class="card">
-              <h3>XML ↔ JSON Converter</h3>
-
-              <p>
-                Convert XML to JSON and JSON to XML instantly with validation
-                and browser-side processing.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/xml-formatter-validator.html" class="card-link">
-            <div class="card">
-              <h3>XML Formatter & Validator</h3>
-              <p>
-                Format, minify and validate XML code directly in your browser
-                with clear error detection.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/yaml-json-converter.html" class="card-link">
-            <div class="card">
-              <h3>YAML ↔ JSON Converter</h3>
-
-              <p>
-                Convert YAML and JSON in both directions with validation,
-                formatting and browser-side processing.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/markdown-editor.html" class="card-link">
-            <div class="card">
-              <h3>Markdown Editor</h3>
-
-              <p>
-                Create Markdown content with live preview, HTML conversion and
-                export options.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/jwt-decoder.html" class="card-link">
-            <div class="card">
-              <h3>JWT Decoder</h3>
-
-              <p>
-                Decode, inspect and validate JSON Web Tokens directly in your
-                browser.
-              </p>
-            </div>
-          </a>
-          <a href="tools/jwt-generator.html" class="card-link">
-            <div class="card">
-              <h3>JWT Generator</h3>
-
-              <p>
-                Create secure JSON Web Tokens with custom headers, payloads and
-                secrets directly in your browser.
-              </p>
-            </div>
-          </a>
-          <a href="tools/meta-tag-generator.html" class="card-link">
-            <div class="card">
-              <h3>Meta Tag Generator</h3>
-
-              <p>
-                Generate clean SEO metadata, canonical tags and social sharing
-                snippets for web pages.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/open-graph-generator.html" class="card-link">
-            <div class="card">
-              <h3>Open Graph Generator</h3>
-
-              <p>
-                Build Open Graph and Twitter Card tags with a clear preview for
-                social platforms.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/robots-generator.html" class="card-link">
-            <div class="card">
-              <h3>Robots.txt Generator</h3>
-
-              <p>
-                Control crawler access with simple robots.txt rules for search
-                engines and site indexing.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/sitemap-generator.html" class="card-link">
-            <div class="card">
-              <h3>Sitemap Generator</h3>
-
-              <p>
-                Prepare XML sitemaps with URL lists, priority settings and
-                update frequency options.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/lorem-ipsum-generator.html" class="card-link">
-            <div class="card">
-              <h3>Lorem Ipsum Generator</h3>
-
-              <p>
-                Create placeholder copy for layouts, mockups, landing pages and
-                interface prototypes.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/css-minifier.html" class="card-link">
-            <div class="card">
-              <h3>CSS Minifier & Beautifier</h3>
-
-              <p>
-                Clean, compress and reformat CSS code for lighter files and
-                better readability.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/html-minifier.html" class="card-link">
-            <div class="card">
-              <h3>HTML Minifier</h3>
-
-              <p>
-                Optimize HTML markup by reducing whitespace or improving code
-                structure.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/sql-formatter.html" class="card-link">
-            <div class="card">
-              <h3>SQL Formatter</h3>
-
-              <p>
-                Turn dense SQL queries into cleaner, easier-to-read statements
-                for debugging and review.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/sql-minifier.html" class="card-link">
-            <div class="card">
-              <h3>SQL Minifier</h3>
-
-              <p>
-                Minify SQL queries by removing comments, extra spaces and
-                unnecessary line breaks directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/cron-expression-generator.html" class="card-link">
-            <div class="card">
-              <h3>Cron Expression Generator</h3>
-
-              <p>
-                Build cron schedules, preview timing rules and copy expressions
-                for server automation.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/htaccess-generator.html" class="card-link">
-            <div class="card">
-              <h3>HTACCESS Generator</h3>
-              <p>
-                Generate ready-to-use .htaccess rules for redirects, HTTPS,
-                caching and website security.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/env-generator.html" class="card-link">
-            <div class="card">
-              <h3>.ENV Generator</h3>
-
-              <p>
-                Create structured environment configuration files for
-                applications, APIs and databases.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/regex-tester.html" class="card-link">
-            <div class="card">
-              <h3>Regex Tester</h3>
-              <p>
-                Test regular expressions with live matching, highlighting and
-                pattern validation.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/base64-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Base64 Toolkit</h3>
-              <p>
-                Encode and decode Base64 text instantly with UTF-8 support and
-                local processing.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/html-entity-encoder-decoder.html" class="card-link">
-            <div class="card">
-              <h3>HTML Entity Encoder / Decoder</h3>
-              <p>
-                Encode and decode HTML entities for safe web content, symbols
-                and special characters.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/uuid-generator.html" class="card-link">
-            <div class="card">
-              <h3>UUID Generator</h3>
-              <p>
-                Generate UUID v4 and UUID v7 identifiers for applications, APIs
-                and software development.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/file-hash-checker.html" class="card-link">
-            <div class="card">
-              <h3>File Hash Checker</h3>
-              <p>
-                Calculate and verify SHA-256, SHA-384 and SHA-512 hashes to
-                check file integrity directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/hash-generator.html" class="card-link">
-            <div class="card">
-              <h3>Hash Generator</h3>
-              <p>
-                Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from
-                text directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/diff-checker.html" class="card-link">
-            <div class="card">
-              <h3>Text Diff Checker</h3>
-              <p>
-                Compare two texts and instantly identify line-by-line
-                differences directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/url-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>URL Toolkit</h3>
-              <p>
-                Encode, decode, inspect and build URLs, query strings and UTM
-                parameters with browser-based tools.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/http-header-analyzer.html" class="card-link">
-            <div class="card">
-              <h3>HTTP Header Analyzer</h3>
-
-              <p>
-                Analyze HTTP response headers, security policies, caching rules
-                and server information directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/user-agent-parser.html" class="card-link">
-            <div class="card">
-              <h3>User-Agent Parser</h3>
-
-              <p>
-                Analyze User-Agent strings to detect browser, operating system,
-                rendering engine, device type and bots directly in your browser.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="tool-category">
-        <h2 class="category-title" id="document-tools">Document Tools</h2>
-        <p class="category-description">
-          Organize, convert and prepare documents with PDF utilities designed
-          for everyday file management and professional workflows.
-        </p>
-
-        <div class="grid">
-          <a href="tools/pdf-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>PDF Toolkit</h3>
-              <p>
-                Edit, convert, compress, merge, split and secure PDF documents
-                with fast browser-based tools.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="tool-category">
-        <h2 class="category-title" id="image-tools">Image & Design Tools</h2>
-        <p class="category-description">
-          Create, optimize and analyze visual assets with image, color and
-          palette tools for design, content and web projects.
-        </p>
-
-        <div class="grid">
-          <a href="tools/image-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Image Toolkit</h3>
-              <p>
-                Resize, compress, convert, crop and optimize images directly in
-                your browser without uploading files.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/color-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Color Toolkit</h3>
-              <p>
-                Convert color formats, create palettes and check accessibility
-                with professional color tools.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/color-palette-extractor.html" class="card-link">
-            <div class="card">
-              <h3>Color Palette Extractor</h3>
-
-              <p>
-                Extract dominant colors from images and generate reusable
-                palettes for branding, design and web projects.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="tool-category">
-        <h2 class="category-title" id="utility-tools">Utility Tools</h2>
-        <p class="category-description">
-          Handle common daily tasks faster with calculators, generators,
-          converters and text utilities built for quick results.
-        </p>
-
-        <div class="grid" id="utility-tools-grid">
-          <a href="tools/qr-generator.html" class="card-link">
-            <div class="card">
-              <h3>QR Code Generator</h3>
-              <p>
-                Create QR codes for websites, Wi-Fi, contacts, events, email,
-                SMS and more with instant browser-based generation.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/barcode-generator.html" class="card-link">
-            <div class="card">
-              <h3>Barcode Generator</h3>
-
-              <p>
-                Create professional barcodes for products, inventory, logistics
-                and retail directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/date-time-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Date & Time Toolkit</h3>
-              <p>
-                Calculate dates, ages, countdowns, timestamps and time
-                differences with accurate browser-based tools.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/unix-timestamp-converter.html" class="card-link">
-            <div class="card">
-              <h3>Unix Timestamp Converter</h3>
-              <p>
-                Convert Unix timestamps to readable dates and convert dates back
-                to Unix time in seconds or milliseconds.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/unit-converter.html" class="card-link">
-            <div class="card">
-              <h3>Unit Converter</h3>
-              <p>
-                Convert length, weight, temperature, volume, area and many other
-                units with instant calculations.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/password-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Password Toolkit</h3>
-              <p>
-                Generate strong passwords, secure passphrases and cryptographic
-                hashes to improve account security.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/text-toolkit.html" class="card-link">
-            <div class="card">
-              <h3>Text Toolkit</h3>
-              <p>
-                Edit, format, clean, convert and analyze text with fast
-                browser-based utilities for everyday work.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/word-character-counter.html" class="card-link">
-            <div class="card">
-              <h3>Word & Character Counter</h3>
-              <p>
-                Count words, characters, sentences, paragraphs, lines and
-                reading time directly in your browser.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/case-converter.html" class="card-link">
-            <div class="card">
-              <h3>Case Converter</h3>
-              <p>
-                Convert text to uppercase, lowercase, title case, camelCase,
-                snake_case, kebab-case and other common formats.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-
-      <div class="tool-category">
-        <h2 class="category-title" id="data-tools">Data Conversion Tools</h2>
-        <p class="category-description">
-          Transform CSV, XLSX, JSON and XML files into cleaner, more useful
-          formats for analysis, development and reporting.
-        </p>
-
-        <div class="grid">
-          <a href="tools/data-converter.html" class="card-link">
-            <div class="card">
-              <h3>Data Converter</h3>
-              <p>
-                Convert CSV, XLSX, JSON and XML files quickly with secure
-                browser-based processing and no uploads.
-              </p>
-            </div>
-          </a>
-
-          <a href="tools/csv-viewer-editor.html" class="card-link">
-            <div class="card">
-              <h3>CSV Viewer & Editor</h3>
-
-              <p>
-                Open, view, search and edit CSV data directly in your browser
-                with export options.
-              </p>
-            </div>
-          </a>
-        </div>
-      </div>
-    </section>
-
-
-
-    <footer class="footer" id="footer">
-      <div class="footer-inner">
-        <div class="footer-contact">
-          <div class="footer-contact-icon" aria-hidden="true">
-            <svg viewBox="0 0 24 24">
-              <rect x="3" y="5" width="18" height="14" rx="2"></rect>
-              <path d="m3 7 9 6 9-6"></path>
-            </svg>
+        <meta name="application-name" content="XAVERT" />
+        <meta name="robots" content="index, follow" />
+        <meta name="referrer" content="strict-origin-when-cross-origin" />
+        <meta name="author" content="XAVERT" />
+        <meta name="theme-color" content="#dc2626" />
+        <meta name="color-scheme" content="light" />
+        <link rel="canonical" href="https://xavert.com/" />
+
+        <meta property="og:type" content="website" />
+        <meta
+          property="og:title"
+          content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
+        />
+        <meta
+          property="og:description"
+          content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
+        />
+        <meta property="og:url" content="https://xavert.com/" />
+        <meta
+          property="og:image"
+          content="https://xavert.com/assets/images/og-image.png"
+        />
+        <meta property="og:site_name" content="XAVERT" />
+
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta
+          name="twitter:title"
+          content="XAVERT | Free Online Developer, SEO, PDF & Utility Tools"
+        />
+        <meta
+          name="twitter:description"
+          content="Free browser-based tools for developers, SEO, PDF, images, data conversion and everyday productivity."
+        />
+        <meta
+          name="twitter:image"
+          content="https://xavert.com/assets/images/og-image.png"
+        />
+        <meta name="format-detection" content="telephone=no" />
+        <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+        <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@graph": [
+              {
+                "@type": "WebApplication",
+                "name": "XAVERT",
+                "url": "https://xavert.com/",
+                "description": "Free online browser-based tools for developers, PDF editing, image processing, SEO, JSON, QR codes, passwords, data conversion and productivity.",
+                "applicationCategory": "UtilitiesApplication",
+                "browserRequirements": "Requires JavaScript",
+                "inLanguage": "en",
+                "operatingSystem": "Web Browser",
+                "offers": {
+                  "@type": "Offer",
+                  "price": "0",
+                  "priceCurrency": "USD"
+                },
+                "contactPoint": {
+                  "@type": "ContactPoint",
+                  "contactType": "customer support",
+                  "email": "support@xavert.com",
+                  "availableLanguage": ["en", "it"]
+                }
+              },
+              {
+                "@type": "WebSite",
+                "name": "XAVERT",
+                "url": "https://xavert.com/",
+                "description": "Free online browser-based tools for developers, designers and everyday productivity.",
+                "inLanguage": "en"
+              }
+            ]
+          }
+        </script>
+        <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+          }
+
+          html {
+            scroll-behavior: smooth;
+          }
+
+          body {
+            background: #f7f8fb;
+            color: #111827;
+          }
+
+          .intro {
+            text-align: center;
+            padding: 18px 20px 10px;
+          }
+
+          .intro img {
+            width: 150px;
+            max-width: 48%;
+            height: auto;
+            display: block;
+            margin: 0 auto 2px;
+          }
+
+          .intro h1 {
+            max-width: 760px;
+            margin: 0 auto 8px;
+            font-size: 30px;
+            line-height: 1.15;
+            font-weight: 800;
+            letter-spacing: -0.7px;
+            color: #111827;
+          }
+
+          .intro p {
+            max-width: 660px;
+            margin: 0 auto;
+            color: #526174;
+            font-size: 15.5px;
+            line-height: 1.6;
+            font-weight: 500;
+          }
+
+          .trust-row {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 7px;
+            margin: 12px auto 0;
+            color: #526174;
+            font-size: 12.5px;
+            font-weight: 700;
+          }
+
+          .trust-row span {
+            display: inline;
+          }
+
+          .trust-row span[aria-hidden="true"] {
+            color: #dc2626;
+          }
+
+          .card-link:focus-visible {
+            outline: 3px solid rgba(220, 38, 38, 0.2);
+            outline-offset: 3px;
+          }
+
+          .search-box {
+            position: relative;
+            z-index: 20;
+            max-width: 720px;
+            margin: 20px auto 0;
+          }
+
+          .search-box::before {
+            content: "";
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            width: 18px;
+            height: 18px;
+            border: 2px solid #526174;
+            border-radius: 50%;
+            transform: translateY(-58%);
+            pointer-events: none;
+            transition:
+              border-color 0.2s ease,
+              opacity 0.2s ease;
+          }
+
+          .search-box::after {
+            content: "";
+            position: absolute;
+            left: 36px;
+            top: calc(50% + 7px);
+            width: 7px;
+            height: 2px;
+            border-radius: 999px;
+            background: #526174;
+            transform: rotate(45deg);
+            transform-origin: left center;
+            pointer-events: none;
+            transition:
+              background 0.2s ease,
+              opacity 0.2s ease;
+          }
+
+          .search-box:focus-within::before {
+            border-color: #dc2626;
+          }
+
+          .search-box:focus-within::after {
+            background: #dc2626;
+          }
+
+          .search-box input {
+            width: 100%;
+            min-height: 58px;
+            padding: 0 22px 0 54px;
+            border: 1px solid #d7dde5;
+            border-radius: 18px;
+            font: inherit;
+            font-size: 15px;
+            font-weight: 500;
+            color: #111827;
+            background: rgba(255, 255, 255, 0.96);
+            box-shadow:
+              0 1px 2px rgba(15, 23, 42, 0.03),
+              0 10px 30px rgba(15, 23, 42, 0.055);
+            transition:
+              border-color 0.2s ease,
+              box-shadow 0.2s ease,
+              transform 0.2s ease;
+            -webkit-appearance: none;
+            appearance: none;
+          }
+
+          .search-box input::placeholder {
+            color: #6b7788;
+            font-weight: 450;
+          }
+
+          .search-box input:focus {
+            outline: none;
+            border-color: rgba(220, 38, 38, 0.72);
+            box-shadow:
+              0 0 0 4px rgba(220, 38, 38, 0.08),
+              0 14px 36px rgba(15, 23, 42, 0.08);
+          }
+
+          .search-box input::-webkit-search-cancel-button {
+            cursor: pointer;
+          }
+
+          .search-results {
+            position: absolute;
+            top: calc(100% + 8px);
+            left: 0;
+            right: 0;
+            z-index: 30;
+            max-height: 390px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            background: #ffffff;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
+            text-align: left;
+          }
+
+          .search-results[hidden] {
+            display: none;
+          }
+
+          .search-result-item {
+            display: block;
+            padding: 13px 16px;
+            border-bottom: 1px solid #eef1f5;
+            color: inherit;
+            text-decoration: none;
+            transition:
+              background-color 0.16s ease,
+              color 0.16s ease;
+          }
+
+          .search-result-item:last-child {
+            border-bottom: 0;
+          }
+
+          .search-result-item:hover,
+          .search-result-item:focus-visible,
+          .search-result-item.is-active {
+            outline: none;
+            background: #fff7f7;
+          }
+
+          .search-result-title {
+            display: block;
+            color: #111827;
+            font-size: 14px;
+            font-weight: 800;
+            line-height: 1.3;
+          }
+
+          .search-result-meta {
+            display: block;
+            margin-top: 3px;
+            color: #526174;
+            font-size: 12px;
+            font-weight: 600;
+            line-height: 1.35;
+          }
+
+          .search-empty {
+            padding: 14px 16px;
+            color: #526174;
+            font-size: 13px;
+            font-weight: 650;
+          }
+
+          .services {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 18px 4% 48px;
+          }
+
+          .tool-category {
+            margin-top: 34px;
+            padding: 30px 0 4px;
+            border-top: 1px solid #e5e7eb;
+          }
+
+          .tool-category:first-child {
+            margin-top: 0;
+            padding-top: 10px;
+            border-top: 0;
+          }
+
+          .category-title {
+            margin-bottom: 6px;
+            color: #111827;
+            font-size: 26px;
+            font-weight: 800;
+            line-height: 1.2;
+            letter-spacing: -0.55px;
+          }
+
+          .category-description {
+            max-width: 720px;
+            margin-bottom: 16px;
+            color: #526174;
+            font-size: 14px;
+            line-height: 1.55;
+          }
+
+          .category-footer {
+            margin-top: 18px;
+            text-align: center;
+          }
+
+          .category-button {
+            padding: 9px 18px;
+            border: 1px solid #d9dee6;
+            border-radius: 999px;
+            background: #ffffff;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition:
+              border-color 0.2s ease,
+              color 0.2s ease,
+              background-color 0.2s ease;
+          }
+
+          .category-button:hover {
+            border-color: #dc2626;
+            background: #fff7f7;
+            color: #b91c1c;
+          }
+
+          .grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+            align-items: stretch;
+          }
+
+          .card-link {
+            display: block;
+            height: 100%;
+            border-radius: 14px;
+            color: inherit;
+            text-decoration: none;
+          }
+
+          .card {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            min-height: 154px;
+            height: 100%;
+            padding: 18px 18px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+            transition:
+              transform 0.2s ease,
+              box-shadow 0.2s ease,
+              border-color 0.2s ease;
+          }
+
+          .card-link:hover .card,
+          .card:hover {
+            border-color: #f0b4b4;
+            transform: translateY(-3px);
+            box-shadow: 0 10px 26px rgba(15, 23, 42, 0.075);
+          }
+
+          .card h3 {
+            margin: 0 0 8px;
+            color: #111827;
+            font-size: 17px;
+            font-weight: 800;
+            line-height: 1.3;
+            letter-spacing: -0.25px;
+          }
+
+          .card p {
+            display: -webkit-box;
+            margin: 0 0 16px;
+            overflow: hidden;
+            color: #526174;
+            font-size: 13.5px;
+            line-height: 1.55;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+          }
+
+          .card::after {
+            content: "Open tool  →";
+            margin-top: auto;
+            color: #dc2626;
+            font-size: 12.5px;
+            font-weight: 800;
+            letter-spacing: 0.05px;
+          }
+
+          .footer {
+            width: min(1180px, calc(100% - 32px));
+            margin: 30px auto 18px;
+            padding: 18px 20px;
+            border: 1px solid #e5e7eb;
+            border-radius: 14px;
+            background: #ffffff;
+            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
+          }
+
+          .footer-inner {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 24px;
+            width: min(1180px, 100%);
+            margin: 0 auto;
+          }
+
+          .footer-contact {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+          }
+
+          .footer-contact-icon {
+            display: grid;
+            flex: 0 0 38px;
+            width: 38px;
+            height: 38px;
+            place-items: center;
+            border-radius: 10px;
+            background: #fff1f2;
+            color: #dc2626;
+          }
+
+          .footer-contact-icon svg {
+            width: 19px;
+            height: 19px;
+            fill: none;
+            stroke: currentColor;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+          }
+
+          .footer-contact-copy {
+            min-width: 0;
+          }
+
+          .footer-contact-title {
+            margin: 0 0 2px;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 800;
+            line-height: 1.2;
+          }
+
+          .footer-contact-email {
+            color: #dc2626;
+            font-size: 13px;
+            font-weight: 700;
+            line-height: 1.3;
+            text-decoration: none;
+            overflow-wrap: anywhere;
+          }
+
+          .footer-contact-email:hover,
+          .footer-contact-email:focus-visible {
+            color: #b91c1c;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            outline: none;
+          }
+
+          .footer-legal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+          }
+
+          .footer-legal a {
+            color: #475569;
+            font-size: 12.5px;
+            font-weight: 700;
+            text-decoration: none;
+          }
+
+          .footer-legal a:hover,
+          .footer-legal a:focus-visible {
+            color: #dc2626;
+            text-decoration: underline;
+            text-underline-offset: 3px;
+            outline: none;
+          }
+
+          .footer-bottom {
+            flex: 0 0 auto;
+            color: #111827;
+            font-size: 13px;
+            font-weight: 800;
+            text-align: right;
+          }
+
+          @media (max-width: 1180px) {
+            .grid {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+          }
+
+          @media (max-width: 860px) {
+            .grid {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+          }
+
+          @media (max-width: 640px) {
+            .intro {
+              padding: 12px 16px 8px;
+            }
+
+            .intro img {
+              width: 104px;
+              max-width: 42%;
+            }
+
+            .intro h1 {
+              max-width: 94%;
+              margin-bottom: 7px;
+              font-size: 23px;
+              line-height: 1.18;
+              letter-spacing: -0.35px;
+            }
+
+            .intro p {
+              max-width: 94%;
+              font-size: 14px;
+              line-height: 1.5;
+            }
+
+            .trust-row {
+              gap: 6px;
+              margin-top: 11px;
+            }
+
+            .trust-row span {
+              font-size: 11.5px;
+            }
+
+            .search-box {
+              margin-top: 16px;
+            }
+
+            .search-box::before {
+              left: 17px;
+              width: 16px;
+              height: 16px;
+            }
+
+            .search-box::after {
+              left: 31px;
+              top: calc(50% + 6px);
+              width: 6px;
+            }
+
+            .search-box input {
+              min-height: 52px;
+              padding: 0 16px 0 47px;
+              border-radius: 15px;
+              font-size: 14px;
+            }
+
+            .services {
+              padding: 8px 16px 34px;
+            }
+
+            .tool-category {
+              margin-top: 26px;
+              padding-top: 24px;
+            }
+
+            .tool-category:first-child {
+              padding-top: 8px;
+            }
+
+            .category-title {
+              font-size: 22px;
+            }
+
+            .category-description {
+              margin-bottom: 13px;
+              font-size: 13.5px;
+            }
+
+            .grid {
+              grid-template-columns: 1fr;
+              gap: 10px;
+            }
+
+            .card {
+              min-height: 132px;
+              padding: 16px;
+            }
+
+            .card h3 {
+              font-size: 16.5px;
+            }
+
+            .card p {
+              margin-bottom: 12px;
+              -webkit-line-clamp: 2;
+            }
+
+            .contact-section {
+              width: calc(100% - 24px);
+              margin-top: 22px;
+            }
+
+            .contact-card {
+              display: flex;
+              width: fit-content;
+              max-width: 100%;
+            }
+
+            .contact-section {
+              width: min(100% - 24px, 1100px);
+              margin-top: 26px;
+            }
+
+            .contact-card {
+              align-items: flex-start;
+              flex-direction: column;
+              gap: 16px;
+              padding: 20px;
+            }
+
+            .contact-main {
+              align-items: flex-start;
+            }
+
+            .contact-email {
+              width: 100%;
+              justify-content: center;
+            }
+
+            .footer-inner {
+              justify-content: center;
+              text-align: center;
+            }
+          }
+        </style>
+      </head>
+
+      <body>
+        <section class="intro">
+          <img
+            src="logo-hero.svg"
+            alt="XAVERT Free Online Tools"
+            width="150"
+            height="150"
+            fetchpriority="high"
+            loading="eager"
+            decoding="async"
+          />
+
+          <h1>Digital Utility Ecosystem</h1>
+
+          <p>
+            A growing collection of fast, practical browser tools for developers,
+            creators and everyday tasks, built to keep your workflow simple and your
+            data private.
+          </p>
+
+          <div class="trust-row" aria-label="XAVERT advantages">
+            <span>Browser-based</span>
+            <span aria-hidden="true">·</span>
+            <span>Privacy-first</span>
+            <span aria-hidden="true">·</span>
+            <span>No sign-up</span>
           </div>
 
-          <div class="footer-contact-copy">
-            <div class="footer-contact-title">Contact</div>
-            <a
-              class="footer-contact-email"
-              href="mailto:support@xavert.com"
-              aria-label="Email XAVERT support"
-            >
-              support@xavert.com
-            </a>
+          <div
+            class="search-box"
+            id="toolSearchCombobox"
+            role="combobox"
+            aria-haspopup="listbox"
+            aria-owns="searchResults"
+            aria-expanded="false"
+          >
+            <input
+              type="search"
+              id="toolSearch"
+              placeholder="Search tools, formats or tasks..."
+              autocomplete="off"
+              spellcheck="false"
+              aria-label="Search XAVERT tools"
+              aria-controls="searchResults"
+              aria-autocomplete="list"
+            />
+            <div
+              id="searchResults"
+              class="search-results"
+              role="listbox"
+              aria-label="Tool search suggestions"
+              hidden
+            ></div>
           </div>
-        </div>
-        <nav class="footer-legal" aria-label="Legal">
-          <a href="privacy-policy.html">Privacy Policy</a>
-          <a href="terms-of-use.html">Terms of Use</a>
-        </nav>
+        </section>
 
-        <div class="footer-bottom">© 2026 XAVERT</div>
-      </div>
-    </footer>
-    <script src="assets/js/index.js" defer></script>
-  </body>
-</html>
+        <main id="main-content">
+        <section class="services" id="services">
+          <div class="tool-category">
+            <h2 class="category-title" id="developer-tools">Developer Tools</h2>
+            <p class="category-description">
+              Build, format, test and manage code-related workflows with practical
+              tools for developers, SEO tasks, structured data and web projects.
+            </p>
+
+            <div class="grid">
+              <a href="tools/json-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>JSON Toolkit Pro</h3>
+                  <p>
+                    Format, validate, minify, escape, unescape and compare JSON data
+                    directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/xml-json-converter.html" class="card-link">
+                <div class="card">
+                  <h3>XML ↔ JSON Converter</h3>
+
+                  <p>
+                    Convert XML to JSON and JSON to XML instantly with validation
+                    and browser-side processing.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/xml-formatter-validator.html" class="card-link">
+                <div class="card">
+                  <h3>XML Formatter & Validator</h3>
+                  <p>
+                    Format, minify and validate XML code directly in your browser
+                    with clear error detection.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/yaml-json-converter.html" class="card-link">
+                <div class="card">
+                  <h3>YAML ↔ JSON Converter</h3>
+
+                  <p>
+                    Convert YAML and JSON in both directions with validation,
+                    formatting and browser-side processing.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/markdown-editor.html" class="card-link">
+                <div class="card">
+                  <h3>Markdown Editor</h3>
+
+                  <p>
+                    Create Markdown content with live preview, HTML conversion and
+                    export options.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/jwt-decoder.html" class="card-link">
+                <div class="card">
+                  <h3>JWT Decoder</h3>
+
+                  <p>
+                    Decode, inspect and validate JSON Web Tokens directly in your
+                    browser.
+                  </p>
+                </div>
+              </a>
+              <a href="tools/jwt-generator.html" class="card-link">
+                <div class="card">
+                  <h3>JWT Generator</h3>
+
+                  <p>
+                    Create secure JSON Web Tokens with custom headers, payloads and
+                    secrets directly in your browser.
+                  </p>
+                </div>
+              </a>
+              <a href="tools/meta-tag-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Meta Tag Generator</h3>
+
+                  <p>
+                    Generate clean SEO metadata, canonical tags and social sharing
+                    snippets for web pages.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/open-graph-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Open Graph Generator</h3>
+
+                  <p>
+                    Build Open Graph and Twitter Card tags with a clear preview for
+                    social platforms.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/robots-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Robots.txt Generator</h3>
+
+                  <p>
+                    Control crawler access with simple robots.txt rules for search
+                    engines and site indexing.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/sitemap-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Sitemap Generator</h3>
+
+                  <p>
+                    Prepare XML sitemaps with URL lists, priority settings and
+                    update frequency options.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/lorem-ipsum-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Lorem Ipsum Generator</h3>
+
+                  <p>
+                    Create placeholder copy for layouts, mockups, landing pages and
+                    interface prototypes.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/css-minifier.html" class="card-link">
+                <div class="card">
+                  <h3>CSS Minifier & Beautifier</h3>
+
+                  <p>
+                    Clean, compress and reformat CSS code for lighter files and
+                    better readability.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/html-minifier.html" class="card-link">
+                <div class="card">
+                  <h3>HTML Minifier</h3>
+
+                  <p>
+                    Optimize HTML markup by reducing whitespace or improving code
+                    structure.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/sql-formatter.html" class="card-link">
+                <div class="card">
+                  <h3>SQL Formatter</h3>
+
+                  <p>
+                    Turn dense SQL queries into cleaner, easier-to-read statements
+                    for debugging and review.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/sql-minifier.html" class="card-link">
+                <div class="card">
+                  <h3>SQL Minifier</h3>
+
+                  <p>
+                    Minify SQL queries by removing comments, extra spaces and
+                    unnecessary line breaks directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/cron-expression-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Cron Expression Generator</h3>
+
+                  <p>
+                    Build cron schedules, preview timing rules and copy expressions
+                    for server automation.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/htaccess-generator.html" class="card-link">
+                <div class="card">
+                  <h3>HTACCESS Generator</h3>
+                  <p>
+                    Generate ready-to-use .htaccess rules for redirects, HTTPS,
+                    caching and website security.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/env-generator.html" class="card-link">
+                <div class="card">
+                  <h3>.ENV Generator</h3>
+
+                  <p>
+                    Create structured environment configuration files for
+                    applications, APIs and databases.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/regex-tester.html" class="card-link">
+                <div class="card">
+                  <h3>Regex Tester</h3>
+                  <p>
+                    Test regular expressions with live matching, highlighting and
+                    pattern validation.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/base64-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Base64 Toolkit</h3>
+                  <p>
+                    Encode and decode Base64 text instantly with UTF-8 support and
+                    local processing.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/html-entity-encoder-decoder.html" class="card-link">
+                <div class="card">
+                  <h3>HTML Entity Encoder / Decoder</h3>
+                  <p>
+                    Encode and decode HTML entities for safe web content, symbols
+                    and special characters.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/uuid-generator.html" class="card-link">
+                <div class="card">
+                  <h3>UUID Generator</h3>
+                  <p>
+                    Generate UUID v4 and UUID v7 identifiers for applications, APIs
+                    and software development.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/file-hash-checker.html" class="card-link">
+                <div class="card">
+                  <h3>File Hash Checker</h3>
+                  <p>
+                    Calculate and verify SHA-256, SHA-384 and SHA-512 hashes to
+                    check file integrity directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/hash-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Hash Generator</h3>
+                  <p>
+                    Generate MD5, SHA-1, SHA-256, SHA-384 and SHA-512 hashes from
+                    text directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/diff-checker.html" class="card-link">
+                <div class="card">
+                  <h3>Text Diff Checker</h3>
+                  <p>
+                    Compare two texts and instantly identify line-by-line
+                    differences directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/url-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>URL Toolkit</h3>
+                  <p>
+                    Encode, decode, inspect and build URLs, query strings and UTM
+                    parameters with browser-based tools.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/http-header-analyzer.html" class="card-link">
+                <div class="card">
+                  <h3>HTTP Header Analyzer</h3>
+
+                  <p>
+                    Analyze HTTP response headers, security policies, caching rules
+                    and server information directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/user-agent-parser.html" class="card-link">
+                <div class="card">
+                  <h3>User-Agent Parser</h3>
+
+                  <p>
+                    Analyze User-Agent strings to detect browser, operating system,
+                    rendering engine, device type and bots directly in your browser.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="tool-category">
+            <h2 class="category-title" id="document-tools">Document Tools</h2>
+            <p class="category-description">
+              Organize, convert and prepare documents with PDF utilities designed
+              for everyday file management and professional workflows.
+            </p>
+
+            <div class="grid">
+              <a href="tools/pdf-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>PDF Toolkit</h3>
+                  <p>
+                    Edit, convert, compress, merge, split and secure PDF documents
+                    with fast browser-based tools.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="tool-category">
+            <h2 class="category-title" id="image-tools">Image & Design Tools</h2>
+            <p class="category-description">
+              Create, optimize and analyze visual assets with image, color and
+              palette tools for design, content and web projects.
+            </p>
+
+            <div class="grid">
+              <a href="tools/image-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Image Toolkit</h3>
+                  <p>
+                    Resize, compress, convert, crop and optimize images directly in
+                    your browser without uploading files.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/color-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Color Toolkit</h3>
+                  <p>
+                    Convert color formats, create palettes and check accessibility
+                    with professional color tools.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/color-palette-extractor.html" class="card-link">
+                <div class="card">
+                  <h3>Color Palette Extractor</h3>
+
+                  <p>
+                    Extract dominant colors from images and generate reusable
+                    palettes for branding, design and web projects.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="tool-category">
+            <h2 class="category-title" id="utility-tools">Utility Tools</h2>
+            <p class="category-description">
+              Handle common daily tasks faster with calculators, generators,
+              converters and text utilities built for quick results.
+            </p>
+
+            <div class="grid" id="utility-tools-grid">
+              <a href="tools/qr-generator.html" class="card-link">
+                <div class="card">
+                  <h3>QR Code Generator</h3>
+                  <p>
+                    Create QR codes for websites, Wi-Fi, contacts, events, email,
+                    SMS and more with instant browser-based generation.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/barcode-generator.html" class="card-link">
+                <div class="card">
+                  <h3>Barcode Generator</h3>
+
+                  <p>
+                    Create professional barcodes for products, inventory, logistics
+                    and retail directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/date-time-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Date & Time Toolkit</h3>
+                  <p>
+                    Calculate dates, ages, countdowns, timestamps and time
+                    differences with accurate browser-based tools.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/unix-timestamp-converter.html" class="card-link">
+                <div class="card">
+                  <h3>Unix Timestamp Converter</h3>
+                  <p>
+                    Convert Unix timestamps to readable dates and convert dates back
+                    to Unix time in seconds or milliseconds.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/unit-converter.html" class="card-link">
+                <div class="card">
+                  <h3>Unit Converter</h3>
+                  <p>
+                    Convert length, weight, temperature, volume, area and many other
+                    units with instant calculations.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/password-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Password Toolkit</h3>
+                  <p>
+                    Generate strong passwords, secure passphrases and cryptographic
+                    hashes to improve account security.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/text-toolkit.html" class="card-link">
+                <div class="card">
+                  <h3>Text Toolkit</h3>
+                  <p>
+                    Edit, format, clean, convert and analyze text with fast
+                    browser-based utilities for everyday work.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/word-character-counter.html" class="card-link">
+                <div class="card">
+                  <h3>Word & Character Counter</h3>
+                  <p>
+                    Count words, characters, sentences, paragraphs, lines and
+                    reading time directly in your browser.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/case-converter.html" class="card-link">
+                <div class="card">
+                  <h3>Case Converter</h3>
+                  <p>
+                    Convert text to uppercase, lowercase, title case, camelCase,
+                    snake_case, kebab-case and other common formats.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+
+          <div class="tool-category">
+            <h2 class="category-title" id="data-tools">Data Conversion Tools</h2>
+            <p class="category-description">
+              Transform CSV, XLSX, JSON and XML files into cleaner, more useful
+              formats for analysis, development and reporting.
+            </p>
+
+            <div class="grid">
+              <a href="tools/data-converter.html" class="card-link">
+                <div class="card">
+                  <h3>Data Converter</h3>
+                  <p>
+                    Convert CSV, XLSX, JSON and XML files quickly with secure
+                    browser-based processing and no uploads.
+                  </p>
+                </div>
+              </a>
+
+              <a href="tools/csv-viewer-editor.html" class="card-link">
+                <div class="card">
+                  <h3>CSV Viewer & Editor</h3>
+
+                  <p>
+                    Open, view, search and edit CSV data directly in your browser
+                    with export options.
+                  </p>
+                </div>
+              </a>
+            </div>
+          </div>
+        </section>
+        </main>
+
+        <footer class="footer" id="footer">
+          <div class="footer-inner">
+            <div class="footer-contact">
+              <div class="footer-contact-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <rect x="3" y="5" width="18" height="14" rx="2"></rect>
+                  <path d="m3 7 9 6 9-6"></path>
+                </svg>
+              </div>
+
+              <div class="footer-contact-copy">
+                <div class="footer-contact-title">Contact</div>
+                <a
+                  class="footer-contact-email"
+                  href="mailto:support@xavert.com"
+                  aria-label="Email XAVERT support"
+                >
+                  support@xavert.com
+                </a>
+              </div>
+            </div>
+            <nav class="footer-legal" aria-label="Legal">
+              <a href="privacy-policy.html">Privacy Policy</a>
+              <a href="terms-of-use.html">Terms of Use</a>
+            </nav>
+
+            <div class="footer-bottom">© 2026 XAVERT</div>
+          </div>
+        </footer>
+        <script src="assets/js/index.js" defer></script>
+      </body>
+    </html>
