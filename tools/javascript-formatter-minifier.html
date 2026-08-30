@@ -1,0 +1,785 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | JavaScript Formatter & Minifier</title>
+
+    <meta
+      name="description"
+      content="Format, validate and minify JavaScript with configurable indentation, Terser compression and mangling, file loading, statistics and browser-based processing."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/javascript-formatter-minifier.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="XAVERT | JavaScript Formatter & Minifier"
+    />
+    <meta
+      property="og:description"
+      content="Format, validate and minify JavaScript directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/javascript-formatter-minifier.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="XAVERT | JavaScript Formatter & Minifier"
+    />
+    <meta
+      name="twitter:description"
+      content="Beautify, validate and minify JavaScript with configurable options."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "JavaScript Formatter & Minifier",
+        "alternateName": "XAVERT JavaScript Formatter & Minifier",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/javascript-formatter-minifier.html",
+        "description": "Format, validate and minify JavaScript with configurable formatting, Terser compression and mangling, file loading and browser-based processing.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "JavaScript beautification",
+          "JavaScript minification",
+          "JavaScript syntax validation",
+          "Script and ES module modes",
+          "Configurable indentation",
+          "Configurable brace style",
+          "Comment preservation options",
+          "Terser compression",
+          "Identifier mangling",
+          "Top-level optimization",
+          "Function and class name preservation",
+          "Compression pass control",
+          "Drop console option",
+          "File upload and drag-and-drop",
+          "Input and output statistics",
+          "Copy and download output",
+          "Replace input with output",
+          "Browser-side source processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .jsfm-drop-zone {
+        display: flex;
+        width: 100%;
+        min-height: 94px;
+        padding: 16px;
+        border: 2px dashed #d1d5db;
+        border-radius: 14px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease;
+      }
+
+      .jsfm-drop-zone:hover,
+      .jsfm-drop-zone:focus-visible,
+      .jsfm-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
+      }
+
+      .jsfm-drop-title {
+        display: block;
+        margin-bottom: 4px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .jsfm-drop-help,
+      .jsfm-file-info,
+      .jsfm-help {
+        color: #64748b;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      .jsfm-file-info {
+        display: block;
+        margin-top: 4px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .jsfm-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .jsfm-top-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, 0.75fr);
+        gap: 15px;
+        margin-top: 16px;
+      }
+
+      .jsfm-panel {
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 13px;
+        background: #ffffff;
+      }
+
+      .jsfm-panel-title {
+        margin: 0 0 10px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .jsfm-code {
+        width: 100%;
+        min-height: 430px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.55;
+        resize: vertical;
+        tab-size: 2;
+        box-sizing: border-box;
+      }
+
+      .jsfm-settings-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+      }
+
+      .jsfm-setting-full {
+        grid-column: 1 / -1;
+      }
+
+      .jsfm-checkbox {
+        display: flex;
+        min-height: 36px;
+        padding: 7px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #f9fafb;
+        align-items: center;
+        gap: 7px;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .jsfm-checkbox input {
+        flex: 0 0 15px;
+        width: 15px;
+        min-width: 15px;
+        max-width: 15px;
+        height: 15px;
+        min-height: 15px;
+        max-height: 15px;
+        margin: 0;
+        padding: 0;
+        accent-color: #dc2626;
+      }
+
+      .jsfm-preset-row {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 9px;
+      }
+
+      .jsfm-preset-row .btn {
+        padding: 8px 9px;
+        font-size: 11.5px;
+      }
+
+      .jsfm-actions,
+      .jsfm-output-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+        gap: 9px;
+        margin-top: 13px;
+      }
+
+      .jsfm-results[hidden],
+      .jsfm-options-panel[hidden] {
+        display: none !important;
+      }
+
+      .jsfm-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .jsfm-output-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(250px, 0.32fr);
+        gap: 14px;
+        margin-top: 15px;
+      }
+
+      .jsfm-analysis-list {
+        display: grid;
+        gap: 7px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .jsfm-analysis-item {
+        padding: 8px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      .jsfm-analysis-item strong {
+        color: #111827;
+      }
+
+      .jsfm-runtime-note {
+        margin-top: 12px;
+        padding: 9px 10px;
+        border: 1px solid #bfdbfe;
+        border-radius: 9px;
+        background: #eff6ff;
+        color: #1e40af;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      @media (max-width: 1050px) {
+        .jsfm-top-grid,
+        .jsfm-output-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .jsfm-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 650px) {
+        .jsfm-settings-grid,
+        .jsfm-preset-row {
+          grid-template-columns: 1fr;
+        }
+
+        .jsfm-stats {
+          grid-template-columns: 1fr;
+        }
+
+        .jsfm-code {
+          min-height: 330px;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/javascript-formatter-minifier.js?v=20260828-3" defer></script>
+  </head>
+
+  <body
+    data-tool="javascript-formatter-minifier"
+    data-related-tools="html-minifier,css-minifier,json-toolkit,regex-tester,base64-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">
+          JavaScript Formatter &amp; Minifier
+        </h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">
+            JavaScript Workspace
+          </h2>
+          <p class="tool-card-description">
+            Beautify, validate or minify JavaScript without executing the source code.
+          </p>
+        </header>
+
+        <form id="jsfmForm" novalidate>
+        <label
+          id="dropZone"
+          class="jsfm-drop-zone"
+          for="fileInput"
+          tabindex="0"
+          aria-controls="fileInput"
+        >
+          <span>
+            <span class="jsfm-drop-title">Open or drop a JavaScript file</span>
+            <span class="jsfm-drop-help">
+              Supports .js and .mjs files. You can also paste code below.
+            </span>
+            <span id="fileInfo" class="jsfm-file-info">
+              No file selected.
+            </span>
+          </span>
+        </label>
+
+        <input
+          id="fileInput"
+          class="jsfm-file-input"
+          type="file"
+          accept=".js,.mjs,text/javascript,application/javascript"
+        />
+
+        <div class="jsfm-top-grid">
+          <section class="jsfm-panel" aria-labelledby="input-title">
+            <h3 id="input-title" class="jsfm-panel-title">JavaScript Input</h3>
+            <textarea
+              id="inputCode"
+              class="jsfm-code"
+              aria-labelledby="input-title"
+              spellcheck="false"
+              placeholder="Paste JavaScript here..."
+            ></textarea>
+          </section>
+
+          <aside class="jsfm-panel" aria-labelledby="settings-title">
+            <h3 id="settings-title" class="jsfm-panel-title">Processing Settings</h3>
+
+            <div class="form-group">
+              <label for="operationSelect">Operation</label>
+              <select id="operationSelect">
+                <option value="beautify" selected>Beautify / Format</option>
+                <option value="minify">Minify</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="sourceMode">Source Mode</label>
+              <select id="sourceMode">
+                <option value="script" selected>Script</option>
+                <option value="module">ES Module</option>
+              </select>
+              <p class="jsfm-help">
+                Use ES Module for import/export or top-level module syntax.
+              </p>
+            </div>
+
+            <section
+              id="beautifyOptions"
+              class="jsfm-options-panel"
+              aria-labelledby="beautify-options-title"
+            >
+              <h4 id="beautify-options-title" class="jsfm-panel-title">
+                Beautify Options
+              </h4>
+
+              <div class="jsfm-settings-grid">
+                <div class="form-group">
+                  <label for="indentSelect">Indentation</label>
+                  <select id="indentSelect">
+                    <option value="2" selected>2 spaces</option>
+                    <option value="4">4 spaces</option>
+                    <option value="tab">Tabs</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="braceStyle">Brace Style</label>
+                  <select id="braceStyle">
+                    <option value="collapse" selected>Collapse</option>
+                    <option value="expand">Expand</option>
+                  </select>
+                </div>
+
+                <label class="jsfm-checkbox jsfm-setting-full">
+                  <input id="preserveNewlines" type="checkbox" checked />
+                  Preserve meaningful existing line breaks
+                </label>
+
+                <label class="jsfm-checkbox jsfm-setting-full">
+                  <input id="endWithNewline" type="checkbox" checked />
+                  End output with a newline
+                </label>
+              </div>
+            </section>
+
+            <section
+              id="minifyOptions"
+              class="jsfm-options-panel"
+              aria-labelledby="minify-options-title"
+              hidden
+            >
+              <h4 id="minify-options-title" class="jsfm-panel-title">
+                Minify Options
+              </h4>
+
+              <div class="jsfm-preset-row" aria-label="Minify presets">
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  data-minify-preset="safe"
+                >
+                  Safe
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  data-minify-preset="balanced"
+                >
+                  Balanced
+                </button>
+                <button
+                  class="btn btn-secondary"
+                  type="button"
+                  data-minify-preset="maximum"
+                >
+                  Maximum
+                </button>
+              </div>
+
+              <div class="jsfm-settings-grid" style="margin-top: 10px">
+                <div class="form-group">
+                  <label for="ecmaSelect">ECMAScript Target</label>
+                  <select id="ecmaSelect">
+                    <option value="5">ES5</option>
+                    <option value="2015">ES2015</option>
+                    <option value="2020" selected>ES2020</option>
+                    <option value="2022">ES2022</option>
+                  </select>
+                </div>
+
+                <div class="form-group">
+                  <label for="passesSelect">Compression Passes</label>
+                  <select id="passesSelect">
+                    <option value="1">1 pass</option>
+                    <option value="2" selected>2 passes</option>
+                    <option value="3">3 passes</option>
+                  </select>
+                </div>
+
+                <div class="form-group jsfm-setting-full">
+                  <label for="commentsSelect">Comments</label>
+                  <select id="commentsSelect">
+                    <option value="license" selected>Preserve license / important comments</option>
+                    <option value="all">Preserve all comments</option>
+                    <option value="none">Remove comments</option>
+                  </select>
+                </div>
+
+                <label class="jsfm-checkbox">
+                  <input id="compressCheck" type="checkbox" checked />
+                  Compress code
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="mangleCheck" type="checkbox" checked />
+                  Mangle local identifiers
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="topLevelCheck" type="checkbox" />
+                  Optimize top-level names
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="keepFunctionsCheck" type="checkbox" />
+                  Keep function names
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="keepClassesCheck" type="checkbox" />
+                  Keep class names
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="dropConsoleCheck" type="checkbox" />
+                  Remove console.* calls
+                </label>
+
+                <label class="jsfm-checkbox">
+                  <input id="asciiOnlyCheck" type="checkbox" />
+                  ASCII-only output
+                </label>
+              </div>
+
+              <p class="jsfm-help">
+                Top-level mangling and console removal can change public names or
+                observable behavior. Enable them only when appropriate.
+              </p>
+            </section>
+
+            <div class="jsfm-runtime-note">
+              Processing uses js-beautify and Terser inside a disposable Web
+              Worker. Your source code is parsed and transformed, never executed.
+            </div>
+          </aside>
+        </div>
+
+        <div class="jsfm-actions">
+          <button
+            id="processBtn"
+            class="btn"
+            type="button"
+            data-primary-action
+          >
+            Process JavaScript
+          </button>
+
+          <button id="validateBtn" class="btn btn-secondary" type="button">
+            Validate Syntax
+          </button>
+
+          <button
+            id="sampleBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-sample-loader="javascript-formatter"
+          >
+            Load Sample
+          </button>
+
+          <button
+            id="cancelBtn"
+            class="btn btn-secondary"
+            type="button"
+            disabled
+          >
+            Cancel
+          </button>
+
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="reset"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <section
+          id="resultSection"
+          class="jsfm-results"
+          aria-labelledby="result-title"
+          hidden
+        >
+          <h2 id="result-title">Processed JavaScript</h2>
+
+          <div class="stats-grid jsfm-stats">
+            <div class="stat-card">
+              <strong id="inputSizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">Input Size</span>
+            </div>
+            <div class="stat-card">
+              <strong id="outputSizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">Output Size</span>
+            </div>
+            <div class="stat-card">
+              <strong id="changeStat" class="stat-value">0%</strong>
+              <span class="stat-label">Size Change</span>
+            </div>
+            <div class="stat-card">
+              <strong id="lineStat" class="stat-value">0 → 0</strong>
+              <span class="stat-label">Lines</span>
+            </div>
+            <div class="stat-card">
+              <strong id="executionStat" class="stat-value">0ms</strong>
+              <span class="stat-label">Processing</span>
+            </div>
+            <div class="stat-card">
+              <strong id="modeStat" class="stat-value">—</strong>
+              <span class="stat-label">Mode</span>
+            </div>
+          </div>
+
+          <div class="jsfm-output-grid">
+            <section class="jsfm-panel" aria-labelledby="output-title">
+              <h3 id="output-title" class="jsfm-panel-title">
+                JavaScript Output
+              </h3>
+
+              <textarea
+                id="outputCode"
+                class="jsfm-code"
+                readonly
+                aria-labelledby="output-title"
+                spellcheck="false"
+              ></textarea>
+
+              <div class="jsfm-output-actions">
+                <button id="copyBtn" class="btn" type="button">
+                  Copy Output
+                </button>
+                <button id="downloadBtn" class="btn btn-secondary" type="button">
+                  Download .js
+                </button>
+                <button id="replaceInputBtn" class="btn btn-secondary" type="button">
+                  Replace Input
+                </button>
+              </div>
+            </section>
+
+            <aside class="jsfm-panel" aria-labelledby="analysis-title">
+              <h3 id="analysis-title" class="jsfm-panel-title">Analysis</h3>
+              <ul id="analysisList" class="jsfm-analysis-list"></ul>
+            </aside>
+          </div>
+        </section>
+        </form>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT JavaScript Formatter &amp; Minifier formats, validates and
+          minifies JavaScript source code without executing it.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Beautify JavaScript with configurable indentation and brace style.</li>
+          <li>Minify JavaScript with Terser compression and identifier mangling.</li>
+          <li>Validate syntax before transformation.</li>
+          <li>Switch between classic Script and ES Module parsing modes.</li>
+          <li>Choose ES5, ES2015, ES2020 or ES2022 output targets.</li>
+          <li>Use Safe, Balanced or Maximum minification presets.</li>
+          <li>Control compression passes and comment preservation.</li>
+          <li>Optionally preserve function and class names.</li>
+          <li>Optionally optimize top-level identifiers.</li>
+          <li>Optionally remove console calls and force ASCII-only output.</li>
+          <li>Open .js or .mjs files with click or drag-and-drop.</li>
+          <li>Compare input/output size, line counts and processing time.</li>
+          <li>Copy, download or reuse the processed output as new input.</li>
+          <li>Cancel long-running processing without freezing the page.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Your JavaScript source is processed in your browser and is not sent to
+          XAVERT. The transformation libraries are fetched from public CDNs when
+          needed, so an internet connection may be required before processing.
+        </p>
+
+        <p>
+          This tool targets JavaScript syntax supported by Terser and
+          js-beautify. TypeScript and JSX require dedicated parsers and are not
+          treated as standard JavaScript here. Minification can alter identifier
+          names or remove code according to the options you explicitly enable.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+
+    <script id="xavert-sample-javascript-formatter" type="application/json">
+      {
+        "fields": {
+          "operationSelect": "beautify",
+          "sourceMode": "script",
+          "inputCode": "function calculateTotal(items,taxRate){const subtotal=items.reduce((sum,item)=>sum+item.price*item.quantity,0);const tax=subtotal*taxRate;return{subtotal,tax,total:subtotal+tax}}const cart=[{name:'Keyboard',price:79.99,quantity:1},{name:'Mouse',price:39.99,quantity:2}];console.log(calculateTotal(cart,0.2));",
+          "indentSelect": "2",
+          "braceStyle": "collapse",
+          "preserveNewlines": true,
+          "endWithNewline": true
+        },
+        "focus": "inputCode"
+      }
+    </script>
+  </body>
+</html>

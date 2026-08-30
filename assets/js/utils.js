@@ -12,8 +12,149 @@ const XAVERT_MESSAGES = Object.freeze({
   clearSuccess: "Cleared.",
 });
 
-function getXavertMessageElement() {
-  return document.getElementById("message");
+const XAVERT_MESSAGE_STATE_CLASSES = Object.freeze([
+  "message-success",
+  "message-error",
+  "message-info",
+  "success",
+  "error",
+  "info",
+]);
+
+function isXavertMessageElementVisible(element) {
+  return (
+    element instanceof HTMLElement &&
+    !element.hidden &&
+    !element.closest("[hidden]") &&
+    element.getAttribute("aria-hidden") !== "true"
+  );
+}
+
+function getXavertMessageCandidates(root = document) {
+  if (!(root instanceof Document || root instanceof Element)) {
+    return [];
+  }
+
+  const candidates = Array.from(
+    root.querySelectorAll(
+      '#message, [data-xavert-message], .message[role="status"], .message[aria-live]',
+    ),
+  );
+
+  return candidates.filter(
+    (element, index) =>
+      isXavertMessageElementVisible(element) &&
+      !element.matches(".field-error, [data-xavert-message-ignore]") &&
+      candidates.indexOf(element) === index,
+  );
+}
+
+function getContextualXavertMessageElement() {
+  const activeElement =
+    document.activeElement instanceof HTMLElement ? document.activeElement : null;
+
+  if (activeElement && activeElement !== document.body) {
+    let context = activeElement;
+
+    while (context && context !== document.body) {
+      const candidates = getXavertMessageCandidates(context);
+
+      if (candidates.length === 1) {
+        return candidates[0];
+      }
+
+      context = context.parentElement;
+    }
+  }
+
+  const standardMessage = document.getElementById("message");
+
+  if (isXavertMessageElementVisible(standardMessage)) {
+    return standardMessage;
+  }
+
+  const explicitMessages = Array.from(
+    document.querySelectorAll("[data-xavert-message]"),
+  ).filter(isXavertMessageElementVisible);
+
+  if (explicitMessages.length === 1) {
+    return explicitMessages[0];
+  }
+
+  const candidates = getXavertMessageCandidates(document);
+
+  return candidates.length === 1 ? candidates[0] : null;
+}
+
+function createXavertFallbackMessageElement() {
+  const existing = document.querySelector("[data-xavert-generated-message]");
+
+  if (existing instanceof HTMLElement) {
+    return existing;
+  }
+
+  const message = document.createElement("div");
+  message.className = "message";
+  message.dataset.xavertMessage = "";
+  message.dataset.xavertGeneratedMessage = "";
+  message.setAttribute("role", "status");
+  message.setAttribute("aria-live", "polite");
+  message.setAttribute("aria-atomic", "true");
+
+  const activeElement =
+    document.activeElement instanceof HTMLElement ? document.activeElement : null;
+  const context =
+    activeElement?.closest(".tool-card, main") ??
+    document.querySelector(".tool-card") ??
+    document.querySelector("main") ??
+    document.body;
+
+  const primaryAction = context.querySelector("[data-primary-action]");
+  const actionGroup = primaryAction?.closest(
+    ".button-grid, .button-row, .tool-actions, .actions",
+  );
+
+  if (actionGroup?.parentElement) {
+    actionGroup.insertAdjacentElement("afterend", message);
+  } else {
+    context.append(message);
+  }
+
+  return message;
+}
+
+function getXavertMessageElement({ createFallback = true } = {}) {
+  return (
+    getContextualXavertMessageElement() ??
+    (createFallback ? createXavertFallbackMessageElement() : null)
+  );
+}
+
+function resetXavertMessageElement(message) {
+  if (!(message instanceof HTMLElement)) {
+    return;
+  }
+
+  message.textContent = "";
+  message.classList.remove(...XAVERT_MESSAGE_STATE_CLASSES);
+}
+
+function clearMessage() {
+  resetXavertMessageElement(
+    getXavertMessageElement({ createFallback: false }),
+  );
+}
+
+function clearPersistentSuccessMessages() {
+  getXavertMessageCandidates(document).forEach((message) => {
+    const isSuccess =
+      message.classList.contains("message-success") ||
+      message.classList.contains("success");
+
+    if (isSuccess) {
+      resetXavertMessageElement(message);
+    }
+  });
 }
 
 function getXavertToastElement() {
@@ -34,24 +175,6 @@ function getXavertToastElement() {
   }
 
   return toast;
-}
-
-function clearMessage() {
-  const message = getXavertMessageElement();
-
-  if (!message) {
-    return;
-  }
-
-  message.textContent = "";
-  message.classList.remove(
-    "message-success",
-    "message-error",
-    "message-info",
-    "success",
-    "error",
-    "info",
-  );
 }
 
 function showToast(text, type = "info") {
@@ -104,33 +227,24 @@ function showMessage(text, type = "info") {
   }
 
   message.textContent = text;
-
-  message.classList.remove(
-    "message-success",
-    "message-error",
-    "message-info",
-    "success",
-    "error",
-    "info",
-  );
-
+  message.classList.remove(...XAVERT_MESSAGE_STATE_CLASSES);
   message.classList.add(`message-${safeType}`);
 }
 
-function showActionSuccess() {
-  showMessage(XAVERT_MESSAGES.actionSuccess, "success");
+function showActionSuccess(text = XAVERT_MESSAGES.actionSuccess) {
+  showMessage(text, "success");
 }
 
-function showCopySuccess() {
-  showMessage(XAVERT_MESSAGES.copySuccess, "success");
+function showCopySuccess(text = XAVERT_MESSAGES.copySuccess) {
+  showMessage(text, "success");
 }
 
-function showDownloadSuccess() {
-  showMessage(XAVERT_MESSAGES.downloadSuccess, "success");
+function showDownloadSuccess(text = XAVERT_MESSAGES.downloadSuccess) {
+  showMessage(text, "success");
 }
 
-function showSampleSuccess() {
-  showMessage(XAVERT_MESSAGES.sampleSuccess, "success");
+function showSampleSuccess(text = XAVERT_MESSAGES.sampleSuccess) {
+  showMessage(text, "success");
 }
 
 function showClearSuccess() {
@@ -207,6 +321,7 @@ window.XAVERT_MESSAGES = XAVERT_MESSAGES;
 window.showToast = showToast;
 window.showMessage = showMessage;
 window.clearMessage = clearMessage;
+window.clearPersistentSuccessMessages = clearPersistentSuccessMessages;
 
 window.showActionSuccess = showActionSuccess;
 window.showCopySuccess = showCopySuccess;

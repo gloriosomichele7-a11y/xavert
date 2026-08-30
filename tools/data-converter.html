@@ -24,7 +24,8 @@
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/vendor/xlsx.full.min.js" defer></script>
-  <script src="../assets/js/data-converter.js" defer></script>
+    <script src="../assets/js/vendor/jszip.min.js" defer></script>
+    <script src="../assets/js/data-converter.js" defer></script>
     
     <!-- Open Graph -->
     <meta property="og:type" content="website" />
@@ -76,39 +77,6 @@
           "@type": "Organization",
           "name": "XAVERT"
         }
-      }
-    </script>
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Are my files uploaded?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. All files and data are processed locally in your browser and are never uploaded to any server."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Which file formats are supported?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "The tool supports CSV, XLSX, JSON and XML for conversion, formatting, validation and minification."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is Data Converter free to use?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. The Data Converter is completely free and requires no registration."
-            }
-          }
-        ]
       }
     </script>
 
@@ -219,10 +187,115 @@
         min-height: 46px;
       }
 
+      .xlsx-sheet-panel {
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f8fafc;
+      }
+
+      .xlsx-sheet-panel[hidden] {
+        display: none;
+      }
+
+      .xlsx-sheet-toolbar {
+        display: grid;
+        grid-template-columns: minmax(220px, 320px) minmax(0, 1fr);
+        gap: 16px;
+        align-items: end;
+      }
+
+      .xlsx-sheet-toolbar .form-group {
+        margin: 0;
+      }
+
+      .xlsx-sheet-info {
+        min-height: 46px;
+        display: flex;
+        align-items: center;
+        color: #475569;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
+      .xlsx-preview-block {
+        margin-top: 16px;
+      }
+
+      .xlsx-preview-heading {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        margin-bottom: 8px;
+        color: #475569;
+        font-size: 13px;
+      }
+
+      .xlsx-preview-heading strong {
+        color: #111827;
+      }
+
+      .xlsx-preview-scroll {
+        max-height: 270px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .xlsx-preview-table {
+        width: 100%;
+        min-width: 520px;
+        border-collapse: collapse;
+        font-size: 12px;
+      }
+
+      .xlsx-preview-table th,
+      .xlsx-preview-table td {
+        max-width: 220px;
+        padding: 8px 10px;
+        border-right: 1px solid #eef2f7;
+        border-bottom: 1px solid #eef2f7;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+      }
+
+      .xlsx-preview-table th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #f8fafc;
+        color: #64748b;
+        font-weight: 800;
+      }
+
+      .xlsx-preview-table caption {
+        padding: 18px;
+        color: #64748b;
+        text-align: left;
+      }
+
       @media (max-width: 576px) {
         .drop-zone {
           min-height: 120px;
           padding: 18px;
+        }
+
+        .xlsx-sheet-toolbar {
+          grid-template-columns: 1fr;
+          gap: 8px;
+        }
+
+        .xlsx-sheet-info {
+          min-height: 0;
+        }
+
+        .xlsx-preview-heading {
+          flex-direction: column;
+          gap: 2px;
         }
       }
 
@@ -317,15 +390,15 @@
         <ul class="about-features">
           <li>
             Convert between CSV, XLSX, JSON and XML formats across the supported
-            workflows.
+            workflows, including worksheet-aware Excel conversions.
           </li>
           <li>
             Format, minify and validate JSON and XML data without sending
             anything to a server.
           </li>
           <li>
-            Work with file imports, drag and drop, copy actions and downloads
-            from the same unified experience.
+            Select individual Excel worksheets, preview workbook data or export
+            every worksheet as separate CSV or JSON files in a ZIP archive.
           </li>
           <li>
             Keep every conversion and processing step local to the browser for

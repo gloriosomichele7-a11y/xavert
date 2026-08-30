@@ -3,11 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
     <title>XAVERT | Regex Tester</title>
 
     <meta
       name="description"
-      content="Test regular expressions, highlight matches, analyze text and export results directly in your browser."
+      content="Test JavaScript regular expressions with flags, highlighted matches, capture groups, replace and split previews, timeout protection and structured exports."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
@@ -20,90 +21,472 @@
     <link rel="stylesheet" href="../assets/css/components.css" />
     <link rel="stylesheet" href="../assets/css/responsive.css" />
 
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Regex Tester" />
+    <meta
+      property="og:description"
+      content="Test JavaScript regular expressions with match highlighting, capture groups, replace and split previews, and timeout protection."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/regex-tester.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Regex Tester" />
+    <meta
+      name="twitter:description"
+      content="Test JavaScript regular expressions with flags, groups, transformations and timeout protection."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Regex Tester",
+        "alternateName": "XAVERT Regex Tester",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/regex-tester.html",
+        "description": "Test JavaScript regular expressions with flags, highlighted matches, capture groups, replace and split previews, timeout protection and structured exports.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "JavaScript regular expression testing",
+          "Regex flag controls",
+          "Safe Web Worker execution",
+          "Execution timeout protection",
+          "Highlighted matches",
+          "Capture group inspection",
+          "Named capture group inspection",
+          "Match positions and indices",
+          "Replace preview",
+          "Split preview",
+          "Backtracking risk hints",
+          "Regex presets",
+          "JavaScript code snippet generation",
+          "Plain-text match export",
+          "Structured JSON export",
+          "Browser-side processing"
+        ]
+      }
+    </script>
+
     <style>
-      .regex-input,
-      .regex-textarea {
-        font-family: Consolas, Monaco, "Courier New", monospace;
-        line-height: 1.6;
+      .regex-pattern-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(280px, 0.38fr);
+        gap: 14px;
+        align-items: start;
       }
 
-      .regex-textarea {
-        min-height: 220px;
-        resize: vertical;
+      .regex-pattern-input {
+        width: 100%;
+        min-height: 44px;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        box-sizing: border-box;
       }
 
       .regex-presets {
         display: flex;
         flex-wrap: wrap;
-        gap: 8px;
-        margin-top: 10px;
+        gap: 7px;
+        margin-top: 9px;
       }
 
-      .regex-flags {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 14px;
-        margin-top: 10px;
+      .regex-preset {
+        padding: 7px 10px;
+        font-size: 12px;
+      }
+
+      .regex-flags-box {
+        min-width: 0;
+        padding: 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+        box-sizing: border-box;
+      }
+
+      .regex-flags-title {
+        display: block;
+        margin-bottom: 7px;
+        color: #111827;
+        font-size: 12.5px;
+        font-weight: 800;
+      }
+
+      .regex-flags-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 6px;
       }
 
       .regex-flag {
         display: flex;
+        min-width: 0;
+        min-height: 33px;
+        padding: 5px 7px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
         align-items: center;
-        gap: 7px;
-        margin: 0;
-        color: #374151;
-        font-size: 14px;
-        font-weight: 700;
+        justify-content: center;
+        gap: 5px;
+        color: #334155;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12px;
+        font-weight: 800;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .regex-flag:has(input:checked) {
+        border-color: #dc2626;
+        background: #fff7f7;
+        color: #991b1b;
+      }
+
+      .regex-flag:has(input:disabled) {
+        opacity: 0.5;
+        cursor: not-allowed;
       }
 
       .regex-flag input {
-        width: auto;
-        min-height: auto;
+        flex: 0 0 14px;
+        width: 14px;
+        min-width: 14px;
+        max-width: 14px;
+        height: 14px;
+        min-height: 14px;
+        max-height: 14px;
         margin: 0;
+        padding: 0;
+        accent-color: #dc2626;
+      }
+
+      .regex-input-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(290px, 0.82fr);
+        gap: 14px;
+        margin-top: 17px;
+      }
+
+      .regex-test-text {
+        width: 100%;
+        min-height: 300px;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 13px;
+        line-height: 1.55;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+
+      .regex-options-card {
+        min-width: 0;
+        padding: 13px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+      }
+
+      .regex-panel-title {
+        margin: 0 0 9px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .regex-options-grid {
+        display: grid;
+        gap: 10px;
+      }
+
+      .regex-checkbox {
+        display: flex;
+        min-width: 0;
+        min-height: 34px;
+        padding: 6px 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        align-items: center;
+        gap: 7px;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 700;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .regex-checkbox input {
+        flex: 0 0 15px;
+        width: 15px;
+        min-width: 15px;
+        max-width: 15px;
+        height: 15px;
+        min-height: 15px;
+        max-height: 15px;
+        margin: 0;
+        padding: 0;
+        accent-color: #dc2626;
+      }
+
+      .regex-help,
+      .regex-empty {
+        color: #64748b;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      .regex-help {
+        margin: 5px 0 0;
+      }
+
+      .regex-risk-box {
+        margin-top: 11px;
+        padding: 10px;
+        border: 1px solid #bbf7d0;
+        border-radius: 9px;
+        background: #f0fdf4;
+      }
+
+      .regex-risk-box[data-level="medium"] {
+        border-color: #fed7aa;
+        background: #fff7ed;
+      }
+
+      .regex-risk-box[data-level="high"] {
+        border-color: #fecaca;
+        background: #fef2f2;
+      }
+
+      .regex-risk-title {
+        display: block;
+        margin-bottom: 3px;
+        color: #111827;
+        font-size: 12px;
+        font-weight: 800;
+      }
+
+      .regex-risk-text {
+        margin: 0;
+        color: #475569;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      .regex-actions,
+      .regex-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+        gap: 9px;
+        margin-top: 13px;
       }
 
       .regex-result[hidden] {
         display: none !important;
       }
 
-      .regex-preview {
-        min-height: 140px;
-        padding: 14px;
-        border: 1px solid #dbe3ea;
-        border-radius: 10px;
-        background: #ffffff;
-        white-space: pre-wrap;
-        overflow-wrap: anywhere;
-        font-family: Consolas, Monaco, "Courier New", monospace;
-        line-height: 1.6;
+      .regex-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
       }
 
-      .regex-preview mark {
-        padding: 2px 3px;
-        border-radius: 4px;
-        background: rgba(220, 38, 38, 0.18);
+      .regex-result-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.15fr) minmax(310px, 0.85fr);
+        gap: 14px;
+        margin-top: 17px;
+      }
+
+      .regex-panel {
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+
+      .regex-highlight {
+        min-height: 270px;
+        max-height: 540px;
+        padding: 12px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.6;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      .regex-highlight mark {
+        padding: 0 1px;
+        border-radius: 3px;
+        background: #fee2e2;
         color: #991b1b;
       }
 
+      .regex-zero-match {
+        display: inline-block;
+        width: 2px;
+        min-height: 1.2em;
+        margin: 0 1px;
+        background: #dc2626;
+        vertical-align: text-bottom;
+      }
+
       .regex-match-list {
-        margin: 10px 0 0;
+        display: grid;
+        max-height: 540px;
+        margin: 0;
         padding: 0;
+        overflow: auto;
+        gap: 8px;
         list-style: none;
       }
 
-      .regex-match-list li {
-        padding: 9px 0;
-        border-bottom: 1px solid #e5e7eb;
-        font-family: Consolas, Monaco, "Courier New", monospace;
-        font-size: 14px;
+      .regex-match-card {
+        padding: 9px 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #f9fafb;
+      }
+
+      .regex-match-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .regex-match-value {
+        min-width: 0;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12px;
+        font-weight: 800;
         overflow-wrap: anywhere;
       }
 
-      .regex-actions {
+      .regex-match-index {
+        flex: 0 0 auto;
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .regex-group-list {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
-        gap: 12px;
-        margin-top: 18px;
+        gap: 4px;
+        margin-top: 7px;
+      }
+
+      .regex-group-item {
+        padding: 5px 7px;
+        border-radius: 6px;
+        background: #ffffff;
+        color: #475569;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 11px;
+        overflow-wrap: anywhere;
+      }
+
+      .regex-subgrid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 14px;
+        margin-top: 14px;
+      }
+
+      .regex-output-textarea {
+        width: 100%;
+        min-height: 190px;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.5;
+        resize: vertical;
+        box-sizing: border-box;
+      }
+
+      .regex-code {
+        min-height: 170px;
+        margin: 0;
+        padding: 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #0f172a;
+        color: #e2e8f0;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 11.5px;
+        line-height: 1.55;
+        white-space: pre-wrap;
+        overflow-wrap: anywhere;
+      }
+
+      @media (max-width: 1050px) {
+        .regex-pattern-row,
+        .regex-input-grid,
+        .regex-result-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .regex-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 650px) {
+        .regex-subgrid {
+          grid-template-columns: 1fr;
+        }
+
+        .regex-flags-grid {
+          grid-template-columns: repeat(4, minmax(0, 1fr));
+        }
+
+        .regex-stats {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
 
@@ -133,199 +516,418 @@
         <h1 id="tool-title" class="tool-title">Regex Tester</h1>
       </section>
 
-      <div class="tool-sections">
-        <section class="tool-card" aria-labelledby="regex-workspace-title">
-          <header class="tool-card-header">
-            <h2 id="regex-workspace-title" class="tool-card-title">
-              Test Regular Expressions
-            </h2>
-            <p class="tool-card-description">
-              Validate patterns, highlight matches and export matched text.
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">
+            Test Regular Expressions
+          </h2>
+          <p class="tool-card-description">
+            Test JavaScript regular expressions with timeout protection,
+            highlighted matches, groups and transformation previews.
+          </p>
+        </header>
+
+        <div class="regex-pattern-row">
+          <div class="form-group">
+            <label for="pattern">Regular Expression</label>
+            <input
+              id="pattern"
+              class="regex-pattern-input"
+              type="text"
+              spellcheck="false"
+              autocomplete="off"
+              placeholder="Example: \b(?<word>[A-Za-z]{4,})\b"
+            />
+
+            <div class="regex-presets" aria-label="Regex presets">
+              <button
+                class="btn btn-secondary regex-preset"
+                type="button"
+                data-regex-preset="\d+"
+              >
+                Numbers
+              </button>
+              <button
+                class="btn btn-secondary regex-preset"
+                type="button"
+                data-regex-preset="[A-Za-z]+"
+              >
+                Words
+              </button>
+              <button
+                class="btn btn-secondary regex-preset"
+                type="button"
+                data-regex-preset="https?:\/\/[^\s]+"
+              >
+                URLs
+              </button>
+              <button
+                class="btn btn-secondary regex-preset"
+                type="button"
+                data-regex-preset="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
+              >
+                Email
+              </button>
+              <button
+                class="btn btn-secondary regex-preset"
+                type="button"
+                data-regex-preset="\b\d{4}-\d{2}-\d{2}\b"
+              >
+                ISO Date
+              </button>
+            </div>
+          </div>
+
+          <div
+            class="regex-flags-box"
+            role="group"
+            aria-labelledby="flags-title"
+          >
+            <span id="flags-title" class="regex-flags-title">Flags</span>
+
+            <div class="regex-flags-grid">
+              <label class="regex-flag" title="Global: continue after the first match">
+                <input id="flagG" type="checkbox" checked />
+                g
+              </label>
+              <label class="regex-flag" title="Ignore case">
+                <input id="flagI" type="checkbox" />
+                i
+              </label>
+              <label class="regex-flag" title="Multiline anchors">
+                <input id="flagM" type="checkbox" />
+                m
+              </label>
+              <label class="regex-flag" title="Dot matches newline characters">
+                <input id="flagS" type="checkbox" />
+                s
+              </label>
+              <label class="regex-flag" title="Unicode-aware matching">
+                <input id="flagU" type="checkbox" checked />
+                u
+              </label>
+              <label class="regex-flag" title="Sticky matching">
+                <input id="flagY" type="checkbox" />
+                y
+              </label>
+              <label class="regex-flag" title="Unicode sets mode">
+                <input id="flagV" type="checkbox" />
+                v
+              </label>
+              <label class="regex-flag" title="Expose match indices">
+                <input id="flagD" type="checkbox" />
+                d
+              </label>
+            </div>
+
+            <p class="regex-help">
+              Unsupported flags are disabled automatically. JavaScript does not
+              allow <strong>u</strong> and <strong>v</strong> together.
             </p>
-          </header>
+          </div>
+        </div>
 
-          <div class="tool-card-body">
-            <div class="form-group">
-              <label for="pattern">Regular Expression</label>
-              <input
-                id="pattern"
-                class="regex-input"
-                type="text"
-                placeholder="Example: \d+"
-                spellcheck="false"
-                autocomplete="off"
-              />
+        <div class="regex-input-grid">
+          <div class="form-group">
+            <label for="inputText">Test Text</label>
+            <textarea
+              id="inputText"
+              class="regex-test-text"
+              spellcheck="false"
+              placeholder="Paste or type text to test..."
+            ></textarea>
+          </div>
 
-              <div class="regex-presets" aria-label="Regex presets">
-                <button
-                  class="btn btn-secondary regex-preset"
-                  type="button"
-                  data-regex-preset="\d+"
-                >
-                  Numbers
-                </button>
-                <button
-                  class="btn btn-secondary regex-preset"
-                  type="button"
-                  data-regex-preset="[A-Za-z]+"
-                >
-                  Words
-                </button>
-                <button
-                  class="btn btn-secondary regex-preset"
-                  type="button"
-                  data-regex-preset="https?:\/\/[^\s]+"
-                >
-                  URLs
-                </button>
-                <button
-                  class="btn btn-secondary regex-preset"
-                  type="button"
-                  data-regex-preset="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}"
-                >
-                  Email
-                </button>
+          <aside class="regex-options-card" aria-labelledby="options-title">
+            <h3 id="options-title" class="regex-panel-title">Test Options</h3>
+
+            <div class="regex-options-grid">
+              <label class="regex-checkbox">
+                <input id="autoRunCheck" type="checkbox" checked />
+                Re-run automatically after edits
+              </label>
+
+              <div class="form-group">
+                <label for="timeoutSelect">Execution Timeout</label>
+                <select id="timeoutSelect">
+                  <option value="250">250 ms</option>
+                  <option value="500">500 ms</option>
+                  <option value="1000" selected>1 second</option>
+                  <option value="2000">2 seconds</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="maxMatchesSelect">Maximum Matches</label>
+                <select id="maxMatchesSelect">
+                  <option value="100">100</option>
+                  <option value="500" selected>500</option>
+                  <option value="1000">1,000</option>
+                  <option value="5000">5,000</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="replacementInput">Replacement</label>
+                <input
+                  id="replacementInput"
+                  type="text"
+                  spellcheck="false"
+                  placeholder="Example: [$<word>]"
+                />
+                <p class="regex-help">
+                  Supports JavaScript replacement tokens such as $&, $1 and
+                  $&lt;name&gt;.
+                </p>
+              </div>
+
+              <div class="form-group">
+                <label for="splitLimit">Split Limit</label>
+                <input
+                  id="splitLimit"
+                  type="number"
+                  min="1"
+                  max="1000"
+                  step="1"
+                  value="50"
+                />
               </div>
             </div>
 
-            <div class="form-group">
-              <label>Flags</label>
-              <div class="regex-flags">
-                <label class="regex-flag" for="flagG"
-                  ><input id="flagG" type="checkbox" checked /><span
-                    >Global</span
-                  ></label
-                >
-                <label class="regex-flag" for="flagI"
-                  ><input id="flagI" type="checkbox" /><span
-                    >Ignore Case</span
-                  ></label
-                >
-                <label class="regex-flag" for="flagM"
-                  ><input id="flagM" type="checkbox" /><span
-                    >Multiline</span
-                  ></label
-                >
-              </div>
+            <div id="riskBox" class="regex-risk-box" data-level="low">
+              <span id="riskTitle" class="regex-risk-title">
+                Pattern Risk: Low
+              </span>
+              <p id="riskText" class="regex-risk-text">
+                No common catastrophic-backtracking indicators detected.
+              </p>
             </div>
+          </aside>
+        </div>
 
-            <div class="form-group">
-              <label for="inputText">Test Text</label>
+        <div class="regex-actions">
+          <button id="testBtn" class="btn" type="button" data-primary-action>
+            Test Regex
+          </button>
+
+          <button
+            id="sampleBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-sample-loader="regex-default"
+          >
+            Load Sample
+          </button>
+
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <section
+          id="resultBox"
+          class="regex-result"
+          aria-labelledby="result-title"
+          hidden
+        >
+          <h2 id="result-title">Regex Result</h2>
+
+          <div class="stats-grid regex-stats">
+            <div class="stat-card">
+              <strong id="matchCountStat" class="stat-value">0</strong>
+              <span class="stat-label">Matches</span>
+            </div>
+            <div class="stat-card">
+              <strong id="groupCountStat" class="stat-value">0</strong>
+              <span class="stat-label">Capture Groups</span>
+            </div>
+            <div class="stat-card">
+              <strong id="namedGroupStat" class="stat-value">0</strong>
+              <span class="stat-label">Named Groups</span>
+            </div>
+            <div class="stat-card">
+              <strong id="matchedCharsStat" class="stat-value">0</strong>
+              <span class="stat-label">Matched Chars</span>
+            </div>
+            <div class="stat-card">
+              <strong id="executionStat" class="stat-value">0ms</strong>
+              <span class="stat-label">Execution</span>
+            </div>
+            <div class="stat-card">
+              <strong id="flagsStat" class="stat-value">—</strong>
+              <span class="stat-label">Flags</span>
+            </div>
+          </div>
+
+          <div class="regex-result-grid">
+            <section class="regex-panel" aria-labelledby="highlight-title">
+              <h3 id="highlight-title" class="regex-panel-title">
+                Highlighted Matches
+              </h3>
+              <div id="preview" class="regex-highlight"></div>
+            </section>
+
+            <section class="regex-panel" aria-labelledby="matches-title">
+              <h3 id="matches-title" class="regex-panel-title">
+                Match Details
+              </h3>
+              <ul id="matches" class="regex-match-list"></ul>
+            </section>
+          </div>
+
+          <div class="regex-subgrid">
+            <section class="regex-panel" aria-labelledby="replace-title">
+              <h3 id="replace-title" class="regex-panel-title">
+                Replace Preview
+              </h3>
               <textarea
-                id="inputText"
-                class="regex-textarea"
-                placeholder="Paste the text you want to test here"
+                id="replaceOutput"
+                class="regex-output-textarea"
+                readonly
+                aria-label="Replaced text preview"
                 spellcheck="false"
               ></textarea>
-            </div>
 
-            <div class="button-grid regex-actions">
-              <button
-                id="testBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Test Regex
-              </button>
-              <button id="sampleBtn" class="btn btn-secondary" type="button">
-                Load Sample
-              </button>
-              <button
-                id="copyMatchesBtn"
-                class="btn btn-secondary"
-                type="button"
-              >
-                Copy Matches
-              </button>
-              <button
-                id="downloadMatchesBtn"
-                class="btn btn-secondary"
-                type="button"
-              >
-                Download Matches
-              </button>
-              <button
-                id="clearBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
-            </div>
-
-            <div
-              id="message"
-              class="message"
-              role="status"
-              aria-live="polite"
-              aria-atomic="true"
-            ></div>
-
-            <section
-              id="resultBox"
-              class="tool-card-result regex-result"
-              aria-labelledby="result-title"
-              hidden
-            >
-              <h3 id="result-title">Highlighted Preview</h3>
-              <div id="preview" class="regex-preview">
-                Matches will appear here.
+              <div class="regex-result-actions">
+                <button
+                  id="copyReplaceBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Copy Replaced Text
+                </button>
               </div>
+            </section>
 
-              <h3>Matches</h3>
+            <section class="regex-panel" aria-labelledby="split-title">
+              <h3 id="split-title" class="regex-panel-title">
+                Split Preview
+              </h3>
+              <textarea
+                id="splitOutput"
+                class="regex-output-textarea"
+                readonly
+                aria-label="Split text preview"
+                spellcheck="false"
+              ></textarea>
+            </section>
+          </div>
 
-              <div class="stats-grid">
-                <div class="stat-card">
-                  <strong id="matchCountStat" class="stat-value">0</strong
-                  ><span class="stat-label">Matches</span>
-                </div>
-                <div class="stat-card">
-                  <strong id="patternLengthStat" class="stat-value">0</strong
-                  ><span class="stat-label">Pattern Length</span>
-                </div>
-                <div class="stat-card">
-                  <strong id="textLengthStat" class="stat-value">0</strong
-                  ><span class="stat-label">Text Length</span>
-                </div>
-                <div class="stat-card">
-                  <strong id="flagsStat" class="stat-value">—</strong
-                  ><span class="stat-label">Flags</span>
-                </div>
+          <div class="regex-subgrid">
+            <section class="regex-panel" aria-labelledby="snippet-title">
+              <h3 id="snippet-title" class="regex-panel-title">
+                JavaScript Snippet
+              </h3>
+              <pre id="snippetOutput" class="regex-code"></pre>
+
+              <div class="regex-result-actions">
+                <button
+                  id="copySnippetBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Copy Snippet
+                </button>
               </div>
+            </section>
 
-              <ul id="matches" class="regex-match-list">
-                <li>No matches yet.</li>
-              </ul>
+            <section class="regex-panel" aria-labelledby="export-title">
+              <h3 id="export-title" class="regex-panel-title">
+                Export Results
+              </h3>
+              <p class="regex-empty">
+                Plain-text export contains the matched values. JSON export also
+                includes positions, groups, named groups, indices and timing.
+              </p>
+
+              <div class="regex-result-actions">
+                <button id="copyMatchesBtn" class="btn" type="button">
+                  Copy Matches
+                </button>
+                <button
+                  id="downloadMatchesBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download Matches
+                </button>
+                <button
+                  id="copyJsonBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Copy Match JSON
+                </button>
+                <button
+                  id="downloadJsonBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download Match JSON
+                </button>
+              </div>
             </section>
           </div>
         </section>
-      </div>
+      </section>
 
       <section class="info about-card" aria-labelledby="about-title">
         <h2 id="about-title">About</h2>
+
         <p class="about-intro">
-          The XAVERT Regex Tester lets you test JavaScript-compatible regular
-          expressions directly in your browser.
+          The XAVERT Regex Tester evaluates patterns with the browser's native
+          JavaScript RegExp engine.
         </p>
 
         <h3>Main Features</h3>
         <ul class="about-features">
-          <li>Test regular expressions against custom text.</li>
-          <li>Use global, ignore-case and multiline flags.</li>
-          <li>Highlight matching text safely in the preview.</li>
+          <li>Test JavaScript-compatible regular expressions against custom text.</li>
           <li>
-            Use quick presets for numbers, words, URLs and email addresses.
+            Use g, i, m, s, u, y, v and d flags when supported by the browser.
           </li>
-          <li>Copy or download matched values.</li>
+          <li>
+            Run regex evaluation inside a disposable Web Worker so expensive
+            patterns can be terminated without freezing the page.
+          </li>
+          <li>Choose an execution timeout from 250 ms to 2 seconds.</li>
+          <li>Highlight matches and inspect their start and end positions.</li>
+          <li>Inspect numbered capture groups and named capture groups.</li>
+          <li>Inspect match indices when the d flag is enabled and supported.</li>
+          <li>Preview JavaScript replacement and split results.</li>
+          <li>
+            Review heuristic warnings for common nested-quantifier and ambiguous
+            backtracking patterns.
+          </li>
+          <li>Use quick presets for numbers, words, URLs, email and ISO dates.</li>
+          <li>Generate a ready-to-use JavaScript RegExp snippet.</li>
+          <li>Copy or download plain matches and structured JSON results.</li>
         </ul>
 
         <h3>Privacy First</h3>
         <p class="about-privacy">
-          Regex processing happens locally within your browser. Your pattern and
-          test text are never uploaded, transmitted, shared or stored on any
-          server.
+          Pattern evaluation, test text, replacement previews and exported data
+          are processed locally in your browser. This tool does not require a
+          third-party runtime and does not upload your regex content to XAVERT.
+        </p>
+
+        <p>
+          This tool uses JavaScript regular-expression syntax. PCRE, .NET, Python
+          and other regex engines can support different features or semantics.
+          Backtracking risk detection is heuristic; the execution timeout remains
+          the final protection against an expensive pattern.
         </p>
       </section>
 
@@ -345,5 +947,28 @@
       aria-atomic="true"
       hidden
     ></div>
+
+    <script id="xavert-sample-regex-default" type="application/json">
+      {
+        "fields": {
+          "pattern": "\\b(?<level>ERROR|WARN)\\s+\\[(?<service>[A-Za-z-]+)\\]\\s+(?<message>.+)$",
+          "inputText": "INFO [api] Server started\nWARN [cache] Cache miss for product:42\nERROR [payments] Gateway timeout\nWARN [auth] Expired session token\nERROR [api] Invalid request payload",
+          "flagG": true,
+          "flagI": false,
+          "flagM": true,
+          "flagS": false,
+          "flagU": true,
+          "flagY": false,
+          "flagV": false,
+          "flagD": false,
+          "replacementInput": "[$<level>] $<service>: $<message>",
+          "splitLimit": 50,
+          "timeoutSelect": 1000,
+          "maxMatchesSelect": 500
+        },
+        "action": "testBtn",
+        "focus": "pattern"
+      }
+    </script>
   </body>
 </html>

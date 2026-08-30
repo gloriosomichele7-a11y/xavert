@@ -1,0 +1,801 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Image Metadata & EXIF Cleaner</title>
+
+    <meta
+      name="description"
+      content="View EXIF, GPS, camera, date, software and other image metadata, then create a privacy-clean copy of supported images directly in your browser."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/image-metadata-exif-cleaner.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta
+      property="og:title"
+      content="XAVERT | Image Metadata & EXIF Cleaner"
+    />
+    <meta
+      property="og:description"
+      content="Inspect hidden image metadata and create a privacy-clean copy directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/image-metadata-exif-cleaner.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="XAVERT | Image Metadata & EXIF Cleaner"
+    />
+    <meta
+      name="twitter:description"
+      content="View EXIF and GPS metadata and create a privacy-clean image copy."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Image Metadata & EXIF Cleaner",
+        "alternateName": "XAVERT Image Metadata & EXIF Cleaner",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/image-metadata-exif-cleaner.html",
+        "description": "Inspect EXIF, GPS, camera, date, software, XMP, IPTC and other image metadata, then create a privacy-clean copy of supported image formats directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "EXIF metadata viewer",
+          "GPS metadata detection",
+          "Camera and lens information",
+          "Date and software metadata",
+          "XMP and IPTC inspection",
+          "Sensitive metadata risk summary",
+          "Metadata search and filtering",
+          "Metadata JSON export",
+          "Lossless metadata removal where safe",
+          "Cleaned image verification",
+          "Browser-side image processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .meta-drop-zone {
+        display: flex;
+        width: 100%;
+        min-height: 150px;
+        padding: 24px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        text-decoration: none;
+        user-select: none;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .meta-drop-zone:hover,
+      .meta-drop-zone:focus-visible,
+      .meta-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
+      }
+
+      .meta-drop-zone:hover,
+      .meta-drop-zone:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .meta-drop-title {
+        display: block;
+        margin-bottom: 6px;
+        color: #111827;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .meta-drop-content {
+        display: block;
+        width: 100%;
+      }
+
+      .meta-drop-help,
+      .meta-file-info,
+      .meta-note,
+      .meta-clean-note {
+        color: #64748b;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .meta-file-info {
+        margin-top: 10px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .meta-source-actions,
+      .meta-clean-actions,
+      .meta-export-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      .meta-preview-grid {
+        display: grid;
+        grid-template-columns: minmax(240px, 0.8fr) minmax(0, 1.2fr);
+        gap: 16px;
+        margin-top: 22px;
+      }
+
+      .meta-preview-card,
+      .meta-summary-card,
+      .meta-cleaner-card {
+        min-width: 0;
+        padding: 16px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #ffffff;
+      }
+
+      .meta-preview-frame {
+        display: grid;
+        min-height: 250px;
+        overflow: hidden;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background:
+          linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+          linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+          linear-gradient(-45deg, transparent 75%, #f3f4f6 75%),
+          #ffffff;
+        background-position:
+          0 0,
+          0 8px,
+          8px -8px,
+          -8px 0;
+        background-size: 16px 16px;
+        place-items: center;
+      }
+
+      .meta-preview-image {
+        display: block;
+        max-width: 100%;
+        max-height: 440px;
+        object-fit: contain;
+      }
+
+      .meta-preview-empty {
+        padding: 24px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 650;
+        text-align: center;
+      }
+
+      .meta-card-title {
+        margin: 0 0 10px;
+        color: #111827;
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .meta-privacy-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .meta-privacy-item {
+        display: flex;
+        min-width: 0;
+        padding: 10px 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .meta-privacy-label {
+        min-width: 0;
+        color: #334155;
+        font-size: 13px;
+        font-weight: 700;
+      }
+
+      .meta-risk-badge {
+        flex: 0 0 auto;
+        padding: 4px 8px;
+        border-radius: 999px;
+        font-size: 11px;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .meta-risk-found {
+        background: #fee2e2;
+        color: #b91c1c;
+      }
+
+      .meta-risk-clear {
+        background: #dcfce7;
+        color: #166534;
+      }
+
+      .meta-risk-info {
+        background: #e0f2fe;
+        color: #075985;
+      }
+
+      .meta-gps-box {
+        margin-top: 12px;
+        padding: 12px;
+        border: 1px solid #fecaca;
+        border-radius: 10px;
+        background: #fef2f2;
+      }
+
+      .meta-gps-value {
+        margin: 0 0 8px;
+        color: #991b1b;
+        font-size: 13px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+        margin-top: 22px;
+      }
+
+      .meta-cleaner-card {
+        margin-top: 20px;
+        background: #f9fafb;
+      }
+
+      .meta-clean-status {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      .meta-clean-status-item {
+        padding: 10px 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #ffffff;
+      }
+
+      .meta-clean-status-label {
+        display: block;
+        margin-bottom: 3px;
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+      }
+
+      .meta-clean-status-value {
+        color: #111827;
+        font-size: 13px;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-table-section {
+        margin-top: 24px;
+      }
+
+      .meta-toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(180px, 240px);
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+
+      .meta-table-wrap {
+        max-height: 560px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #ffffff;
+      }
+
+      .meta-table {
+        width: 100%;
+        min-width: 700px;
+        border-collapse: collapse;
+        font-size: 12.5px;
+      }
+
+      .meta-table th,
+      .meta-table td {
+        padding: 9px 10px;
+        border-right: 1px solid #eef2f7;
+        border-bottom: 1px solid #eef2f7;
+        vertical-align: top;
+        text-align: left;
+      }
+
+      .meta-table th:last-child,
+      .meta-table td:last-child {
+        border-right: 0;
+      }
+
+      .meta-table thead th {
+        position: sticky;
+        top: 0;
+        z-index: 1;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 11px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.035em;
+      }
+
+      .meta-table-category {
+        color: #64748b;
+        font-weight: 800;
+        white-space: nowrap;
+      }
+
+      .meta-table-tag {
+        color: #111827;
+        font-weight: 800;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-table-value {
+        max-width: 520px;
+        color: #334155;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-sensitive-row {
+        background: #fff7f7;
+      }
+
+      .meta-empty-row {
+        padding: 20px;
+        color: #64748b;
+        text-align: center;
+      }
+
+      @media (max-width: 1000px) {
+        .meta-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .meta-clean-status {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (max-width: 760px) {
+        .meta-preview-grid,
+        .meta-toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .meta-preview-frame {
+          min-height: 220px;
+        }
+      }
+
+      @media (max-width: 520px) {
+        .meta-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .meta-drop-zone {
+          transition: none;
+        }
+
+        .meta-drop-zone:hover,
+        .meta-drop-zone:focus-visible {
+          transform: none;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/exifreader@4.44.0/dist/exif-reader.js"
+      defer
+    ></script>
+    <script src="../assets/js/image-metadata-exif-cleaner.js" defer></script>
+  </head>
+
+  <body
+    data-tool="image-metadata-exif-cleaner"
+    data-related-tools="image-toolkit,background-remover,image-to-text-ocr,color-palette-extractor"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">
+          Image Metadata & EXIF Cleaner
+        </h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">
+            Metadata Inspector
+          </h2>
+          <p class="tool-card-description">
+            Inspect hidden image metadata, identify privacy-sensitive information and
+            create a cleaned copy when the format can be handled safely in the
+            browser.
+          </p>
+        </header>
+
+        <label
+          id="dropZone"
+          class="meta-drop-zone"
+          for="imageInput"
+          tabindex="0"
+          aria-controls="imageInput"
+          aria-describedby="fileInfo"
+        >
+          <span class="meta-drop-content">
+            <span class="meta-drop-title">Choose or drop an image</span>
+            <span class="meta-drop-help">
+              Inspect JPEG, PNG, WebP, HEIC/HEIF, AVIF and TIFF metadata.
+            </span>
+            <span id="fileInfo" class="meta-file-info">No image selected.</span>
+          </span>
+        </label>
+
+        <input
+          id="imageInput"
+          class="meta-file-input"
+          type="file"
+          accept=".jpg,.jpeg,.png,.webp,.heic,.heif,.avif,.tif,.tiff,image/jpeg,image/png,image/webp,image/heic,image/heif,image/avif,image/tiff"
+        />
+
+        <div class="meta-source-actions">
+          <button id="inspectBtn" class="btn" type="button" data-primary-action disabled>
+            Inspect Metadata
+          </button>
+          <button id="replaceBtn" class="btn btn-secondary" type="button">
+            Replace Image
+          </button>
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <section
+          id="resultSection"
+          aria-labelledby="result-title"
+          hidden
+        >
+          <h2 id="result-title">Metadata Result</h2>
+
+          <div class="meta-preview-grid">
+            <div class="meta-preview-card">
+              <h3 class="meta-card-title">Image Preview</h3>
+              <div class="meta-preview-frame">
+                <img
+                  id="previewImage"
+                  class="meta-preview-image"
+                  alt="Selected image preview"
+                  hidden
+                />
+                <div id="previewEmpty" class="meta-preview-empty">
+                  Preview is unavailable for this image format in the current
+                  browser.
+                </div>
+              </div>
+            </div>
+
+            <div class="meta-summary-card">
+              <h3 class="meta-card-title">Privacy Summary</h3>
+
+              <div class="meta-privacy-list">
+                <div class="meta-privacy-item">
+                  <span class="meta-privacy-label">GPS / Location</span>
+                  <span id="gpsRisk" class="meta-risk-badge meta-risk-clear">
+                    Not found
+                  </span>
+                </div>
+
+                <div class="meta-privacy-item">
+                  <span class="meta-privacy-label">Author / Creator</span>
+                  <span id="authorRisk" class="meta-risk-badge meta-risk-clear">
+                    Not found
+                  </span>
+                </div>
+
+                <div class="meta-privacy-item">
+                  <span class="meta-privacy-label">Device identifiers</span>
+                  <span id="deviceRisk" class="meta-risk-badge meta-risk-clear">
+                    Not found
+                  </span>
+                </div>
+
+                <div class="meta-privacy-item">
+                  <span class="meta-privacy-label">Date / Time</span>
+                  <span id="dateRisk" class="meta-risk-badge meta-risk-clear">
+                    Not found
+                  </span>
+                </div>
+
+                <div class="meta-privacy-item">
+                  <span class="meta-privacy-label">Editing software</span>
+                  <span id="softwareRisk" class="meta-risk-badge meta-risk-clear">
+                    Not found
+                  </span>
+                </div>
+              </div>
+
+              <div id="gpsBox" class="meta-gps-box" hidden>
+                <p id="gpsValue" class="meta-gps-value"></p>
+                <button id="copyGpsBtn" class="btn btn-secondary" type="button">
+                  Copy Coordinates
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div class="stats-grid meta-stats">
+            <div class="stat-card">
+              <strong id="tagsStat" class="stat-value">0</strong>
+              <span class="stat-label">Metadata Tags</span>
+            </div>
+            <div class="stat-card">
+              <strong id="groupsStat" class="stat-value">0</strong>
+              <span class="stat-label">Groups</span>
+            </div>
+            <div class="stat-card">
+              <strong id="sensitiveStat" class="stat-value">0</strong>
+              <span class="stat-label">Sensitive Tags</span>
+            </div>
+            <div class="stat-card">
+              <strong id="dimensionsStat" class="stat-value">—</strong>
+              <span class="stat-label">Dimensions</span>
+            </div>
+            <div class="stat-card">
+              <strong id="formatStat" class="stat-value">—</strong>
+              <span class="stat-label">Format</span>
+            </div>
+            <div class="stat-card">
+              <strong id="fileSizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">File Size</span>
+            </div>
+          </div>
+
+          <section class="meta-cleaner-card" aria-labelledby="cleaner-title">
+            <h3 id="cleaner-title" class="meta-card-title">
+              Privacy Cleaner
+            </h3>
+            <p id="cleanSupportNote" class="meta-clean-note">
+              Cleaning support will be shown after inspection.
+            </p>
+
+            <div id="cleanStatus" class="meta-clean-status" hidden>
+              <div class="meta-clean-status-item">
+                <span class="meta-clean-status-label">Method</span>
+                <span id="cleanMethod" class="meta-clean-status-value">—</span>
+              </div>
+              <div class="meta-clean-status-item">
+                <span class="meta-clean-status-label">Removed</span>
+                <span id="removedStat" class="meta-clean-status-value">—</span>
+              </div>
+              <div class="meta-clean-status-item">
+                <span class="meta-clean-status-label">Verification</span>
+                <span id="verificationStat" class="meta-clean-status-value">—</span>
+              </div>
+            </div>
+
+            <div class="meta-clean-actions">
+              <button id="cleanBtn" class="btn" type="button" disabled>
+                Remove Metadata
+              </button>
+              <button id="downloadCleanBtn" class="btn btn-secondary" type="button" disabled>
+                Download Clean Copy
+              </button>
+            </div>
+          </section>
+
+          <section class="meta-table-section" aria-labelledby="all-metadata-title">
+            <h3 id="all-metadata-title">All Metadata</h3>
+
+            <div class="meta-toolbar">
+              <div class="form-group">
+                <label for="metadataSearch">Search Metadata</label>
+                <input
+                  id="metadataSearch"
+                  type="search"
+                  placeholder="Search tag names or values..."
+                  autocomplete="off"
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="groupFilter">Metadata Group</label>
+                <select id="groupFilter">
+                  <option value="">All groups</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="meta-table-wrap">
+              <table class="meta-table">
+                <thead>
+                  <tr>
+                    <th scope="col">Group</th>
+                    <th scope="col">Tag</th>
+                    <th scope="col">Value</th>
+                    <th scope="col">Privacy</th>
+                  </tr>
+                </thead>
+                <tbody id="metadataTableBody"></tbody>
+              </table>
+            </div>
+
+            <div class="meta-export-actions">
+              <button id="copyJsonBtn" class="btn" type="button">
+                Copy Metadata JSON
+              </button>
+              <button id="downloadJsonBtn" class="btn btn-secondary" type="button">
+                Download Metadata JSON
+              </button>
+            </div>
+          </section>
+        </section>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Image Metadata & EXIF Cleaner reveals metadata stored inside
+          image files and helps you remove common privacy-sensitive metadata before
+          sharing supported images.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>
+            Inspect EXIF, GPS, camera, lens, date, software, XMP, IPTC and other
+            metadata when available in the source format.
+          </li>
+          <li>
+            Detect location, creator information, device identifiers and other
+            privacy-sensitive tags.
+          </li>
+          <li>Search and filter the complete metadata table.</li>
+          <li>Copy GPS coordinates when location metadata is present.</li>
+          <li>Copy or download structured metadata as JSON.</li>
+          <li>
+            Remove common metadata from JPEG, PNG and WebP files without recompressing
+            image pixels when safe.
+          </li>
+          <li>
+            Preserve visual orientation by rendering a clean copy when EXIF
+            orientation cannot safely be removed losslessly.
+          </li>
+          <li>Verify the cleaned file by parsing its metadata again.</li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Your image is inspected and cleaned locally in your browser and is not
+          uploaded to XAVERT. The ExifReader library is loaded from a third-party CDN
+          when this page opens. Cleaning is available for JPEG, PNG and WebP; other
+          supported formats are inspection-only because safe browser-side metadata
+          rewriting is format-dependent.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

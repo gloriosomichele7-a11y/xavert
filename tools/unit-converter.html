@@ -15,6 +15,57 @@
     <meta name="theme-color" content="#dc2626" />
 
     <link rel="canonical" href="https://xavert.com/tools/unit-converter.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Unit Converter" />
+    <meta
+      property="og:description"
+      content="Convert length, weight, temperature, area, volume and speed units directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/unit-converter.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Unit Converter" />
+    <meta
+      name="twitter:description"
+      content="Convert length, weight, temperature, area, volume and speed units directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Unit Converter",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/unit-converter.html",
+        "description": "Convert length, weight, temperature, area, volume and speed units directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
+      }
+    </script>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
     <link rel="stylesheet" href="../assets/css/global.css" />
@@ -96,8 +147,8 @@
           <header class="tool-card-header">
             <h2 id="converter-title" class="tool-card-title">Convert Units</h2>
             <p class="tool-card-description">
-              Convert common length, weight, temperature, area, volume and speed
-              units.
+              Convert length, weight, temperature, area, volume, speed, pressure,
+              energy, power, data storage, angle, frequency and force units.
             </p>
           </header>
 
@@ -125,8 +176,18 @@
                   <option value="temperature|fahrenheit|celsius">
                     Fahrenheit → Celsius
                   </option>
-                  <option value="volume|liter|gallon">Liter → Gallon</option>
-                  <option value="volume|gallon|liter">Gallon → Liter</option>
+                  <option value="volume|liter|gallon">Liter → US Gallon</option>
+                  <option value="volume|gallon|liter">US Gallon → Liter</option>
+                  <option value="pressure|bar|psi">Bar → PSI</option>
+                  <option value="pressure|psi|bar">PSI → Bar</option>
+                  <option value="energy|kilowatt hour|joule">
+                    Kilowatt-hour → Joule
+                  </option>
+                  <option value="data-storage|gigabyte|gibibyte">
+                    Gigabyte → Gibibyte
+                  </option>
+                  <option value="angle|degree|radian">Degree → Radian</option>
+                  <option value="frequency|hertz|rpm">Hertz → RPM</option>
                 </select>
               </div>
 
@@ -139,6 +200,13 @@
                   <option value="area">Area</option>
                   <option value="volume">Volume</option>
                   <option value="speed">Speed</option>
+                  <option value="pressure">Pressure</option>
+                  <option value="energy">Energy</option>
+                  <option value="power">Power</option>
+                  <option value="data-storage">Data Storage</option>
+                  <option value="angle">Angle</option>
+                  <option value="frequency">Frequency</option>
+                  <option value="force">Force</option>
                 </select>
               </div>
 
@@ -218,6 +286,7 @@
                   id="clearHistoryBtn"
                   class="btn btn-secondary"
                   type="button"
+                  data-clear-action
                 >
                   Clear History
                 </button>
@@ -240,8 +309,11 @@
 
         <h3>Main Features</h3>
         <ul class="about-features">
-          <li>Convert length, weight, temperature, area, volume and speed.</li>
-          <li>Use common favorite conversion pairs.</li>
+          <li>
+            Convert 13 categories including length, temperature, pressure, energy,
+            power, data storage, angle, frequency and force.
+          </li>
+          <li>Use common favorite conversion pairs across multiple categories.</li>
           <li>Swap source and target units instantly.</li>
           <li>Keep a short conversion history during the current session.</li>
           <li>Copy the latest result.</li>

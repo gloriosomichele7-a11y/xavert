@@ -28,10 +28,46 @@
         "Work with PDF files using practical browser-based utilities.",
     }),
 
+    "word-toolkit": Object.freeze({
+      title: "Word Toolkit",
+      description:
+        "Preview, inspect and convert DOCX documents directly in your browser.",
+    }),
+
     "image-toolkit": Object.freeze({
       title: "Image Toolkit",
       description:
         "Convert, resize and optimize images directly in your browser.",
+    }),
+
+    "background-remover": Object.freeze({
+      title: "Background Remover",
+      description:
+        "Remove image backgrounds automatically with browser-based AI.",
+    }),
+
+    "image-to-text-ocr": Object.freeze({
+      title: "Image to Text OCR",
+      description:
+        "Extract editable text from images with multilingual browser-based OCR.",
+    }),
+
+    "image-metadata-exif-cleaner": Object.freeze({
+      title: "Image Metadata & EXIF Cleaner",
+      description:
+        "Inspect image metadata and create a privacy-clean copy of supported images.",
+    }),
+
+    "svg-toolkit": Object.freeze({
+      title: "SVG Toolkit",
+      description:
+        "Inspect, sanitize, optimize and convert SVG graphics in your browser.",
+    }),
+
+    "image-upscaler": Object.freeze({
+      title: "AI Image Upscaler",
+      description:
+        "Upscale images with browser-based ESRGAN super resolution.",
     }),
 
     "data-converter": Object.freeze({
@@ -250,6 +286,30 @@
       description:
         "Convert and validate YAML and JSON directly in your browser.",
     }),
+
+    "favicon-generator": Object.freeze({
+      title: "Favicon Generator",
+      description:
+        "Create favicon, Apple touch and PWA icon assets from one image.",
+    }),
+
+    "markup-generator": Object.freeze({
+      title: "Markup Generator",
+      description:
+        "Build structured JSON-LD for common Schema.org content types.",
+    }),
+
+    "javascript-formatter-minifier": Object.freeze({
+      title: "JavaScript Formatter & Minifier",
+      description:
+        "Format, validate and minify JavaScript directly in your browser.",
+    }),
+
+    "qr-code-scanner-reader": Object.freeze({
+      title: "QR Code Scanner & Reader",
+      description:
+        "Scan and decode QR codes from images, clipboard content or a camera.",
+    }),
   });
   // ---------------------------
   // Existing Tool Fallback Mapping
@@ -352,6 +412,7 @@
     ]),
 
     "qr-generator": Object.freeze([
+      "qr-code-scanner-reader",
       "barcode-generator",
       "image-toolkit",
       "text-toolkit",
@@ -366,8 +427,15 @@
     ]),
 
     "image-toolkit": Object.freeze([
+      "background-remover",
+      "image-to-text-ocr",
+      "image-metadata-exif-cleaner",
+      "image-upscaler",
+      "svg-toolkit",
+      "favicon-generator",
       "color-palette-extractor",
       "color-toolkit",
+      "qr-code-scanner-reader",
       "qr-generator",
       "pdf-toolkit",
     ]),
@@ -375,6 +443,7 @@
     "color-toolkit": Object.freeze([
       "color-palette-extractor",
       "image-toolkit",
+      "background-remover",
       "qr-generator",
       "barcode-generator",
     ]),
@@ -382,16 +451,82 @@
     "color-palette-extractor": Object.freeze([
       "color-toolkit",
       "image-toolkit",
+      "svg-toolkit",
+      "image-upscaler",
+      "image-metadata-exif-cleaner",
+      "background-remover",
       "qr-generator",
       "barcode-generator",
     ]),
 
+    "background-remover": Object.freeze([
+      "image-toolkit",
+      "image-upscaler",
+      "image-to-text-ocr",
+      "image-metadata-exif-cleaner",
+      "color-palette-extractor",
+      "color-toolkit",
+      "pdf-toolkit",
+      "base64-toolkit",
+    ]),
+
+    "image-to-text-ocr": Object.freeze([
+      "image-toolkit",
+      "image-upscaler",
+      "image-metadata-exif-cleaner",
+      "background-remover",
+      "pdf-toolkit",
+      "word-toolkit",
+      "text-toolkit",
+    ]),
+
+    "image-metadata-exif-cleaner": Object.freeze([
+      "image-toolkit",
+      "image-upscaler",
+      "background-remover",
+      "image-to-text-ocr",
+      "color-palette-extractor",
+    ]),
+
+    "svg-toolkit": Object.freeze([
+      "image-toolkit",
+      "favicon-generator",
+      "color-toolkit",
+      "color-palette-extractor",
+      "base64-toolkit",
+      "qr-generator",
+      "image-upscaler",
+    ]),
+
+    "image-upscaler": Object.freeze([
+      "image-toolkit",
+      "background-remover",
+      "image-metadata-exif-cleaner",
+      "image-to-text-ocr",
+      "color-palette-extractor",
+      "svg-toolkit",
+    ]),
+
+
+
+
     "pdf-toolkit": Object.freeze([
+      "word-toolkit",
+      "image-to-text-ocr",
       "image-toolkit",
       "text-toolkit",
       "file-hash-checker",
       "data-converter",
     ]),
+
+    "word-toolkit": Object.freeze([
+      "pdf-toolkit",
+      "image-to-text-ocr",
+      "markdown-editor",
+      "text-toolkit",
+      "data-converter",
+    ]),
+
 
     "unit-converter": Object.freeze([
       "date-time-toolkit",
@@ -454,10 +589,43 @@
     ]),
 
     "css-minifier": Object.freeze([
+      "javascript-formatter-minifier",
+      "html-minifier",
       "json-toolkit",
       "regex-tester",
-      "data-converter",
       "text-toolkit",
+    ]),
+
+    "favicon-generator": Object.freeze([
+      "image-toolkit",
+      "svg-toolkit",
+      "color-toolkit",
+      "color-palette-extractor",
+      "image-metadata-exif-cleaner",
+    ]),
+
+    "markup-generator": Object.freeze([
+      "json-toolkit",
+      "meta-tag-generator",
+      "open-graph-generator",
+      "html-minifier",
+      "javascript-formatter-minifier",
+    ]),
+
+    "javascript-formatter-minifier": Object.freeze([
+      "html-minifier",
+      "css-minifier",
+      "json-toolkit",
+      "regex-tester",
+      "base64-toolkit",
+    ]),
+
+    "qr-code-scanner-reader": Object.freeze([
+      "qr-generator",
+      "image-toolkit",
+      "image-to-text-ocr",
+      "barcode-generator",
+      "url-toolkit",
     ]),
   });
 
@@ -474,6 +642,7 @@
     ["html", "HTML"],
     ["htaccess", "HTACCESS"],
     ["json", "JSON"],
+    ["js", "JS"],
     ["pdf", "PDF"],
     ["qr", "QR"],
     ["regex", "Regex"],

@@ -8,7 +8,7 @@
 
     <meta
       name="description"
-      content="Resize, crop, compress, convert, rotate, flip, watermark, grayscale, clean metadata and export images directly in your browser."
+      content="Resize, crop, compress, convert, rotate, flip, watermark, clean metadata and export PNG, JPEG, WebP, AVIF, GIF, BMP, HEIC and HEIF images directly in your browser."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
@@ -25,7 +25,7 @@
     <meta property="og:title" content="XAVERT | Image Toolkit" />
     <meta
       property="og:description"
-      content="Resize, crop, compress, convert, rotate, flip, watermark and clean image metadata directly in your browser."
+      content="Resize, crop, compress, convert, rotate, flip, watermark and process HEIC, HEIF, AVIF and common image formats directly in your browser."
     />
     <meta
       property="og:url"
@@ -41,7 +41,7 @@
     <meta name="twitter:title" content="XAVERT | Image Toolkit" />
     <meta
       name="twitter:description"
-      content="Process and export images locally in your browser."
+      content="Process HEIC, HEIF, AVIF and common image formats directly in your browser."
     />
     <meta
       name="twitter:image"
@@ -58,7 +58,7 @@
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
         "url": "https://xavert.com/tools/image-toolkit.html",
-        "description": "Resize, crop, compress, convert, rotate, flip, watermark, grayscale, clean metadata and export images directly in your browser.",
+        "description": "Resize, crop, compress, convert, rotate, flip, watermark, grayscale, clean metadata and process HEIC, HEIF, AVIF and common image formats directly in your browser.",
         "inLanguage": "en",
         "isAccessibleForFree": true,
         "offers": {
@@ -69,7 +69,20 @@
         "publisher": {
           "@type": "Organization",
           "name": "XAVERT"
-        }
+        },
+        "featureList": [
+          "HEIC and HEIF browser decoding",
+          "PNG, JPEG, WebP, AVIF, GIF and BMP input",
+          "Image resize and center crop",
+          "JPEG compression",
+          "JPEG, PNG and WebP conversion",
+          "Rotate and flip",
+          "Text watermark",
+          "Grayscale conversion",
+          "Metadata-clean re-export",
+          "Image to PDF",
+          "Clipboard image copy"
+        ]
       }
     </script>
 
@@ -124,6 +137,17 @@
         font-size: 14px;
         font-weight: 700;
         overflow-wrap: anywhere;
+      }
+
+      .image-format-note {
+        margin-top: 8px;
+        color: #6b7280;
+        font-size: 12px;
+        line-height: 1.5;
+      }
+
+      .image-format-note strong {
+        color: #111827;
       }
 
       .image-option-section {
@@ -214,8 +238,9 @@
             </h2>
 
             <p class="tool-card-description">
-              Select one image and choose a processing workflow. PNG, JPEG and
-              WebP are supported for browser-based image operations.
+              Select one image and choose a processing workflow. PNG, JPEG,
+              WebP, AVIF, GIF and BMP use native browser decoding; HEIC and HEIF
+              are decoded on demand before processing.
             </p>
           </header>
 
@@ -240,7 +265,7 @@
               <div class="form-group">
                 <label for="downloadFormat">Result Export Format</label>
                 <select id="downloadFormat">
-                  <option value="original">Original Result Format</option>
+                  <option value="original">Operation Default Format</option>
                   <option value="image/jpeg">JPG</option>
                   <option value="image/png">PNG</option>
                   <option value="image/webp">WebP</option>
@@ -265,11 +290,17 @@
                   id="imageFile"
                   class="image-file-input"
                   type="file"
-                  accept="image/png,image/jpeg,image/webp"
+                  accept="image/png,image/jpeg,image/webp,image/avif,image/gif,image/bmp,image/heic,image/heif,.png,.jpg,.jpeg,.webp,.avif,.gif,.bmp,.heic,.heif"
                 />
 
                 <div id="fileInfo" class="image-file-info">
                   No image selected
+                </div>
+
+                <div class="image-format-note">
+                  <strong>Input:</strong> PNG, JPEG, WebP, AVIF, GIF, BMP,
+                  HEIC and HEIF. Animated GIF/HEIF content is processed as a
+                  single decoded frame.
                 </div>
               </div>
             </div>
@@ -460,16 +491,18 @@
 
         <p class="about-intro">
           The XAVERT Image Toolkit provides common image processing workflows
-          directly in your browser.
+          and broad input-format support directly in your browser.
         </p>
 
         <h3>Main Features</h3>
 
         <ul class="about-features">
+          <li>Open PNG, JPEG, WebP, AVIF, GIF and BMP images.</li>
+          <li>Decode HEIC and HEIF images in the browser when needed.</li>
           <li>Resize while optionally preserving aspect ratio.</li>
           <li>Center-crop images to custom dimensions.</li>
           <li>Compress images to JPEG with adjustable quality.</li>
-          <li>Convert between JPEG, PNG and WebP.</li>
+          <li>Convert decoded images to JPEG, PNG or WebP.</li>
           <li>Rotate, flip, watermark and grayscale images.</li>
           <li>Re-export images to remove embedded metadata.</li>
           <li>Convert one image to an A4 PDF.</li>
@@ -479,9 +512,16 @@
         <h3>Privacy First</h3>
 
         <p class="about-privacy">
-          Everything is processed locally within your browser. Your images and
-          generated results are never uploaded, transmitted, shared or stored on
-          any server.
+          Image pixels and generated results are processed locally in your
+          browser and are not uploaded to XAVERT. HEIC/HEIF support downloads a
+          pinned decoder runtime from a public CDN only when that format needs
+          decoding; the selected image remains in the browser.
+        </p>
+
+        <p>
+          HEIC/HEIF decoding uses the first decodable image for normal toolkit
+          operations. Animated or multi-image containers are not exported as
+          animations by this tool.
         </p>
       </section>
 

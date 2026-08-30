@@ -136,6 +136,37 @@
         font-weight: 800;
       }
 
+      .markdown-preview hr {
+        margin: 18px 0;
+        border: 0;
+        border-top: 1px solid #d1d5db;
+      }
+
+      .markdown-preview img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 10px;
+      }
+
+      .markdown-preview del {
+        color: #6b7280;
+      }
+
+      .markdown-preview .task-list-item {
+        list-style: none;
+      }
+
+      .markdown-preview input[type="checkbox"] {
+        margin-right: 7px;
+      }
+
+      .markdown-note {
+        margin: 8px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.5;
+      }
+
       .markdown-actions {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
@@ -144,9 +175,54 @@
       }
     </style>
 
+    <script
+      src="https://cdn.jsdelivr.net/npm/marked@18.0.11/lib/marked.umd.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/dompurify@3.4.14/dist/purify.min.js"
+      defer
+    ></script>
     <script src="../assets/js/global.js" defer></script>
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/markdown-editor.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Markdown Editor" />
+    <meta property="og:description" content="Write, preview, convert and export Markdown directly in your browser with live preview and local processing." />
+    <meta property="og:url" content="https://xavert.com/tools/markdown-editor.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Markdown Editor" />
+    <meta name="twitter:description" content="Write, preview, convert and export Markdown directly in your browser with live preview and local processing." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Markdown Editor",
+      "url": "https://xavert.com/tools/markdown-editor.html",
+      "description": "Write, preview, convert and export Markdown directly in your browser with live preview and local processing.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
@@ -194,6 +270,11 @@
                   spellcheck="false"
                 ></textarea>
 
+                <p class="markdown-note">
+                  Supports GitHub Flavored Markdown (GFM), including nested lists,
+                  task lists, tables, strikethrough, autolinks and fenced code blocks.
+                </p>
+
                 <div class="button-grid markdown-actions">
                   <button
                     id="updateBtn"
@@ -208,6 +289,7 @@
                     id="sampleBtn"
                     class="btn btn-secondary"
                     type="button"
+                    data-sample-loader="markdown-default"
                   >
                     Load Sample
                   </button>
@@ -316,9 +398,10 @@
         <ul class="about-features">
           <li>Live Markdown preview while typing.</li>
           <li>
-            Headings, lists, task lists, blockquotes, tables and code blocks.
+            GFM-compatible headings, nested lists, task lists, blockquotes, tables
+            and fenced code blocks.
           </li>
-          <li>Inline emphasis, code and links.</li>
+          <li>Inline emphasis, strikethrough, code, autolinks and links.</li>
           <li>Copy Markdown or generated HTML.</li>
           <li>Download Markdown and standalone HTML files.</li>
           <li>
@@ -342,6 +425,16 @@
 
     <footer class="xavert-footer-note">Powered by XAVERT</footer>
 
+
+    <script type="application/json" id="xavert-sample-markdown-default">
+      {
+        "fields": {
+          "markdownInput": "# XAVERT Markdown Editor\n\nWrite **Markdown** and preview it instantly.\n\n## GFM Features\n\n- Live preview\n  - Nested lists\n- ~~Strikethrough~~\n- Autolink: https://xavert.com\n\n> Everything runs directly in your browser.\n\n| Feature | Status |\n|:---|---:|\n| Preview | Ready |\n| Export | Ready |\n\n- [x] Create content\n- [ ] Export final document\n\n```js\nconst ready = true;\n```"
+        },
+        "focus": "markdownInput"
+      }
+    </script>
+
     <div
       id="xavert-toast"
       class="xavert-toast"
@@ -351,6 +444,5 @@
       hidden
     ></div>
 
-    <script src="../assets/js/markdown-editor.js"></script>
   </body>
 </html>

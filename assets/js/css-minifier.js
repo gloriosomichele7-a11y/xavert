@@ -1,5 +1,5 @@
 // =====================================
-// XAVERT CSS Minifier & Beautifier
+// XAVERT CSS Minifier
 // =====================================
 
 "use strict";
@@ -16,10 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
     output: $("outputCss"),
     inputMeta: $("inputMeta"),
     outputMeta: $("outputMeta"),
-
     preserveComments: $("preserveComments"),
     indentSize: $("indentSize"),
-
     minifyButton: $("minifyBtn"),
     beautifyButton: $("beautifyBtn"),
     validateButton: $("validateBtn"),
@@ -29,10 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
     clearButton: $("clearBtn"),
     copyButton: $("copyBtn"),
     downloadButton: $("downloadBtn"),
-
     fileInput: $("fileInput"),
     message: $("css-message"),
-
     inputChars: $("inputChars"),
     outputChars: $("outputChars"),
     inputLines: $("inputLines"),
@@ -41,8 +37,10 @@ document.addEventListener("DOMContentLoaded", () => {
     compression: $("compression"),
   };
 
+  const optionalElementNames = new Set(["indentSize", "beautifyButton"]);
+
   const missingElements = Object.entries(elements)
-    .filter(([, element]) => !element)
+    .filter(([name, element]) => !element && !optionalElementNames.has(name))
     .map(([name]) => name);
 
   if (missingElements.length > 0) {
@@ -50,37 +48,39 @@ document.addEventListener("DOMContentLoaded", () => {
       "CSS Minifier initialization failed. Missing elements:",
       missingElements,
     );
-
     return;
   }
 
   const MAX_FILE_SIZE = 5 * 1024 * 1024;
 
-  const SAMPLE_CSS = `/* XAVERT sample stylesheet */
+  const SAMPLE_CSS = `/*! XAVERT sample stylesheet */
 
 :root {
   --brand-color: #dc2626;
-  --page-width: 1100px;
+  --gap: calc(1rem + 2vw);
+  --fallback-stack: Inter, system-ui, sans-serif;
 }
 
 body {
   margin: 0;
-  background: #f7f8fb;
-  color: #111827;
+  color: var(--brand-color);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'/%3E");
+}
+
+.card :hover {
+  transform: translateY(-2px);
 }
 
 .card {
-  max-width: var(--page-width);
+  width: min(100%, 70rem);
   margin: 24px auto;
-  padding: 24px;
-  border: 1px solid #e5e7eb;
-  border-radius: 18px;
+  padding: var(--gap);
+  border: 1px solid color-mix(in srgb, var(--brand-color) 30%, white);
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
   .card {
     margin: 16px;
-    padding: 18px;
   }
 }`;
 
@@ -92,7 +92,6 @@ body {
 
   function setInlineMessage(text = "", type = "info") {
     const allowedTypes = ["success", "error", "info"];
-
     const safeType = allowedTypes.includes(type) ? type : "info";
 
     elements.message.textContent = text;
@@ -103,11 +102,21 @@ body {
     }
   }
 
-  function notify(text = "", type = "info", useToast = true) {
+  function notify(text = "", type = "info") {
     setInlineMessage(text, type);
 
-    if (text && useToast && typeof window.showMessage === "function") {
+    if (text && typeof window.showMessage === "function") {
       window.showMessage(text, type);
+    }
+  }
+
+  function announceActionSuccess() {
+    setInlineMessage("Action completed successfully.", "success");
+
+    if (typeof window.showActionSuccess === "function") {
+      window.showActionSuccess();
+    } else if (typeof window.showMessage === "function") {
+      window.showMessage("Action completed successfully.", "success");
     }
   }
 
@@ -124,105 +133,359 @@ body {
     const output = elements.output.value;
 
     elements.inputMeta.textContent =
-      `${formatNumber(input.length)} characters · ` +
+      `${formatNumber(Array.from(input).length)} characters · ` +
       `${formatNumber(countLines(input))} lines`;
 
     elements.outputMeta.textContent =
-      `${formatNumber(output.length)} characters · ` +
+      `${formatNumber(Array.from(output).length)} characters · ` +
       `${formatNumber(countLines(output))} lines`;
   }
 
-  function countTopLevelRules(css) {
-    let count = 0;
-    let depth = 0;
-    let quote = "";
-    let inComment = false;
+  // --------------------------------------------------
+  // Lexical Helpers
+  // --------------------------------------------------
 
-    for (let index = 0; index < css.length; index += 1) {
+  function isIdentifierCharacter(character) {
+    return Boolean(character) && /[A-Za-z0-9_-]/.test(character);
+  }
+
+  function startsUrlFunction(css, index) {
+    if (css.slice(index, index + 4).toLowerCase() !== "url(") {
+      return false;
+    }
+
+    return !isIdentifierCharacter(css[index - 1]);
+  }
+
+  function readQuoted(css, startIndex) {
+    const quote = css[startIndex];
+    let index = startIndex + 1;
+
+    while (index < css.length) {
+      const character = css[index];
+
+      if (character === "\\") {
+        index += 2;
+        continue;
+      }
+
+      if (character === quote) {
+        return {
+          value: css.slice(startIndex, index + 1),
+          endIndex: index,
+          closed: true,
+        };
+      }
+
+      index += 1;
+    }
+
+    return {
+      value: css.slice(startIndex),
+      endIndex: css.length - 1,
+      closed: false,
+    };
+  }
+
+  function readComment(css, startIndex) {
+    const closing = css.indexOf("*/", startIndex + 2);
+
+    if (closing === -1) {
+      return {
+        value: css.slice(startIndex),
+        endIndex: css.length - 1,
+        closed: false,
+      };
+    }
+
+    return {
+      value: css.slice(startIndex, closing + 2),
+      endIndex: closing + 1,
+      closed: true,
+    };
+  }
+
+  function readBalancedParentheses(css, openIndex) {
+    let depth = 1;
+    let index = openIndex + 1;
+
+    while (index < css.length) {
       const current = css[index];
       const next = css[index + 1];
 
-      if (inComment) {
-        if (current === "*" && next === "/") {
-          inComment = false;
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+        index = quoted.endIndex + 1;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(css, index);
+        index = comment.endIndex + 1;
+        continue;
+      }
+
+      if (current === "\\") {
+        index += 2;
+        continue;
+      }
+
+      if (current === "(") {
+        depth += 1;
+      } else if (current === ")") {
+        depth -= 1;
+
+        if (depth === 0) {
+          return {
+            value: css.slice(openIndex, index + 1),
+            endIndex: index,
+            closed: true,
+          };
+        }
+      }
+
+      index += 1;
+    }
+
+    return {
+      value: css.slice(openIndex),
+      endIndex: css.length - 1,
+      closed: false,
+    };
+  }
+
+  function readUrlFunction(css, startIndex) {
+    const openIndex = startIndex + 3;
+    const balanced = readBalancedParentheses(css, openIndex);
+
+    return {
+      value: css.slice(startIndex, balanced.endIndex + 1),
+      endIndex: balanced.endIndex,
+      closed: balanced.closed,
+    };
+  }
+
+  function isPreservedComment(content) {
+    const normalized = content.toLowerCase();
+
+    return (
+      content.startsWith("/*!") ||
+      normalized.includes("@license") ||
+      normalized.includes("@preserve") ||
+      normalized.includes("@copyright")
+    );
+  }
+
+  function normalizeRemovedComments(value) {
+    let output = "";
+    let pendingSpace = false;
+
+    for (let index = 0; index < value.length; index += 1) {
+      const current = value[index];
+      const next = value[index + 1];
+
+      if (current === "'" || current === '"') {
+        if (pendingSpace && output && !/\s$/.test(output)) {
+          output += " ";
+        }
+
+        pendingSpace = false;
+        const quoted = readQuoted(value, index);
+        output += quoted.value;
+        index = quoted.endIndex;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(value, index);
+        pendingSpace = true;
+        index = comment.endIndex;
+        continue;
+      }
+
+      if (/\s/.test(current)) {
+        pendingSpace = true;
+        continue;
+      }
+
+      if (pendingSpace && output && !/\s$/.test(output)) {
+        output += " ";
+      }
+
+      pendingSpace = false;
+      output += current;
+    }
+
+    if (pendingSpace && output) {
+      output += " ";
+    }
+
+    return output;
+  }
+
+  function readCustomPropertyValue(css, startIndex, preserveLicenseComments) {
+    let output = "";
+    let index = startIndex;
+    let parenthesisDepth = 0;
+    let bracketDepth = 0;
+    let braceDepth = 0;
+
+    while (index < css.length) {
+      const current = css[index];
+      const next = css[index + 1];
+
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+        output += quoted.value;
+        index = quoted.endIndex + 1;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(css, index);
+
+        if (
+          preserveLicenseComments &&
+          isPreservedComment(comment.value)
+        ) {
+          output += comment.value;
+        } else {
+          const previous = output[output.length - 1] ?? "";
+          const following = css[comment.endIndex + 1] ?? "";
+
+          if (
+            previous &&
+            following &&
+            !/\s/.test(previous) &&
+            !/\s/.test(following)
+          ) {
+            output += " ";
+          }
+        }
+
+        index = comment.endIndex + 1;
+        continue;
+      }
+
+      if (current === "\\") {
+        output += current;
+
+        if (index + 1 < css.length) {
+          output += css[index + 1];
+          index += 2;
+        } else {
           index += 1;
         }
 
         continue;
       }
 
-      if (!quote && current === "/" && next === "*") {
-        inComment = true;
+      if (current === "(") {
+        parenthesisDepth += 1;
+      } else if (current === ")" && parenthesisDepth > 0) {
+        parenthesisDepth -= 1;
+      } else if (current === "[") {
+        bracketDepth += 1;
+      } else if (current === "]" && bracketDepth > 0) {
+        bracketDepth -= 1;
+      } else if (current === "{") {
+        braceDepth += 1;
+      } else if (current === "}" && braceDepth > 0) {
+        braceDepth -= 1;
+      } else if (
+        (current === ";" || current === "}") &&
+        parenthesisDepth === 0 &&
+        bracketDepth === 0 &&
+        braceDepth === 0
+      ) {
+        break;
+      }
+
+      output += current;
+      index += 1;
+    }
+
+    return {
+      value: output,
+      endIndex: index - 1,
+    };
+  }
+
+  function isPropertyName(statement) {
+    return /^(?:--[A-Za-z_-][A-Za-z0-9_-]*|-?[A-Za-z_][A-Za-z0-9_-]*)$/.test(
+      statement,
+    );
+  }
+
+  function isCustomPropertyName(statement) {
+    return /^--[A-Za-z_-][A-Za-z0-9_-]*$/.test(statement);
+  }
+
+  function looksLikeDeclarationAfterColon(css, startIndex) {
+    let parenthesisDepth = 0;
+    let bracketDepth = 0;
+
+    for (let index = startIndex; index < css.length; index += 1) {
+      const current = css[index];
+      const next = css[index + 1];
+
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+        index = quoted.endIndex;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(css, index);
+        index = comment.endIndex;
+        continue;
+      }
+
+      if (startsUrlFunction(css, index)) {
+        const url = readUrlFunction(css, index);
+        index = url.endIndex;
+        continue;
+      }
+
+      if (current === "\\") {
         index += 1;
         continue;
       }
 
-      if (quote) {
-        if (current === "\\") {
-          index += 1;
-          continue;
-        }
-
-        if (current === quote) {
-          quote = "";
-        }
-
+      if (current === "(") {
+        parenthesisDepth += 1;
         continue;
       }
 
-      if (current === '"' || current === "'") {
-        quote = current;
+      if (current === ")" && parenthesisDepth > 0) {
+        parenthesisDepth -= 1;
+        continue;
+      }
+
+      if (current === "[") {
+        bracketDepth += 1;
+        continue;
+      }
+
+      if (current === "]" && bracketDepth > 0) {
+        bracketDepth -= 1;
+        continue;
+      }
+
+      if (parenthesisDepth !== 0 || bracketDepth !== 0) {
         continue;
       }
 
       if (current === "{") {
-        if (depth === 0) {
-          count += 1;
-        }
+        return false;
+      }
 
-        depth += 1;
-      } else if (current === "}") {
-        depth = Math.max(0, depth - 1);
+      if (current === ";" || current === "}") {
+        return true;
       }
     }
 
-    return count;
-  }
-
-  function updateStats() {
-    const input = elements.input.value;
-    const output = elements.output.value;
-
-    const inputLength = input.length;
-    const outputLength = output.length;
-
-    const saved = Math.max(0, inputLength - outputLength);
-
-    const reduction = inputLength > 0 ? (saved / inputLength) * 100 : 0;
-
-    elements.inputChars.textContent = formatNumber(inputLength);
-
-    elements.outputChars.textContent = formatNumber(outputLength);
-
-    elements.inputLines.textContent = formatNumber(countLines(input));
-
-    elements.ruleCount.textContent = formatNumber(
-      countTopLevelRules(output || input),
-    );
-
-    elements.savedChars.textContent = formatNumber(saved);
-
-    elements.compression.textContent = `${reduction.toFixed(1)}%`;
-
-    const hasOutput = output.length > 0;
-
-    elements.copyButton.disabled = !hasOutput;
-
-    elements.downloadButton.disabled = !hasOutput;
-
-    elements.swapButton.disabled = !hasOutput;
-
-    updateMeta();
+    return true;
   }
 
   // --------------------------------------------------
@@ -235,48 +498,50 @@ body {
     const parenthesisStack = [];
     const bracketStack = [];
 
-    let quote = "";
-    let quoteStart = -1;
-    let inComment = false;
-    let commentStart = -1;
-
     for (let index = 0; index < css.length; index += 1) {
       const current = css[index];
       const next = css[index + 1];
 
-      if (inComment) {
-        if (current === "*" && next === "/") {
-          inComment = false;
-          index += 1;
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+
+        if (!quoted.closed) {
+          errors.push(
+            `Unclosed quoted string beginning at character ${index + 1}.`,
+          );
+          break;
         }
 
+        index = quoted.endIndex;
         continue;
       }
 
-      if (!quote && current === "/" && next === "*") {
-        inComment = true;
-        commentStart = index;
+      if (current === "/" && next === "*") {
+        const comment = readComment(css, index);
+
+        if (!comment.closed) {
+          errors.push(`Unclosed comment beginning at character ${index + 1}.`);
+          break;
+        }
+
+        index = comment.endIndex;
+        continue;
+      }
+
+      if (startsUrlFunction(css, index)) {
+        const url = readUrlFunction(css, index);
+
+        if (!url.closed) {
+          errors.push(`Unclosed url() beginning at character ${index + 1}.`);
+          break;
+        }
+
+        index = url.endIndex;
+        continue;
+      }
+
+      if (current === "\\") {
         index += 1;
-        continue;
-      }
-
-      if (quote) {
-        if (current === "\\") {
-          index += 1;
-          continue;
-        }
-
-        if (current === quote) {
-          quote = "";
-          quoteStart = -1;
-        }
-
-        continue;
-      }
-
-      if (current === '"' || current === "'") {
-        quote = current;
-        quoteStart = index;
         continue;
       }
 
@@ -311,39 +576,24 @@ body {
       }
     }
 
-    if (inComment) {
-      errors.push(
-        `Unclosed comment beginning at character ${commentStart + 1}.`,
-      );
-    }
-
-    if (quote) {
-      errors.push(
-        `Unclosed quoted string beginning at character ${quoteStart + 1}.`,
-      );
-    }
-
     if (braceStack.length > 0) {
       errors.push(
         `${braceStack.length} opening brace` +
-          `${braceStack.length === 1 ? "" : "s"} ` +
-          `without a matching closing brace.`,
+          `${braceStack.length === 1 ? "" : "s"} without a matching closing brace.`,
       );
     }
 
     if (parenthesisStack.length > 0) {
       errors.push(
         `${parenthesisStack.length} opening parenthesis` +
-          `${parenthesisStack.length === 1 ? "" : "es"} ` +
-          `without a matching closing parenthesis.`,
+          `${parenthesisStack.length === 1 ? "" : "es"} without a matching closing parenthesis.`,
       );
     }
 
     if (bracketStack.length > 0) {
       errors.push(
         `${bracketStack.length} opening square bracket` +
-          `${bracketStack.length === 1 ? "" : "s"} ` +
-          `without a matching closing square bracket.`,
+          `${bracketStack.length === 1 ? "" : "s"} without a matching closing square bracket.`,
       );
     }
 
@@ -354,338 +604,512 @@ body {
   }
 
   // --------------------------------------------------
-  // CSS Processing
+  // CSS Minification
   // --------------------------------------------------
 
-  function isPreservedComment(content) {
-    const normalizedContent = content.toLowerCase();
+  function minifyCss(css, preserveLicenseComments) {
+    let result = "";
+    let pendingSpace = false;
+    let statement = "";
+    let suppressNextSpace = false;
+    let blockDepth = 0;
 
-    return (
-      content.startsWith("/*!") ||
-      normalizedContent.includes("@license") ||
-      normalizedContent.includes("@preserve") ||
-      normalizedContent.includes("@copyright")
-    );
-  }
+    function appendRaw(value) {
+      result += value;
+      statement += value;
+    }
 
-  function tokenizeCss(css, preserveLicenseComments) {
-    const tokens = [];
-
-    let buffer = "";
-    let quote = "";
-    let inComment = false;
-    let comment = "";
-
-    function flushBuffer() {
-      if (!buffer) {
-        return;
+    function shouldKeepPendingSpace(nextCharacter) {
+      if (!result || suppressNextSpace) {
+        return false;
       }
 
-      tokens.push({
-        type: "text",
-        value: buffer,
-      });
+      const previous = result[result.length - 1];
 
-      buffer = "";
+      if (["{", "}", ";", ","].includes(previous)) {
+        return false;
+      }
+
+      if (["{", "}", ";", ","].includes(nextCharacter)) {
+        return false;
+      }
+
+      return true;
+    }
+
+    function flushPendingSpace(nextCharacter) {
+      if (pendingSpace && shouldKeepPendingSpace(nextCharacter)) {
+        result += " ";
+        statement += " ";
+      }
+
+      pendingSpace = false;
+      suppressNextSpace = false;
     }
 
     for (let index = 0; index < css.length; index += 1) {
       const current = css[index];
       const next = css[index + 1];
 
-      if (inComment) {
-        comment += current;
-
-        if (current === "*" && next === "/") {
-          comment += next;
-          index += 1;
-          inComment = false;
-
-          if (preserveLicenseComments && isPreservedComment(comment)) {
-            flushBuffer();
-
-            tokens.push({
-              type: "comment",
-              value: comment,
-            });
-          }
-
-          comment = "";
-        }
-
-        continue;
-      }
-
-      if (quote) {
-        buffer += current;
-
-        if (current === "\\") {
-          if (index + 1 < css.length) {
-            buffer += css[index + 1];
-            index += 1;
-          }
-
-          continue;
-        }
-
-        if (current === quote) {
-          quote = "";
-        }
-
-        continue;
-      }
-
-      if (current === "/" && next === "*") {
-        flushBuffer();
-
-        inComment = true;
-        comment = "/*";
-        index += 1;
-
-        continue;
-      }
-
-      if (current === '"' || current === "'") {
-        quote = current;
-        buffer += current;
-
-        continue;
-      }
-
-      buffer += current;
-    }
-
-    flushBuffer();
-
-    return tokens;
-  }
-
-  function minifyTextSegment(segment) {
-    let result = "";
-    let pendingSpace = false;
-
-    const noSpaceBefore = new Set(["{", "}", ":", ";", ",", ")"]);
-
-    const noSpaceAfter = new Set(["{", "}", ":", ";", ",", "("]);
-
-    for (let index = 0; index < segment.length; index += 1) {
-      const current = segment[index];
-
       if (/\s/.test(current)) {
         pendingSpace = true;
         continue;
       }
 
-      if (pendingSpace && result) {
-        const previous = result[result.length - 1];
-
-        if (!noSpaceAfter.has(previous) && !noSpaceBefore.has(current)) {
-          result += " ";
-        }
-      }
-
-      pendingSpace = false;
-      result += current;
-    }
-
-    return result.trim();
-  }
-
-  function minifyCss(css, preserveLicenseComments) {
-    const tokens = tokenizeCss(css, preserveLicenseComments);
-
-    return tokens
-      .map((token) => {
-        if (token.type === "comment") {
-          return `${token.value}\n`;
-        }
-
-        return minifyTextSegment(token.value);
-      })
-      .join("")
-      .replace(/\n{2,}/g, "\n")
-      .trim();
-  }
-
-  function getIndentUnit() {
-    if (elements.indentSize.value === "tab") {
-      return "\t";
-    }
-
-    return " ".repeat(Number(elements.indentSize.value));
-  }
-
-  function beautifyCss(css, preserveLicenseComments) {
-    const compact = minifyCss(css, preserveLicenseComments);
-
-    const indentUnit = getIndentUnit();
-
-    let result = "";
-    let depth = 0;
-    let quote = "";
-    let inComment = false;
-
-    function appendIndent() {
-      result += indentUnit.repeat(Math.max(0, depth));
-    }
-
-    for (let index = 0; index < compact.length; index += 1) {
-      const current = compact[index];
-      const next = compact[index + 1];
-
-      if (inComment) {
-        result += current;
-
-        if (current === "*" && next === "/") {
-          result += next;
-          index += 1;
-          inComment = false;
-
-          result += "\n";
-          appendIndent();
-        }
-
-        continue;
-      }
-
-      if (quote) {
-        result += current;
-
-        if (current === "\\") {
-          if (index + 1 < compact.length) {
-            result += compact[index + 1];
-            index += 1;
-          }
-
-          continue;
-        }
-
-        if (current === quote) {
-          quote = "";
-        }
-
-        continue;
-      }
-
       if (current === "/" && next === "*") {
-        inComment = true;
-        result += "/*";
-        index += 1;
+        const comment = readComment(css, index);
 
-        continue;
-      }
-
-      if (current === '"' || current === "'") {
-        quote = current;
-        result += current;
-
-        continue;
-      }
-
-      if (current === "{") {
-        result = result.trimEnd();
-        result += " {\n";
-
-        depth += 1;
-        appendIndent();
-
-        continue;
-      }
-
-      if (current === "}") {
-        result = result.trimEnd();
-        result += "\n";
-
-        depth = Math.max(0, depth - 1);
-
-        appendIndent();
-        result += "}";
-
-        const following = compact[index + 1];
-
-        if (following && following !== ";") {
-          result += "\n\n";
-          appendIndent();
+        if (
+          preserveLicenseComments &&
+          isPreservedComment(comment.value)
+        ) {
+          flushPendingSpace("/");
+          appendRaw(comment.value);
+          pendingSpace = true;
+        } else {
+          pendingSpace = true;
         }
 
+        index = comment.endIndex;
         continue;
       }
 
-      if (current === ";") {
-        result += ";\n";
-        appendIndent();
-
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+        flushPendingSpace(current);
+        appendRaw(quoted.value);
+        index = quoted.endIndex;
         continue;
       }
 
-      if (current === ",") {
-        result += ",";
+      if (startsUrlFunction(css, index)) {
+        const url = readUrlFunction(css, index);
+        flushPendingSpace("u");
+        appendRaw(url.value);
+        index = url.endIndex;
+        continue;
+      }
 
-        if (depth === 0) {
-          result += "\n";
-          appendIndent();
-        } else {
-          result += " ";
+      if (current === "\\") {
+        flushPendingSpace(current);
+        appendRaw(current);
+
+        if (index + 1 < css.length) {
+          appendRaw(css[index + 1]);
+          index += 1;
         }
 
         continue;
       }
 
       if (current === ":") {
-        result += ": ";
+        const candidate = statement.trim();
+
+        if (
+          blockDepth > 0 &&
+          isPropertyName(candidate) &&
+          (isCustomPropertyName(candidate) ||
+            looksLikeDeclarationAfterColon(css, index + 1))
+        ) {
+          // Whitespace around a declaration colon is never needed. Do not apply
+          // this rule to selector pseudo-classes, where a preceding space can be
+          // semantically meaningful (for example: `.card :hover`).
+          pendingSpace = false;
+          result += ":";
+          statement += ":";
+          suppressNextSpace = true;
+
+          if (isCustomPropertyName(candidate)) {
+            const customValue = readCustomPropertyValue(
+              css,
+              index + 1,
+              preserveLicenseComments,
+            );
+
+            result += customValue.value;
+            statement += customValue.value;
+            index = customValue.endIndex;
+          }
+
+          continue;
+        }
+      }
+
+      if (current === "{") {
+        pendingSpace = false;
+        result = result.trimEnd();
+        result += "{";
+        blockDepth += 1;
+        statement = "";
+        suppressNextSpace = false;
         continue;
       }
 
-      result += current;
+      if (current === "}") {
+        pendingSpace = false;
+        result = result.trimEnd();
+        result += "}";
+        blockDepth = Math.max(0, blockDepth - 1);
+        statement = "";
+        suppressNextSpace = false;
+        continue;
+      }
+
+      if (current === ";") {
+        pendingSpace = false;
+        result = result.trimEnd();
+        result += ";";
+        statement = "";
+        suppressNextSpace = false;
+        continue;
+      }
+
+      if (current === ",") {
+        pendingSpace = false;
+        result = result.trimEnd();
+        result += ",";
+        statement += ",";
+        suppressNextSpace = true;
+        continue;
+      }
+
+      flushPendingSpace(current);
+      appendRaw(current);
+    }
+
+    return result.trim();
+  }
+
+  // --------------------------------------------------
+  // CSS Beautification
+  // --------------------------------------------------
+
+  function getIndentUnit() {
+    const selectedIndent = elements.indentSize?.value ?? "2";
+
+    if (selectedIndent === "tab") {
+      return "\t";
+    }
+
+    const size = Number(selectedIndent);
+    return " ".repeat(Number.isFinite(size) && size > 0 ? size : 2);
+  }
+
+  function beautifyCss(css, preserveLicenseComments) {
+    const compact = minifyCss(css, preserveLicenseComments);
+    const indentUnit = getIndentUnit();
+
+    let result = "";
+    let depth = 0;
+    let pendingSpace = false;
+    let statement = "";
+
+    function indent() {
+      return indentUnit.repeat(Math.max(0, depth));
+    }
+
+    function append(value) {
+      result += value;
+      statement += value;
+    }
+
+    function ensureSingleSpace() {
+      if (result && !/[\s\n]$/.test(result)) {
+        result += " ";
+        statement += " ";
+      }
+    }
+
+    function newline() {
+      result = result.replace(/[ \t]+$/g, "");
+
+      if (!result.endsWith("\n")) {
+        result += "\n";
+      }
+
+      result += indent();
+      pendingSpace = false;
+    }
+
+    for (let index = 0; index < compact.length; index += 1) {
+      const current = compact[index];
+      const next = compact[index + 1];
+
+      if (/\s/.test(current)) {
+        pendingSpace = true;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(compact, index);
+
+        if (pendingSpace) {
+          ensureSingleSpace();
+        }
+
+        append(comment.value);
+        pendingSpace = false;
+        index = comment.endIndex;
+        continue;
+      }
+
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(compact, index);
+
+        if (pendingSpace) {
+          ensureSingleSpace();
+        }
+
+        append(quoted.value);
+        pendingSpace = false;
+        index = quoted.endIndex;
+        continue;
+      }
+
+      if (startsUrlFunction(compact, index)) {
+        const url = readUrlFunction(compact, index);
+
+        if (pendingSpace) {
+          ensureSingleSpace();
+        }
+
+        append(url.value);
+        pendingSpace = false;
+        index = url.endIndex;
+        continue;
+      }
+
+      if (current === "\\") {
+        if (pendingSpace) {
+          ensureSingleSpace();
+        }
+
+        append(current);
+
+        if (index + 1 < compact.length) {
+          append(compact[index + 1]);
+          index += 1;
+        }
+
+        pendingSpace = false;
+        continue;
+      }
+
+      if (current === ":") {
+        const candidate = statement.trim();
+
+        if (
+          depth > 0 &&
+          isPropertyName(candidate) &&
+          (isCustomPropertyName(candidate) ||
+            looksLikeDeclarationAfterColon(compact, index + 1))
+        ) {
+          result = result.trimEnd();
+          result += ": ";
+          statement = `${candidate}: `;
+          pendingSpace = false;
+
+          if (isCustomPropertyName(candidate)) {
+            const customValue = readCustomPropertyValue(
+              compact,
+              index + 1,
+              preserveLicenseComments,
+            );
+
+            const normalizedValue = normalizeRemovedComments(customValue.value);
+            result += normalizedValue;
+            statement += normalizedValue;
+            index = customValue.endIndex;
+          }
+
+          continue;
+        }
+      }
+
+      if (current === "{") {
+        result = result.trimEnd();
+        result += " {\n";
+        depth += 1;
+        result += indent();
+        statement = "";
+        pendingSpace = false;
+        continue;
+      }
+
+      if (current === "}") {
+        result = result.trimEnd();
+
+        if (!result.endsWith("\n")) {
+          result += "\n";
+        }
+
+        depth = Math.max(0, depth - 1);
+        result += `${indent()}}`;
+        statement = "";
+        pendingSpace = false;
+
+        const following = compact[index + 1];
+
+        if (following) {
+          result += "\n";
+          result += indent();
+        }
+
+        continue;
+      }
+
+      if (current === ";") {
+        result = result.trimEnd();
+        result += ";";
+        statement = "";
+        newline();
+        continue;
+      }
+
+      if (current === ",") {
+        result = result.trimEnd();
+        result += ", ";
+        statement += ", ";
+        pendingSpace = false;
+        continue;
+      }
+
+      if (pendingSpace) {
+        ensureSingleSpace();
+      }
+
+      pendingSpace = false;
+      append(current);
     }
 
     return `${result.trim()}\n`;
   }
+
+  // --------------------------------------------------
+  // Statistics
+  // --------------------------------------------------
+
+  function countTopLevelRules(css) {
+    let count = 0;
+    let depth = 0;
+
+    for (let index = 0; index < css.length; index += 1) {
+      const current = css[index];
+      const next = css[index + 1];
+
+      if (current === "'" || current === '"') {
+        const quoted = readQuoted(css, index);
+        index = quoted.endIndex;
+        continue;
+      }
+
+      if (current === "/" && next === "*") {
+        const comment = readComment(css, index);
+        index = comment.endIndex;
+        continue;
+      }
+
+      if (startsUrlFunction(css, index)) {
+        const url = readUrlFunction(css, index);
+        index = url.endIndex;
+        continue;
+      }
+
+      if (current === "\\") {
+        index += 1;
+        continue;
+      }
+
+      if (current === "{") {
+        if (depth === 0) {
+          count += 1;
+        }
+
+        depth += 1;
+      } else if (current === "}") {
+        depth = Math.max(0, depth - 1);
+      }
+    }
+
+    return count;
+  }
+
+  function updateStats() {
+    const input = elements.input.value;
+    const output = elements.output.value;
+
+    const inputLength = Array.from(input).length;
+    const outputLength = Array.from(output).length;
+    const saved = Math.max(0, inputLength - outputLength);
+    const reduction = inputLength > 0 ? (saved / inputLength) * 100 : 0;
+
+    elements.inputChars.textContent = formatNumber(inputLength);
+    elements.outputChars.textContent = formatNumber(outputLength);
+    elements.inputLines.textContent = formatNumber(countLines(input));
+    elements.ruleCount.textContent = formatNumber(
+      countTopLevelRules(output || input),
+    );
+    elements.savedChars.textContent = formatNumber(saved);
+    elements.compression.textContent = `${reduction.toFixed(1)}%`;
+
+    const hasOutput = output.length > 0;
+    elements.copyButton.disabled = !hasOutput;
+    elements.downloadButton.disabled = !hasOutput;
+    elements.swapButton.disabled = !hasOutput;
+
+    updateMeta();
+  }
+
+  function resetOutput(message = "") {
+    elements.output.value = "";
+    currentOperation = "";
+    updateStats();
+    setInlineMessage(message, message ? "info" : "info");
+  }
+
+  // --------------------------------------------------
+  // Processing Actions
+  // --------------------------------------------------
 
   function processCss(operation, { announce = true } = {}) {
     const input = elements.input.value;
 
     if (!input.trim()) {
       notify("Enter CSS code first.", "error");
-
       elements.input.focus();
-      return;
+      return false;
     }
 
     const validation = validateCssStructure(input);
 
     if (!validation.valid) {
+      resetOutput();
       notify(validation.errors[0], "error");
-
-      return;
+      return false;
     }
 
     const preserveComments = elements.preserveComments.checked;
 
     try {
       const output =
-        operation === "minify"
-          ? minifyCss(input, preserveComments)
-          : beautifyCss(input, preserveComments);
+        operation === "beautify"
+          ? beautifyCss(input, preserveComments)
+          : minifyCss(input, preserveComments);
 
       elements.output.value = output;
       currentOperation = operation;
-
       updateStats();
 
       if (announce) {
-        setInlineMessage("Action completed successfully.", "success");
-
-        if (typeof window.showActionSuccess === "function") {
-          window.showActionSuccess();
-        } else if (typeof window.showMessage === "function") {
-          window.showMessage("Action completed successfully.", "success");
-        }
+        announceActionSuccess();
       }
+
+      return true;
     } catch (error) {
       console.error("CSS processing failed:", error);
-
-      notify("The CSS could not be processed.", "error");
+      resetOutput();
+      notify("The CSS could not be processed safely.", "error");
+      return false;
     }
   }
 
@@ -694,7 +1118,6 @@ body {
 
     if (!input.trim()) {
       notify("Enter CSS code first.", "error");
-
       elements.input.focus();
       return;
     }
@@ -703,7 +1126,6 @@ body {
 
     if (validation.valid) {
       notify("No structural issues detected.", "success");
-
       return;
     }
 
@@ -721,13 +1143,11 @@ body {
 
     if (file.size === 0) {
       notify("The selected file is empty.", "error");
-
       return;
     }
 
     if (file.size > MAX_FILE_SIZE) {
       notify("The CSS file must be smaller than 5 MB.", "error");
-
       return;
     }
 
@@ -736,25 +1156,18 @@ body {
 
     if (!validType) {
       notify("Select a valid .css file.", "error");
-
       return;
     }
 
     try {
       const content = await file.text();
-
       elements.input.value = content;
-      elements.output.value = "";
-      currentOperation = "";
-
+      resetOutput();
       updateStats();
-
       notify("CSS imported.", "success");
-
       elements.input.focus();
     } catch (error) {
       console.error("CSS import failed:", error);
-
       notify("The CSS file could not be read.", "error");
     } finally {
       elements.fileInput.value = "";
@@ -766,11 +1179,15 @@ body {
 
     if (!output) {
       notify("Nothing to copy.", "error");
-
       return;
     }
 
-    await xavertCopyText(output);
+    if (typeof window.xavertCopyText !== "function") {
+      notify("Copy utility is unavailable.", "error");
+      return;
+    }
+
+    await window.xavertCopyText(output);
   }
 
   function downloadOutput() {
@@ -778,13 +1195,21 @@ body {
 
     if (!output) {
       notify("Nothing to download.", "error");
+      return;
+    }
 
+    if (typeof window.downloadFile !== "function") {
+      notify("Download utility is unavailable.", "error");
       return;
     }
 
     const suffix = currentOperation || "processed";
 
-    downloadFile(`xavert-css-${suffix}.css`, output, "text/css;charset=utf-8");
+    window.downloadFile(
+      `xavert-css-${suffix}.css`,
+      output,
+      "text/css;charset=utf-8",
+    );
   }
 
   function moveOutputToInput() {
@@ -792,27 +1217,18 @@ body {
 
     if (!output) {
       notify("Nothing to move.", "error");
-
       return;
     }
 
     elements.input.value = output;
-    elements.output.value = "";
-    currentOperation = "";
-
-    updateStats();
-
+    resetOutput();
     notify("Output moved to input.", "success");
-
     elements.input.focus();
   }
 
   function loadSample() {
     elements.input.value = SAMPLE_CSS;
-    elements.output.value = "";
-    currentOperation = "";
-
-    updateStats();
+    resetOutput();
     processCss("minify", { announce: false });
 
     if (typeof window.showSampleSuccess === "function") {
@@ -830,9 +1246,11 @@ body {
     elements.output.value = "";
     elements.fileInput.value = "";
     elements.preserveComments.checked = true;
-    elements.indentSize.value = "2";
+    if (elements.indentSize) {
+      elements.indentSize.value = "2";
+    }
     currentOperation = "";
-
+    setInlineMessage("");
     updateStats();
     elements.input.focus();
   }
@@ -843,20 +1261,17 @@ body {
 
   elements.input.addEventListener("input", () => {
     if (elements.output.value) {
-      elements.output.value = "";
-      currentOperation = "";
-
-      setInlineMessage("Input changed. Process the CSS again.", "info");
+      resetOutput("Input changed. Process the CSS again.");
+    } else {
+      updateStats();
     }
-
-    updateStats();
   });
 
   elements.minifyButton.addEventListener("click", () => {
     processCss("minify");
   });
 
-  elements.beautifyButton.addEventListener("click", () => {
+  elements.beautifyButton?.addEventListener("click", () => {
     processCss("beautify");
   });
 
@@ -867,19 +1282,15 @@ body {
   });
 
   elements.fileInput.addEventListener("change", () => {
-    const file = elements.fileInput.files?.[0];
-
-    importCssFile(file);
+    void importCssFile(elements.fileInput.files?.[0]);
   });
 
   elements.sampleButton.addEventListener("click", loadSample);
-
   elements.swapButton.addEventListener("click", moveOutputToInput);
-
   elements.clearButton.addEventListener("click", clearTool);
-
-  elements.copyButton.addEventListener("click", copyOutput);
-
+  elements.copyButton.addEventListener("click", () => {
+    void copyOutput();
+  });
   elements.downloadButton.addEventListener("click", downloadOutput);
 
   elements.input.addEventListener("keydown", (event) => {
@@ -890,13 +1301,10 @@ body {
     event.preventDefault();
 
     const start = elements.input.selectionStart;
-
     const end = elements.input.selectionEnd;
-
     const indentation = getIndentUnit();
 
     elements.input.setRangeText(indentation, start, end, "end");
-
     updateStats();
   });
 
@@ -906,7 +1314,7 @@ body {
       event.shiftKey &&
       event.key.toLowerCase() === "b";
 
-    if (isBeautifyShortcut) {
+    if (isBeautifyShortcut && elements.beautifyButton) {
       event.preventDefault();
       processCss("beautify");
     }
@@ -917,18 +1325,10 @@ body {
       return;
     }
 
-    setInlineMessage(
-      "Processing options changed. Run the conversion again.",
-      "info",
-    );
-
-    elements.output.value = "";
-    currentOperation = "";
-
-    updateStats();
+    resetOutput("Processing options changed. Process the CSS again.");
   });
 
-  elements.indentSize.addEventListener("change", () => {
+  elements.indentSize?.addEventListener("change", () => {
     if (currentOperation !== "beautify" || !elements.input.value.trim()) {
       return;
     }

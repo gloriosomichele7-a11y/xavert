@@ -42,12 +42,63 @@
         gap: 12px;
         margin-top: 18px;
       }
+
+      .sql-settings {
+        margin-bottom: 16px;
+      }
+
+      .sql-note {
+        margin: 8px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.55;
+      }
     </style>
 
     <script src="../assets/js/global.js" defer></script>
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/sql-formatter@15.8.2/dist/sql-formatter.min.js"
+      defer
+    ></script>
     <script src="../assets/js/sql-formatter.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | SQL Formatter" />
+    <meta property="og:description" content="Format, beautify and minify SQL queries directly in your browser." />
+    <meta property="og:url" content="https://xavert.com/tools/sql-formatter.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | SQL Formatter" />
+    <meta name="twitter:description" content="Format, beautify and minify SQL queries directly in your browser." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SQL Formatter",
+      "url": "https://xavert.com/tools/sql-formatter.html",
+      "description": "Format, beautify and minify SQL queries directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
@@ -132,6 +183,58 @@
                     </button>
                   </div>
 
+                  <div class="form-grid sql-settings">
+                    <div class="form-group">
+                      <label for="sqlDialect">SQL Dialect</label>
+                      <select id="sqlDialect">
+                        <option value="sql">Standard SQL</option>
+                        <option value="postgresql">PostgreSQL</option>
+                        <option value="mysql">MySQL</option>
+                        <option value="mariadb">MariaDB</option>
+                        <option value="sqlite">SQLite</option>
+                        <option value="transactsql">SQL Server / T-SQL</option>
+                        <option value="plsql">Oracle PL/SQL</option>
+                        <option value="bigquery">Google BigQuery</option>
+                        <option value="snowflake">Snowflake</option>
+                        <option value="redshift">Amazon Redshift</option>
+                        <option value="duckdb">DuckDB</option>
+                        <option value="clickhouse">ClickHouse</option>
+                        <option value="spark">Spark SQL</option>
+                        <option value="hive">Apache Hive</option>
+                        <option value="trino">Trino / Presto</option>
+                        <option value="tidb">TiDB</option>
+                        <option value="singlestoredb">SingleStoreDB</option>
+                        <option value="db2">IBM DB2</option>
+                        <option value="db2i">IBM DB2 for i</option>
+                        <option value="n1ql">Couchbase N1QL</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="keywordCase">Keyword Case</label>
+                      <select id="keywordCase">
+                        <option value="upper">UPPERCASE</option>
+                        <option value="lower">lowercase</option>
+                        <option value="preserve">Preserve input</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <label for="indentStyle">Indentation</label>
+                      <select id="indentStyle">
+                        <option value="2">2 spaces</option>
+                        <option value="4">4 spaces</option>
+                        <option value="tab">Tabs</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <p class="sql-note">
+                    Choose the database dialect for the most accurate formatting.
+                    Stored procedures and custom statement delimiters can require
+                    dialect-specific handling.
+                  </p>
+
                   <textarea
                     id="inputSql"
                     class="sql-editor"
@@ -183,14 +286,14 @@
 
               <div>
                 <div class="form-group">
-                  <label for="outputSql">Formatted SQL</label>
+                  <label for="outputSql">SQL Output</label>
 
                   <textarea
                     id="outputSql"
                     class="sql-editor"
                     readonly
                     spellcheck="false"
-                    placeholder="Formatted SQL will appear here..."
+                    placeholder="Formatted or minified SQL will appear here..."
                   ></textarea>
                 </div>
 
@@ -245,9 +348,13 @@
 
         <ul class="about-features">
           <li>
-            Format common SELECT, JOIN, INSERT, UPDATE and DELETE statements.
+            Dialect-aware formatting for major SQL databases and query engines.
           </li>
-          <li>Minify SQL while preserving quoted strings.</li>
+          <li>Control keyword case and indentation style.</li>
+          <li>
+            Minify SQL while preserving strings, quoted identifiers and semantic
+            optimizer comments.
+          </li>
           <li>Use quick sample queries.</li>
           <li>Track input/output characters, lines and SQL keyword count.</li>
           <li>Copy or download the generated SQL file.</li>

@@ -1,0 +1,84 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XAVERT | QR Code Scanner & Reader</title>
+  <meta name="description" content="Scan QR codes from images, clipboard content or your camera directly in your browser." />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://xavert.com/tools/qr-code-scanner-reader.html" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="XAVERT | QR Code Scanner &amp; Reader" />
+  <meta property="og:description" content="Scan QR codes from images, clipboard content or your camera directly in your browser." />
+  <meta property="og:url" content="https://xavert.com/tools/qr-code-scanner-reader.html" />
+  <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+  <meta property="og:site_name" content="XAVERT" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="XAVERT | QR Code Scanner &amp; Reader" />
+  <meta name="twitter:description" content="Scan QR codes from images, clipboard content or your camera directly in your browser." />
+  <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="../assets/css/global.css" />
+  <link rel="stylesheet" href="../assets/css/components.css" />
+  <link rel="stylesheet" href="../assets/css/responsive.css" />
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"QR Code Scanner & Reader","applicationCategory":"UtilitiesApplication","operatingSystem":"Any","url":"https://xavert.com/tools/qr-code-scanner-reader.html","description":"Scan and decode QR codes from images, clipboard content or a camera directly in the browser.","inLanguage":"en","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},"publisher":{"@type":"Organization","name":"XAVERT"}}
+  </script>
+  <style>
+    .qrs-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.75fr);gap:14px}.qrs-panel{padding:14px;border:1px solid #e5e7eb;border-radius:12px;background:#fff;min-width:0}.qrs-panel h3{margin-top:0}.qrs-drop{display:flex;min-height:120px;padding:16px;border:2px dashed #d1d5db;border-radius:12px;background:#f9fafb;align-items:center;justify-content:center;text-align:center;cursor:pointer}.qrs-drop.dragover,.qrs-drop:hover,.qrs-drop:focus-visible{border-color:#dc2626;background:#fef2f2;outline:none}.qrs-file{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}.qrs-media{position:relative;display:grid;min-height:260px;margin-top:12px;border:1px solid #e5e7eb;border-radius:10px;background:#f8fafc;place-items:center;overflow:hidden}.qrs-media[hidden]{display:none!important}.qrs-media img,.qrs-media video{display:block;max-width:100%;max-height:500px;object-fit:contain}.qrs-media video{width:100%;background:#111827}.qrs-overlay{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.qrs-actions{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,135px),1fr));gap:8px;margin-top:10px}.qrs-settings{display:grid;grid-template-columns:1fr 1fr;gap:9px}.qrs-full{grid-column:1/-1}.qrs-note{margin-top:10px;padding:9px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc;color:#475569;font-size:11.5px;line-height:1.45}.qrs-results{margin-top:22px}.qrs-stats{grid-template-columns:repeat(5,minmax(0,1fr))}.qrs-result-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,.45fr);gap:14px;margin-top:14px}.qrs-text{width:100%;min-height:220px;padding:12px;border:1px solid #d1d5db;border-radius:9px;background:#f8fafc;font-family:ui-monospace,monospace;box-sizing:border-box;resize:vertical}.qrs-details{display:grid;gap:7px;margin:0}.qrs-detail{padding:8px;border:1px solid #e5e7eb;border-radius:8px;background:#f8fafc}.qrs-detail dt{font-size:10px;font-weight:800;color:#64748b;text-transform:uppercase}.qrs-detail dd{margin:3px 0 0;overflow-wrap:anywhere;white-space:pre-wrap}@media(max-width:900px){.qrs-grid,.qrs-result-grid{grid-template-columns:1fr}.qrs-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}@media(max-width:600px){.qrs-settings,.qrs-stats{grid-template-columns:1fr}}
+  </style>
+  <script src="../assets/js/global.js" defer></script>
+  <script src="../assets/js/utils.js" defer></script>
+  <script src="../assets/js/related-tools.js" defer></script>
+  <script src="../assets/js/qr-code-scanner-reader.js" defer></script>
+</head>
+<body data-tool="qr-code-scanner-reader" data-related-tools="qr-generator,image-toolkit,image-to-text-ocr,barcode-generator,url-toolkit">
+<main class="container">
+  <a href="../index.html" class="back-link">← Back to Home</a>
+  <section class="tool-hero" aria-labelledby="tool-title"><img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" /><h1 id="tool-title" class="tool-title">QR Code Scanner &amp; Reader</h1></section>
+  <section class="tool-card" aria-labelledby="workspace-title">
+    <header class="tool-card-header"><h2 id="workspace-title" class="tool-card-title">QR Scanner Workspace</h2></header>
+    <form id="scannerForm" novalidate>
+      <div class="qrs-grid">
+        <section class="qrs-panel">
+          <h3>Image Source</h3>
+          <label id="dropZone" class="qrs-drop" for="fileInput" tabindex="0"><span><strong>Choose or drop a QR image</strong><br />PNG, JPEG, WebP or GIF. You can also paste an image.</span></label>
+          <input id="fileInput" class="qrs-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif,.png,.jpg,.jpeg,.webp,.gif" />
+          <p id="fileMeta">No image selected.</p>
+          <div id="previewShell" class="qrs-media" hidden><img id="previewImage" alt="QR source preview" /><canvas id="imageOverlay" class="qrs-overlay"></canvas></div>
+          <div class="qrs-actions"><button id="scanImageBtn" class="btn" type="button" data-primary-action disabled>Scan Image</button><button id="pasteImageBtn" class="btn btn-secondary" type="button">Paste Image</button></div>
+        </section>
+        <aside class="qrs-panel">
+          <h3>Camera Scanner</h3>
+          <div class="qrs-settings">
+            <div class="form-group qrs-full"><label for="cameraSelect">Camera</label><select id="cameraSelect"><option value="">Default / Rear camera</option></select></div>
+            <div class="form-group"><label for="inversionSelect">Fallback Inversion</label><select id="inversionSelect"><option value="attemptBoth" selected>Normal + inverted</option><option value="dontInvert">Normal only</option><option value="invertFirst">Inverted first</option></select></div>
+            <div class="form-group"><label for="cameraInterval">Camera Scan Rate</label><select id="cameraInterval"><option value="120">Fast</option><option value="220" selected>Balanced</option><option value="400">Battery saver</option></select></div>
+          </div>
+          <div id="cameraShell" class="qrs-media" hidden><video id="cameraVideo" playsinline muted></video><canvas id="cameraOverlay" class="qrs-overlay"></canvas></div>
+          <canvas id="scanCanvas" hidden></canvas>
+          <div class="qrs-actions"><button id="startCameraBtn" class="btn" type="button">Start Camera</button><button id="stopCameraBtn" class="btn btn-secondary" type="button" disabled>Stop Camera</button></div>
+          <div class="qrs-note">Camera scanning requires HTTPS and browser permission. No video is recorded or uploaded.</div>
+          <div class="qrs-note"><strong>Decoder:</strong> <span id="engineText">Checking browser support…</span></div>
+        </aside>
+      </div>
+      <div class="qrs-actions"><button id="clearBtn" class="btn btn-secondary" type="reset" data-clear-action>Clear</button></div>
+      <div id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+      <section id="resultSection" class="qrs-results" hidden>
+        <h2>Decoded QR Code</h2>
+        <div class="stats-grid qrs-stats">
+          <div class="stat-card"><strong id="typeStat" class="stat-value">—</strong><span class="stat-label">Type</span></div><div class="stat-card"><strong id="lengthStat" class="stat-value">0</strong><span class="stat-label">Characters</span></div><div class="stat-card"><strong id="bytesStat" class="stat-value">0 B</strong><span class="stat-label">Size</span></div><div class="stat-card"><strong id="sourceStat" class="stat-value">—</strong><span class="stat-label">Source</span></div><div class="stat-card"><strong id="decoderStat" class="stat-value">—</strong><span class="stat-label">Decoder</span></div>
+        </div>
+        <div class="qrs-result-grid">
+          <section class="qrs-panel"><h3>Decoded Content</h3><textarea id="decodedText" class="qrs-text" readonly aria-label="Decoded QR content" spellcheck="false"></textarea><div class="qrs-actions"><button id="copyBtn" class="btn" type="button">Copy Result</button><button id="openBtn" class="btn btn-secondary" type="button" hidden>Open URL</button><button id="downloadBtn" class="btn btn-secondary" type="button">Download .txt</button></div></section>
+          <aside class="qrs-panel"><h3>Parsed Details</h3><dl id="detailList" class="qrs-details"></dl><p id="noDetails">No additional structured fields detected.</p></aside>
+        </div>
+      </section>
+    </form>
+  </section>
+  <section class="info about-card" aria-labelledby="about-title"><h2 id="about-title">About</h2><p class="about-intro">The XAVERT QR Code Scanner &amp; Reader decodes QR codes from image files, clipboard images and live camera frames.</p><h3>Main Features</h3><ul class="about-features"><li>Scan QR codes from PNG, JPEG, WebP and GIF images.</li><li>Use click, drag-and-drop or clipboard paste.</li><li>Scan continuously with a device camera.</li><li>Use native BarcodeDetector when available and jsQR as fallback.</li><li>Detect URLs, Wi-Fi, email, phone, SMS, geo, vCard and plain text.</li><li>Copy, open or download decoded content.</li></ul><h3>Privacy First</h3><p class="about-privacy">Images and camera frames are processed locally in your browser and are not uploaded to XAVERT. jsQR is downloaded from a public CDN only when the fallback decoder is needed.</p><p>Camera access requires HTTPS and browser permission. Detected URLs are never opened automatically.</p></section>
+  <section class="info" aria-labelledby="related-tools-title" hidden><h2 id="related-tools-title">Related Tools</h2><div id="related-tools"></div></section>
+</main>
+<footer class="xavert-footer-note">Powered by XAVERT</footer>
+<div id="xavert-toast" class="xavert-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+</body></html>

@@ -78,38 +78,6 @@
       }
     </script>
 
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "FAQPage",
-        "mainEntity": [
-          {
-            "@type": "Question",
-            "name": "Are my .env files uploaded?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "No. All .env files are generated locally in your browser."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Can I download the generated file?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. You can download the generated .env file instantly."
-            }
-          },
-          {
-            "@type": "Question",
-            "name": "Is the generated APP_KEY secure?",
-            "acceptedAnswer": {
-              "@type": "Answer",
-              "text": "Yes. The generator uses the browser's cryptographically secure random number generator."
-            }
-          }
-        ]
-      }
-    </script>
     <style>
       .password-field {
         display: grid;
@@ -122,6 +90,54 @@
         min-width: 84px;
       }
 
+      .env-section-title {
+        margin: 8px 0 0;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1.35;
+      }
+
+      .env-variable-toolbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .env-variable-toolbar .form-group {
+        margin: 0;
+      }
+
+      .env-variable-list {
+        display: grid;
+        gap: 10px;
+      }
+
+      .env-variable-row {
+        display: grid;
+        grid-template-columns: minmax(150px, 0.8fr) minmax(180px, 1.2fr) auto auto;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .env-variable-action {
+        min-width: 74px;
+      }
+
+      .env-helper {
+        margin: -2px 0 2px;
+      }
+
+      @media (max-width: 760px) {
+        .env-variable-row {
+          grid-template-columns: 1fr 1fr;
+        }
+
+        .env-variable-action {
+          width: 100%;
+        }
+      }
+
       @media (max-width: 576px) {
         .password-field {
           grid-template-columns: 1fr;
@@ -129,6 +145,11 @@
 
         .password-toggle {
           width: 100%;
+        }
+
+        .env-variable-toolbar,
+        .env-variable-row {
+          grid-template-columns: 1fr;
         }
       }
     </style>
@@ -167,6 +188,16 @@
 
         <div class="form-grid">
           <div class="form-group">
+            <label for="outputProfile">Output Profile</label>
+            <select id="outputProfile" name="outputProfile">
+              <option value="generic">Generic Web App</option>
+              <option value="laravel">Laravel</option>
+            </select>
+            <p class="tool-card-description env-helper">
+              Generic preserves the standard XAVERT variable names. Laravel uses
+              DB_DATABASE and DB_USERNAME conventions.
+            </p>
+
             <label for="appName">Application Name</label>
             <input
               id="appName"
@@ -314,6 +345,50 @@
               </button>
             </div>
 
+            <h3 class="env-section-title">Additional Variables</h3>
+            <p class="tool-card-description env-helper">
+              Add custom key/value pairs or start from an editable common preset.
+              Preset names can vary between frameworks and providers, so review them
+              before deployment.
+            </p>
+
+            <div class="env-variable-toolbar">
+              <div class="form-group">
+                <label for="variablePreset">Variable Preset</label>
+                <select id="variablePreset" name="variablePreset">
+                  <option value="">Choose a preset...</option>
+                  <option value="redis">Redis</option>
+                  <option value="smtp">SMTP / Email</option>
+                  <option value="s3">AWS / S3-Compatible Storage</option>
+                  <option value="auth">JWT Authentication</option>
+                </select>
+              </div>
+
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="add-preset"
+              >
+                Add Preset
+              </button>
+            </div>
+
+            <div
+              id="customVariables"
+              class="env-variable-list"
+              aria-label="Additional environment variables"
+            ></div>
+
+            <div class="button-grid">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-action="add-variable"
+              >
+                Add Variable
+              </button>
+            </div>
+
             <div class="button-grid">
               <button
                 type="button"
@@ -389,10 +464,10 @@
       <section class="info about-card" aria-labelledby="about-title">
         <h2 id="about-title">About</h2>
         <p class="about-intro">
-          Generate environment configuration templates directly in your browser.
-          The tool helps developers create secure APP_KEY values, strong
-          database credentials and complete .env files for local, staging and
-          production setups.
+          Generate flexible environment configuration templates directly in your
+          browser. The tool helps developers create secure APP_KEY values, strong
+          database credentials, custom variables and ready-to-use .env files for
+          local, staging and production setups.
         </p>
 
         <h3>Overview</h3>
@@ -418,8 +493,20 @@
             development or production environments.
           </li>
           <li>
-            Choose common database drivers and validate application URLs and
-            ports.
+            Choose a Generic Web App or Laravel output profile while keeping the
+            same workspace and validation rules.
+          </li>
+          <li>
+            Add unlimited custom key/value variables and generate secure values
+            for secrets directly in the browser.
+          </li>
+          <li>
+            Add editable Redis, SMTP, S3-compatible storage or JWT variable
+            presets without locking the output to a specific provider.
+          </li>
+          <li>
+            Choose common database drivers and validate application URLs, ports
+            and custom variable names.
           </li>
           <li>
             Copy the generated .env content or download it as a .env file
@@ -430,9 +517,10 @@
         <h3>Use Cases</h3>
         <p>
           Use this tool when you are bootstrapping a Laravel, Node, PHP, Python
-          or other web application and need a consistent .env file quickly. It
-          is also useful for developers preparing environment values for
-          testing, demos or deployment handoffs.
+          or other web application and need a consistent .env file quickly. Custom
+          variables and editable presets also make it useful for Redis, email,
+          object-storage and authentication configuration during testing, demos or
+          deployment handoffs.
         </p>
 
         <h3>Privacy</h3>
@@ -458,5 +546,14 @@
     </main>
 
     <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
   </body>
 </html>

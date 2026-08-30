@@ -183,6 +183,7 @@
                 <option value="difference">Date Difference</option>
                 <option value="age">Age Calculator</option>
                 <option value="timestamp">Timestamp Converter</option>
+                <option value="timezone">Time Zone Converter / World Time</option>
                 <option value="dateadd">Add / Subtract Days</option>
                 <option value="countdown">Countdown Calculator</option>
               </select>
@@ -385,6 +386,91 @@
             </section>
 
             <section
+              id="timezoneTool"
+              class="tool-section"
+              aria-labelledby="timezoneTitle"
+              hidden
+            >
+              <header class="tool-section-header">
+                <h2 id="timezoneTitle" class="tool-section-title">
+                  Time Zone Converter / World Time
+                </h2>
+                <p class="tool-section-description">
+                  Convert a date and time between world time zones with
+                  daylight-saving adjustments handled automatically.
+                </p>
+              </header>
+
+              <div class="form-grid">
+                <div class="form-group full-width">
+                  <label for="timezoneDateTime">Date and Time</label>
+                  <input
+                    type="datetime-local"
+                    id="timezoneDateTime"
+                    autocomplete="off"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="timezoneFrom">From Time Zone</label>
+                  <select id="timezoneFrom" autocomplete="off"></select>
+                </div>
+
+                <div class="form-group">
+                  <label for="timezoneTo">To Time Zone</label>
+                  <select id="timezoneTo" autocomplete="off"></select>
+                </div>
+              </div>
+
+              <div class="button-grid date-actions">
+                <button
+                  type="button"
+                  class="btn"
+                  data-action="convert-timezone"
+                  data-primary-action
+                >
+                  Convert Time
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-action="current-world-time"
+                >
+                  Use Current Time
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-action="swap-timezones"
+                >
+                  Swap Zones
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-action="clear-all"
+                  data-clear-action
+                >
+                  Clear
+                </button>
+              </div>
+
+              <div
+                id="timezoneMessage"
+                class="message"
+                role="status"
+                aria-live="polite"
+                aria-atomic="true"
+              ></div>
+              <div
+                id="timezoneResult"
+                class="card result-box"
+                aria-live="polite"
+                hidden
+              ></div>
+            </section>
+
+            <section
               id="dateaddTool"
               class="tool-section"
               aria-labelledby="dateaddTitle"
@@ -530,6 +616,7 @@
           <li>Calculate age in years, months, days and total days.</li>
           <li>Convert Unix timestamps in seconds or milliseconds.</li>
           <li>Generate the current Unix timestamp.</li>
+          <li>Convert dates and times between world time zones with DST support.</li>
           <li>Add or subtract days from a selected date.</li>
           <li>Calculate the remaining time until a future date and time.</li>
         </ul>

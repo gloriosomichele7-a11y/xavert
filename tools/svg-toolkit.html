@@ -1,0 +1,1067 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | SVG Toolkit</title>
+
+    <meta
+      name="description"
+      content="Inspect, sanitize, optimize, preview and convert SVG files in your browser. Analyze structure and colors, export optimized SVG or render PNG."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/svg-toolkit.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | SVG Toolkit" />
+    <meta
+      property="og:description"
+      content="Sanitize, optimize, inspect and convert SVG files directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/svg-toolkit.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | SVG Toolkit" />
+    <meta
+      name="twitter:description"
+      content="Sanitize, optimize, inspect and convert SVG files in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "SVG Toolkit",
+        "alternateName": "XAVERT SVG Toolkit",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/svg-toolkit.html",
+        "description": "Inspect, sanitize, optimize, preview and convert SVG files directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "SVG sanitization",
+          "SVG optimization",
+          "Three optimization levels",
+          "Safe SVG preview",
+          "SVG structure analysis",
+          "SVG color extraction",
+          "External reference detection",
+          "Accessibility checks",
+          "SVG source editor",
+          "Copy and download optimized SVG",
+          "SVG data URI copy",
+          "SVG to PNG conversion",
+          "Custom PNG dimensions and background",
+          "Browser-side processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .svg-source-grid {
+        display: grid;
+        grid-template-columns: minmax(230px, 0.34fr) minmax(0, 0.66fr);
+        gap: 16px;
+      }
+
+      .svg-drop-zone {
+        display: flex;
+        min-height: 250px;
+        padding: 20px;
+        border: 2px dashed #d1d5db;
+        border-radius: 14px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        box-sizing: border-box;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .svg-drop-zone:hover,
+      .svg-drop-zone:focus-visible,
+      .svg-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
+      }
+
+      .svg-drop-zone:hover,
+      .svg-drop-zone:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .svg-drop-title {
+        display: block;
+        margin-bottom: 6px;
+        color: #111827;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .svg-drop-help,
+      .svg-file-info,
+      .svg-note,
+      .svg-setting-help,
+      .svg-security-note {
+        color: #64748b;
+        font-size: 12.5px;
+        line-height: 1.5;
+      }
+
+      .svg-file-info {
+        margin-top: 10px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .svg-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .svg-editor-wrap {
+        min-width: 0;
+      }
+
+      .svg-editor-header {
+        display: flex;
+        margin-bottom: 7px;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .svg-editor-title {
+        margin: 0;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .svg-editor-count {
+        color: #64748b;
+        font-size: 11.5px;
+        font-weight: 700;
+        white-space: nowrap;
+      }
+
+      .svg-source-editor,
+      .svg-output-editor {
+        width: 100%;
+        min-height: 250px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 12.5px;
+        line-height: 1.5;
+        resize: vertical;
+        box-sizing: border-box;
+        tab-size: 2;
+      }
+
+      .svg-output-editor {
+        min-height: 300px;
+        background: #f8fafc;
+      }
+
+      .svg-source-actions,
+      .svg-result-actions,
+      .svg-png-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+        gap: 9px;
+        margin-top: 12px;
+      }
+
+      .svg-settings {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 20px;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f9fafb;
+      }
+
+      .svg-settings-title {
+        grid-column: 1 / -1;
+        margin: 0;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .svg-checkbox-area {
+        display: grid;
+        grid-column: 1 / -1;
+        grid-template-columns: repeat(auto-fit, minmax(175px, 1fr));
+        gap: 7px;
+      }
+
+      .svg-checkbox {
+        display: flex;
+        min-width: 0;
+        min-height: 34px;
+        padding: 6px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #ffffff;
+        align-items: center;
+        gap: 7px;
+        color: #334155;
+        font-size: 12.5px;
+        font-weight: 700;
+        line-height: 1.25;
+        cursor: pointer;
+        box-sizing: border-box;
+      }
+
+      .svg-checkbox input[type="checkbox"] {
+        flex: 0 0 15px;
+        width: 15px;
+        min-width: 15px;
+        max-width: 15px;
+        height: 15px;
+        min-height: 15px;
+        max-height: 15px;
+        margin: 0;
+        padding: 0;
+        accent-color: #dc2626;
+      }
+
+      .svg-checkbox-disabled {
+        opacity: 0.72;
+        cursor: default;
+      }
+
+      .svg-results {
+        margin-top: 25px;
+      }
+
+      .svg-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .svg-preview-analysis-grid {
+        display: grid;
+        grid-template-columns: minmax(280px, 0.9fr) minmax(0, 1.1fr);
+        gap: 16px;
+        margin-top: 18px;
+      }
+
+      .svg-panel {
+        min-width: 0;
+        padding: 15px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #ffffff;
+      }
+
+      .svg-panel-title {
+        margin: 0 0 10px;
+        color: #111827;
+        font-size: 15px;
+        font-weight: 800;
+      }
+
+      .svg-preview-toolbar {
+        display: grid;
+        grid-template-columns: minmax(120px, 1fr) minmax(120px, 1fr);
+        gap: 8px;
+        margin-bottom: 10px;
+      }
+
+      .svg-preview-frame {
+        position: relative;
+        display: grid;
+        min-height: 330px;
+        max-height: 580px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        place-items: center;
+      }
+
+      .svg-preview-checker {
+        background:
+          linear-gradient(45deg, #eef0f3 25%, transparent 25%),
+          linear-gradient(-45deg, #eef0f3 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #eef0f3 75%),
+          linear-gradient(-45deg, transparent 75%, #eef0f3 75%),
+          #ffffff;
+        background-position:
+          0 0,
+          0 9px,
+          9px -9px,
+          -9px 0;
+        background-size: 18px 18px;
+      }
+
+      .svg-preview-light {
+        background: #ffffff;
+      }
+
+      .svg-preview-dark {
+        background: #1f2937;
+      }
+
+      .svg-preview-image {
+        display: block;
+        max-width: 100%;
+        max-height: 540px;
+        object-fit: contain;
+        transform-origin: center;
+      }
+
+      .svg-preview-empty {
+        padding: 24px;
+        color: #64748b;
+        font-size: 13px;
+        font-weight: 650;
+        text-align: center;
+      }
+
+      .svg-analysis-list {
+        display: grid;
+        gap: 7px;
+      }
+
+      .svg-analysis-item {
+        display: flex;
+        min-width: 0;
+        padding: 9px 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #f9fafb;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .svg-analysis-label {
+        min-width: 0;
+        color: #475569;
+        font-size: 12.5px;
+        font-weight: 700;
+      }
+
+      .svg-analysis-value {
+        flex: 0 0 auto;
+        max-width: 55%;
+        color: #111827;
+        font-size: 12.5px;
+        font-weight: 800;
+        text-align: right;
+        overflow-wrap: anywhere;
+      }
+
+      .svg-warning-list {
+        display: grid;
+        gap: 7px;
+        margin-top: 12px;
+      }
+
+      .svg-warning-item {
+        padding: 9px 10px;
+        border: 1px solid #fed7aa;
+        border-radius: 9px;
+        background: #fff7ed;
+        color: #9a3412;
+        font-size: 12.5px;
+        line-height: 1.45;
+        font-weight: 700;
+      }
+
+      .svg-security-box {
+        margin-top: 12px;
+        padding: 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f8fafc;
+      }
+
+      .svg-security-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 8px;
+      }
+
+      .svg-security-stat {
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        text-align: center;
+      }
+
+      .svg-security-stat strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #111827;
+        font-size: 15px;
+      }
+
+      .svg-security-stat span {
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 700;
+      }
+
+      .svg-colors-section,
+      .svg-output-section,
+      .svg-png-section {
+        margin-top: 18px;
+      }
+
+      .svg-color-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+        gap: 8px;
+      }
+
+      .svg-color-item {
+        display: flex;
+        min-width: 0;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #ffffff;
+        align-items: center;
+        gap: 9px;
+      }
+
+      .svg-color-swatch {
+        flex: 0 0 30px;
+        width: 30px;
+        height: 30px;
+        border: 1px solid #cbd5e1;
+        border-radius: 7px;
+        background:
+          linear-gradient(45deg, #e5e7eb 25%, transparent 25%),
+          linear-gradient(-45deg, #e5e7eb 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #e5e7eb 75%),
+          linear-gradient(-45deg, transparent 75%, #e5e7eb 75%),
+          #ffffff;
+        background-position:
+          0 0,
+          0 6px,
+          6px -6px,
+          -6px 0;
+        background-size: 12px 12px;
+        overflow: hidden;
+      }
+
+      .svg-color-fill {
+        width: 100%;
+        height: 100%;
+      }
+
+      .svg-color-info {
+        min-width: 0;
+      }
+
+      .svg-color-value {
+        display: block;
+        overflow: hidden;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 11.5px;
+        font-weight: 800;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .svg-color-count {
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 700;
+      }
+
+      .svg-png-settings {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+      }
+
+      .svg-custom-background {
+        display: flex;
+        align-items: end;
+        gap: 8px;
+      }
+
+      .svg-custom-background input[type="color"] {
+        width: 48px;
+        min-width: 48px;
+        height: 38px;
+        padding: 3px;
+        cursor: pointer;
+      }
+
+      @media (max-width: 1050px) {
+        .svg-source-grid,
+        .svg-preview-analysis-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .svg-settings {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .svg-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+
+        .svg-png-settings {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 620px) {
+        .svg-settings,
+        .svg-png-settings,
+        .svg-preview-toolbar {
+          grid-template-columns: 1fr;
+        }
+
+        .svg-stats,
+        .svg-security-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .svg-drop-zone {
+          min-height: 180px;
+        }
+
+        .svg-source-editor,
+        .svg-output-editor {
+          min-height: 300px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .svg-drop-zone {
+          transition: none;
+        }
+
+        .svg-drop-zone:hover,
+        .svg-drop-zone:focus-visible {
+          transform: none;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/dompurify@3.4.13/dist/purify.min.js"
+      defer
+    ></script>
+    <script src="../assets/js/svg-toolkit.js" defer></script>
+  </head>
+
+  <body
+    data-tool="svg-toolkit"
+    data-related-tools="image-toolkit,color-toolkit,color-palette-extractor,base64-toolkit,qr-generator"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">SVG Toolkit</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">SVG Workspace</h2>
+          <p class="tool-card-description">
+            Inspect, sanitize, optimize and export SVG graphics without uploading
+            your artwork to XAVERT.
+          </p>
+        </header>
+
+        <div class="svg-source-grid">
+          <div>
+            <label
+              id="dropZone"
+              class="svg-drop-zone"
+              for="svgFileInput"
+              tabindex="0"
+              aria-controls="svgFileInput"
+              aria-describedby="fileInfo"
+            >
+              <span>
+                <span class="svg-drop-title">Choose or drop an SVG</span>
+                <span class="svg-drop-help">
+                  Load an .svg file or paste SVG markup into the source editor.
+                </span>
+                <span id="fileInfo" class="svg-file-info">
+                  No SVG file selected.
+                </span>
+              </span>
+            </label>
+
+            <input
+              id="svgFileInput"
+              class="svg-file-input"
+              type="file"
+              accept=".svg,image/svg+xml"
+            />
+
+            <div class="svg-source-actions">
+              <button id="pasteBtn" class="btn btn-secondary" type="button">
+                Paste SVG
+              </button>
+              <button id="sampleBtn" class="btn btn-secondary" type="button">
+                Load Sample
+              </button>
+            </div>
+          </div>
+
+          <div class="svg-editor-wrap">
+            <div class="svg-editor-header">
+              <h3 class="svg-editor-title">SVG Source</h3>
+              <span id="sourceCount" class="svg-editor-count">0 B</span>
+            </div>
+
+            <textarea
+              id="sourceInput"
+              class="svg-source-editor"
+              spellcheck="false"
+              placeholder="<svg ...>...</svg>"
+              aria-label="SVG source code"
+            ></textarea>
+          </div>
+        </div>
+
+        <section class="svg-settings" aria-labelledby="settings-title">
+          <h3 id="settings-title" class="svg-settings-title">
+            Processing Settings
+          </h3>
+
+          <div class="form-group">
+            <label for="optimizationLevel">Optimization Level</label>
+            <select id="optimizationLevel">
+              <option value="safe">Safe</option>
+              <option value="balanced" selected>Balanced</option>
+              <option value="maximum">Maximum</option>
+            </select>
+            <p class="svg-setting-help">
+              Safe preserves more structure. Maximum may rewrite paths and IDs.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="precisionSelect">Numeric Precision</label>
+            <select id="precisionSelect">
+              <option value="5">5 decimals</option>
+              <option value="4">4 decimals</option>
+              <option value="3" selected>3 decimals</option>
+              <option value="2">2 decimals</option>
+            </select>
+            <p class="svg-setting-help">
+              Lower precision can reduce size but may alter very detailed artwork.
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label for="previewBackground">Preview Background</label>
+            <select id="previewBackground">
+              <option value="checker" selected>Checkerboard</option>
+              <option value="light">Light</option>
+              <option value="dark">Dark</option>
+            </select>
+          </div>
+
+          <div class="svg-checkbox-area">
+            <label class="svg-checkbox svg-checkbox-disabled">
+              <input id="sanitizeCheck" type="checkbox" checked disabled />
+              Sanitize unsafe SVG content
+            </label>
+
+            <label class="svg-checkbox">
+              <input id="preserveAccessibilityCheck" type="checkbox" checked />
+              Preserve title and description
+            </label>
+
+            <label class="svg-checkbox">
+              <input id="preserveIdsCheck" type="checkbox" checked />
+              Preserve IDs
+            </label>
+
+            <label class="svg-checkbox">
+              <input id="removeMetadataCheck" type="checkbox" checked />
+              Remove editor metadata
+            </label>
+
+            <label class="svg-checkbox">
+              <input id="removeCommentsCheck" type="checkbox" checked />
+              Remove comments
+            </label>
+
+            <label class="svg-checkbox svg-checkbox-disabled">
+              <input id="blockExternalCheck" type="checkbox" checked disabled />
+              Block external network references
+            </label>
+          </div>
+        </section>
+
+        <div class="svg-source-actions">
+          <button
+            id="processBtn"
+            class="btn"
+            type="button"
+            data-primary-action
+          >
+            Process SVG
+          </button>
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <section
+          id="resultSection"
+          class="svg-results"
+          aria-labelledby="result-title"
+          hidden
+        >
+          <h2 id="result-title">SVG Result</h2>
+
+          <div class="stats-grid svg-stats">
+            <div class="stat-card">
+              <strong id="originalSizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">Original Size</span>
+            </div>
+            <div class="stat-card">
+              <strong id="outputSizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">Output Size</span>
+            </div>
+            <div class="stat-card">
+              <strong id="savingsStat" class="stat-value">0%</strong>
+              <span class="stat-label">Size Change</span>
+            </div>
+            <div class="stat-card">
+              <strong id="elementsStat" class="stat-value">0</strong>
+              <span class="stat-label">Elements</span>
+            </div>
+            <div class="stat-card">
+              <strong id="pathsStat" class="stat-value">0</strong>
+              <span class="stat-label">Paths</span>
+            </div>
+            <div class="stat-card">
+              <strong id="colorsStat" class="stat-value">0</strong>
+              <span class="stat-label">Colors</span>
+            </div>
+          </div>
+
+          <div class="svg-preview-analysis-grid">
+            <section class="svg-panel" aria-labelledby="preview-title">
+              <h3 id="preview-title" class="svg-panel-title">Safe Preview</h3>
+
+              <div class="svg-preview-toolbar">
+                <div class="form-group">
+                  <label for="zoomRange">Zoom</label>
+                  <input
+                    id="zoomRange"
+                    type="range"
+                    min="25"
+                    max="300"
+                    step="5"
+                    value="100"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label for="zoomValue">Preview Zoom</label>
+                  <input id="zoomValue" type="text" value="100%" readonly />
+                </div>
+              </div>
+
+              <div
+                id="previewFrame"
+                class="svg-preview-frame svg-preview-checker"
+              >
+                <img
+                  id="previewImage"
+                  class="svg-preview-image"
+                  alt="Processed SVG preview"
+                  hidden
+                />
+                <div id="previewEmpty" class="svg-preview-empty">
+                  Process an SVG to generate the safe preview.
+                </div>
+              </div>
+            </section>
+
+            <section class="svg-panel" aria-labelledby="analysis-title">
+              <h3 id="analysis-title" class="svg-panel-title">
+                Structure & Security
+              </h3>
+
+              <div id="analysisList" class="svg-analysis-list"></div>
+
+              <div class="svg-security-box">
+                <strong>Sanitization Report</strong>
+                <div class="svg-security-grid">
+                  <div class="svg-security-stat">
+                    <strong id="removedUnsafeStat">0</strong>
+                    <span>Unsafe Items Removed</span>
+                  </div>
+                  <div class="svg-security-stat">
+                    <strong id="externalRefsStat">0</strong>
+                    <span>External Refs Blocked</span>
+                  </div>
+                  <div class="svg-security-stat">
+                    <strong id="warningsStat">0</strong>
+                    <span>Review Warnings</span>
+                  </div>
+                </div>
+                <p class="svg-security-note">
+                  Preview and exports use sanitized SVG. External HTTP(S), protocol-relative
+                  and JavaScript references are removed.
+                </p>
+              </div>
+
+              <div id="warningList" class="svg-warning-list"></div>
+            </section>
+          </div>
+
+          <section class="svg-colors-section svg-panel" aria-labelledby="colors-title">
+            <h3 id="colors-title" class="svg-panel-title">Detected Colors</h3>
+            <div id="colorGrid" class="svg-color-grid"></div>
+          </section>
+
+          <section class="svg-output-section svg-panel" aria-labelledby="output-title">
+            <div class="svg-editor-header">
+              <h3 id="output-title" class="svg-panel-title">Processed SVG</h3>
+              <span id="outputCount" class="svg-editor-count">0 B</span>
+            </div>
+
+            <textarea
+              id="outputText"
+              class="svg-output-editor"
+              spellcheck="false"
+              readonly
+              aria-label="Processed SVG source"
+            ></textarea>
+
+            <div class="svg-result-actions">
+              <button id="copySvgBtn" class="btn" type="button">Copy SVG</button>
+              <button id="downloadSvgBtn" class="btn btn-secondary" type="button">
+                Download SVG
+              </button>
+              <button id="copyDataUriBtn" class="btn btn-secondary" type="button">
+                Copy Data URI
+              </button>
+              <button id="replaceSourceBtn" class="btn btn-secondary" type="button">
+                Replace Source
+              </button>
+            </div>
+          </section>
+
+          <section class="svg-png-section svg-panel" aria-labelledby="png-title">
+            <h3 id="png-title" class="svg-panel-title">SVG to PNG</h3>
+
+            <div class="svg-png-settings">
+              <div class="form-group">
+                <label for="pngWidth">Width</label>
+                <input id="pngWidth" type="number" min="1" max="12000" step="1" />
+              </div>
+
+              <div class="form-group">
+                <label for="pngHeight">Height</label>
+                <input id="pngHeight" type="number" min="1" max="12000" step="1" />
+              </div>
+
+              <div class="form-group">
+                <label for="pngBackground">Background</label>
+                <select id="pngBackground">
+                  <option value="transparent" selected>Transparent</option>
+                  <option value="white">White</option>
+                  <option value="custom">Custom</option>
+                </select>
+              </div>
+
+              <div id="customBackgroundWrap" class="form-group svg-custom-background" hidden>
+                <div>
+                  <label for="customBackground">Custom Color</label>
+                  <input
+                    id="customBackground"
+                    type="color"
+                    value="#ffffff"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <label class="svg-checkbox" style="margin-top: 9px">
+              <input id="lockAspectCheck" type="checkbox" checked />
+              Lock PNG aspect ratio
+            </label>
+
+            <div class="svg-png-actions">
+              <button id="downloadPngBtn" class="btn" type="button">
+                Download PNG
+              </button>
+            </div>
+
+            <p id="pngNote" class="svg-note">
+              PNG dimensions are derived from the SVG viewBox or explicit width and
+              height when available.
+            </p>
+          </section>
+        </section>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT SVG Toolkit helps developers and designers inspect, sanitize,
+          optimize and export SVG graphics while keeping the artwork in the browser.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Load SVG files, paste SVG markup or start from a built-in sample.</li>
+          <li>
+            Sanitize scripts, event handlers, unsafe embedded content and external
+            network references before preview or export.
+          </li>
+          <li>
+            Optimize SVG markup with Safe, Balanced and Maximum processing profiles.
+          </li>
+          <li>
+            Control numeric precision, ID preservation, accessibility content,
+            metadata and comment removal.
+          </li>
+          <li>
+            Inspect viewBox, dimensions, element counts, paths, groups, gradients,
+            filters, masks, clip paths, symbols, text and images.
+          </li>
+          <li>
+            Detect colors used in presentation attributes, inline styles and style
+            blocks.
+          </li>
+          <li>Review accessibility and external-reference warnings.</li>
+          <li>Copy SVG markup or a compact SVG data URI.</li>
+          <li>Download the processed SVG or render it to PNG.</li>
+          <li>
+            Choose PNG dimensions while optionally locking the SVG aspect ratio.
+          </li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Your SVG artwork is processed in your browser and is not uploaded to
+          XAVERT. DOMPurify is loaded from a third-party CDN when the page opens.
+          SVGO is downloaded from a third-party CDN only when SVG optimization is
+          requested. External references inside the processed SVG are blocked before
+          preview and export.
+        </p>
+
+        <p>
+          SVG optimization can rewrite markup while preserving its visual result.
+          The Maximum profile is intentionally more aggressive and should be
+          visually reviewed before replacing production artwork.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

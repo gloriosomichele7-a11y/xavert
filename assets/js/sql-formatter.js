@@ -4,6 +4,10 @@ function initSqlFormatter() {
   const inputSql = document.getElementById("inputSql");
   const outputSql = document.getElementById("outputSql");
 
+  const sqlDialect = document.getElementById("sqlDialect");
+  const keywordCase = document.getElementById("keywordCase");
+  const indentStyle = document.getElementById("indentStyle");
+
   const formatBtn = document.getElementById("formatBtn");
   const minifyBtn = document.getElementById("minifyBtn");
   const swapBtn = document.getElementById("swapBtn");
@@ -25,6 +29,9 @@ function initSqlFormatter() {
   const required = [
     inputSql,
     outputSql,
+    sqlDialect,
+    keywordCase,
+    indentStyle,
     formatBtn,
     minifyBtn,
     swapBtn,
@@ -56,31 +63,49 @@ function initSqlFormatter() {
       "update users set active = 0, updated_at = now() where last_login < '2025-01-01';",
   };
 
-  const majorKeywords = [
-    "SELECT",
-    "FROM",
-    "WHERE",
-    "GROUP BY",
-    "ORDER BY",
-    "HAVING",
-    "LEFT JOIN",
-    "RIGHT JOIN",
-    "INNER JOIN",
-    "FULL JOIN",
-    "OUTER JOIN",
-    "JOIN",
-    "LIMIT",
-    "VALUES",
+  const fallbackMajorKeywords = [
+    "WITH RECURSIVE",
     "INSERT INTO",
-    "UPDATE",
     "DELETE FROM",
-    "DELETE",
-    "SET",
     "CREATE TABLE",
     "ALTER TABLE",
     "DROP TABLE",
     "UNION ALL",
+    "LEFT OUTER JOIN",
+    "RIGHT OUTER JOIN",
+    "FULL OUTER JOIN",
+    "LEFT JOIN",
+    "RIGHT JOIN",
+    "INNER JOIN",
+    "FULL JOIN",
+    "CROSS JOIN",
+    "GROUP BY",
+    "ORDER BY",
+    "PARTITION BY",
+    "ON CONFLICT",
+    "RETURNING",
+    "SELECT",
+    "FROM",
+    "WHERE",
+    "HAVING",
+    "QUALIFY",
+    "WINDOW",
+    "JOIN",
+    "LIMIT",
+    "OFFSET",
+    "FETCH",
+    "VALUES",
+    "UPDATE",
+    "DELETE",
+    "INSERT",
+    "SET",
+    "MERGE",
+    "USING",
+    "WHEN MATCHED",
+    "WHEN NOT MATCHED",
     "UNION",
+    "INTERSECT",
+    "EXCEPT",
   ];
 
   function setInlineMessage(text = "", type = "info") {
@@ -108,112 +133,317 @@ function initSqlFormatter() {
     }
   }
 
-  function tokenizeSql(sql) {
-    const tokens = [];
-    let buffer = "";
-    let quote = null;
+  function isIdentifierStart(character) {
+    return /[A-Za-z_]/.test(character ?? "");
+  }
 
-    function flush() {
-      if (buffer) {
-        tokens.push({
-          type: quote ? "string" : "text",
-          value: buffer,
-        });
-        buffer = "";
-      }
-    }
+  function isIdentifierPart(character) {
+    return /[A-Za-z0-9_$]/.test(character ?? "");
+  }
 
-    for (let index = 0; index < sql.length; index += 1) {
-      const char = sql[index];
+  function readQuotedToken(sql, startIndex, quote, type) {
+    let value = quote;
+    let index = startIndex + 1;
+
+    while (index < sql.length) {
+      const character = sql[index];
       const next = sql[index + 1];
 
-      if (quote) {
-        buffer += char;
+      value += character;
 
-        if (char === quote) {
-          if (next === quote) {
-            buffer += next;
-            index += 1;
-          } else {
-            flush();
-            quote = null;
+      if (character === "\\" && quote !== "[") {
+        if (next !== undefined) {
+          value += next;
+          index += 2;
+          continue;
+        }
+      }
+
+      if (quote === "[") {
+        if (character === "]") {
+          if (next === "]") {
+            value += next;
+            index += 2;
+            continue;
           }
+
+          return { type, value, nextIndex: index + 1 };
+        }
+      } else if (character === quote) {
+        if (next === quote) {
+          value += next;
+          index += 2;
+          continue;
         }
 
-        continue;
+        return { type, value, nextIndex: index + 1 };
       }
 
-      if (char === "'" || char === '"' || char === "`") {
-        flush();
-        quote = char;
-        buffer = char;
-        continue;
-      }
-
-      buffer += char;
+      index += 1;
     }
 
-    flush();
+    return { type, value, nextIndex: sql.length };
+  }
 
+  function readDollarQuotedToken(sql, startIndex) {
+    const opening = sql.slice(startIndex).match(/^\$[A-Za-z_][A-Za-z0-9_]*\$|^\$\$/);
+
+    if (!opening) {
+      return null;
+    }
+
+    const delimiter = opening[0];
+    const contentStart = startIndex + delimiter.length;
+    const end = sql.indexOf(delimiter, contentStart);
+
+    if (end === -1) {
+      return {
+        type: "string",
+        value: sql.slice(startIndex),
+        nextIndex: sql.length,
+      };
+    }
+
+    return {
+      type: "string",
+      value: sql.slice(startIndex, end + delimiter.length),
+      nextIndex: end + delimiter.length,
+    };
+  }
+
+  function tokenizeSql(sql) {
+    const tokens = [];
+    let textBuffer = "";
+
+    const mysqlLikeDialect = ["mysql", "mariadb", "tidb"].includes(
+      sqlDialect.value,
+    );
+
+    function flushText() {
+      if (!textBuffer) {
+        return;
+      }
+
+      tokens.push({ type: "text", value: textBuffer });
+      textBuffer = "";
+    }
+
+    let index = 0;
+
+    while (index < sql.length) {
+      const character = sql[index];
+      const next = sql[index + 1];
+
+      if (character === "'" || character === '"' || character === "`") {
+        flushText();
+        const type = character === "'" ? "string" : "identifier";
+        const token = readQuotedToken(sql, index, character, type);
+        tokens.push(token);
+        index = token.nextIndex;
+        continue;
+      }
+
+      if (character === "[") {
+        flushText();
+        const token = readQuotedToken(sql, index, "[", "identifier");
+        tokens.push(token);
+        index = token.nextIndex;
+        continue;
+      }
+
+      if (character === "$") {
+        const token = readDollarQuotedToken(sql, index);
+
+        if (token) {
+          flushText();
+          tokens.push(token);
+          index = token.nextIndex;
+          continue;
+        }
+      }
+
+      const dashCommentAllowed =
+        character === "-" &&
+        next === "-" &&
+        (!mysqlLikeDialect ||
+          sql[index + 2] === undefined ||
+          /\s/.test(sql[index + 2]));
+
+      if (dashCommentAllowed) {
+        flushText();
+        let end = index + 2;
+
+        while (end < sql.length && sql[end] !== "\n" && sql[end] !== "\r") {
+          end += 1;
+        }
+
+        tokens.push({
+          type: "comment",
+          value: sql.slice(index, end),
+          semantic: false,
+        });
+        index = end;
+        continue;
+      }
+
+      if (character === "#" && mysqlLikeDialect) {
+        flushText();
+        let end = index + 1;
+
+        while (end < sql.length && sql[end] !== "\n" && sql[end] !== "\r") {
+          end += 1;
+        }
+
+        tokens.push({
+          type: "comment",
+          value: sql.slice(index, end),
+          semantic: false,
+        });
+        index = end;
+        continue;
+      }
+
+      if (character === "/" && next === "*") {
+        flushText();
+        const closing = sql.indexOf("*/", index + 2);
+        const end = closing === -1 ? sql.length : closing + 2;
+        const value = sql.slice(index, end);
+
+        tokens.push({
+          type: "comment",
+          value,
+          semantic: /^\/\*[+!]/.test(value),
+        });
+        index = end;
+        continue;
+      }
+
+      textBuffer += character;
+      index += 1;
+    }
+
+    flushText();
     return tokens;
   }
 
-  function formatTextSegment(segment) {
+  function applyFallbackKeywordCase(value) {
+    const selectedCase = keywordCase.value;
+
+    if (selectedCase === "preserve") {
+      return value;
+    }
+
+    return selectedCase === "lower" ? value.toLowerCase() : value.toUpperCase();
+  }
+
+  function formatFallbackTextSegment(segment) {
     let formatted = segment;
 
-    const orderedKeywords = majorKeywords
+    const keywordPattern = fallbackMajorKeywords
       .slice()
-      .sort((a, b) => b.length - a.length);
+      .sort((a, b) => b.length - a.length)
+      .map((keyword) =>
+        keyword
+          .split(" ")
+          .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
+          .join("\\s+"),
+      )
+      .join("|");
 
-    orderedKeywords.forEach((keyword) => {
-      const keywordPattern = keyword
-        .split(" ")
-        .map((part) => part.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"))
-        .join("\\s+");
+    const regex = new RegExp(`\\b(?:${keywordPattern})\\b`, "gi");
 
-      const regex = new RegExp(`\\b${keywordPattern}\\b`, "gi");
-
-      formatted = formatted.replace(
-        regex,
-        (match) => `\n${match.toUpperCase()}`,
-      );
+    formatted = formatted.replace(regex, (match) => {
+      return `\n${applyFallbackKeywordCase(match)}`;
     });
 
     return formatted;
   }
 
-  function formatSqlText(sql) {
+  function fallbackFormatSql(sql) {
     const tokens = tokenizeSql(sql);
 
     return tokens
-      .map((token) =>
-        token.type === "string" ? token.value : formatTextSegment(token.value),
-      )
+      .map((token) => {
+        if (token.type === "text") {
+          return formatFallbackTextSegment(token.value);
+        }
+
+        return token.value;
+      })
       .join("")
       .replace(/[ \t]+\n/g, "\n")
       .replace(/\n[ \t]+/g, "\n")
-      .replace(/\n{2,}/g, "\n")
+      .replace(/\n{3,}/g, "\n\n")
       .trim();
+  }
+
+  function getFormatterOptions() {
+    const tabSetting = indentStyle.value;
+
+    return {
+      language: sqlDialect.value,
+      keywordCase: keywordCase.value,
+      tabWidth: tabSetting === "4" ? 4 : 2,
+      useTabs: tabSetting === "tab",
+      linesBetweenQueries: 1,
+    };
+  }
+
+  function formatSqlText(sql) {
+    const formatter = window.sqlFormatter;
+
+    if (formatter && typeof formatter.format === "function") {
+      return {
+        output: formatter.format(sql, getFormatterOptions()).trim(),
+        usedFallback: false,
+      };
+    }
+
+    return {
+      output: fallbackFormatSql(sql),
+      usedFallback: true,
+    };
+  }
+
+  function normalizeMinifiedText(segment) {
+    return segment
+      .replace(/\s+/g, " ")
+      .replace(/\s*,\s*/g, ",")
+      .replace(/\(\s+/g, "(")
+      .replace(/\s+\)/g, ")")
+      .replace(/\s*;\s*/g, ";");
   }
 
   function minifySqlText(sql) {
     const tokens = tokenizeSql(sql);
 
-    return tokens
-      .map((token) => {
-        if (token.type === "string") {
-          return token.value;
-        }
+    const pieces = tokens.map((token) => {
+      if (token.type === "comment") {
+        return token.semantic ? ` ${token.value} ` : " ";
+      }
 
-        return token.value
-          .replace(/--[^\n\r]*/g, " ")
-          .replace(/\/\*[\s\S]*?\*\//g, " ")
-          .replace(/\s+/g, " ")
-          .replace(/\s*([(),=<>+\-*/])\s*/g, "$1");
-      })
-      .join("")
-      .replace(/\s+/g, " ")
-      .trim();
+      if (token.type === "text") {
+        return normalizeMinifiedText(token.value);
+      }
+
+      return token.value;
+    });
+
+    let compact = "";
+
+    pieces.forEach((piece) => {
+      if (!piece) {
+        return;
+      }
+
+      if (/\s$/.test(compact) && /^\s/.test(piece)) {
+        compact += piece.replace(/^\s+/, "");
+      } else {
+        compact += piece;
+      }
+    });
+
+    return compact.trim();
   }
 
   function countKeywords(sql) {
@@ -223,7 +453,7 @@ function initSqlFormatter() {
       .join(" ");
 
     const keywordPattern =
-      /\b(SELECT|FROM|WHERE|JOIN|GROUP\s+BY|ORDER\s+BY|HAVING|LIMIT|INSERT\s+INTO|UPDATE|DELETE(?:\s+FROM)?|SET|VALUES|CREATE\s+TABLE|ALTER\s+TABLE|DROP\s+TABLE|UNION(?:\s+ALL)?)\b/gi;
+      /\b(WITH(?:\s+RECURSIVE)?|SELECT|FROM|WHERE|JOIN|GROUP\s+BY|ORDER\s+BY|PARTITION\s+BY|HAVING|QUALIFY|WINDOW|LIMIT|OFFSET|FETCH|INSERT\s+INTO|INSERT|UPDATE|DELETE(?:\s+FROM)?|SET|VALUES|CREATE\s+TABLE|ALTER\s+TABLE|DROP\s+TABLE|MERGE|USING|RETURNING|UNION(?:\s+ALL)?|INTERSECT|EXCEPT)\b/gi;
 
     return (plainText.match(keywordPattern) || []).length;
   }
@@ -253,13 +483,11 @@ function initSqlFormatter() {
     setInlineMessage("");
   }
 
-  function announceActionSuccess() {
-    setInlineMessage("Action completed successfully.", "success");
+  function announceActionSuccess(text = "Action completed successfully.") {
+    setInlineMessage(text, "success");
 
-    if (typeof window.showActionSuccess === "function") {
-      window.showActionSuccess();
-    } else if (typeof window.showMessage === "function") {
-      window.showMessage("Action completed successfully.", "success");
+    if (typeof window.showMessage === "function") {
+      window.showMessage(text, "success");
     }
   }
 
@@ -273,21 +501,41 @@ function initSqlFormatter() {
       return false;
     }
 
-    const formatted = formatSqlText(sql);
+    try {
+      const result = formatSqlText(sql);
 
-    outputSql.value = formatted;
-    lastOperation = "formatted";
+      outputSql.value = result.output;
+      lastOperation = "formatted";
 
-    updateStats(sql, formatted);
+      updateStats(sql, result.output);
 
-    copyBtn.disabled = false;
-    downloadBtn.disabled = false;
+      copyBtn.disabled = false;
+      downloadBtn.disabled = false;
 
-    if (announce) {
-      announceActionSuccess();
+      if (announce) {
+        announceActionSuccess(
+          result.usedFallback
+            ? "SQL formatted with the basic local fallback."
+            : "SQL formatted successfully.",
+        );
+      }
+
+      return true;
+    } catch (error) {
+      console.error(error);
+      resetOutput();
+
+      const detail =
+        error instanceof Error && error.message
+          ? error.message.split("\n")[0].trim()
+          : "Unable to format SQL.";
+
+      notify(
+        `Unable to format SQL. Check the selected dialect and query syntax. ${detail}`.trim(),
+        "error",
+      );
+      return false;
     }
-
-    return true;
   }
 
   function minifySql() {
@@ -310,8 +558,7 @@ function initSqlFormatter() {
     copyBtn.disabled = false;
     downloadBtn.disabled = false;
 
-    announceActionSuccess();
-
+    announceActionSuccess("SQL minified successfully.");
     return true;
   }
 
@@ -322,11 +569,9 @@ function initSqlFormatter() {
     }
 
     inputSql.value = outputSql.value;
-
     resetOutput();
 
     notify("Output moved to input.", "success");
-
     inputSql.focus();
   }
 
@@ -341,7 +586,7 @@ function initSqlFormatter() {
       return;
     }
 
-    await window.xavertCopyText(outputSql.value);
+    await window.xavertCopyText(outputSql.value, "SQL copied.");
   }
 
   function downloadOutput() {
@@ -359,11 +604,15 @@ function initSqlFormatter() {
       `xavert-sql-${lastOperation}.sql`,
       outputSql.value,
       "text/plain;charset=utf-8",
+      "Download started.",
     );
   }
 
   function clearAll() {
     inputSql.value = "";
+    sqlDialect.value = "sql";
+    keywordCase.value = "upper";
+    indentStyle.value = "2";
     lastOperation = "query";
 
     resetOutput();
@@ -375,7 +624,6 @@ function initSqlFormatter() {
     const sample = samples[type] ?? samples.join;
 
     inputSql.value = sample;
-
     resetOutput();
     setInlineMessage("");
 
@@ -387,9 +635,7 @@ function initSqlFormatter() {
 
     setInlineMessage("Sample loaded successfully.", "success");
 
-    if (typeof window.showSampleSuccess === "function") {
-      window.showSampleSuccess();
-    } else if (typeof window.showMessage === "function") {
+    if (typeof window.showMessage === "function") {
       window.showMessage("Sample loaded successfully.", "success");
     }
 
@@ -407,6 +653,9 @@ function initSqlFormatter() {
   });
 
   inputSql.addEventListener("input", invalidateResult);
+  sqlDialect.addEventListener("change", invalidateResult);
+  keywordCase.addEventListener("change", invalidateResult);
+  indentStyle.addEventListener("change", invalidateResult);
 
   formatBtn.addEventListener("click", () => {
     formatSql();

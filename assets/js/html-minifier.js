@@ -101,7 +101,7 @@ function initHtmlMinifierBeautifier() {
     const protectedBlocks = [];
 
     const placeholder = html.replace(
-      /<(pre|textarea|script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,
+      /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<(pre|textarea|script|style|xmp)\b(?:[^>"']|"[^"]*"|'[^']*')*>[\s\S]*?<\/\1\s*>/gi,
       (match) => {
         const token = `___XAVERT_BLOCK_${protectedBlocks.length}___`;
         protectedBlocks.push(match);
@@ -119,15 +119,70 @@ function initHtmlMinifierBeautifier() {
     );
   }
 
+  function splitMarkupAndText(html) {
+    const segments = [];
+    let textStart = 0;
+    let index = 0;
+
+    function isMarkupStart(position) {
+      const next = html[position + 1] || "";
+      return /[A-Za-z!/?]/.test(next);
+    }
+
+    while (index < html.length) {
+      if (html[index] !== "<" || !isMarkupStart(index)) {
+        index += 1;
+        continue;
+      }
+
+      if (index > textStart) {
+        segments.push({ type: "text", value: html.slice(textStart, index) });
+      }
+
+      const markupStart = index;
+      let quote = "";
+      index += 1;
+
+      while (index < html.length) {
+        const character = html[index];
+
+        if (quote) {
+          if (character === quote) {
+            quote = "";
+          }
+        } else if (character === '"' || character === "'") {
+          quote = character;
+        } else if (character === ">") {
+          index += 1;
+          break;
+        }
+
+        index += 1;
+      }
+
+      segments.push({ type: "markup", value: html.slice(markupStart, index) });
+      textStart = index;
+    }
+
+    if (textStart < html.length) {
+      segments.push({ type: "text", value: html.slice(textStart) });
+    }
+
+    return segments;
+  }
+
   function minifyHtmlText(html) {
     const { placeholder, protectedBlocks } = protectBlocks(html);
 
-    const minified = placeholder
-      .replace(/<!--(?!\[if)[\s\S]*?-->/gi, "")
-      .replace(/>\s+</g, "><")
-      .replace(/[ \t]{2,}/g, " ")
-      .replace(/\s+\n/g, "\n")
-      .replace(/\n\s+/g, "\n")
+    const minified = splitMarkupAndText(placeholder)
+      .map((segment) => {
+        if (segment.type === "markup") {
+          return segment.value;
+        }
+
+        return segment.value.replace(/\s+/g, " ");
+      })
+      .join("")
       .trim();
 
     return restoreBlocks(minified, protectedBlocks);

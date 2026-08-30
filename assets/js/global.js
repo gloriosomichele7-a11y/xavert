@@ -6,6 +6,11 @@
 
 (function () {
   function clearPersistentSuccess() {
+    if (typeof window.clearPersistentSuccessMessages === "function") {
+      window.clearPersistentSuccessMessages();
+      return;
+    }
+
     const message = document.getElementById("message");
 
     if (!message) {
@@ -17,11 +22,6 @@
       message.classList.contains("success");
 
     if (!isSuccess) {
-      return;
-    }
-
-    if (typeof window.clearMessage === "function") {
-      window.clearMessage();
       return;
     }
 
@@ -277,8 +277,10 @@
       }
 
       const editable =
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement;
+        (target instanceof HTMLInputElement ||
+          target instanceof HTMLTextAreaElement) &&
+        !target.readOnly &&
+        !target.disabled;
 
       if (!editable) {
         return;

@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const dropZone = document.getElementById("dropZone");
   const fileInput = document.getElementById("fileInput");
   const fileInfo = document.getElementById("fileInfo");
+  const hashProgressWrap = document.getElementById("hashProgressWrap");
+  const hashProgress = document.getElementById("hashProgress");
+  const hashProgressLabel = document.getElementById("hashProgressLabel");
   const hashAlgorithm = document.getElementById("hashAlgorithm");
   const expectedHash = document.getElementById("expectedHash");
   const generateBtn = document.getElementById("generateBtn");
@@ -30,6 +33,9 @@ document.addEventListener("DOMContentLoaded", () => {
     dropZone,
     fileInput,
     fileInfo,
+    hashProgressWrap,
+    hashProgress,
+    hashProgressLabel,
     hashAlgorithm,
     expectedHash,
     generateBtn,
@@ -69,6 +75,32 @@ document.addEventListener("DOMContentLoaded", () => {
   let currentHash = "";
   let currentReport = "";
   let generationToken = 0;
+  let activeReader = null;
+  let largeFileConfirmationKey = "";
+
+  const MIB = 1024 ** 2;
+  const deviceMemory = Number(navigator.deviceMemory);
+  const memoryTier = Number.isFinite(deviceMemory) && deviceMemory > 0
+    ? deviceMemory
+    : null;
+
+  const LARGE_FILE_WARNING_BYTES =
+    memoryTier !== null && memoryTier <= 2
+      ? 64 * MIB
+      : memoryTier !== null && memoryTier <= 4
+        ? 128 * MIB
+        : memoryTier !== null && memoryTier >= 8
+          ? 256 * MIB
+          : 128 * MIB;
+
+  const LARGE_FILE_HARD_LIMIT_BYTES =
+    memoryTier !== null && memoryTier <= 2
+      ? 192 * MIB
+      : memoryTier !== null && memoryTier <= 4
+        ? 384 * MIB
+        : memoryTier !== null && memoryTier >= 8
+          ? 768 * MIB
+          : 384 * MIB;
 
   const hasWebCrypto =
     window.isSecureContext &&
@@ -97,6 +129,94 @@ document.addEventListener("DOMContentLoaded", () => {
     if (text && useToast && typeof window.showMessage === "function") {
       window.showMessage(text, type);
     }
+  }
+
+  function setProgress(value = 0, label = "", visible = true) {
+    const safeValue = Math.max(0, Math.min(100, Number(value) || 0));
+
+    hashProgress.value = safeValue;
+    hashProgressLabel.textContent = label || "Preparing file...";
+    hashProgressWrap.hidden = !visible;
+  }
+
+  function hideProgress() {
+    hashProgress.value = 0;
+    hashProgressLabel.textContent = "Preparing file...";
+    hashProgressWrap.hidden = true;
+  }
+
+  function abortActiveReader() {
+    if (activeReader && activeReader.readyState === FileReader.LOADING) {
+      activeReader.abort();
+    }
+
+    activeReader = null;
+  }
+
+  function cancelGeneration() {
+    generationToken += 1;
+    abortActiveReader();
+    generateBtn.disabled = false;
+    generateBtn.removeAttribute("aria-busy");
+    hideProgress();
+  }
+
+  function getLargeFileKey(file, algorithm) {
+    return [file.name, file.size, file.lastModified, algorithm].join(":");
+  }
+
+  function readFileWithProgress(file, token, algorithm) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      activeReader = reader;
+
+      reader.onprogress = (event) => {
+        if (token !== generationToken || !event.lengthComputable) {
+          return;
+        }
+
+        const readPercent = Math.round((event.loaded / event.total) * 100);
+        const displayPercent = Math.min(80, Math.round(readPercent * 0.8));
+
+        setProgress(
+          displayPercent,
+          `Reading file... ${readPercent}%`,
+          true,
+        );
+      };
+
+      reader.onload = () => {
+        if (activeReader === reader) {
+          activeReader = null;
+        }
+
+        if (token !== generationToken) {
+          reject(new DOMException("Hash generation cancelled.", "AbortError"));
+          return;
+        }
+
+        setProgress(85, `Computing ${algorithm} digest...`, true);
+        resolve(reader.result);
+      };
+
+      reader.onerror = () => {
+        if (activeReader === reader) {
+          activeReader = null;
+        }
+
+        reject(reader.error || new Error("Unable to read the selected file."));
+      };
+
+      reader.onabort = () => {
+        if (activeReader === reader) {
+          activeReader = null;
+        }
+
+        reject(new DOMException("Hash generation cancelled.", "AbortError"));
+      };
+
+      reader.readAsArrayBuffer(file);
+    });
   }
 
   function formatFileSize(bytes) {
@@ -288,8 +408,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function setSelectedFile(file) {
-    generationToken += 1;
+    cancelGeneration();
     selectedFile = file || null;
+    largeFileConfirmationKey = "";
 
     updateFileInfo();
     resetResult();
@@ -323,27 +444,59 @@ document.addEventListener("DOMContentLoaded", () => {
       return false;
     }
 
-    const token = ++generationToken;
     const file = selectedFile;
     const algorithm = hashAlgorithm.value;
+    const confirmationKey = getLargeFileKey(file, algorithm);
+
+    if (file.size > LARGE_FILE_HARD_LIMIT_BYTES) {
+      largeFileConfirmationKey = "";
+      notify(
+        `This ${formatFileSize(file.size)} file is too large for safe in-browser hashing on this device. Use a desktop hashing utility for files above ${formatFileSize(LARGE_FILE_HARD_LIMIT_BYTES)}.`,
+        "error",
+        announce,
+      );
+      return false;
+    }
+
+    if (
+      file.size > LARGE_FILE_WARNING_BYTES &&
+      largeFileConfirmationKey !== confirmationKey
+    ) {
+      largeFileConfirmationKey = confirmationKey;
+      notify(
+        `Large file detected (${formatFileSize(file.size)}). Browser Web Crypto must load the file into memory. Click Generate Hash again to continue.`,
+        "info",
+        announce,
+      );
+      return false;
+    }
+
+    largeFileConfirmationKey = "";
+
+    const token = ++generationToken;
+    let buffer = null;
 
     generateBtn.disabled = true;
     generateBtn.setAttribute("aria-busy", "true");
+    setProgress(0, `Preparing ${formatFileSize(file.size)} file...`, true);
 
     notify(`Generating ${algorithm} hash...`, "info", false);
 
     try {
-      const buffer = await file.arrayBuffer();
+      buffer = await readFileWithProgress(file, token, algorithm);
 
       if (token !== generationToken) {
         return false;
       }
 
       const digest = await window.crypto.subtle.digest(algorithm, buffer);
+      buffer = null;
 
       if (token !== generationToken) {
         return false;
       }
+
+      setProgress(100, `${algorithm} hash completed.`, true);
 
       const hash = bufferToHex(digest);
       const timestamp = new Date().toLocaleString();
@@ -389,15 +542,28 @@ document.addEventListener("DOMContentLoaded", () => {
         setInlineMessage("");
       }
 
+      window.setTimeout(() => {
+        if (token === generationToken) {
+          hideProgress();
+        }
+      }, 600);
+
       return true;
     } catch (error) {
+      if (error?.name === "AbortError") {
+        return false;
+      }
+
       console.error("Hash generation failed:", error);
 
       resetResult();
+      hideProgress();
       notify("Unable to generate the file hash.", "error", announce);
 
       return false;
     } finally {
+      buffer = null;
+
       if (token === generationToken) {
         generateBtn.disabled = false;
         generateBtn.removeAttribute("aria-busy");
@@ -406,8 +572,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function clearTool() {
-    generationToken += 1;
+    cancelGeneration();
     selectedFile = null;
+    largeFileConfirmationKey = "";
 
     fileInput.value = "";
     expectedHash.value = "";
@@ -488,7 +655,11 @@ document.addEventListener("DOMContentLoaded", () => {
     fileInput.value = "";
   });
 
-  hashAlgorithm.addEventListener("change", invalidateResult);
+  hashAlgorithm.addEventListener("change", () => {
+    cancelGeneration();
+    largeFileConfirmationKey = "";
+    invalidateResult();
+  });
   expectedHash.addEventListener("input", () => {
     if (currentHash) {
       updateVerification();
@@ -513,7 +684,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   downloadBtn.addEventListener("click", downloadReport);
 
+  window.addEventListener("pagehide", abortActiveReader);
+
   resetResult();
+  hideProgress();
 
   if (!hasWebCrypto) {
     generateBtn.disabled = true;

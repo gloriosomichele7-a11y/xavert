@@ -35,12 +35,55 @@
         gap: 12px;
         margin-top: 18px;
       }
+
+      .sql-minifier-note {
+        margin: 8px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.55;
+      }
     </style>
 
     <script src="../assets/js/global.js" defer></script>
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/sql-minifier.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | SQL Minifier" />
+    <meta property="og:description" content="Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser." />
+    <meta property="og:url" content="https://xavert.com/tools/sql-minifier.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | SQL Minifier" />
+    <meta name="twitter:description" content="Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "SQL Minifier",
+      "url": "https://xavert.com/tools/sql-minifier.html",
+      "description": "Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
@@ -76,7 +119,7 @@
 
             <p class="tool-card-description">
               Remove SQL comments, blank lines and unnecessary whitespace while
-              preserving quoted strings.
+              protecting strings, quoted identifiers and dialect-specific syntax.
             </p>
           </header>
 
@@ -94,14 +137,40 @@
                   ></textarea>
                 </div>
 
-                <div class="form-group">
-                  <label for="compressionMode">Compression Mode</label>
+                <div class="form-grid">
+                  <div class="form-group">
+                    <label for="sqlDialect">SQL Dialect</label>
 
-                  <select id="compressionMode">
-                    <option value="safe" selected>Safe Minify</option>
-                    <option value="max">Maximum Compression</option>
-                  </select>
+                    <select id="sqlDialect">
+                      <option value="standard" selected>Standard / ANSI SQL</option>
+                      <option value="postgresql">PostgreSQL</option>
+                      <option value="mysql">MySQL</option>
+                      <option value="mariadb">MariaDB</option>
+                      <option value="tsql">SQL Server / T-SQL</option>
+                      <option value="oracle">Oracle / PL/SQL</option>
+                      <option value="sqlite">SQLite</option>
+                      <option value="bigquery">BigQuery</option>
+                      <option value="snowflake">Snowflake</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="compressionMode">Compression Mode</label>
+
+                    <select id="compressionMode">
+                      <option value="safe" selected>Safe Minify</option>
+                      <option value="max">Maximum Compression</option>
+                    </select>
+                  </div>
                 </div>
+
+                <p class="sql-minifier-note">
+                  Safe mode keeps a little readability around comma-separated
+                  values. Maximum mode removes additional optional punctuation
+                  spacing without collapsing risky arithmetic operators. SQL
+                  strings, quoted identifiers and semantic optimizer comments are
+                  preserved.
+                </p>
 
                 <div class="button-grid sql-minifier-actions">
                   <button
@@ -187,6 +256,11 @@
                 <strong id="savedPercent" class="stat-value">0%</strong>
                 <span class="stat-label">Compression</span>
               </div>
+
+              <div class="stat-card">
+                <strong id="commentsRemoved" class="stat-value">0</strong>
+                <span class="stat-label">Comments Removed</span>
+              </div>
             </div>
           </div>
         </section>
@@ -203,10 +277,12 @@
         <h3>Main Features</h3>
 
         <ul class="about-features">
-          <li>Remove line and block comments.</li>
-          <li>Compress whitespace while preserving quoted strings.</li>
+          <li>Remove ordinary line and block comments safely.</li>
+          <li>Preserve optimizer hints and executable semantic comments.</li>
+          <li>Protect quoted strings, identifiers and PostgreSQL dollar quotes.</li>
+          <li>Handle MySQL comments, T-SQL temporary tables and Oracle q-quotes.</li>
           <li>Choose Safe or Maximum Compression.</li>
-          <li>Track characters saved and compression percentage.</li>
+          <li>Track characters saved, compression and removed comments.</li>
           <li>Copy or download the minified SQL file.</li>
         </ul>
 

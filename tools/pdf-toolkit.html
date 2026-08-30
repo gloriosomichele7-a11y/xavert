@@ -15,6 +15,57 @@
     <meta name="theme-color" content="#dc2626" />
 
     <link rel="canonical" href="https://xavert.com/tools/pdf-toolkit.html" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | PDF Toolkit" />
+    <meta
+      property="og:description"
+      content="Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/pdf-toolkit.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | PDF Toolkit" />
+    <meta
+      name="twitter:description"
+      content="Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "PDF Toolkit",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/pdf-toolkit.html",
+        "description": "Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        }
+      }
+    </script>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
     <link rel="stylesheet" href="../assets/css/global.css" />
@@ -22,7 +73,8 @@
     <link rel="stylesheet" href="../assets/css/responsive.css" />
 
     <style>
-      .pdf-tool-panel[hidden] {
+      .pdf-tool-panel[hidden],
+      .signature-method-area[hidden] {
         display: none !important;
       }
 
@@ -77,6 +129,18 @@
         line-height: 1.6;
       }
 
+      .pdf-warning {
+        margin-top: 12px;
+        padding: 12px 14px;
+        border: 1px solid #f5c2c7;
+        border-radius: 12px;
+        background: #fff7f7;
+        color: #7f1d1d;
+        font-size: 13px;
+        font-weight: 650;
+        line-height: 1.55;
+      }
+
       .signature-canvas {
         width: 100%;
         max-width: 100%;
@@ -85,23 +149,49 @@
         background: #ffffff;
         touch-action: none;
       }
-
-      .signature-method-area[hidden] {
-        display: none !important;
-      }
     </style>
 
-    <script src="../assets/js/vendor/pdf-lib.min.js" defer></script>
     <script
-      src="../assets/js/vendor/jspdf.umd.min.js"
+      src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"
       defer
     ></script>
-    <script src="../assets/js/vendor/jszip.min.js" defer></script>
-    <script src="../assets/js/vendor/pdf.min.js" defer></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
+      defer
+    ></script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"
+      defer
+    ></script>
+    <script>
+      const PDFJS_VERSION = "6.2.108";
+      const PDFJS_CDN_BASE = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/`;
+
+      window.__xavertPdfJsConfig = Object.freeze({
+        workerSrc: `${PDFJS_CDN_BASE}legacy/build/pdf.worker.min.mjs`,
+        cMapUrl: `${PDFJS_CDN_BASE}cmaps/`,
+        iccUrl: `${PDFJS_CDN_BASE}iccs/`,
+        standardFontDataUrl: `${PDFJS_CDN_BASE}standard_fonts/`,
+        wasmUrl: `${PDFJS_CDN_BASE}wasm/`,
+      });
+
+      window.__xavertPdfJsReady = import(
+        `${PDFJS_CDN_BASE}legacy/build/pdf.min.mjs`
+      )
+        .then((pdfjsLib) => {
+          window.pdfjsLib = pdfjsLib;
+          return pdfjsLib;
+        })
+        .catch((error) => {
+          console.error("PDF Toolkit: PDF.js failed to load.", error);
+          return null;
+        });
+    </script>
 
     <script src="../assets/js/global.js" defer></script>
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/pdf-toolkit.js" defer></script>
   </head>
 
   <body
@@ -121,7 +211,6 @@
           fetchpriority="high"
           decoding="async"
         />
-
         <h1 id="tool-title" class="tool-title">PDF Toolkit</h1>
       </section>
 
@@ -130,7 +219,6 @@
           <header class="tool-card-header">
             <h2 id="selector-title" class="tool-card-title">Select Tool</h2>
           </header>
-
           <div class="tool-card-body">
             <div class="form-group">
               <label for="toolSelector">Tool</label>
@@ -153,85 +241,32 @@
           </div>
         </section>
 
-        <section
-          id="mergeTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="merge-title"
-        >
+        <section id="mergeTool" class="tool-card pdf-tool-panel" aria-labelledby="merge-title">
           <header class="tool-card-header">
             <h2 id="merge-title" class="tool-card-title">Merge PDF</h2>
-            <p class="tool-card-description">
-              Combine multiple PDF files into one document.
-            </p>
+            <p class="tool-card-description">Combine multiple PDF files into one document.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="mergeFiles"
-              data-drop-target="mergeFiles"
-              tabindex="0"
-            >
-              Click or drag PDF files here
-            </label>
-            <input
-              id="mergeFiles"
-              type="file"
-              accept="application/pdf"
-              multiple
-              hidden
-            />
+            <label class="pdf-drop-zone" for="mergeFiles" data-drop-target="mergeFiles" tabindex="0">Click or drag PDF files here</label>
+            <input id="mergeFiles" type="file" accept="application/pdf" multiple hidden />
             <div id="mergeCount" class="pdf-file-count">No files selected</div>
             <div class="button-grid pdf-actions">
-              <button
-                id="mergeBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Merge PDF
-              </button>
-              <button
-                id="clearMergeBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="mergeBtn" class="btn" type="button">Merge PDF</button>
+              <button id="clearMergeBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="mergeMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="mergeMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="splitTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="split-title"
-          hidden
-        >
+        <section id="splitTool" class="tool-card pdf-tool-panel" aria-labelledby="split-title" hidden>
           <header class="tool-card-header">
             <h2 id="split-title" class="tool-card-title">Split PDF</h2>
-            <p class="tool-card-description">
-              Export all pages, a range or specific pages as separate PDF files.
-            </p>
+            <p class="tool-card-description">Export all pages, a range or specific pages as separate PDF files.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="splitFile"
-              data-drop-target="splitFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
+            <label class="pdf-drop-zone" for="splitFile" data-drop-target="splitFile" tabindex="0">Click or drag one PDF file here</label>
             <input id="splitFile" type="file" accept="application/pdf" hidden />
             <div id="splitCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-grid">
               <div class="form-group">
                 <label for="splitMode">Split Mode</label>
@@ -243,181 +278,60 @@
               </div>
               <div class="form-group">
                 <label for="splitPages">Pages</label>
-                <input
-                  id="splitPages"
-                  type="text"
-                  placeholder="Example: 1-3 or 1,3,5"
-                />
+                <input id="splitPages" type="text" placeholder="Example: 1-3 or 1,3,5" />
               </div>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="splitBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Split PDF
-              </button>
-              <button
-                id="clearSplitBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="splitBtn" class="btn" type="button">Split PDF</button>
+              <button id="clearSplitBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="splitMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="splitMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="imagesTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="images-title"
-          hidden
-        >
+        <section id="imagesTool" class="tool-card pdf-tool-panel" aria-labelledby="images-title" hidden>
           <header class="tool-card-header">
             <h2 id="images-title" class="tool-card-title">Images to PDF</h2>
-            <p class="tool-card-description">
-              Convert JPG and PNG images into one PDF document.
-            </p>
+            <p class="tool-card-description">Convert JPG and PNG images into one PDF document.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="imageFiles"
-              data-drop-target="imageFiles"
-              tabindex="0"
-            >
-              Click or drag image files here
-            </label>
-            <input
-              id="imageFiles"
-              type="file"
-              accept="image/jpeg,image/png"
-              multiple
-              hidden
-            />
+            <label class="pdf-drop-zone" for="imageFiles" data-drop-target="imageFiles" tabindex="0">Click or drag image files here</label>
+            <input id="imageFiles" type="file" accept="image/jpeg,image/png" multiple hidden />
             <div id="imageCount" class="pdf-file-count">No files selected</div>
             <div class="button-grid pdf-actions">
-              <button
-                id="imagesToPdfBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Convert to PDF
-              </button>
-              <button
-                id="clearImagesBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="imagesToPdfBtn" class="btn" type="button">Convert to PDF</button>
+              <button id="clearImagesBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="imageMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="imageMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="pdfjpgTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="pdfjpg-title"
-          hidden
-        >
+        <section id="pdfjpgTool" class="tool-card pdf-tool-panel" aria-labelledby="pdfjpg-title" hidden>
           <header class="tool-card-header">
             <h2 id="pdfjpg-title" class="tool-card-title">PDF to JPG</h2>
-            <p class="tool-card-description">
-              Convert each PDF page into a high-quality JPG image.
-            </p>
+            <p class="tool-card-description">Convert each PDF page into a high-quality JPG image.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="pdfJpgFile"
-              data-drop-target="pdfJpgFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="pdfJpgFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="pdfJpgFile" data-drop-target="pdfJpgFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="pdfJpgFile" type="file" accept="application/pdf" hidden />
             <div id="pdfJpgCount" class="pdf-file-count">No file selected</div>
             <div class="button-grid pdf-actions">
-              <button
-                id="pdfToJpgBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Convert to JPG
-              </button>
-              <button
-                id="clearPdfJpgBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="pdfToJpgBtn" class="btn" type="button">Convert to JPG</button>
+              <button id="clearPdfJpgBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="pdfJpgMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="pdfJpgMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="rotateTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="rotate-title"
-          hidden
-        >
+        <section id="rotateTool" class="tool-card pdf-tool-panel" aria-labelledby="rotate-title" hidden>
           <header class="tool-card-header">
             <h2 id="rotate-title" class="tool-card-title">Rotate PDF</h2>
-            <p class="tool-card-description">
-              Rotate every page by 90, 180 or 270 degrees.
-            </p>
+            <p class="tool-card-description">Rotate every page by 90, 180 or 270 degrees.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="rotateFile"
-              data-drop-target="rotateFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="rotateFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="rotateFile" data-drop-target="rotateFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="rotateFile" type="file" accept="application/pdf" hidden />
             <div id="rotateCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-group">
               <label for="rotateAngle">Rotation Angle</label>
               <select id="rotateAngle">
@@ -426,332 +340,111 @@
                 <option value="270">270°</option>
               </select>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="rotateBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Rotate PDF
-              </button>
-              <button
-                id="clearRotateBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="rotateBtn" class="btn" type="button">Rotate PDF</button>
+              <button id="clearRotateBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="rotateMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="rotateMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="extractTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="extract-title"
-          hidden
-        >
+        <section id="extractTool" class="tool-card pdf-tool-panel" aria-labelledby="extract-title" hidden>
           <header class="tool-card-header">
             <h2 id="extract-title" class="tool-card-title">Extract Pages</h2>
-            <p class="tool-card-description">
-              Create a new PDF from selected pages.
-            </p>
+            <p class="tool-card-description">Create a new PDF from selected pages.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="extractFile"
-              data-drop-target="extractFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="extractFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="extractFile" data-drop-target="extractFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="extractFile" type="file" accept="application/pdf" hidden />
             <div id="extractCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-group">
               <label for="extractPages">Pages to Extract</label>
-              <input
-                id="extractPages"
-                type="text"
-                placeholder="Example: 1-3 or 1,3,5"
-              />
-              <p class="pdf-note">
-                Pages are counted from the actual PDF structure.
-              </p>
+              <input id="extractPages" type="text" placeholder="Example: 1-3 or 1,3,5" />
+              <p class="pdf-note">Pages are counted from the actual PDF structure.</p>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="extractBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Extract Pages
-              </button>
-              <button
-                id="clearExtractBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="extractBtn" class="btn" type="button">Extract Pages</button>
+              <button id="clearExtractBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="extractMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="extractMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="deleteTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="delete-title"
-          hidden
-        >
+        <section id="deleteTool" class="tool-card pdf-tool-panel" aria-labelledby="delete-title" hidden>
           <header class="tool-card-header">
             <h2 id="delete-title" class="tool-card-title">Delete Pages</h2>
-            <p class="tool-card-description">
-              Remove selected pages and download a cleaned PDF.
-            </p>
+            <p class="tool-card-description">Remove selected pages and download a cleaned PDF.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="deleteFile"
-              data-drop-target="deleteFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="deleteFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="deleteFile" data-drop-target="deleteFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="deleteFile" type="file" accept="application/pdf" hidden />
             <div id="deleteCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-group">
               <label for="deletePages">Pages to Delete</label>
-              <input
-                id="deletePages"
-                type="text"
-                placeholder="Example: 1-3 or 1,3,5"
-              />
-              <p class="pdf-note">
-                Pages are counted from the actual PDF structure.
-              </p>
+              <input id="deletePages" type="text" placeholder="Example: 1-3 or 1,3,5" />
+              <p class="pdf-note">Pages are counted from the actual PDF structure.</p>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="deleteBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Delete Pages
-              </button>
-              <button
-                id="clearDeleteBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="deleteBtn" class="btn" type="button">Delete Pages</button>
+              <button id="clearDeleteBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="deleteMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="deleteMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="pngTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="png-title"
-          hidden
-        >
+        <section id="pngTool" class="tool-card pdf-tool-panel" aria-labelledby="png-title" hidden>
           <header class="tool-card-header">
             <h2 id="png-title" class="tool-card-title">PDF to PNG</h2>
-            <p class="tool-card-description">
-              Convert every PDF page into PNG images.
-            </p>
+            <p class="tool-card-description">Convert every PDF page into PNG images.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="pngFile"
-              data-drop-target="pngFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
+            <label class="pdf-drop-zone" for="pngFile" data-drop-target="pngFile" tabindex="0">Click or drag one PDF file here</label>
             <input id="pngFile" type="file" accept="application/pdf" hidden />
             <div id="pngCount" class="pdf-file-count">No file selected</div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="pdfToPngBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Convert to PNG
-              </button>
-              <button
-                id="clearPngBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="pdfToPngBtn" class="btn" type="button">Convert to PNG</button>
+              <button id="clearPngBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="pngMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="pngMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="watermarkTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="watermark-title"
-          hidden
-        >
+        <section id="watermarkTool" class="tool-card pdf-tool-panel" aria-labelledby="watermark-title" hidden>
           <header class="tool-card-header">
             <h2 id="watermark-title" class="tool-card-title">Watermark PDF</h2>
-            <p class="tool-card-description">
-              Add a text watermark to every page.
-            </p>
+            <p class="tool-card-description">Add a text watermark to every page.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="watermarkFile"
-              data-drop-target="watermarkFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="watermarkFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
-            <div id="watermarkCount" class="pdf-file-count">
-              No file selected
-            </div>
-
+            <label class="pdf-drop-zone" for="watermarkFile" data-drop-target="watermarkFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="watermarkFile" type="file" accept="application/pdf" hidden />
+            <div id="watermarkCount" class="pdf-file-count">No file selected</div>
             <div class="form-grid">
               <div class="form-group">
                 <label for="watermarkText">Watermark Text</label>
-                <input
-                  id="watermarkText"
-                  type="text"
-                  maxlength="200"
-                  placeholder="Example: CONFIDENTIAL"
-                />
+                <input id="watermarkText" type="text" maxlength="200" placeholder="Example: CONFIDENTIAL" />
               </div>
               <div class="form-group">
                 <label for="watermarkSize">Watermark Size</label>
-                <input
-                  id="watermarkSize"
-                  type="number"
-                  value="40"
-                  min="10"
-                  max="120"
-                />
+                <input id="watermarkSize" type="number" value="40" min="10" max="120" />
               </div>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="watermarkBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Add Watermark
-              </button>
-              <button
-                id="clearWatermarkBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="watermarkBtn" class="btn" type="button">Add Watermark</button>
+              <button id="clearWatermarkBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="watermarkMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="watermarkMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="compressTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="compress-title"
-          hidden
-        >
+        <section id="compressTool" class="tool-card pdf-tool-panel" aria-labelledby="compress-title" hidden>
           <header class="tool-card-header">
             <h2 id="compress-title" class="tool-card-title">Compress PDF</h2>
-            <p class="tool-card-description">
-              Rebuild pages as optimized images to reduce file size.
-            </p>
+            <p class="tool-card-description">Rebuild pages as optimized images to reduce file size.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="compressFile"
-              data-drop-target="compressFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="compressFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
-            <div id="compressCount" class="pdf-file-count">
-              No file selected
-            </div>
-
+            <label class="pdf-drop-zone" for="compressFile" data-drop-target="compressFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="compressFile" type="file" accept="application/pdf" hidden />
+            <div id="compressCount" class="pdf-file-count">No file selected</div>
             <div class="form-group">
               <label for="compressLevel">Compression Level</label>
               <select id="compressLevel">
@@ -759,133 +452,49 @@
                 <option value="medium">Medium Compression</option>
                 <option value="high">High Compression</option>
               </select>
-              <p class="pdf-note">
-                Best suited to scanned and image-heavy PDFs. Text-only PDFs may
-                not become smaller.
-              </p>
+              <p class="pdf-note">Best suited to scanned and image-heavy PDFs. Text-only PDFs may not become smaller.</p>
+              <div class="pdf-warning" role="note">
+                Compression rasterizes each page. Selectable text, links, form fields, annotations and vector content can be flattened or lost. Keep the original PDF if those features matter.
+              </div>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="compressBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Compress PDF
-              </button>
-              <button
-                id="clearCompressBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="compressBtn" class="btn" type="button">Compress PDF</button>
+              <button id="clearCompressBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="compressMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="compressMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="reorderTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="reorder-title"
-          hidden
-        >
+        <section id="reorderTool" class="tool-card pdf-tool-panel" aria-labelledby="reorder-title" hidden>
           <header class="tool-card-header">
             <h2 id="reorder-title" class="tool-card-title">Reorder Pages</h2>
-            <p class="tool-card-description">
-              Create a new PDF using a custom page order.
-            </p>
+            <p class="tool-card-description">Create a new PDF using a custom page order.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="reorderFile"
-              data-drop-target="reorderFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="reorderFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="reorderFile" data-drop-target="reorderFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="reorderFile" type="file" accept="application/pdf" hidden />
             <div id="reorderCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-group">
               <label for="reorderPages">New Page Order</label>
-              <input
-                id="reorderPages"
-                type="text"
-                placeholder="Example: 3,1,2,4"
-              />
+              <input id="reorderPages" type="text" placeholder="Example: 3,1,2,4" />
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="reorderBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Reorder Pages
-              </button>
-              <button
-                id="clearReorderBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="reorderBtn" class="btn" type="button">Reorder Pages</button>
+              <button id="clearReorderBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="reorderMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="reorderMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="numbersTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="numbers-title"
-          hidden
-        >
+        <section id="numbersTool" class="tool-card pdf-tool-panel" aria-labelledby="numbers-title" hidden>
           <header class="tool-card-header">
             <h2 id="numbers-title" class="tool-card-title">Add Page Numbers</h2>
-            <p class="tool-card-description">
-              Add page numbers to every PDF page.
-            </p>
+            <p class="tool-card-description">Add page numbers to every PDF page.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="numbersFile"
-              data-drop-target="numbersFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="numbersFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="numbersFile" data-drop-target="numbersFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="numbersFile" type="file" accept="application/pdf" hidden />
             <div id="numbersCount" class="pdf-file-count">No file selected</div>
-
             <div class="form-grid">
               <div class="form-group">
                 <label for="numbersPosition">Position</label>
@@ -903,63 +512,23 @@
                 <input id="numbersStart" type="number" value="1" min="1" />
               </div>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="numbersBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Add Page Numbers
-              </button>
-              <button
-                id="clearNumbersBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="numbersBtn" class="btn" type="button">Add Page Numbers</button>
+              <button id="clearNumbersBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="numbersMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="numbersMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
 
-        <section
-          id="signTool"
-          class="tool-card pdf-tool-panel"
-          aria-labelledby="sign-title"
-          hidden
-        >
+        <section id="signTool" class="tool-card pdf-tool-panel" aria-labelledby="sign-title" hidden>
           <header class="tool-card-header">
             <h2 id="sign-title" class="tool-card-title">Sign PDF</h2>
-            <p class="tool-card-description">
-              Add a drawn signature or uploaded signature image to a PDF page.
-            </p>
+            <p class="tool-card-description">Add a drawn signature or uploaded signature image to a PDF page.</p>
           </header>
           <div class="tool-card-body">
-            <label
-              class="pdf-drop-zone"
-              for="signPdfFile"
-              data-drop-target="signPdfFile"
-              tabindex="0"
-            >
-              Click or drag one PDF file here
-            </label>
-            <input
-              id="signPdfFile"
-              type="file"
-              accept="application/pdf"
-              hidden
-            />
+            <label class="pdf-drop-zone" for="signPdfFile" data-drop-target="signPdfFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="signPdfFile" type="file" accept="application/pdf" hidden />
             <div id="signPdfCount" class="pdf-file-count">No PDF selected</div>
-
             <div class="form-grid">
               <div class="form-group">
                 <label for="signMethod">Signature Method</label>
@@ -982,96 +551,40 @@
                 </select>
               </div>
             </div>
-
             <div id="drawSignatureArea" class="signature-method-area">
               <label for="signatureCanvas">Draw Signature</label>
-              <canvas
-                id="signatureCanvas"
-                class="signature-canvas"
-                width="500"
-                height="180"
-              ></canvas>
+              <canvas id="signatureCanvas" class="signature-canvas" width="500" height="180" aria-label="Signature drawing area"></canvas>
               <div class="button-grid pdf-actions">
-                <button
-                  id="clearSignatureBtn"
-                  class="btn btn-secondary"
-                  type="button"
-                >
-                  Clear Drawing
-                </button>
+                <button id="clearSignatureBtn" class="btn btn-secondary" type="button" data-clear-action>Clear Drawing</button>
               </div>
             </div>
-
             <div id="uploadSignatureArea" class="signature-method-area" hidden>
-              <label
-                class="pdf-drop-zone"
-                for="signatureImageFile"
-                data-drop-target="signatureImageFile"
-                tabindex="0"
-              >
-                Click or drag signature image here
-              </label>
-              <input
-                id="signatureImageFile"
-                type="file"
-                accept="image/png,image/jpeg"
-                hidden
-              />
-              <div id="signatureImageCount" class="pdf-file-count">
-                No signature image selected
-              </div>
+              <label class="pdf-drop-zone" for="signatureImageFile" data-drop-target="signatureImageFile" tabindex="0">Click or drag signature image here</label>
+              <input id="signatureImageFile" type="file" accept="image/png,image/jpeg" hidden />
+              <div id="signatureImageCount" class="pdf-file-count">No signature image selected</div>
             </div>
-
             <div class="button-grid pdf-actions">
-              <button
-                id="signBtn"
-                class="btn"
-                type="button"
-                data-primary-action
-              >
-                Sign PDF
-              </button>
-              <button
-                id="clearSignBtn"
-                class="btn btn-secondary"
-                type="button"
-                data-clear-action
-              >
-                Clear
-              </button>
+              <button id="signBtn" class="btn" type="button">Sign PDF</button>
+              <button id="clearSignBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
-            <div
-              id="signMessage"
-              class="message"
-              role="status"
-              aria-live="polite"
-            ></div>
+            <div id="signMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
       </div>
 
       <section class="info about-card" aria-labelledby="about-title">
         <h2 id="about-title">About</h2>
-
-        <p class="about-intro">
-          The XAVERT PDF Toolkit provides browser-based utilities for common PDF
-          editing and conversion tasks.
-        </p>
-
+        <p class="about-intro">The XAVERT PDF Toolkit provides browser-based utilities for common PDF editing and conversion tasks.</p>
         <h3>Main Features</h3>
         <ul class="about-features">
           <li>Merge, split, extract, delete, rotate and reorder PDF pages.</li>
           <li>Convert JPG/PNG images to PDF and PDF pages to JPG/PNG.</li>
           <li>Add watermarks and page numbers.</li>
-          <li>Compress image-heavy PDFs.</li>
+          <li>Compress image-heavy PDFs by rasterizing pages.</li>
           <li>Add drawn or uploaded signatures.</li>
         </ul>
-
         <h3>Privacy First</h3>
-        <p class="about-privacy">
-          PDF processing happens locally within your browser. Your files are
-          never uploaded, transmitted, shared or stored on XAVERT servers.
-        </p>
+        <p class="about-privacy">PDF processing happens locally within your browser. Your files are never uploaded, transmitted, shared or stored on XAVERT servers.</p>
       </section>
 
       <section class="info" aria-labelledby="related-tools-title" hidden>
@@ -1082,15 +595,6 @@
 
     <footer class="xavert-footer-note">Powered by XAVERT</footer>
 
-    <div
-      id="xavert-toast"
-      class="xavert-toast"
-      role="status"
-      aria-live="polite"
-      aria-atomic="true"
-      hidden
-    ></div>
-
-    <script src="../assets/js/pdf-toolkit.js"></script>
+    <div id="xavert-toast" class="xavert-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
   </body>
 </html>

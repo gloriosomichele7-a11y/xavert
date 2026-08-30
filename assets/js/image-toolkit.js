@@ -78,7 +78,35 @@ document.addEventListener("DOMContentLoaded", () => {
     return;
   }
 
-  const SUPPORTED_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+  const OUTPUT_TYPES = new Set(["image/png", "image/jpeg", "image/webp"]);
+  const NATIVE_INPUT_TYPES = new Set([
+    "image/png",
+    "image/jpeg",
+    "image/webp",
+    "image/avif",
+    "image/gif",
+    "image/bmp",
+    "image/x-ms-bmp",
+  ]);
+  const HEIC_INPUT_TYPES = new Set([
+    "image/heic",
+    "image/heif",
+    "image/heic-sequence",
+    "image/heif-sequence",
+  ]);
+  const HEIC_EXTENSIONS = new Set(["heic", "heif"]);
+  const NATIVE_EXTENSIONS = new Set([
+    "png",
+    "jpg",
+    "jpeg",
+    "webp",
+    "avif",
+    "gif",
+    "bmp",
+  ]);
+
+  const HEIC_TO_URL =
+    "https://cdn.jsdelivr.net/npm/heic-to@1.5.2/dist/iife/heic-to.js";
 
   const MAX_IMAGE_FILE_SIZE = 25 * 1024 * 1024;
   const MAX_CANVAS_DIMENSION = 16384;
@@ -86,6 +114,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let selectedFile = null;
   let selectedImage = null;
+  let selectedWidth = 0;
+  let selectedHeight = 0;
+  let selectedInputFormat = "";
+  let heicRuntimePromise = null;
   let processedBlob = null;
   let processedFileName = "";
   let processedMimeType = "";
@@ -155,6 +187,194 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
+  function getFileExtension(fileName) {
+    const match = String(fileName || "")
+      .toLowerCase()
+      .match(/\.([a-z0-9]+)$/);
+
+    return match ? match[1] : "";
+  }
+
+  function isHeicCandidate(file) {
+    const type = String(file?.type || "").toLowerCase();
+    const extension = getFileExtension(file?.name);
+
+    return HEIC_INPUT_TYPES.has(type) || HEIC_EXTENSIONS.has(extension);
+  }
+
+  function getInputFormatLabel(file) {
+    const extension = getFileExtension(file?.name);
+
+    if (HEIC_EXTENSIONS.has(extension)) {
+      return extension.toUpperCase();
+    }
+
+    if (extension === "jpg" || extension === "jpeg") return "JPEG";
+    if (extension) return extension.toUpperCase();
+
+    const type = String(file?.type || "").toLowerCase();
+
+    if (type === "image/jpeg") return "JPEG";
+    if (type.startsWith("image/")) {
+      return type.slice(6).toUpperCase();
+    }
+
+    return "Image";
+  }
+
+  function releaseSelectedImage() {
+    if (selectedImage && typeof selectedImage.close === "function") {
+      try {
+        selectedImage.close();
+      } catch {
+        // Some browser image sources expose close() defensively.
+      }
+    }
+
+    selectedImage = null;
+    selectedWidth = 0;
+    selectedHeight = 0;
+    selectedInputFormat = "";
+  }
+
+  function ensureHeicRuntime() {
+    if (
+      typeof window.HeicTo === "function" &&
+      typeof window.HeicTo.isHeic === "function"
+    ) {
+      return Promise.resolve(window.HeicTo);
+    }
+
+    if (heicRuntimePromise) {
+      return heicRuntimePromise;
+    }
+
+    heicRuntimePromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector(
+        'script[data-xavert-heic-to="1"]',
+      );
+
+      // If no runtime is exposed and no promise is active, any old script
+      // element is stale or failed and should not block a retry.
+      existing?.remove();
+
+      const finish = () => {
+        if (
+          typeof window.HeicTo === "function" &&
+          typeof window.HeicTo.isHeic === "function"
+        ) {
+          resolve(window.HeicTo);
+        } else {
+          reject(new Error("HEIC/HEIF decoder loaded without a usable API."));
+        }
+      };
+
+      const script = document.createElement("script");
+      script.src = HEIC_TO_URL;
+      script.async = true;
+      script.dataset.xavertHeicTo = "1";
+
+      script.addEventListener("load", finish, { once: true });
+      script.addEventListener(
+        "error",
+        () => reject(new Error("Unable to download the HEIC/HEIF decoder.")),
+        { once: true },
+      );
+
+      document.head.appendChild(script);
+    }).catch((error) => {
+      heicRuntimePromise = null;
+      throw error;
+    });
+
+    return heicRuntimePromise;
+  }
+
+  async function decodeHeicFile(file) {
+    const heicTo = await ensureHeicRuntime();
+
+    let recognized = false;
+
+    try {
+      recognized = await heicTo.isHeic(file);
+    } catch (error) {
+      console.warn("HEIC/HEIF signature check failed:", error);
+    }
+
+    if (!recognized) {
+      throw new Error(
+        "The selected file was not recognized as a valid HEIC/HEIF image.",
+      );
+    }
+
+    try {
+      const bitmapResult = await heicTo({
+        blob: file,
+        type: "bitmap",
+      });
+      const bitmap = Array.isArray(bitmapResult)
+        ? bitmapResult[0]
+        : bitmapResult;
+
+      if (
+        bitmap &&
+        Number.isFinite(bitmap.width) &&
+        Number.isFinite(bitmap.height) &&
+        bitmap.width > 0 &&
+        bitmap.height > 0
+      ) {
+        return {
+          image: bitmap,
+          width: bitmap.width,
+          height: bitmap.height,
+          decoder: "HEIC/HEIF decoder",
+        };
+      }
+    } catch (bitmapError) {
+      console.warn(
+        "Direct HEIC/HEIF bitmap decode failed; trying PNG fallback.",
+        bitmapError,
+      );
+    }
+
+    const pngResult = await heicTo({
+      blob: file,
+      type: "image/png",
+      quality: 1,
+    });
+    const pngBlob = Array.isArray(pngResult)
+      ? pngResult[0]
+      : pngResult;
+
+    if (!(pngBlob instanceof Blob)) {
+      throw new Error("The HEIC/HEIF decoder returned an invalid image.");
+    }
+
+    const image = await loadImageFromBlob(pngBlob);
+
+    return {
+      image,
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+      decoder: "HEIC/HEIF decoder",
+    };
+  }
+
+  async function decodeInputFile(file) {
+    if (isHeicCandidate(file)) {
+      return decodeHeicFile(file);
+    }
+
+    const image = await loadImageFromBlob(file);
+
+    return {
+      image,
+      width: image.naturalWidth,
+      height: image.naturalHeight,
+      decoder: "Browser",
+    };
+  }
+
   function revokePreviewUrl() {
     if (previewUrl) {
       URL.revokeObjectURL(previewUrl);
@@ -200,8 +420,17 @@ document.addEventListener("DOMContentLoaded", () => {
       return "Select one image first.";
     }
 
-    if (!SUPPORTED_TYPES.has(file.type)) {
-      return "Only PNG, JPEG and WebP images are supported.";
+    const type = String(file.type || "").toLowerCase();
+    const extension = getFileExtension(file.name);
+
+    const supported =
+      NATIVE_INPUT_TYPES.has(type) ||
+      HEIC_INPUT_TYPES.has(type) ||
+      NATIVE_EXTENSIONS.has(extension) ||
+      HEIC_EXTENSIONS.has(extension);
+
+    if (!supported) {
+      return "Supported inputs are PNG, JPEG, WebP, AVIF, GIF, BMP, HEIC and HEIF.";
     }
 
     if (file.size === 0) {
@@ -308,7 +537,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (error) {
       selectedFile = null;
-      selectedImage = null;
+      releaseSelectedImage();
       imageFile.value = "";
       fileInfo.textContent = "No image selected";
       resetResult();
@@ -318,41 +547,86 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const token = generationToken;
 
+    selectedFile = null;
+    releaseSelectedImage();
+    resetResult();
+
+    const formatLabel = getInputFormatLabel(file);
+
+    if (isHeicCandidate(file)) {
+      fileInfo.textContent =
+        `${file.name} • ${formatFileSize(file.size)} • ` +
+        `${formatLabel} • Loading HEIC/HEIF decoder…`;
+    } else {
+      fileInfo.textContent =
+        `${file.name} • ${formatFileSize(file.size)} • ${formatLabel} • Decoding…`;
+    }
+
     try {
-      const image = await loadImageFromBlob(file);
+      const decoded = await decodeInputFile(file);
 
       if (token !== generationToken) {
+        if (decoded.image && typeof decoded.image.close === "function") {
+          decoded.image.close();
+        }
         return;
       }
 
+      validateCanvasSize(decoded.width, decoded.height);
+
       selectedFile = file;
-      selectedImage = image;
+      selectedImage = decoded.image;
+      selectedWidth = decoded.width;
+      selectedHeight = decoded.height;
+      selectedInputFormat = formatLabel;
+
+      const frameNote =
+        ["GIF", "HEIC", "HEIF"].includes(formatLabel)
+          ? " • Single decoded frame"
+          : "";
 
       fileInfo.textContent =
         `${file.name} • ${formatFileSize(file.size)} • ` +
-        `${image.naturalWidth}×${image.naturalHeight} px`;
+        `${selectedWidth}×${selectedHeight} px • ${formatLabel} • ` +
+        `${decoded.decoder}${frameNote}`;
 
-      resetResult();
       setInlineMessage("");
     } catch (loadError) {
-      console.error(loadError);
+      console.error("Image decode failed:", loadError);
 
       selectedFile = null;
-      selectedImage = null;
+      releaseSelectedImage();
       imageFile.value = "";
       fileInfo.textContent = "No image selected";
       resetResult();
 
-      notify("Unable to read the selected image.", "error");
+      const messageText =
+        loadError instanceof Error
+          ? loadError.message
+          : "Unable to read the selected image.";
+
+      notify(messageText, "error");
     }
   }
 
   function getOriginalOutputType() {
-    return selectedFile?.type === "image/png"
-      ? "image/png"
-      : selectedFile?.type === "image/webp"
-        ? "image/webp"
-        : "image/jpeg";
+    const type = String(selectedFile?.type || "").toLowerCase();
+    const extension = getFileExtension(selectedFile?.name);
+
+    if (type === "image/jpeg" || ["jpg", "jpeg"].includes(extension)) {
+      return "image/jpeg";
+    }
+
+    if (type === "image/webp" || extension === "webp") {
+      return "image/webp";
+    }
+
+    /*
+     * PNG is the safest operation-default fallback for decoded formats that
+     * may contain transparency (AVIF, GIF, HEIC/HEIF) or whose original
+     * encoding is not an output format supported by this toolkit.
+     */
+    return "image/png";
   }
 
   function buildOutputName(prefix, mimeType) {
@@ -390,13 +664,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!width) {
       width = Math.round(
-        (selectedImage.naturalWidth * height) / selectedImage.naturalHeight,
+        (selectedWidth * height) / selectedHeight,
       );
     }
 
     if (!height) {
       height = Math.round(
-        (selectedImage.naturalHeight * width) / selectedImage.naturalWidth,
+        (selectedHeight * width) / selectedWidth,
       );
     }
 
@@ -427,17 +701,17 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (
-      width > selectedImage.naturalWidth ||
-      height > selectedImage.naturalHeight
+      width > selectedWidth ||
+      height > selectedHeight
     ) {
       throw new Error("Crop dimensions cannot exceed the original image.");
     }
 
     const { canvas, context } = createCanvas(width, height);
 
-    const startX = Math.floor((selectedImage.naturalWidth - width) / 2);
+    const startX = Math.floor((selectedWidth - width) / 2);
 
-    const startY = Math.floor((selectedImage.naturalHeight - height) / 2);
+    const startY = Math.floor((selectedHeight - height) / 2);
 
     context.drawImage(
       selectedImage,
@@ -474,8 +748,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const { canvas, context } = createCanvas(
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     context.fillStyle = "#ffffff";
@@ -496,13 +770,13 @@ document.addEventListener("DOMContentLoaded", () => {
   async function processConvert() {
     const mimeType = outputFormat.value;
 
-    if (!SUPPORTED_TYPES.has(mimeType)) {
+    if (!OUTPUT_TYPES.has(mimeType)) {
       throw new Error("Unsupported output format.");
     }
 
     const { canvas, context } = createCanvas(
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     if (mimeType === "image/jpeg") {
@@ -531,12 +805,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const swapped = angle === 90 || angle === 270;
 
     const width = swapped
-      ? selectedImage.naturalHeight
-      : selectedImage.naturalWidth;
+      ? selectedHeight
+      : selectedWidth;
 
     const height = swapped
-      ? selectedImage.naturalWidth
-      : selectedImage.naturalHeight;
+      ? selectedWidth
+      : selectedHeight;
 
     const { canvas, context } = createCanvas(width, height);
 
@@ -544,8 +818,8 @@ document.addEventListener("DOMContentLoaded", () => {
     context.rotate((angle * Math.PI) / 180);
     context.drawImage(
       selectedImage,
-      -selectedImage.naturalWidth / 2,
-      -selectedImage.naturalHeight / 2,
+      -selectedWidth / 2,
+      -selectedHeight / 2,
     );
 
     const mimeType = getOriginalOutputType();
@@ -567,8 +841,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const { canvas, context } = createCanvas(
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     if (direction === "horizontal") {
@@ -606,8 +880,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const { canvas, context } = drawImageOnCanvas(
       selectedImage,
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     context.font = `${size}px Arial`;
@@ -640,8 +914,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function processGrayscale() {
     const { canvas, context } = drawImageOnCanvas(
       selectedImage,
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     const imageData = context.getImageData(0, 0, canvas.width, canvas.height);
@@ -676,8 +950,8 @@ document.addEventListener("DOMContentLoaded", () => {
   async function processMetadata() {
     const { canvas } = drawImageOnCanvas(
       selectedImage,
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     const mimeType = getOriginalOutputType();
@@ -699,8 +973,8 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     const { canvas, context } = createCanvas(
-      selectedImage.naturalWidth,
-      selectedImage.naturalHeight,
+      selectedWidth,
+      selectedHeight,
     );
 
     context.fillStyle = "#ffffff";
@@ -708,7 +982,7 @@ document.addEventListener("DOMContentLoaded", () => {
     context.drawImage(selectedImage, 0, 0);
 
     const dataUrl = canvas.toDataURL("image/jpeg", 0.95);
-    const landscape = selectedImage.naturalWidth > selectedImage.naturalHeight;
+    const landscape = selectedWidth > selectedHeight;
 
     const pdf = new jsPdfConstructor({
       orientation: landscape ? "landscape" : "portrait",
@@ -720,12 +994,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const pageHeight = pdf.internal.pageSize.getHeight();
 
     const scale = Math.min(
-      pageWidth / selectedImage.naturalWidth,
-      pageHeight / selectedImage.naturalHeight,
+      pageWidth / selectedWidth,
+      pageHeight / selectedHeight,
     );
 
-    const width = selectedImage.naturalWidth * scale;
-    const height = selectedImage.naturalHeight * scale;
+    const width = selectedWidth * scale;
+    const height = selectedHeight * scale;
 
     const x = (pageWidth - width) / 2;
     const y = (pageHeight - height) / 2;
@@ -738,8 +1012,8 @@ document.addEventListener("DOMContentLoaded", () => {
       blob,
       mimeType: "application/pdf",
       fileName: `XAVERT-Image-to-PDF-${getCleanName(selectedFile.name)}.pdf`,
-      width: selectedImage.naturalWidth,
-      height: selectedImage.naturalHeight,
+      width: selectedWidth,
+      height: selectedHeight,
       isPdf: true,
     };
   }
@@ -873,7 +1147,7 @@ document.addEventListener("DOMContentLoaded", () => {
       };
     }
 
-    if (!SUPPORTED_TYPES.has(mimeType)) {
+    if (!OUTPUT_TYPES.has(mimeType)) {
       throw new Error("Unsupported download format.");
     }
 
@@ -982,7 +1256,7 @@ document.addEventListener("DOMContentLoaded", () => {
     generationToken += 1;
 
     selectedFile = null;
-    selectedImage = null;
+    releaseSelectedImage();
 
     imageFile.value = "";
     fileInfo.textContent = "No image selected";
@@ -1083,6 +1357,16 @@ document.addEventListener("DOMContentLoaded", () => {
   copyImageBtn.addEventListener("click", () => {
     void copyProcessedImage();
   });
+
+  window.addEventListener(
+    "pagehide",
+    () => {
+      generationToken += 1;
+      releaseSelectedImage();
+      revokePreviewUrl();
+    },
+    { once: true },
+  );
 
   updateToolOptions();
   resetResult();

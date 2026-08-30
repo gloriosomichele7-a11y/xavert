@@ -31,6 +31,9 @@
     <loc>https://xavert.com/tools/open-graph-generator.html</loc>
   </url>
   <url>
+    <loc>https://xavert.com/tools/markup-generator.html</loc>
+  </url>
+  <url>
     <loc>https://xavert.com/tools/robots-generator.html</loc>
   </url>
   <url>
@@ -44,6 +47,9 @@
   </url>
   <url>
     <loc>https://xavert.com/tools/html-minifier.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/javascript-formatter-minifier.html</loc>
   </url>
   <url>
     <loc>https://xavert.com/tools/sql-formatter.html</loc>
@@ -94,16 +100,40 @@
     <loc>https://xavert.com/tools/pdf-toolkit.html</loc>
   </url>
   <url>
+    <loc>https://xavert.com/tools/word-toolkit.html</loc>
+  </url>
+  <url>
     <loc>https://xavert.com/tools/image-toolkit.html</loc>
   </url>
   <url>
     <loc>https://xavert.com/tools/color-toolkit.html</loc>
   </url>
   <url>
+    <loc>https://xavert.com/tools/background-remover.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/image-to-text-ocr.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/image-metadata-exif-cleaner.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/svg-toolkit.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/favicon-generator.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/image-upscaler.html</loc>
+  </url>
+  <url>
     <loc>https://xavert.com/tools/color-palette-extractor.html</loc>
   </url>
   <url>
     <loc>https://xavert.com/tools/qr-generator.html</loc>
+  </url>
+  <url>
+    <loc>https://xavert.com/tools/qr-code-scanner-reader.html</loc>
   </url>
   <url>
     <loc>https://xavert.com/tools/barcode-generator.html</loc>

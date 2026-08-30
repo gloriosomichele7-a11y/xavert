@@ -134,6 +134,26 @@
         overflow-wrap: anywhere;
       }
 
+
+      .hash-progress-wrap {
+        margin-top: 12px;
+      }
+
+      .hash-progress {
+        display: block;
+        width: 100%;
+        height: 10px;
+        accent-color: #dc2626;
+      }
+
+      .hash-progress-label {
+        margin-top: 6px;
+        color: #6b7280;
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.5;
+      }
+
       .hash-actions {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(min(100%, 150px), 1fr));
@@ -252,6 +272,19 @@
                 <input id="fileInput" class="hash-file-input" type="file" />
 
                 <div id="fileInfo" class="hash-file-info">No file selected</div>
+
+                <div id="hashProgressWrap" class="hash-progress-wrap" hidden>
+                  <progress
+                    id="hashProgress"
+                    class="hash-progress"
+                    max="100"
+                    value="0"
+                    aria-label="Hashing progress"
+                  ></progress>
+                  <div id="hashProgressLabel" class="hash-progress-label">
+                    Preparing file...
+                  </div>
+                </div>
               </div>
 
               <div class="form-group">

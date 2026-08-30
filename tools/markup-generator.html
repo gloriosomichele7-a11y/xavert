@@ -1,0 +1,828 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Markup Generator</title>
+
+    <meta
+      name="description"
+      content="Generate, validate and export Schema.org JSON-LD for articles, products, local businesses, organizations, websites, breadcrumbs, FAQs, events, software, videos and recipes."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link
+      rel="canonical"
+      href="https://xavert.com/tools/markup-generator.html"
+    />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Markup Generator" />
+    <meta
+      property="og:description"
+      content="Build and validate Schema.org JSON-LD with structured forms, custom properties and @graph support."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/markup-generator.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Markup Generator" />
+    <meta
+      name="twitter:description"
+      content="Generate and validate Schema.org JSON-LD directly in your browser."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Markup Generator",
+        "alternateName": "XAVERT Markup Generator",
+        "applicationCategory": "DeveloperApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/markup-generator.html",
+        "description": "Generate, validate and export Schema.org JSON-LD for common website entities and Google-supported structured data types.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "Article JSON-LD",
+          "Product JSON-LD",
+          "LocalBusiness JSON-LD",
+          "Organization JSON-LD",
+          "WebSite JSON-LD",
+          "BreadcrumbList JSON-LD",
+          "FAQPage JSON-LD",
+          "Event JSON-LD",
+          "SoftwareApplication JSON-LD",
+          "VideoObject JSON-LD",
+          "Recipe JSON-LD",
+          "Required and recommended property checks",
+          "Custom Schema.org properties",
+          "JSON-LD editor and validator",
+          "JSON-LD script tag copy",
+          "JSON-LD download",
+          "@graph builder",
+          "Browser-side processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .schema-top-grid {
+        display: grid;
+        grid-template-columns: minmax(250px, 0.36fr) minmax(0, 0.64fr);
+        gap: 14px;
+      }
+
+      .schema-type-card,
+      .schema-form-card,
+      .schema-panel {
+        min-width: 0;
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 13px;
+        background: #ffffff;
+      }
+
+      .schema-type-card {
+        background: #f9fafb;
+      }
+
+      .schema-panel-title {
+        margin: 0 0 10px;
+        color: #111827;
+        font-size: 14px;
+        font-weight: 800;
+      }
+
+      .schema-type-note {
+        margin-top: 10px;
+        padding: 10px;
+        border: 1px solid #e5e7eb;
+        border-radius: 9px;
+        background: #ffffff;
+        color: #475569;
+        font-size: 11.5px;
+        line-height: 1.5;
+      }
+
+      .schema-type-note strong {
+        color: #111827;
+      }
+
+      .schema-reference-links {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .schema-reference-link {
+        display: flex;
+        min-height: 34px;
+        padding: 7px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        align-items: center;
+        justify-content: center;
+        color: #475569;
+        font-size: 11.5px;
+        font-weight: 750;
+        text-align: center;
+        text-decoration: none;
+      }
+
+      .schema-reference-link:hover,
+      .schema-reference-link:focus-visible {
+        border-color: #dc2626;
+        color: #b91c1c;
+        outline: none;
+      }
+
+      .schema-fields-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 11px;
+      }
+
+      .schema-field-full {
+        grid-column: 1 / -1;
+      }
+
+      .schema-label-row {
+        display: flex;
+        align-items: baseline;
+        justify-content: space-between;
+        gap: 8px;
+      }
+
+      .schema-requirement {
+        flex: 0 0 auto;
+        color: #64748b;
+        font-size: 10px;
+        font-weight: 750;
+      }
+
+      .schema-requirement-required {
+        color: #b91c1c;
+      }
+
+      .schema-help,
+      .schema-empty {
+        margin: 5px 0 0;
+        color: #64748b;
+        font-size: 11px;
+        line-height: 1.45;
+      }
+
+      .schema-repeat-section,
+      .schema-custom-section {
+        grid-column: 1 / -1;
+        padding: 11px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+      }
+
+      .schema-repeat-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 8px;
+      }
+
+      .schema-repeat-title {
+        margin: 0;
+        color: #111827;
+        font-size: 12.5px;
+        font-weight: 800;
+      }
+
+      .schema-repeat-list {
+        display: grid;
+        gap: 8px;
+      }
+
+      .schema-repeat-row {
+        display: grid;
+        grid-template-columns: minmax(0, 0.92fr) minmax(0, 1.08fr) auto;
+        gap: 7px;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        align-items: start;
+      }
+
+      .schema-repeat-row.schema-faq-row {
+        grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.2fr) auto;
+      }
+
+      .schema-repeat-row textarea {
+        min-height: 78px;
+        resize: vertical;
+      }
+
+      .schema-remove-btn {
+        width: 34px;
+        min-width: 34px;
+        height: 34px;
+        padding: 0;
+      }
+
+      .schema-custom-row {
+        display: grid;
+        grid-template-columns:
+          minmax(130px, 0.75fr)
+          minmax(100px, 0.4fr)
+          minmax(0, 1.2fr)
+          auto;
+        gap: 7px;
+        padding: 8px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        align-items: start;
+      }
+
+      .schema-actions,
+      .schema-output-actions,
+      .schema-graph-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 145px), 1fr));
+        gap: 9px;
+        margin-top: 13px;
+      }
+
+      .schema-results {
+        margin-top: 24px;
+      }
+
+      .schema-stats {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+      }
+
+      .schema-result-grid {
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) minmax(290px, 0.82fr);
+        gap: 14px;
+        margin-top: 15px;
+      }
+
+      .schema-output {
+        width: 100%;
+        min-height: 430px;
+        padding: 12px;
+        border: 1px solid #d1d5db;
+        border-radius: 10px;
+        background: #f8fafc;
+        color: #111827;
+        font-family:
+          ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+          "Liberation Mono", monospace;
+        font-size: 11.8px;
+        line-height: 1.5;
+        resize: vertical;
+        box-sizing: border-box;
+        tab-size: 2;
+      }
+
+      .schema-validation-summary {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 7px;
+      }
+
+      .schema-validation-stat {
+        padding: 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f8fafc;
+        text-align: center;
+      }
+
+      .schema-validation-stat strong {
+        display: block;
+        margin-bottom: 2px;
+        color: #111827;
+        font-size: 15px;
+      }
+
+      .schema-validation-stat span {
+        color: #64748b;
+        font-size: 10.5px;
+        font-weight: 700;
+      }
+
+      .schema-issues {
+        display: grid;
+        gap: 7px;
+        margin-top: 11px;
+      }
+
+      .schema-issue {
+        padding: 8px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #f8fafc;
+        color: #475569;
+        font-size: 11.5px;
+        line-height: 1.45;
+      }
+
+      .schema-issue-error {
+        border-color: #fecaca;
+        background: #fef2f2;
+        color: #991b1b;
+      }
+
+      .schema-issue-warning {
+        border-color: #fed7aa;
+        background: #fff7ed;
+        color: #9a3412;
+      }
+
+      .schema-issue-info {
+        border-color: #bfdbfe;
+        background: #eff6ff;
+        color: #1e40af;
+      }
+
+      .schema-graph-list {
+        display: grid;
+        gap: 7px;
+        margin-top: 10px;
+      }
+
+      .schema-graph-item {
+        display: flex;
+        padding: 8px 9px;
+        border: 1px solid #e5e7eb;
+        border-radius: 8px;
+        background: #ffffff;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .schema-graph-copy {
+        min-width: 0;
+      }
+
+      .schema-graph-type {
+        display: block;
+        color: #111827;
+        font-size: 11.5px;
+        font-weight: 800;
+      }
+
+      .schema-graph-name {
+        display: block;
+        margin-top: 2px;
+        color: #64748b;
+        font-size: 10.5px;
+        overflow-wrap: anywhere;
+      }
+
+      .schema-mode-badge {
+        display: inline-flex;
+        margin-bottom: 9px;
+        padding: 5px 8px;
+        border-radius: 999px;
+        background: #f1f5f9;
+        color: #475569;
+        font-size: 10.5px;
+        font-weight: 800;
+      }
+
+      @media (max-width: 1050px) {
+        .schema-top-grid,
+        .schema-result-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .schema-stats {
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 700px) {
+        .schema-fields-grid,
+        .schema-validation-summary {
+          grid-template-columns: 1fr;
+        }
+
+        .schema-repeat-row,
+        .schema-repeat-row.schema-faq-row,
+        .schema-custom-row {
+          grid-template-columns: 1fr;
+        }
+
+        .schema-remove-btn {
+          width: 100%;
+        }
+
+        .schema-reference-links {
+          grid-template-columns: 1fr;
+        }
+
+        .schema-stats {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/markup-generator.js" defer></script>
+  </head>
+
+  <body
+    data-tool="markup-generator"
+    data-related-tools="meta-tag-generator,open-graph-generator,robots-generator,sitemap-generator,json-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+        <h1 id="tool-title" class="tool-title">Markup Generator</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">
+            JSON-LD Workspace
+          </h2>
+          <p class="tool-card-description">
+            Build Schema.org JSON-LD, check important properties and export
+            implementation-ready structured data.
+          </p>
+        </header>
+
+        <div class="schema-top-grid">
+          <aside class="schema-type-card" aria-labelledby="type-title">
+            <h3 id="type-title" class="schema-panel-title">Schema Type</h3>
+
+            <div class="form-group">
+              <label for="schemaType">Entity Type</label>
+              <select id="schemaType">
+                <option value="Article">Article / BlogPosting / NewsArticle</option>
+                <option value="Product">Product</option>
+                <option value="LocalBusiness">Local Business</option>
+                <option value="Organization">Organization</option>
+                <option value="WebSite">WebSite</option>
+                <option value="BreadcrumbList">BreadcrumbList</option>
+                <option value="FAQPage">FAQPage</option>
+                <option value="Event">Event</option>
+                <option value="SoftwareApplication">Software Application</option>
+                <option value="VideoObject">VideoObject</option>
+                <option value="Recipe">Recipe</option>
+              </select>
+            </div>
+
+            <div id="typeNote" class="schema-type-note"></div>
+
+            <div class="schema-reference-links">
+              <a
+                id="schemaOrgLink"
+                class="schema-reference-link"
+                href="https://schema.org/Article"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Schema.org Reference
+              </a>
+              <a
+                class="schema-reference-link"
+                href="https://search.google.com/test/rich-results"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Rich Results Test
+              </a>
+              <a
+                class="schema-reference-link"
+                href="https://validator.schema.org/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Schema Validator
+              </a>
+            </div>
+          </aside>
+
+          <section class="schema-form-card" aria-labelledby="form-title">
+            <h3 id="form-title" class="schema-panel-title">
+              Structured Data Fields
+            </h3>
+
+            <div id="schemaFields" class="schema-fields-grid"></div>
+
+            <section class="schema-custom-section" aria-labelledby="custom-title">
+              <div class="schema-repeat-head">
+                <h4 id="custom-title" class="schema-repeat-title">
+                  Advanced Custom Properties
+                </h4>
+                <button
+                  id="addCustomPropertyBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Add Property
+                </button>
+              </div>
+              <p class="schema-help">
+                Add extra Schema.org properties not exposed by the guided form.
+                Existing generated properties are never overwritten.
+              </p>
+              <div id="customPropertyList" class="schema-repeat-list"></div>
+            </section>
+          </section>
+        </div>
+
+        <div class="schema-actions">
+          <button
+            id="generateBtn"
+            class="btn"
+            type="button"
+            data-primary-action
+          >
+            Generate Schema
+          </button>
+          <button
+            id="clearBtn"
+            class="btn btn-secondary"
+            type="button"
+            data-clear-action
+          >
+            Clear
+          </button>
+        </div>
+
+        <div
+          id="message"
+          class="message"
+          role="status"
+          aria-live="polite"
+          aria-atomic="true"
+        ></div>
+
+        <section
+          id="resultSection"
+          class="schema-results"
+          aria-labelledby="result-title"
+          hidden
+        >
+          <h2 id="result-title">Generated Schema</h2>
+
+          <div class="stats-grid schema-stats">
+            <div class="stat-card">
+              <strong id="typeStat" class="stat-value">—</strong>
+              <span class="stat-label">Root Type</span>
+            </div>
+            <div class="stat-card">
+              <strong id="propertyStat" class="stat-value">0</strong>
+              <span class="stat-label">Properties</span>
+            </div>
+            <div class="stat-card">
+              <strong id="nestedStat" class="stat-value">0</strong>
+              <span class="stat-label">Nested Objects</span>
+            </div>
+            <div class="stat-card">
+              <strong id="graphStat" class="stat-value">0</strong>
+              <span class="stat-label">Graph Nodes</span>
+            </div>
+            <div class="stat-card">
+              <strong id="issueStat" class="stat-value">0</strong>
+              <span class="stat-label">Issues</span>
+            </div>
+            <div class="stat-card">
+              <strong id="sizeStat" class="stat-value">0 B</strong>
+              <span class="stat-label">JSON-LD Size</span>
+            </div>
+          </div>
+
+          <div class="schema-result-grid">
+            <section class="schema-panel" aria-labelledby="output-title">
+              <span id="outputModeBadge" class="schema-mode-badge">
+                Current schema
+              </span>
+              <h3 id="output-title" class="schema-panel-title">
+                JSON-LD Output
+              </h3>
+
+              <textarea
+                id="jsonOutput"
+                class="schema-output"
+                spellcheck="false"
+                aria-label="Generated JSON-LD"
+              ></textarea>
+
+              <div class="schema-output-actions">
+                <button id="validateBtn" class="btn" type="button">
+                  Validate Output
+                </button>
+                <button id="copyJsonBtn" class="btn btn-secondary" type="button">
+                  Copy JSON-LD
+                </button>
+                <button
+                  id="copyScriptBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Copy Script Tag
+                </button>
+                <button
+                  id="downloadJsonBtn"
+                  class="btn btn-secondary"
+                  type="button"
+                >
+                  Download .jsonld
+                </button>
+              </div>
+            </section>
+
+            <aside class="schema-panel" aria-labelledby="validation-title">
+              <h3 id="validation-title" class="schema-panel-title">
+                Validation & Review
+              </h3>
+
+              <div class="schema-validation-summary">
+                <div class="schema-validation-stat">
+                  <strong id="errorCount">0</strong>
+                  <span>Errors</span>
+                </div>
+                <div class="schema-validation-stat">
+                  <strong id="warningCount">0</strong>
+                  <span>Warnings</span>
+                </div>
+                <div class="schema-validation-stat">
+                  <strong id="infoCount">0</strong>
+                  <span>Notes</span>
+                </div>
+              </div>
+
+              <div id="issueList" class="schema-issues"></div>
+
+              <section style="margin-top: 14px" aria-labelledby="graph-title">
+                <div class="schema-repeat-head">
+                  <h4 id="graph-title" class="schema-repeat-title">
+                    @graph Builder
+                  </h4>
+                </div>
+
+                <p class="schema-help">
+                  Combine multiple generated entities into one JSON-LD graph.
+                </p>
+
+                <div id="graphList" class="schema-graph-list"></div>
+
+                <div class="schema-graph-actions">
+                  <button
+                    id="addGraphBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Add Current to Graph
+                  </button>
+                  <button
+                    id="useGraphBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    disabled
+                  >
+                    Show @graph
+                  </button>
+                  <button
+                    id="useCurrentBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Show Current
+                  </button>
+                  <button
+                    id="clearGraphBtn"
+                    class="btn btn-secondary"
+                    type="button"
+                    data-clear-action
+                    disabled
+                  >
+                    Clear Graph
+                  </button>
+                </div>
+              </section>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+
+        <p class="about-intro">
+          The XAVERT Markup Generator creates Schema.org structured data
+          in JSON-LD format for common website entities and content types.
+        </p>
+
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>
+            Generate Article, Product, LocalBusiness, Organization, WebSite,
+            BreadcrumbList, FAQPage, Event, SoftwareApplication, VideoObject and
+            Recipe markup.
+          </li>
+          <li>
+            Use guided fields for nested authors, publishers, offers, ratings,
+            addresses, locations and media.
+          </li>
+          <li>Create repeatable FAQ questions and breadcrumb items.</li>
+          <li>Create Recipe ingredient and instruction arrays.</li>
+          <li>Add advanced custom Schema.org properties with typed values.</li>
+          <li>
+            Check locally defined required and recommended implementation
+            properties before deployment.
+          </li>
+          <li>Edit the generated JSON-LD directly and validate JSON syntax.</li>
+          <li>Copy raw JSON-LD or a safe HTML script tag.</li>
+          <li>Download structured data as a .jsonld file.</li>
+          <li>Combine multiple entities with the built-in @graph builder.</li>
+          <li>
+            Open the official Google Rich Results Test or Schema.org validator
+            for external validation.
+          </li>
+        </ul>
+
+        <h3>Privacy First</h3>
+        <p class="about-privacy">
+          Form values, generated JSON-LD, validation results and graph entities
+          are processed locally in your browser. This tool does not require a
+          third-party runtime and does not upload your structured data to XAVERT.
+        </p>
+
+        <p>
+          Local checks in this tool are implementation guidance, not a guarantee
+          of Google rich-result eligibility. Search engines can change supported
+          features and requirements over time, and valid structured data must
+          accurately describe content that is visible on the page.
+        </p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

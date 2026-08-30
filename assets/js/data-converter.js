@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const state = {
     activeMode: "csvxlsx",
+    xlsxWorkbooks: new Map(),
+    xlsxLoadTokens: new Map(),
   };
 
   const modeConfigs = {
@@ -53,7 +55,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     xlsxcsv: {
       title: "XLSX to CSV",
-      description: "Convert an Excel XLSX spreadsheet into a CSV file.",
+      description:
+        "Convert one Excel worksheet to CSV or export every worksheet as separate CSV files in a ZIP archive.",
       body: `
                 <div class="workflow-body">
                     <div
@@ -71,6 +74,24 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
                     <input type="file" id="xlsxCsvFile" accept=".xlsx,.xls" hidden aria-label="Choose XLSX file">
                     <div id="xlsxCsvCount" class="file-count">No file selected</div>
+                    <div id="xlsxCsvOptions" class="xlsx-sheet-panel" hidden>
+                      <div class="xlsx-sheet-toolbar">
+                        <div class="form-group">
+                          <label for="xlsxCsvSheet">Worksheet</label>
+                          <select id="xlsxCsvSheet" aria-describedby="xlsxCsvSheetInfo"></select>
+                        </div>
+                        <div id="xlsxCsvSheetInfo" class="xlsx-sheet-info" aria-live="polite"></div>
+                      </div>
+                      <div class="xlsx-preview-block">
+                        <div class="xlsx-preview-heading">
+                          <strong>Preview</strong>
+                          <span id="xlsxCsvPreviewLabel"></span>
+                        </div>
+                        <div class="xlsx-preview-scroll">
+                          <table id="xlsxCsvPreviewTable" class="xlsx-preview-table" aria-label="Selected worksheet preview"></table>
+                        </div>
+                      </div>
+                    </div>
                     <div class="button-group">
                         <button type="button" data-action="primary">Convert to CSV</button>
                         <button type="button" data-action="clear">Clear</button>
@@ -80,7 +101,8 @@ document.addEventListener("DOMContentLoaded", () => {
     },
     xlsxjson: {
       title: "XLSX to JSON",
-      description: "Convert an Excel XLSX spreadsheet into a JSON file.",
+      description:
+        "Convert one Excel worksheet to JSON or export every worksheet as separate JSON files in a ZIP archive.",
       body: `
                 <div class="workflow-body">
                     <div
@@ -98,6 +120,24 @@ document.addEventListener("DOMContentLoaded", () => {
 </div>
                     <input type="file" id="xlsxJsonFile" accept=".xlsx,.xls" hidden aria-label="Choose XLSX file">
                     <div id="xlsxJsonCount" class="file-count">No file selected</div>
+                    <div id="xlsxJsonOptions" class="xlsx-sheet-panel" hidden>
+                      <div class="xlsx-sheet-toolbar">
+                        <div class="form-group">
+                          <label for="xlsxJsonSheet">Worksheet</label>
+                          <select id="xlsxJsonSheet" aria-describedby="xlsxJsonSheetInfo"></select>
+                        </div>
+                        <div id="xlsxJsonSheetInfo" class="xlsx-sheet-info" aria-live="polite"></div>
+                      </div>
+                      <div class="xlsx-preview-block">
+                        <div class="xlsx-preview-heading">
+                          <strong>Preview</strong>
+                          <span id="xlsxJsonPreviewLabel"></span>
+                        </div>
+                        <div class="xlsx-preview-scroll">
+                          <table id="xlsxJsonPreviewTable" class="xlsx-preview-table" aria-label="Selected worksheet preview"></table>
+                        </div>
+                      </div>
+                    </div>
                     <div class="button-group">
                         <button type="button" data-action="primary">Convert to JSON</button>
                         <button type="button" data-action="clear">Clear</button>
@@ -481,6 +521,8 @@ document.addEventListener("DOMContentLoaded", () => {
       message.textContent = "";
       message.className = "message";
     }
+
+    resetXlsxState(fileInputId);
   }
 
   function detectCsvSeparator(text) {
@@ -594,6 +636,377 @@ document.addEventListener("DOMContentLoaded", () => {
     return false;
   }
 
+  function hasZipLibrary(messageId) {
+    if (typeof JSZip !== "undefined") {
+      return true;
+    }
+
+    setMessage(
+      messageId,
+      "ZIP export support could not be loaded. Please refresh and try again.",
+      "error",
+    );
+    showMessage("ZIP export support is unavailable.", "error");
+    return false;
+  }
+
+  function getXlsxUiConfig(inputId) {
+    const configs = {
+      xlsxCsvFile: {
+        optionsId: "xlsxCsvOptions",
+        selectId: "xlsxCsvSheet",
+        infoId: "xlsxCsvSheetInfo",
+        previewLabelId: "xlsxCsvPreviewLabel",
+        previewTableId: "xlsxCsvPreviewTable",
+        messageId: "xlsxCsvMessage",
+      },
+      xlsxJsonFile: {
+        optionsId: "xlsxJsonOptions",
+        selectId: "xlsxJsonSheet",
+        infoId: "xlsxJsonSheetInfo",
+        previewLabelId: "xlsxJsonPreviewLabel",
+        previewTableId: "xlsxJsonPreviewTable",
+        messageId: "xlsxJsonMessage",
+      },
+    };
+
+    return configs[inputId] || null;
+  }
+
+  function getWorkbookFingerprint(file) {
+    return file
+      ? `${file.name}::${file.size}::${file.lastModified || 0}`
+      : "";
+  }
+
+  function getSheetDimensions(worksheet) {
+    if (!worksheet || !worksheet["!ref"]) {
+      return { rows: 0, columns: 0 };
+    }
+
+    try {
+      const range = XLSX.utils.decode_range(worksheet["!ref"]);
+      return {
+        rows: Math.max(0, range.e.r - range.s.r + 1),
+        columns: Math.max(0, range.e.c - range.s.c + 1),
+      };
+    } catch (error) {
+      console.warn("Unable to read worksheet dimensions.", error);
+      return { rows: 0, columns: 0 };
+    }
+  }
+
+  function formatCount(value, singular, plural = `${singular}s`) {
+    return `${value} ${value === 1 ? singular : plural}`;
+  }
+
+  function clearXlsxPreview(inputId) {
+    const config = getXlsxUiConfig(inputId);
+    if (!config) {
+      return;
+    }
+
+    const options = document.getElementById(config.optionsId);
+    const select = document.getElementById(config.selectId);
+    const info = document.getElementById(config.infoId);
+    const label = document.getElementById(config.previewLabelId);
+    const table = document.getElementById(config.previewTableId);
+
+    if (options) {
+      options.hidden = true;
+    }
+    if (select) {
+      select.onchange = null;
+      select.replaceChildren();
+    }
+    if (info) {
+      info.textContent = "";
+    }
+    if (label) {
+      label.textContent = "";
+    }
+    if (table) {
+      table.replaceChildren();
+    }
+  }
+
+  function resetXlsxState(inputId) {
+    state.xlsxWorkbooks.delete(inputId);
+    state.xlsxLoadTokens.delete(inputId);
+    clearXlsxPreview(inputId);
+  }
+
+  function getPreviewRows(worksheet, maxRows = 8, maxColumns = 8) {
+    const rows = XLSX.utils.sheet_to_json(worksheet, {
+      header: 1,
+      defval: "",
+      raw: false,
+      blankrows: false,
+    });
+
+    return rows.slice(0, maxRows).map((row) => row.slice(0, maxColumns));
+  }
+
+  function renderXlsxPreview(inputId, workbook) {
+    const config = getXlsxUiConfig(inputId);
+    const select = config ? document.getElementById(config.selectId) : null;
+    if (!config || !select || !workbook?.SheetNames?.length) {
+      return;
+    }
+
+    const selectedValue = select.value;
+    const previewSheetName =
+      selectedValue === "__all__" ? workbook.SheetNames[0] : selectedValue;
+    const worksheet = workbook.Sheets[previewSheetName];
+    const dimensions = getSheetDimensions(worksheet);
+    const info = document.getElementById(config.infoId);
+    const label = document.getElementById(config.previewLabelId);
+    const table = document.getElementById(config.previewTableId);
+
+    if (info) {
+      if (selectedValue === "__all__") {
+        info.textContent = `${formatCount(workbook.SheetNames.length, "sheet")} selected • previewing ${previewSheetName} • ${formatCount(dimensions.rows, "row")} × ${formatCount(dimensions.columns, "column")}`;
+      } else {
+        info.textContent = `${formatCount(workbook.SheetNames.length, "sheet")} in workbook • ${formatCount(dimensions.rows, "row")} × ${formatCount(dimensions.columns, "column")}`;
+      }
+    }
+
+    if (label) {
+      label.textContent =
+        selectedValue === "__all__"
+          ? `${previewSheetName} (first sheet)`
+          : previewSheetName;
+    }
+
+    if (!table) {
+      return;
+    }
+
+    table.replaceChildren();
+    const rows = getPreviewRows(worksheet);
+    if (!rows.length) {
+      const caption = document.createElement("caption");
+      caption.textContent = "This worksheet is empty.";
+      table.appendChild(caption);
+      return;
+    }
+
+    const columnCount = Math.max(...rows.map((row) => row.length), 0);
+    const thead = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
+      const th = document.createElement("th");
+      th.scope = "col";
+      th.textContent = XLSX.utils.encode_col(columnIndex);
+      headerRow.appendChild(th);
+    }
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = document.createElement("tbody");
+    rows.forEach((row) => {
+      const tr = document.createElement("tr");
+      for (let columnIndex = 0; columnIndex < columnCount; columnIndex += 1) {
+        const td = document.createElement("td");
+        const value = row[columnIndex] ?? "";
+        td.textContent = String(value);
+        tr.appendChild(td);
+      }
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  function populateXlsxSheetControls(inputId, workbook) {
+    const config = getXlsxUiConfig(inputId);
+    if (!config) {
+      return;
+    }
+
+    const options = document.getElementById(config.optionsId);
+    const select = document.getElementById(config.selectId);
+    if (!options || !select) {
+      return;
+    }
+
+    select.replaceChildren();
+
+    if (workbook.SheetNames.length > 1) {
+      const allOption = document.createElement("option");
+      allOption.value = "__all__";
+      allOption.textContent = `All sheets (${workbook.SheetNames.length}) — ZIP`;
+      select.appendChild(allOption);
+    }
+
+    workbook.SheetNames.forEach((sheetName) => {
+      const option = document.createElement("option");
+      option.value = sheetName;
+      option.textContent = sheetName;
+      select.appendChild(option);
+    });
+
+    // Preserve the old single-sheet workflow by selecting the first worksheet.
+    select.value = workbook.SheetNames[0];
+    options.hidden = false;
+    renderXlsxPreview(inputId, workbook);
+
+    select.onchange = () => {
+      renderXlsxPreview(inputId, workbook);
+    };
+  }
+
+  async function prepareXlsxInput(inputId) {
+    const input = document.getElementById(inputId);
+    const file = input?.files?.[0];
+    const config = getXlsxUiConfig(inputId);
+    if (!config || !file) {
+      resetXlsxState(inputId);
+      return null;
+    }
+
+    if (!hasXlsxLibrary(config.messageId)) {
+      return null;
+    }
+
+    const token = Symbol(inputId);
+    state.xlsxLoadTokens.set(inputId, token);
+    setMessage(config.messageId, "Reading workbook...", "info");
+
+    try {
+      const buffer = await file.arrayBuffer();
+      if (state.xlsxLoadTokens.get(inputId) !== token) {
+        return null;
+      }
+
+      const workbook = XLSX.read(buffer, {
+        type: "array",
+        cellDates: true,
+      });
+
+      if (!workbook.SheetNames.length) {
+        throw new Error("Workbook contains no worksheets.");
+      }
+
+      const record = {
+        workbook,
+        fingerprint: getWorkbookFingerprint(file),
+      };
+      state.xlsxWorkbooks.set(inputId, record);
+      populateXlsxSheetControls(inputId, workbook);
+      setMessage(
+        config.messageId,
+        `Workbook ready: ${formatCount(workbook.SheetNames.length, "sheet")}.`,
+        "info",
+      );
+      return workbook;
+    } catch (error) {
+      console.error(error);
+      resetXlsxState(inputId);
+      setMessage(
+        config.messageId,
+        "Unable to read this Excel workbook. The file may be damaged or unsupported.",
+        "error",
+      );
+      showMessage("Unable to read Excel workbook.", "error");
+      return null;
+    }
+  }
+
+  async function ensureXlsxWorkbook(inputId) {
+    const input = document.getElementById(inputId);
+    const file = input?.files?.[0];
+    if (!file) {
+      return null;
+    }
+
+    const cached = state.xlsxWorkbooks.get(inputId);
+    if (cached?.fingerprint === getWorkbookFingerprint(file)) {
+      return cached.workbook;
+    }
+
+    return prepareXlsxInput(inputId);
+  }
+
+  function getSelectedSheetNames(inputId, workbook) {
+    const config = getXlsxUiConfig(inputId);
+    const select = config ? document.getElementById(config.selectId) : null;
+    if (!select || !workbook?.SheetNames?.length) {
+      return workbook?.SheetNames?.slice(0, 1) || [];
+    }
+
+    return select.value === "__all__"
+      ? [...workbook.SheetNames]
+      : [select.value];
+  }
+
+  function sanitizeFilePart(value, fallback = "Sheet") {
+    const cleaned = String(value || "")
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "-")
+      .replace(/\s+/g, " ")
+      .replace(/[. ]+$/g, "")
+      .trim();
+
+    return (cleaned || fallback).slice(0, 80);
+  }
+
+  function getUniqueSheetFileName(sheetName, extension, usedNames) {
+    const base = sanitizeFilePart(sheetName);
+    let candidate = `${base}.${extension}`;
+    let counter = 2;
+
+    while (usedNames.has(candidate.toLowerCase())) {
+      candidate = `${base}-${counter}.${extension}`;
+      counter += 1;
+    }
+
+    usedNames.add(candidate.toLowerCase());
+    return candidate;
+  }
+
+  function normalizeJsonValue(value) {
+    if (value instanceof Date) {
+      return Number.isNaN(value.getTime()) ? null : value.toISOString();
+    }
+
+    if (Array.isArray(value)) {
+      return value.map(normalizeJsonValue);
+    }
+
+    if (value && typeof value === "object") {
+      return Object.fromEntries(
+        Object.entries(value).map(([key, item]) => [key, normalizeJsonValue(item)]),
+      );
+    }
+
+    return value;
+  }
+
+  function worksheetToJson(worksheet) {
+    const records = XLSX.utils.sheet_to_json(worksheet, {
+      defval: null,
+      raw: true,
+    });
+
+    return normalizeJsonValue(records);
+  }
+
+  function getCsvSeparator() {
+    const userLocale = navigator.language || navigator.userLanguage || "en-US";
+    const semicolonLocales = [
+      "it",
+      "fr",
+      "de",
+      "es",
+      "pt",
+      "nl",
+      "pl",
+      "tr",
+      "ru",
+    ];
+    const localePrefix = userLocale.split("-")[0].toLowerCase();
+    return semicolonLocales.includes(localePrefix) ? ";" : ",";
+  }
+
   function downloadBlob(blob, fileName) {
     downloadFile(fileName, blob, blob.type || "application/octet-stream");
   }
@@ -676,31 +1089,57 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      setMessage("xlsxCsvMessage", "Converting XLSX to CSV...", "info");
-      const buffer = await file.arrayBuffer();
-      const workbook = XLSX.read(buffer, { type: "array" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const userLocale =
-        navigator.language || navigator.userLanguage || "en-US";
-      const semicolonLocales = [
-        "it",
-        "fr",
-        "de",
-        "es",
-        "pt",
-        "nl",
-        "pl",
-        "tr",
-        "ru",
-      ];
-      const localePrefix = userLocale.split("-")[0].toLowerCase();
-      const csvSeparator = semicolonLocales.includes(localePrefix) ? ";" : ",";
-      const csv = XLSX.utils.sheet_to_csv(worksheet, { FS: csvSeparator });
+      const workbook = await ensureXlsxWorkbook("xlsxCsvFile");
+      if (!workbook) {
+        return;
+      }
 
-      downloadBlob(
-        new Blob([csv], { type: "text/csv;charset=utf-8" }),
-        "XAVERT-XLSX-to-CSV.csv",
-      );
+      const sheetNames = getSelectedSheetNames("xlsxCsvFile", workbook);
+      if (!sheetNames.length) {
+        throw new Error("No worksheet selected.");
+      }
+
+      setMessage("xlsxCsvMessage", "Converting XLSX to CSV...", "info");
+      const csvSeparator = getCsvSeparator();
+
+      if (sheetNames.length === 1) {
+        const sheetName = sheetNames[0];
+        const worksheet = workbook.Sheets[sheetName];
+        const csv = XLSX.utils.sheet_to_csv(worksheet, { FS: csvSeparator });
+        const fileName =
+          workbook.SheetNames.length === 1
+            ? "XAVERT-XLSX-to-CSV.csv"
+            : `XAVERT-XLSX-to-CSV-${sanitizeFilePart(sheetName)}.csv`;
+
+        downloadBlob(
+          new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }),
+          fileName,
+        );
+        showPrimarySuccess("xlsxCsvMessage");
+        return;
+      }
+
+      if (!hasZipLibrary("xlsxCsvMessage")) {
+        return;
+      }
+
+      const zip = new JSZip();
+      const usedNames = new Set();
+      sheetNames.forEach((sheetName) => {
+        const worksheet = workbook.Sheets[sheetName];
+        const csv = XLSX.utils.sheet_to_csv(worksheet, { FS: csvSeparator });
+        zip.file(
+          getUniqueSheetFileName(sheetName, "csv", usedNames),
+          `\ufeff${csv}`,
+        );
+      });
+
+      const archive = await zip.generateAsync({
+        type: "blob",
+        compression: "DEFLATE",
+        compressionOptions: { level: 6 },
+      });
+      downloadBlob(archive, "XAVERT-XLSX-to-CSV.zip");
       showPrimarySuccess("xlsxCsvMessage");
     } catch (error) {
       console.error(error);
@@ -721,18 +1160,56 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     try {
-      setMessage("xlsxJsonMessage", "Converting XLSX to JSON...", "info");
-      const buffer = await file.arrayBuffer();
-      const workbook = XLSX.read(buffer, { type: "array" });
-      const worksheet = workbook.Sheets[workbook.SheetNames[0]];
-      const json = XLSX.utils.sheet_to_json(worksheet, { defval: "" });
+      const workbook = await ensureXlsxWorkbook("xlsxJsonFile");
+      if (!workbook) {
+        return;
+      }
 
-      downloadBlob(
-        new Blob([JSON.stringify(json, null, 2)], {
-          type: "application/json;charset=utf-8",
-        }),
-        "XAVERT-XLSX-to-JSON.json",
-      );
+      const sheetNames = getSelectedSheetNames("xlsxJsonFile", workbook);
+      if (!sheetNames.length) {
+        throw new Error("No worksheet selected.");
+      }
+
+      setMessage("xlsxJsonMessage", "Converting XLSX to JSON...", "info");
+
+      if (sheetNames.length === 1) {
+        const sheetName = sheetNames[0];
+        const json = worksheetToJson(workbook.Sheets[sheetName]);
+        const fileName =
+          workbook.SheetNames.length === 1
+            ? "XAVERT-XLSX-to-JSON.json"
+            : `XAVERT-XLSX-to-JSON-${sanitizeFilePart(sheetName)}.json`;
+
+        downloadBlob(
+          new Blob([JSON.stringify(json, null, 2)], {
+            type: "application/json;charset=utf-8",
+          }),
+          fileName,
+        );
+        showPrimarySuccess("xlsxJsonMessage");
+        return;
+      }
+
+      if (!hasZipLibrary("xlsxJsonMessage")) {
+        return;
+      }
+
+      const zip = new JSZip();
+      const usedNames = new Set();
+      sheetNames.forEach((sheetName) => {
+        const json = worksheetToJson(workbook.Sheets[sheetName]);
+        zip.file(
+          getUniqueSheetFileName(sheetName, "json", usedNames),
+          JSON.stringify(json, null, 2),
+        );
+      });
+
+      const archive = await zip.generateAsync({
+        type: "blob",
+        compression: "DEFLATE",
+        compressionOptions: { level: 6 },
+      });
+      downloadBlob(archive, "XAVERT-XLSX-to-JSON.zip");
       showPrimarySuccess("xlsxJsonMessage");
     } catch (error) {
       console.error(error);
@@ -1373,6 +1850,9 @@ document.addEventListener("DOMContentLoaded", () => {
         dataTransfer.items.add(file);
         input.files = dataTransfer.files;
         updateFileCount(input.id);
+        if (getXlsxUiConfig(input.id)) {
+          void prepareXlsxInput(input.id);
+        }
       });
 
       input.addEventListener("change", () => {
@@ -1388,6 +1868,14 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         updateFileCount(input.id);
+
+        if (getXlsxUiConfig(input.id)) {
+          if (input.files?.[0]) {
+            void prepareXlsxInput(input.id);
+          } else {
+            resetXlsxState(input.id);
+          }
+        }
       });
     });
   }
@@ -1624,6 +2112,8 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    state.xlsxWorkbooks.clear();
+    state.xlsxLoadTokens.clear();
     state.activeMode = mode;
     elements.workflowTitle.textContent = config.title;
     elements.workflowDescription.textContent = config.description;

@@ -2,6 +2,11 @@
 
 const CSV_VIEWER_TOOL_ID = "csv-viewer-editor";
 const MAX_CSV_FILE_SIZE = 10 * 1024 * 1024;
+const MAX_CSV_ROWS = 100000;
+const MAX_CSV_COLUMNS = 500;
+const MAX_CSV_CELLS = 1000000;
+const MAX_RENDERED_CSV_ROWS = 500;
+const MAX_RENDERED_CSV_CELLS = 5000;
 
 const ALLOWED_CSV_MIME_TYPES = new Set([
   "text/csv",
@@ -58,6 +63,10 @@ function initCsvViewerEditor() {
   let currentDelimiter = ",";
   let sortDirection = 1;
   let sortedColumn = -1;
+  let currentViewData = [];
+  let currentPage = 1;
+  let csvCharacterCount = 0;
+  let searchTimer = 0;
 
   function setInlineMessage(text = "", type = "info") {
     if (!message) return;
@@ -163,6 +172,33 @@ function initCsvViewerEditor() {
     let row = [];
     let cell = "";
     let insideQuotes = false;
+    let parsedCells = 0;
+
+    function appendRow() {
+      if (row.length > MAX_CSV_COLUMNS) {
+        throw new Error(
+          `This CSV has more than ${MAX_CSV_COLUMNS.toLocaleString()} columns and cannot be edited safely in the browser.`,
+        );
+      }
+
+      parsedCells += row.length;
+
+      if (parsedCells > MAX_CSV_CELLS) {
+        throw new Error(
+          `This CSV has more than ${MAX_CSV_CELLS.toLocaleString()} cells and cannot be edited safely in the browser.`,
+        );
+      }
+
+      rows.push(row);
+
+      if (rows.length > MAX_CSV_ROWS) {
+        throw new Error(
+          `This CSV has more than ${MAX_CSV_ROWS.toLocaleString()} rows and cannot be edited safely in the browser.`,
+        );
+      }
+
+      row = [];
+    }
 
     for (let i = 0; i < text.length; i += 1) {
       const char = text[i];
@@ -175,14 +211,20 @@ function initCsvViewerEditor() {
         insideQuotes = !insideQuotes;
       } else if (char === delimiter && !insideQuotes) {
         row.push(cell);
+
+        if (row.length > MAX_CSV_COLUMNS) {
+          throw new Error(
+            `This CSV has more than ${MAX_CSV_COLUMNS.toLocaleString()} columns and cannot be edited safely in the browser.`,
+          );
+        }
+
         cell = "";
       } else if ((char === "\n" || char === "\r") && !insideQuotes) {
         if (char === "\r" && next === "\n") {
           i += 1;
         }
         row.push(cell);
-        rows.push(row);
-        row = [];
+        appendRow();
         cell = "";
       } else {
         cell += char;
@@ -191,7 +233,7 @@ function initCsvViewerEditor() {
 
     if (cell !== "" || row.length) {
       row.push(cell);
-      rows.push(row);
+      appendRow();
     }
 
     return rows.filter((item) => item.some((value) => value.trim() !== ""));
@@ -223,7 +265,17 @@ function initCsvViewerEditor() {
   }
 
   function normalizeRows(data) {
-    const maxColumns = Math.max(...data.map((row) => row.length));
+    const maxColumns = data.reduce(
+      (largest, row) => Math.max(largest, row.length),
+      0,
+    );
+
+    if (data.length * maxColumns > MAX_CSV_CELLS) {
+      throw new Error(
+        `This CSV would require more than ${MAX_CSV_CELLS.toLocaleString()} editable cells after normalization.`,
+      );
+    }
+
     return data.map((row) => {
       const normalized = row.slice();
       while (normalized.length < maxColumns) {
@@ -233,28 +285,61 @@ function initCsvViewerEditor() {
     });
   }
 
-  function updateStats() {
+  function updateStats({ recalculateSize = true } = {}) {
     const rows = csvData.length ? csvData.length - 1 : 0;
     const columns = csvData[0] ? csvData[0].length : 0;
     const cells = rows * columns;
-    const text = csvData.length ? toCSV(csvData) : "";
+
+    if (recalculateSize) {
+      csvCharacterCount = csvData.length ? toCSV(csvData).length : 0;
+    }
 
     rowCount.textContent = rows;
     columnCount.textContent = columns;
     cellCount.textContent = cells;
-    fileSize.textContent = text.length;
+    fileSize.textContent = csvCharacterCount;
   }
 
-  function renderTable(data) {
+  function removePaginationControls() {
+    tableContainer.querySelector(".csv-pagination-controls")?.remove();
+  }
+
+  function renderTable(
+    data,
+    { resetPage = true, recalculateSize = true } = {},
+  ) {
+    removePaginationControls();
     csvTable.replaceChildren();
+    currentViewData = data;
 
     if (!data.length) {
       tableContainer.hidden = true;
-      updateStats();
+      currentPage = 1;
+      updateStats({ recalculateSize });
       return;
     }
 
     tableContainer.hidden = false;
+
+    const columnTotal = Math.max(1, data[0].length);
+    const pageSize = Math.max(
+      1,
+      Math.min(
+        MAX_RENDERED_CSV_ROWS,
+        Math.floor(MAX_RENDERED_CSV_CELLS / columnTotal),
+      ),
+    );
+    const dataRows = data.slice(1);
+    const totalPages = Math.max(1, Math.ceil(dataRows.length / pageSize));
+
+    if (resetPage) {
+      currentPage = 1;
+    }
+
+    currentPage = Math.min(Math.max(1, currentPage), totalPages);
+
+    const startIndex = (currentPage - 1) * pageSize;
+    const visibleRows = dataRows.slice(startIndex, startIndex + pageSize);
 
     const thead = document.createElement("thead");
     const headerRow = document.createElement("tr");
@@ -290,8 +375,9 @@ function initCsvViewerEditor() {
 
     const tbody = document.createElement("tbody");
 
-    data.slice(1).forEach((row, rowIndex) => {
+    visibleRows.forEach((row, rowIndex) => {
       const tr = document.createElement("tr");
+      const visibleRowNumber = startIndex + rowIndex + 2;
 
       row.forEach((cell, colIndex) => {
         const td = document.createElement("td");
@@ -299,11 +385,20 @@ function initCsvViewerEditor() {
         input.value = cell;
         input.setAttribute(
           "aria-label",
-          `Row ${rowIndex + 2}, Column ${colIndex + 1}`,
+          `Row ${visibleRowNumber}, Column ${colIndex + 1}`,
         );
         input.addEventListener("input", () => {
-          csvData[rowIndex + 1][colIndex] = input.value;
-          updateStats();
+          const previousValue = row[colIndex] ?? "";
+          const nextValue = input.value;
+
+          if (previousValue === nextValue) {
+            return;
+          }
+
+          csvCharacterCount +=
+            escapeCSV(nextValue).length - escapeCSV(previousValue).length;
+          row[colIndex] = nextValue;
+          updateStats({ recalculateSize: false });
         });
         td.appendChild(input);
         tr.appendChild(td);
@@ -315,10 +410,20 @@ function initCsvViewerEditor() {
       deleteButton.textContent = "🗑";
       deleteButton.title = "Delete row";
       deleteButton.className = "delete-row-btn";
-      deleteButton.setAttribute("aria-label", `Delete row ${rowIndex + 2}`);
+      deleteButton.setAttribute("aria-label", `Delete row ${visibleRowNumber}`);
       deleteButton.addEventListener("click", () => {
-        csvData.splice(rowIndex + 1, 1);
-        renderTable(csvData);
+        const sourceIndex = csvData.indexOf(row);
+
+        if (sourceIndex <= 0) {
+          return;
+        }
+
+        csvData.splice(sourceIndex, 1);
+        renderFilteredRows({
+          announce: false,
+          resetPage: false,
+          recalculateSize: true,
+        });
         notify("Row deleted.", "success");
       });
       deleteCell.appendChild(deleteButton);
@@ -327,17 +432,91 @@ function initCsvViewerEditor() {
     });
 
     csvTable.appendChild(tbody);
-    updateStats();
+
+    if (totalPages > 1) {
+      const controls = document.createElement("div");
+      const previousButton = document.createElement("button");
+      const pageStatus = document.createElement("span");
+      const nextButton = document.createElement("button");
+      const visibleStart = startIndex + 1;
+      const visibleEnd = Math.min(startIndex + pageSize, dataRows.length);
+
+      controls.className = "button-grid csv-actions csv-pagination-controls";
+
+      previousButton.type = "button";
+      previousButton.className = "btn btn-secondary";
+      previousButton.textContent = "Previous Rows";
+      previousButton.disabled = currentPage === 1;
+      previousButton.addEventListener("click", () => {
+        currentPage -= 1;
+        renderTable(currentViewData, {
+          resetPage: false,
+          recalculateSize: false,
+        });
+      });
+
+      pageStatus.className = "message message-info";
+      pageStatus.setAttribute("role", "status");
+      pageStatus.setAttribute("aria-live", "polite");
+      pageStatus.setAttribute("aria-atomic", "true");
+      pageStatus.textContent = `Rows ${visibleStart.toLocaleString()}–${visibleEnd.toLocaleString()} of ${dataRows.length.toLocaleString()}`;
+
+      nextButton.type = "button";
+      nextButton.className = "btn btn-secondary";
+      nextButton.textContent = "Next Rows";
+      nextButton.disabled = currentPage === totalPages;
+      nextButton.addEventListener("click", () => {
+        currentPage += 1;
+        renderTable(currentViewData, {
+          resetPage: false,
+          recalculateSize: false,
+        });
+      });
+
+      controls.append(previousButton, pageStatus, nextButton);
+      tableContainer.appendChild(controls);
+    }
+
+    updateStats({ recalculateSize });
   }
 
   function loadCSV(text) {
+    const previousDelimiter = currentDelimiter;
     currentDelimiter = detectDelimiter(text);
-    const parsed = parseCSV(text);
+    let parsed;
+
+    try {
+      parsed = parseCSV(text);
+    } catch (error) {
+      currentDelimiter = previousDelimiter;
+      notify(
+        error instanceof Error
+          ? error.message
+          : "The CSV is too large to edit safely in the browser.",
+        "error",
+      );
+      return;
+    }
+
     if (!parsed.length) {
+      currentDelimiter = previousDelimiter;
       notify("CSV is empty or invalid.", "error");
       return;
     }
-    csvData = normalizeRows(parsed);
+
+    try {
+      csvData = normalizeRows(parsed);
+    } catch (error) {
+      currentDelimiter = previousDelimiter;
+      notify(
+        error instanceof Error
+          ? error.message
+          : "The CSV is too large to edit safely in the browser.",
+        "error",
+      );
+      return;
+    }
+
     sortedColumn = -1;
     sortDirection = 1;
     searchInput.value = "";
@@ -384,29 +563,60 @@ function initCsvViewerEditor() {
     });
 
     csvData = [header].concat(rows);
-    renderTable(csvData);
+    renderFilteredRows({
+      announce: false,
+      resetPage: true,
+      recalculateSize: false,
+    });
   }
 
-  function filterRows() {
+  function renderFilteredRows(
+    { announce = true, resetPage = true, recalculateSize = false } = {},
+  ) {
     const query = searchInput.value.toLowerCase().trim();
-    if (!query) {
-      renderTable(csvData);
-      setInlineMessage("");
+
+    if (!csvData.length) {
+      renderTable([], { resetPage, recalculateSize });
+
+      if (announce && query) {
+        notify("0 rows found.", "info", false);
+      }
+
       return;
     }
 
-    document.querySelectorAll("#csvTable tbody tr").forEach((row) => {
-      const text = Array.from(row.querySelectorAll("input"))
-        .map((input) => input.value)
-        .join(" ")
-        .toLowerCase();
-      row.classList.toggle("is-hidden-row", !text.includes(query));
+    if (!query) {
+      renderTable(csvData, { resetPage, recalculateSize });
+
+      if (announce) {
+        setInlineMessage("");
+      }
+
+      return;
+    }
+
+    const matchingRows = csvData.slice(1).filter((row) =>
+      row.some((value) => String(value).toLowerCase().includes(query)),
+    );
+
+    renderTable([csvData[0], ...matchingRows], {
+      resetPage,
+      recalculateSize,
     });
 
-    const found = Array.from(
-      document.querySelectorAll("#csvTable tbody tr"),
-    ).filter((row) => !row.classList.contains("is-hidden-row")).length;
-    notify(`${found} row${found !== 1 ? "s" : ""} found.`, "info", false);
+    if (announce) {
+      notify(
+        `${matchingRows.length.toLocaleString()} row${
+          matchingRows.length !== 1 ? "s" : ""
+        } found.`,
+        "info",
+        false,
+      );
+    }
+  }
+
+  function filterRows() {
+    renderFilteredRows();
   }
 
   function createNewCsv() {
@@ -434,12 +644,22 @@ function initCsvViewerEditor() {
     if (!csvData.length) {
       createNewCsv();
       return;
-    } else {
-      const columns = csvData[0].length;
-      const newRow = new Array(columns).fill("");
-      csvData.push(newRow);
     }
-    renderTable(csvData);
+
+    const columns = csvData[0].length;
+
+    if (
+      csvData.length >= MAX_CSV_ROWS ||
+      (csvData.length + 1) * columns > MAX_CSV_CELLS
+    ) {
+      notify("The CSV has reached the safe browser editing limit.", "error");
+      return;
+    }
+
+    csvData.push(new Array(columns).fill(""));
+    searchInput.value = "";
+    currentPage = Number.MAX_SAFE_INTEGER;
+    renderTable(csvData, { resetPage: false, recalculateSize: true });
     notify("Row added.", "success");
   }
 
@@ -466,14 +686,19 @@ function initCsvViewerEditor() {
   }
 
   function clearTool() {
+    window.clearTimeout(searchTimer);
     csvData = [];
     currentDelimiter = ",";
+    currentViewData = [];
+    currentPage = 1;
+    csvCharacterCount = 0;
     csvFile.value = "";
     searchInput.value = "";
     newCsvColumns.value = "3";
+    removePaginationControls();
     csvTable.replaceChildren();
     tableContainer.hidden = true;
-    updateStats();
+    updateStats({ recalculateSize: false });
     setInlineMessage("");
   }
 
@@ -512,7 +737,10 @@ function initCsvViewerEditor() {
     csvFile.value = "";
   });
 
-  searchInput.addEventListener("input", filterRows);
+  searchInput.addEventListener("input", () => {
+    window.clearTimeout(searchTimer);
+    searchTimer = window.setTimeout(filterRows, 150);
+  });
   newCsvBtn.addEventListener("click", createNewCsv);
   addRowBtn.addEventListener("click", addRow);
   downloadBtn.addEventListener("click", downloadCSV);

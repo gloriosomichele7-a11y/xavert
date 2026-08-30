@@ -1,5 +1,142 @@
 "use strict";
 
+const PASSPHRASE_WORDS = Object.freeze(
+[
+  "anchor", "apple", "apron", "arch", "arrow", "artist", "autumn", "badge", "baker", "bamboo", "basket", "beach",
+  "beacon", "berry", "bird", "black", "blade", "bloom", "blue", "board", "boat", "bolt", "book", "bottle",
+  "branch", "bread", "breeze", "brick", "bridge", "brook", "brush", "bucket", "cable", "cactus", "candle", "canyon",
+  "carpet", "castle", "cedar", "chair", "chalk", "charm", "cherry", "circle", "cloud", "coast", "comet", "coral",
+  "corner", "cotton", "crane", "creek", "crown", "crystal", "dawn", "desert", "diamond", "door", "dream", "drift",
+  "eagle", "earth", "ember", "engine", "feather", "field", "flame", "flower", "forest", "frost", "garden", "gate",
+  "glass", "globe", "grain", "grape", "grass", "green", "grove", "harbor", "heart", "hill", "honey", "horse",
+  "island", "ivory", "jade", "lake", "lantern", "leaf", "lemon", "light", "lily", "maple", "meadow", "metal",
+  "moon", "moss", "mountain", "ocean", "olive", "orange", "orbit", "owl", "paper", "peach", "pearl", "pine",
+  "planet", "plum", "pond", "prism", "quartz", "rain", "raven", "reef", "river", "road", "rocket", "rose",
+  "sand", "shadow", "shell", "shore", "silver", "sky", "smoke", "snow", "solar", "spark", "spring", "star",
+  "stone", "storm", "stream", "summer", "sun", "sunset", "surf", "tiger", "timber", "trail", "tree", "valley",
+  "velvet", "violet", "wave", "wheat", "willow", "wind", "winter", "wood", "world", "acorn", "amber", "angel",
+  "antler", "basil", "birch", "blossom", "bronze", "cabin", "camel", "canvas", "cliff", "clover", "daisy", "delta",
+  "dune", "elm", "falcon", "fern", "flint", "fog", "fox", "galaxy", "glacier", "gold", "hawk", "hazel",
+  "horizon", "iris", "ivy", "jungle", "lagoon", "lark", "lava", "lotus", "marble", "meteor", "mint", "mist",
+  "night", "oak", "oasis", "orchid", "pebble", "poppy", "reed", "ridge", "robin", "ruby", "sail", "sea",
+  "slate", "sparrow", "steel", "swan", "thunder", "tide", "topaz", "tulip", "vine", "whale", "wolf", "wren",
+  "able", "active", "agile", "alert", "alive", "ample", "ancient", "apt", "arctic", "basic", "bold", "brave",
+  "bright", "brisk", "calm", "candid", "careful", "casual", "certain", "clever", "clear", "cool", "crisp", "curious",
+  "daily", "deep", "eager", "early", "easy", "fair", "fast", "firm", "fresh", "gentle", "glad", "grand",
+  "great", "happy", "hardy", "honest", "ideal", "keen", "kind", "lively", "lucid", "lucky", "major", "mellow",
+  "mild", "modern", "neat", "noble", "open", "plain", "prime", "proud", "quick", "quiet", "rapid", "ready",
+  "safe", "sharp", "simple", "smart", "solid", "steady", "still", "strong", "sunny", "swift", "tidy", "true",
+  "vivid", "warm", "wise", "young", "adapt", "admire", "agree", "allow", "answer", "arrive", "assist", "avoid",
+  "balance", "begin", "believe", "build", "carry", "change", "choose", "climb", "collect", "compare", "connect", "create",
+  "dance", "decide", "design", "discover", "draw", "drive", "enjoy", "enter", "escape", "explore", "find", "finish",
+  "follow", "gather", "give", "grow", "guide", "help", "imagine", "improve", "join", "jump", "keep", "learn",
+  "listen", "make", "move", "notice", "paint", "plan", "play", "protect", "read", "relax", "remember", "repair",
+  "rest", "ride", "run", "save", "seek", "share", "sing", "solve", "speak", "stand", "start", "study",
+  "swim", "teach", "think", "travel", "trust", "turn", "use", "visit", "walk", "watch", "work", "write",
+  "animal", "badger", "beaver", "bison", "cobra", "dolphin", "donkey", "ferret", "gecko", "heron", "koala", "leopard",
+  "lion", "llama", "otter", "panda", "parrot", "rabbit", "salmon", "seal", "shark", "sheep", "sloth", "turtle",
+  "zebra", "almond", "bean", "cocoa", "coffee", "cream", "mango", "melon", "onion", "pear", "pepper", "rice",
+  "spice", "sugar", "vanilla", "aqua", "beige", "brown", "cyan", "gray", "indigo", "lilac", "lime", "maroon",
+  "navy", "ochre", "pink", "purple", "red", "teal", "white", "yellow", "april", "august", "friday", "january",
+  "july", "june", "march", "monday", "october", "saturday", "sunday", "thursday", "tuesday", "wednesday", "cone", "cube",
+  "curve", "line", "oval", "point", "ring", "shape", "sphere", "square", "triangle", "airport", "avenue", "barn",
+  "camp", "cellar", "city", "cottage", "court", "farm", "home", "hotel", "lane", "lodge", "market", "park",
+  "plaza", "port", "ranch", "station", "street", "tower", "town", "village", "yard", "camera", "card", "clock",
+  "compass", "drum", "flute", "frame", "guitar", "hammer", "helmet", "jacket", "key", "ladder", "lamp", "mirror",
+  "needle", "pencil", "pillow", "radio", "rope", "saddle", "scarf", "shield", "spoon", "table", "tent", "torch",
+  "wheel", "atom", "byte", "cache", "chip", "code", "data", "input", "logic", "matrix", "node", "pixel",
+  "query", "signal", "stack", "token", "vector", "abacus", "absorb", "accent", "access", "account", "action", "adjust",
+  "advice", "affair", "agency", "alarm", "album", "alley", "amount", "arena", "armor", "aspect", "atlas", "attic",
+  "audio", "award", "axis", "bacon", "bagel", "balcony", "balloon", "banner", "barrel", "basin", "battery", "beaker",
+  "blanket", "block", "blouse", "border", "bowl", "brake", "brass", "broom", "bubble", "button", "cabinet", "calendar",
+  "canal", "canoe", "carton", "cement", "chain", "chamber", "channel", "chapel", "chart", "chest", "chimney", "cinema",
+  "clamp", "clay", "clinic", "closet", "cloth", "coach", "column", "comic", "copper", "cord", "cork", "costume",
+  "cradle", "craft", "crater", "crate", "curtain", "cushion", "dairy", "deck", "depot", "desk", "dial", "diary",
+  "dish", "dock", "drawer", "drill", "driver", "envelope", "fabric", "faucet", "fence", "fiber", "flag", "folder",
+  "fountain", "freezer", "funnel", "garage", "gauge", "gear", "glove", "handle", "hinge", "hook", "hose", "iron",
+  "jar", "journal", "kettle", "keyboard", "kitchen", "label", "lens", "locker", "magnet", "map", "marker", "match",
+  "medal", "menu", "model", "motor", "mug", "nail", "napkin", "notebook", "oven", "packet", "paddle", "panel",
+  "parcel", "pedal", "pipe", "plate", "plug", "pocket", "poster", "pot", "pump", "rack", "rail", "razor",
+  "receipt", "ribbon", "ruler", "scale", "screen", "screw", "shelf", "shovel", "sign", "sink", "soap", "socket",
+  "sofa", "switch", "tape", "tile", "timer", "toolbox", "tray", "tube", "tunnel", "umbrella", "valve", "vase",
+  "wallet", "whistle", "window", "zipper", "actor", "adult", "agent", "author", "barber", "brewer", "builder", "buyer",
+  "caller", "captain", "chef", "clerk", "dancer", "dealer", "diver", "editor", "farmer", "guard", "hunter", "judge",
+  "leader", "maker", "miner", "nurse", "owner", "painter", "pilot", "player", "poet", "porter", "reader", "rider",
+  "sailor", "singer", "smith", "speaker", "teacher", "trader", "writer", "airplane", "bicycle", "bus", "cart", "ferry",
+  "glider", "helicopter", "jet", "kayak", "scooter", "ship", "subway", "taxi", "train", "tram", "truck", "van",
+  "wagon", "yacht", "ant", "bee", "beetle", "butterfly", "crab", "crow", "deer", "duck", "frog", "goat",
+  "goose", "insect", "lobster", "moose", "mouse", "octopus", "penguin", "pigeon", "pony", "ram", "rat", "snail",
+  "snake", "spider", "squid", "stork", "turkey", "ash", "aspen", "beech", "cypress", "fir", "palm", "poplar",
+  "redwood", "spruce", "barley", "beet", "beetroot", "cabbage", "carrot", "celery", "corn", "garlic", "ginger", "herb",
+  "kale", "lentil", "lettuce", "maize", "oat", "pea", "potato", "pumpkin", "radish", "rye", "spinach", "squash",
+  "tomato", "biscuit", "brownie", "cake", "candy", "cereal", "cheese", "cookie", "cracker", "donut", "muffin", "noodle",
+  "pasta", "pizza", "pudding", "sandwich", "soup", "toast", "waffle", "breakfast", "dinner", "lunch", "snack", "supper",
+  "ballet", "blues", "choir", "jazz", "melody", "opera", "rhythm", "song", "tango", "baseball", "boxing", "cricket",
+  "cycling", "football", "golf", "hockey", "racing", "rugby", "skiing", "soccer", "tennis", "volleyball", "alpine", "marsh",
+  "prairie", "swamp", "volcano", "dusk", "evening", "morning", "noon", "blizzard", "drizzle", "hail", "shower", "sleet",
+  "current", "energy", "force", "heat", "motion", "power", "pressure", "sound", "speed", "voltage", "acid", "carbon",
+  "element", "gas", "helium", "oxygen", "plasma", "sodium", "zinc", "algebra", "angle", "area", "decimal", "equation",
+  "formula", "graph", "integer", "number", "ratio", "sum", "total", "biology", "chemistry", "geology", "history", "language",
+  "math", "music", "physics", "science", "browser", "domain", "email", "internet", "link", "network", "server", "website",
+  "array", "boolean", "class", "constant", "function", "method", "object", "string", "variable", "backup", "commit", "debug",
+  "deploy", "merge", "patch", "release", "source", "test", "version", "checkbox", "dialog", "dropdown", "footer", "header",
+  "icon", "modal", "navbar", "sidebar", "tab", "privacy", "safety", "secure", "verify", "bargain", "budget", "coin",
+  "finance", "fund", "money", "price", "profit", "sale", "value", "bond", "capital", "equity", "trade", "butter",
+  "egg", "flour", "milk", "oil", "salt", "cup", "fork", "pan", "bed", "bench", "couch", "stool",
+  "bathroom", "bedroom", "hallway", "office", "porch", "family", "friend", "guest", "neighbor", "parent", "partner", "sister",
+  "brother", "baby", "child", "teen", "youth", "elder", "body", "brain", "ear", "eye", "face", "finger",
+  "foot", "hair", "hand", "head", "knee", "leg", "mouth", "neck", "nose", "skin", "tooth", "health",
+  "care", "diet", "fitness", "sleep", "sport", "chapter", "essay", "letter", "note", "page", "poem", "story",
+  "text", "title", "color", "image",
+]
+);
+
+const COMMON_PASSWORDS = Object.freeze(
+  new Set([
+    "123456",
+    "123456789",
+    "12345678",
+    "12345",
+    "1234567",
+    "password",
+    "password1",
+    "password123",
+    "qwerty",
+    "qwerty123",
+    "abc123",
+    "111111",
+    "123123",
+    "admin",
+    "letmein",
+    "welcome",
+    "monkey",
+    "dragon",
+    "football",
+    "iloveyou",
+    "princess",
+    "sunshine",
+    "master",
+    "login",
+    "passw0rd",
+    "p@ssword",
+    "p@ssw0rd",
+  ]),
+);
+
+const PASSWORD_SEQUENCE_SOURCES = Object.freeze([
+  "0123456789",
+  "9876543210",
+  "abcdefghijklmnopqrstuvwxyz",
+  "zyxwvutsrqponmlkjihgfedcba",
+  "qwertyuiop",
+  "poiuytrewq",
+  "asdfghjkl",
+  "lkjhgfdsa",
+  "zxcvbnm",
+  "mnbvcxz",
+]);
+
+
 function initPasswordToolkit() {
   const toolSelector = document.getElementById("toolSelector");
 
@@ -208,27 +345,80 @@ function initPasswordToolkit() {
     });
   }
 
-  function generatePronounceable(length, numbersEnabled) {
-    const vowels = "aeiou";
-    const consonants = "bcdfghjklmnpqrstvwxyz";
-
-    let baseLength = length;
-
-    if (numbersEnabled && length >= 3) {
-      baseLength = length - 3;
+  function generatePronounceable(
+    length,
+    {
+      uppercaseEnabled,
+      lowercaseEnabled,
+      numbersEnabled,
+      symbolsEnabled,
+      excludeSimilarEnabled,
+    },
+  ) {
+    if (!uppercaseEnabled && !lowercaseEnabled) {
+      throw new Error(
+        "Pronounceable passwords require uppercase or lowercase letters.",
+      );
     }
 
-    let result = "";
+    const requiredExtras =
+      Number(numbersEnabled) + Number(symbolsEnabled);
+    const letterCount = length - requiredExtras;
 
-    for (let index = 0; index < baseLength; index += 1) {
-      result += index % 2 === 0 ? pickRandom(consonants) : pickRandom(vowels);
+    if (letterCount < 2) {
+      throw new Error(
+        "Increase the password length for the selected pronounceable options.",
+      );
     }
 
-    if (numbersEnabled && length >= 3) {
-      result += String(100 + getSecureRandomIndex(900));
+    const vowels = excludeSimilarEnabled ? "aeu" : "aeiou";
+    const consonants = excludeSimilarEnabled
+      ? "bcdfghjkmnpqrstvwxyz"
+      : "bcdfghjklmnpqrstvwxyz";
+
+    const letters = [];
+
+    for (let index = 0; index < letterCount; index += 1) {
+      letters.push(
+        index % 2 === 0 ? pickRandom(consonants) : pickRandom(vowels),
+      );
     }
 
-    return result.slice(0, length);
+    if (uppercaseEnabled && lowercaseEnabled) {
+      for (let index = 0; index < letters.length; index += 1) {
+        if (getSecureRandomIndex(2) === 1) {
+          letters[index] = letters[index].toUpperCase();
+        }
+      }
+
+      const uppercaseIndex = getSecureRandomIndex(letters.length);
+      let lowercaseIndex = getSecureRandomIndex(letters.length - 1);
+
+      if (lowercaseIndex >= uppercaseIndex) {
+        lowercaseIndex += 1;
+      }
+
+      letters[uppercaseIndex] = letters[uppercaseIndex].toUpperCase();
+      letters[lowercaseIndex] = letters[lowercaseIndex].toLowerCase();
+    } else if (uppercaseEnabled) {
+      for (let index = 0; index < letters.length; index += 1) {
+        letters[index] = letters[index].toUpperCase();
+      }
+    }
+
+    const extras = [];
+
+    if (numbersEnabled) {
+      extras.push(
+        pickRandom(excludeSimilarEnabled ? "23456789" : "0123456789"),
+      );
+    }
+
+    if (symbolsEnabled) {
+      extras.push(pickRandom("!@#$%^&*()_-+=<>?/{}[]"));
+    }
+
+    return `${letters.join("")}${shuffleSecure(extras).join("")}`;
   }
 
   function generatePasswords() {
@@ -298,7 +488,15 @@ function initPasswordToolkit() {
     try {
       for (let count = 0; count < quantity; count += 1) {
         if (pronounceablePassword.checked) {
-          results.push(generatePronounceable(length, includeNumbers.checked));
+          results.push(
+            generatePronounceable(length, {
+              uppercaseEnabled: includeUppercase.checked,
+              lowercaseEnabled: includeLowercase.checked,
+              numbersEnabled: includeNumbers.checked,
+              symbolsEnabled: includeSymbols.checked,
+              excludeSimilarEnabled: excludeSimilar.checked,
+            }),
+          );
           continue;
         }
 
@@ -429,6 +627,178 @@ function initPasswordToolkit() {
     checkPasswordInput.type = showPasswordToggle.checked ? "text" : "password";
   }
 
+  function normalizePasswordPattern(password) {
+    return password
+      .toLowerCase()
+      .replace(/[@4]/g, "a")
+      .replace(/[3]/g, "e")
+      .replace(/[1!|]/g, "i")
+      .replace(/[0]/g, "o")
+      .replace(/[5$]/g, "s")
+      .replace(/[7+]/g, "t");
+  }
+
+  function hasPredictableSequence(password, minimumLength = 4) {
+    const compact = password.toLowerCase().replace(/[^a-z0-9]/g, "");
+
+    if (compact.length < minimumLength) {
+      return false;
+    }
+
+    for (
+      let start = 0;
+      start <= compact.length - minimumLength;
+      start += 1
+    ) {
+      const fragment = compact.slice(start, start + minimumLength);
+
+      if (
+        PASSWORD_SEQUENCE_SOURCES.some((source) => source.includes(fragment))
+      ) {
+        return true;
+      }
+    }
+
+    return false;
+  }
+
+  function calculateObservedEntropy(password) {
+    const counts = new Map();
+
+    for (const character of password) {
+      counts.set(character, (counts.get(character) ?? 0) + 1);
+    }
+
+    let entropyPerCharacter = 0;
+
+    for (const count of counts.values()) {
+      const probability = count / password.length;
+      entropyPerCharacter -= probability * Math.log2(probability);
+    }
+
+    return entropyPerCharacter * password.length;
+  }
+
+  function estimatePasswordMetrics(password) {
+    let charsetSize = 0;
+
+    if (/[A-Z]/.test(password)) charsetSize += 26;
+    if (/[a-z]/.test(password)) charsetSize += 26;
+    if (/[0-9]/.test(password)) charsetSize += 10;
+    if (/[^A-Za-z0-9]/.test(password)) charsetSize += 32;
+
+    const poolEntropy =
+      password.length * Math.log2(Math.max(charsetSize, 1));
+    const observedEntropy = calculateObservedEntropy(password);
+
+    /*
+     * The pool calculation assumes every position was chosen independently
+     * from the full detected character set. Real user-created passwords often
+     * contain patterns, so keep the estimate deliberately conservative.
+     */
+    let estimatedEntropy = Math.min(poolEntropy, observedEntropy + 20);
+
+    const lower = password.toLowerCase();
+    const normalized = normalizePasswordPattern(password);
+    const compactNormalized = normalized.replace(/[^a-z0-9]/g, "");
+
+    /*
+     * Detect common bases even when the user adds predictable digits or
+     * punctuation around them (for example, P@ssw0rd123!).
+     */
+    const edgeStripped = lower
+      .replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, "")
+      .replace(/^\d+|\d+$/g, "");
+    const normalizedBase = normalizePasswordPattern(edgeStripped).replace(
+      /[^a-z]/g,
+      "",
+    );
+
+    const commonBases = [
+      "password",
+      "qwerty",
+      "admin",
+      "letmein",
+      "welcome",
+      "monkey",
+      "dragon",
+      "football",
+      "iloveyou",
+      "princess",
+      "sunshine",
+      "master",
+      "login",
+      "abc",
+    ];
+
+    const commonMatch =
+      COMMON_PASSWORDS.has(lower) ||
+      COMMON_PASSWORDS.has(normalized) ||
+      COMMON_PASSWORDS.has(compactNormalized) ||
+      commonBases.includes(normalizedBase);
+
+    if (commonMatch) {
+      estimatedEntropy = Math.min(estimatedEntropy, 8);
+    }
+
+    if (/^(.)\1+$/.test(password)) {
+      estimatedEntropy = Math.min(estimatedEntropy, 4);
+    } else {
+      if (/(.)\1{2,}/.test(password)) {
+        estimatedEntropy -= 10;
+      }
+
+      if (/(.{2,6})\1{1,}/.test(password)) {
+        estimatedEntropy -= 12;
+      }
+
+      if (hasPredictableSequence(password)) {
+        estimatedEntropy -= 12;
+      }
+
+      if (/(?:19|20)\d{2}/.test(password)) {
+        estimatedEntropy -= 6;
+      }
+
+      const uniqueRatio = new Set(password).size / password.length;
+
+      if (password.length >= 6 && uniqueRatio < 0.45) {
+        estimatedEntropy -= 10;
+      } else if (password.length >= 6 && uniqueRatio < 0.6) {
+        estimatedEntropy -= 5;
+      }
+    }
+
+    estimatedEntropy = Math.max(0, Math.round(estimatedEntropy));
+
+    let score = Math.min(100, Math.round((estimatedEntropy / 80) * 100));
+
+    if (password.length < 8) {
+      score = Math.min(score, 30);
+    } else if (password.length < 10) {
+      score = Math.min(score, 50);
+    } else if (password.length < 12) {
+      score = Math.min(score, 70);
+    }
+
+    if (commonMatch) {
+      score = Math.min(score, 10);
+    }
+
+    let level = "Very Weak";
+
+    if (score >= 85) level = "Strong";
+    else if (score >= 65) level = "Good";
+    else if (score >= 40) level = "Moderate";
+    else if (score >= 20) level = "Weak";
+
+    return {
+      score,
+      level,
+      entropy: estimatedEntropy,
+    };
+  }
+
   function checkPasswordStrength() {
     const password = checkPasswordInput.value;
 
@@ -441,53 +811,13 @@ function initPasswordToolkit() {
       return;
     }
 
-    let charsetSize = 0;
+    const metrics = estimatePasswordMetrics(password);
 
-    if (/[A-Z]/.test(password)) charsetSize += 26;
-    if (/[a-z]/.test(password)) charsetSize += 26;
-    if (/[0-9]/.test(password)) charsetSize += 10;
-    if (/[^A-Za-z0-9]/.test(password)) charsetSize += 32;
+    strengthFill.style.width = `${metrics.score}%`;
 
-    const entropy = Math.round(password.length * Math.log2(charsetSize || 1));
-
-    let score = 0;
-
-    if (password.length >= 8) score += 15;
-    if (password.length >= 12) score += 15;
-    if (password.length >= 16) score += 15;
-    if (/[A-Z]/.test(password)) score += 15;
-    if (/[a-z]/.test(password)) score += 15;
-    if (/[0-9]/.test(password)) score += 15;
-    if (/[^A-Za-z0-9]/.test(password)) score += 15;
-
-    const commonPasswords = new Set([
-      "password",
-      "123456",
-      "12345678",
-      "qwerty",
-      "admin",
-      "welcome",
-      "letmein",
-    ]);
-
-    if (commonPasswords.has(password.toLowerCase())) {
-      score = 5;
-    }
-
-    score = Math.min(score, 100);
-
-    let level = "Very Weak";
-
-    if (score >= 85) level = "Strong";
-    else if (score >= 65) level = "Good";
-    else if (score >= 40) level = "Moderate";
-    else if (score >= 20) level = "Weak";
-
-    strengthFill.style.width = `${score}%`;
-
-    strengthLevel.textContent = level;
-    strengthScore.textContent = `${score}/100`;
-    entropyBits.textContent = String(entropy);
+    strengthLevel.textContent = metrics.level;
+    strengthScore.textContent = `${metrics.score}/100`;
+    entropyBits.textContent = String(metrics.entropy);
 
     checkerResult.hidden = false;
 
@@ -511,39 +841,12 @@ function initPasswordToolkit() {
   }
 
   function generatePassphrase() {
-    const words = [
-      "river",
-      "stone",
-      "forest",
-      "cloud",
-      "ocean",
-      "mountain",
-      "tiger",
-      "falcon",
-      "planet",
-      "shadow",
-      "silver",
-      "rocket",
-      "dragon",
-      "winter",
-      "summer",
-      "thunder",
-      "crystal",
-      "sunset",
-      "galaxy",
-      "anchor",
-      "bridge",
-      "castle",
-      "comet",
-      "storm",
-    ];
-
     const count = Number(wordCount.value);
 
-    if (!Number.isInteger(count) || count < 3 || count > 10) {
+    if (!Number.isInteger(count) || count < 4 || count > 10) {
       notify(
         passphraseMessage,
-        "Word count must be between 3 and 10.",
+        "Word count must be between 4 and 10.",
         "error",
       );
       return;
@@ -553,7 +856,7 @@ function initPasswordToolkit() {
 
     try {
       currentPassphrase = Array.from({ length: count }, () =>
-        pickRandom(words),
+        pickRandom(PASSPHRASE_WORDS),
       ).join(separator);
     } catch (error) {
       notify(
@@ -570,11 +873,15 @@ function initPasswordToolkit() {
     passphraseResult.hidden = false;
     copyPassphraseBtn.disabled = false;
 
-    notify(passphraseMessage, "Passphrase generated successfully.", "success");
+    notify(
+      passphraseMessage,
+      "Passphrase generated successfully.",
+      "success",
+    );
   }
 
   function clearPassphrase() {
-    wordCount.value = "4";
+    wordCount.value = "6";
     wordSeparator.value = "-";
     currentPassphrase = "";
 

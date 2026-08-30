@@ -153,6 +153,30 @@
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/json-toolkit.js" defer></script>
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "JSON Toolkit",
+      "url": "https://xavert.com/tools/json-toolkit.html",
+      "description": "Format, validate, minify, escape, unescape, upload, download and compare JSON data directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
@@ -300,7 +324,7 @@
               id="mainMessage"
               class="message"
               role="status"
-              aria-live="polite"
+              aria-live="polite" aria-atomic="true"
             ></div>
           </div>
         </section>
@@ -347,6 +371,7 @@
                 id="clearEscapeBtn"
                 class="btn btn-secondary"
                 type="button"
+                data-clear-action
               >
                 Clear
               </button>
@@ -369,7 +394,7 @@
               id="escapeMessage"
               class="message"
               role="status"
-              aria-live="polite"
+              aria-live="polite" aria-atomic="true"
             ></div>
           </div>
         </section>
@@ -421,6 +446,7 @@
                 id="clearCompareBtn"
                 class="btn btn-secondary"
                 type="button"
+                data-clear-action
               >
                 Clear
               </button>
@@ -431,7 +457,7 @@
               id="compareMessage"
               class="message"
               role="status"
-              aria-live="polite"
+              aria-live="polite" aria-atomic="true"
             ></div>
           </div>
         </section>

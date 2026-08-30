@@ -224,11 +224,11 @@ function initSitemapGenerator() {
 
   function loadSample() {
     urls.value = [
-      "https://xavert.com",
-      "https://xavert.com/about",
-      "https://xavert.com/tools",
-      "https://xavert.com/privacy-first",
-      "https://xavert.com/contact",
+      "https://xavert.com/",
+      "https://xavert.com/privacy-policy.html",
+      "https://xavert.com/terms-of-use.html",
+      "https://xavert.com/tools/sitemap-generator.html",
+      "https://xavert.com/tools/markup-generator.html",
     ].join("\n");
 
     changefreq.value = "daily";

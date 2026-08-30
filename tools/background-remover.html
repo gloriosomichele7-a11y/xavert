@@ -1,0 +1,718 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Background Remover</title>
+
+    <meta
+      name="description"
+      content="Remove image backgrounds directly in your browser with AI. Create transparent PNG, WebP or JPG cutouts without uploading your image to XAVERT."
+    />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/background-remover.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Background Remover" />
+    <meta
+      property="og:description"
+      content="Remove image backgrounds with browser-based AI and export transparent cutouts."
+    />
+    <meta
+      property="og:url"
+      content="https://xavert.com/tools/background-remover.html"
+    />
+    <meta
+      property="og:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Background Remover" />
+    <meta
+      name="twitter:description"
+      content="Remove image backgrounds locally in your browser with AI."
+    />
+    <meta
+      name="twitter:image"
+      content="https://xavert.com/assets/images/og-image.png"
+    />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Background Remover",
+        "alternateName": "XAVERT Background Remover",
+        "applicationCategory": "MultimediaApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "url": "https://xavert.com/tools/background-remover.html",
+        "description": "Remove image backgrounds directly in your browser with AI and export transparent PNG, WebP or JPG images.",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "USD"
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "XAVERT"
+        },
+        "featureList": [
+          "AI background removal",
+          "Browser-side image processing",
+          "Transparent PNG export",
+          "WebP and JPG export",
+          "Custom background color",
+          "Edge cleanup",
+          "Automatic subject cropping",
+          "Adjustable subject padding",
+          "Before and after preview"
+        ]
+      }
+    </script>
+
+    <style>
+      .bg-drop-zone {
+        display: flex;
+        min-height: 170px;
+        padding: 26px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        transition:
+          border-color 0.2s ease,
+          background-color 0.2s ease,
+          transform 0.2s ease;
+      }
+
+      .bg-drop-zone:hover,
+      .bg-drop-zone:focus-visible,
+      .bg-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
+      }
+
+      .bg-drop-zone:hover,
+      .bg-drop-zone:focus-visible {
+        transform: translateY(-1px);
+      }
+
+      .bg-drop-title {
+        display: block;
+        margin-bottom: 6px;
+        font-size: 16px;
+        font-weight: 800;
+      }
+
+      .bg-drop-help,
+      .bg-file-info,
+      .bg-runtime-note,
+      .bg-progress-label,
+      .bg-option-help {
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.55;
+      }
+
+      .bg-file-info {
+        margin-top: 12px;
+        font-weight: 700;
+        overflow-wrap: anywhere;
+      }
+
+      .bg-file-input {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .bg-settings {
+        margin-top: 20px;
+      }
+
+      .bg-color-row {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 72px;
+        gap: 10px;
+        align-items: end;
+      }
+
+      .bg-color-input {
+        width: 72px;
+        min-height: 46px;
+        padding: 4px;
+        cursor: pointer;
+      }
+
+      .bg-range-row {
+        display: flex;
+        gap: 12px;
+        align-items: center;
+      }
+
+      .bg-range-row input[type="range"] {
+        flex: 1;
+      }
+
+      .bg-range-value {
+        min-width: 48px;
+        font-weight: 800;
+        text-align: right;
+      }
+
+      .bg-checkbox-row {
+        display: flex;
+        gap: 10px;
+        align-items: flex-start;
+      }
+
+      .bg-checkbox-row input {
+        width: auto;
+        min-height: auto;
+        margin-top: 3px;
+      }
+
+      .bg-checkbox-copy {
+        min-width: 0;
+      }
+
+      .bg-checkbox-copy label {
+        margin: 0;
+        font-weight: 800;
+      }
+
+      .bg-actions,
+      .bg-result-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(min(100%, 160px), 1fr));
+        gap: 12px;
+        margin-top: 20px;
+      }
+
+      .bg-progress-wrap {
+        margin-top: 18px;
+      }
+
+      .bg-progress {
+        width: 100%;
+        height: 12px;
+        margin-top: 7px;
+      }
+
+      .bg-preview-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+
+      .bg-preview-panel {
+        min-width: 0;
+      }
+
+      .bg-preview-panel h3 {
+        margin: 0 0 10px;
+        font-size: 16px;
+      }
+
+      .bg-preview-frame {
+        display: flex;
+        min-height: 280px;
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background-color: #ffffff;
+        background-image:
+          linear-gradient(45deg, #f3f4f6 25%, transparent 25%),
+          linear-gradient(-45deg, #f3f4f6 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, #f3f4f6 75%),
+          linear-gradient(-45deg, transparent 75%, #f3f4f6 75%);
+        background-position:
+          0 0,
+          0 8px,
+          8px -8px,
+          -8px 0;
+        background-size: 16px 16px;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+      }
+
+      .bg-preview-frame img,
+      .bg-preview-frame canvas {
+        display: block;
+        max-width: 100%;
+        max-height: 520px;
+        width: auto;
+        height: auto;
+      }
+
+      .bg-result-meta {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+        margin-top: 18px;
+      }
+
+      .bg-meta-item {
+        padding: 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 12px;
+        background: #f9fafb;
+      }
+
+      .bg-meta-item strong,
+      .bg-meta-item span {
+        display: block;
+      }
+
+      .bg-meta-item strong {
+        margin-bottom: 4px;
+        font-size: 15px;
+      }
+
+      .bg-meta-item span {
+        color: #6b7280;
+        font-size: 12px;
+        font-weight: 700;
+      }
+
+      .bg-model-note {
+        margin-top: 14px;
+        padding: 12px 14px;
+        border: 1px solid #e5e7eb;
+        border-radius: 10px;
+        background: #f9fafb;
+        color: #4b5563;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
+      .bg-model-note a {
+        color: #dc2626;
+        font-weight: 700;
+      }
+
+      @media (max-width: 800px) {
+        .bg-preview-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bg-result-meta {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      @media (max-width: 576px) {
+        .bg-drop-zone {
+          min-height: 140px;
+          padding: 20px;
+        }
+
+        .bg-result-meta {
+          grid-template-columns: 1fr;
+        }
+
+        .bg-preview-frame {
+          min-height: 220px;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .bg-drop-zone {
+          transition: none;
+        }
+
+        .bg-drop-zone:hover,
+        .bg-drop-zone:focus-visible {
+          transform: none;
+        }
+      }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/background-remover.js" defer></script>
+  </head>
+
+  <body
+    data-tool="background-remover"
+    data-related-tools="image-toolkit,color-palette-extractor,color-toolkit,pdf-toolkit,base64-toolkit"
+  >
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img
+          src="../logo-hero.svg"
+          alt="XAVERT"
+          class="tool-logo"
+          width="210"
+          height="210"
+          fetchpriority="high"
+          decoding="async"
+        />
+
+        <h1 id="tool-title" class="tool-title">Background Remover</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="background-workspace-title">
+          <header class="tool-card-header">
+            <h2 id="background-workspace-title" class="tool-card-title">
+              Remove an Image Background
+            </h2>
+
+            <p class="tool-card-description">
+              Select a JPG, PNG or WebP image. The AI model runs in your browser
+              and creates a transparent foreground cutout.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div
+              id="dropZone"
+              class="bg-drop-zone"
+              role="button"
+              tabindex="0"
+              aria-controls="imageInput"
+              aria-label="Select or drop an image"
+            >
+              <div>
+                <span class="bg-drop-title">Choose an image or drop it here</span>
+                <span class="bg-drop-help">
+                  JPG, PNG or WebP · up to 25 MB · image limits adapt to your device
+                </span>
+              </div>
+            </div>
+
+            <input
+              id="imageInput"
+              class="bg-file-input"
+              type="file"
+              aria-label="Choose an image file"
+              accept="image/jpeg,image/png,image/webp,.jpg,.jpeg,.png,.webp"
+            />
+
+            <div id="fileInfo" class="bg-file-info" aria-live="polite">
+              No image selected.
+            </div>
+
+            <div class="form-grid bg-settings">
+              <div class="form-group">
+                <label for="backgroundMode">Output Background</label>
+                <select id="backgroundMode">
+                  <option value="transparent" selected>Transparent</option>
+                  <option value="white">White</option>
+                  <option value="custom">Custom Color</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label for="outputFormat">Download Format</label>
+                <select id="outputFormat">
+                  <option value="png" selected>PNG</option>
+                  <option value="webp">WebP</option>
+                  <option value="jpeg">JPG</option>
+                </select>
+              </div>
+
+              <div class="form-group" id="customColorGroup" hidden>
+                <label for="backgroundColor">Background Color</label>
+                <div class="bg-color-row">
+                  <input
+                    id="backgroundColorText"
+                    type="text"
+                    value="#ffffff"
+                    maxlength="7"
+                    inputmode="text"
+                    aria-label="Background color hex value"
+                  />
+                  <input
+                    id="backgroundColor"
+                    class="bg-color-input"
+                    type="color"
+                    value="#ffffff"
+                    aria-label="Choose background color"
+                  />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="edgeCleanup">Edge Cleanup</label>
+                <div class="bg-range-row">
+                  <input
+                    id="edgeCleanup"
+                    type="range"
+                    min="0"
+                    max="30"
+                    step="1"
+                    value="0"
+                  />
+                  <span id="edgeCleanupValue" class="bg-range-value">0%</span>
+                </div>
+                <span class="bg-option-help">
+                  Increase only when faint background pixels remain around the subject.
+                </span>
+              </div>
+
+              <div class="form-group">
+                <div class="bg-checkbox-row">
+                  <input id="autoCrop" type="checkbox" />
+                  <div class="bg-checkbox-copy">
+                    <label for="autoCrop">Auto Crop to Subject</label>
+                    <span class="bg-option-help">
+                      Trim empty background around the detected foreground while keeping
+                      the subject at full available resolution.
+                    </span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="form-group" id="paddingGroup" hidden>
+                <label for="cropPadding">Subject Padding</label>
+                <div class="bg-range-row">
+                  <input
+                    id="cropPadding"
+                    type="range"
+                    min="0"
+                    max="25"
+                    step="1"
+                    value="5"
+                  />
+                  <span id="cropPaddingValue" class="bg-range-value">5%</span>
+                </div>
+                <span class="bg-option-help">
+                  Preserve adjustable space around the automatically cropped subject
+                  when the original image has room available.
+                </span>
+              </div>
+
+              <div class="form-group" id="qualityGroup" hidden>
+                <label for="outputQuality">Export Quality</label>
+                <div class="bg-range-row">
+                  <input
+                    id="outputQuality"
+                    type="range"
+                    min="60"
+                    max="100"
+                    step="1"
+                    value="92"
+                  />
+                  <span id="outputQualityValue" class="bg-range-value">92%</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="button-grid bg-actions">
+              <button
+                id="removeBtn"
+                class="btn"
+                type="button"
+                data-primary-action
+                disabled
+              >
+                Remove Background
+              </button>
+
+              <button
+                id="replaceBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Choose Image
+              </button>
+
+              <button
+                id="clearBtn"
+                class="btn btn-secondary"
+                type="button"
+                data-clear-action
+              >
+                Clear
+              </button>
+            </div>
+
+            <div id="progressWrap" class="bg-progress-wrap" hidden>
+              <div id="progressLabel" class="bg-progress-label" role="status">
+                Preparing AI model…
+              </div>
+              <progress id="modelProgress" class="bg-progress" max="100"></progress>
+            </div>
+
+            <div
+              id="message"
+              class="message"
+              role="status"
+              aria-live="polite"
+              aria-atomic="true"
+            ></div>
+
+            <p class="bg-runtime-note">
+              First use downloads the browser AI runtime and an approximately 44 MB
+              quantized model. They can be cached by your browser for later use.
+            </p>
+          </div>
+        </section>
+
+        <section
+          id="resultSection"
+          class="tool-card"
+          aria-labelledby="background-result-title"
+          hidden
+        >
+          <header class="tool-card-header">
+            <h2 id="background-result-title" class="tool-card-title">
+              Before &amp; After
+            </h2>
+            <p class="tool-card-description">
+              Review the cutout, adjust the background, edges or subject crop, then export.
+            </p>
+          </header>
+
+          <div class="tool-card-body">
+            <div class="bg-preview-grid">
+              <div class="bg-preview-panel">
+                <h3>Original</h3>
+                <div class="bg-preview-frame">
+                  <img id="originalPreview" alt="Original selected image preview" />
+                </div>
+              </div>
+
+              <div class="bg-preview-panel">
+                <h3>Background Removed</h3>
+                <div class="bg-preview-frame">
+                  <canvas
+                    id="resultCanvas"
+                    aria-label="Background removed image preview"
+                  ></canvas>
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-result-meta">
+              <div class="bg-meta-item">
+                <strong id="dimensionsStat">—</strong>
+                <span>Output Dimensions</span>
+              </div>
+              <div class="bg-meta-item">
+                <strong id="fileSizeStat">—</strong>
+                <span>Original Size</span>
+              </div>
+              <div class="bg-meta-item">
+                <strong id="processingStat">—</strong>
+                <span>Processing Time</span>
+              </div>
+              <div class="bg-meta-item">
+                <strong id="modelStat">ORMBG q8</strong>
+                <span>AI Model</span>
+              </div>
+            </div>
+
+            <div class="button-grid bg-result-actions">
+              <button id="downloadBtn" class="btn" type="button">
+                Download Image
+              </button>
+              <button id="copyImageBtn" class="btn btn-secondary" type="button">
+                Copy PNG
+              </button>
+              <button id="newImageBtn" class="btn btn-secondary" type="button">
+                Replace Image
+              </button>
+            </div>
+          </div>
+        </section>
+
+        <section class="info about-card" aria-labelledby="about-title">
+          <h2 id="about-title">About</h2>
+
+          <p class="about-intro">
+            XAVERT Background Remover isolates the main foreground subject of an
+            image with browser-based AI and creates a cutout that can be exported
+            with transparency or a solid background.
+          </p>
+
+          <h3>Main Features</h3>
+          <ul class="about-features">
+            <li>Automatic AI background removal for JPG, PNG and WebP images.</li>
+            <li>Full-resolution output within browser-safe image limits.</li>
+            <li>Transparent, white or custom-color backgrounds.</li>
+            <li>Optional edge cleanup for faint background remnants.</li>
+            <li>Automatic subject cropping with adjustable output padding.</li>
+            <li>PNG, WebP and JPG downloads with configurable export quality.</li>
+            <li>Before-and-after preview and PNG clipboard copy when supported.</li>
+          </ul>
+
+          <h3>Privacy First</h3>
+          <p class="about-privacy">
+            Your selected image is processed in your browser and is not uploaded
+            to XAVERT. On first use, your browser downloads the AI runtime from
+            jsDelivr and the ORMBG model files from Hugging Face. Those external
+            resources may be cached by your browser.
+          </p>
+
+          <div class="bg-model-note">
+            Runtime: Transformers.js 4.2.0 (Apache-2.0). Model:
+            <a
+              href="https://huggingface.co/onnx-community/ormbg-ONNX"
+              target="_blank"
+              rel="noopener noreferrer"
+            >onnx-community/ormbg-ONNX</a>
+            (Apache-2.0). XAVERT currently uses the quantized q8 model in WASM
+            compatibility mode because background-removal WebGPU support can vary
+            across browser and driver combinations.
+          </div>
+
+          <h3>Important Note</h3>
+          <p>
+            AI cutouts can require manual refinement around hair, glass, shadows,
+            transparent objects or very similar foreground and background colors.
+            Edge Cleanup can make uncertain edges crisper, but high values can also
+            remove fine details. Auto Crop uses the resulting alpha mask and may leave
+            extra space when the model detects soft shadows or semi-transparent edges.
+          </p>
+        </section>
+
+        <section class="info" hidden>
+          <h2>Related Tools</h2>
+          <div id="related-tools"></div>
+        </section>
+      </div>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+
+    <div
+      id="xavert-toast"
+      class="xavert-toast"
+      role="status"
+      aria-live="polite"
+      aria-atomic="true"
+      hidden
+    ></div>
+  </body>
+</html>

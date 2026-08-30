@@ -39,8 +39,19 @@
         margin-top: 18px;
       }
 
+      .ua-note {
+        margin: 10px 0 0;
+        color: #6b7280;
+        font-size: 13px;
+        line-height: 1.6;
+      }
+
       .ua-result[hidden] {
         display: none !important;
+      }
+
+      .ua-result .stat-value {
+        overflow-wrap: anywhere;
       }
 
       .ua-report {
@@ -61,11 +72,47 @@
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/user-agent-parser.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | User-Agent Parser" />
+    <meta property="og:description" content="Parse and analyze User-Agent strings to detect browser, operating system, rendering engine, device type and bots directly in your browser." />
+    <meta property="og:url" content="https://xavert.com/tools/user-agent-parser.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | User-Agent Parser" />
+    <meta name="twitter:description" content="Parse and analyze User-Agent strings to detect browser, operating system, rendering engine, device type and bots directly in your browser." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "User-Agent Parser",
+      "url": "https://xavert.com/tools/user-agent-parser.html",
+      "description": "Parse and analyze User-Agent strings to detect browser, operating system, rendering engine, device type and bots directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
     data-tool="user-agent-parser"
-    data-related-tools="regex-tester,text-toolkit,json-toolkit,url-toolkit,base64-toolkit"
+    data-related-tools="http-header-analyzer,regex-tester,url-toolkit,json-toolkit,text-toolkit,base64-toolkit"
   >
     <main class="container">
       <a href="../index.html" class="back-link">← Back to Home</a>
@@ -104,9 +151,15 @@
               <textarea
                 id="userAgentInput"
                 class="ua-editor"
-                placeholder="Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/120.0.0.0 Safari/537.36"
+                placeholder="Example: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 Chrome/143.0.0.0 Safari/537.36"
                 spellcheck="false"
               ></textarea>
+
+              <p class="ua-note">
+                Modern Chromium-based browsers can intentionally hide exact OS,
+                device and minor-version details. When detected, the parser marks
+                those values as reduced instead of guessing.
+              </p>
             </div>
 
             <div class="button-grid ua-actions">
@@ -121,6 +174,14 @@
 
               <button id="sampleBtn" class="btn btn-secondary" type="button">
                 Load Sample
+              </button>
+
+              <button
+                id="currentBrowserBtn"
+                class="btn btn-secondary"
+                type="button"
+              >
+                Use My Browser
               </button>
 
               <button id="copyBtn" class="btn btn-secondary" type="button">
@@ -160,7 +221,7 @@
               <div class="stats-grid">
                 <div class="stat-card">
                   <strong id="browserStat" class="stat-value">—</strong>
-                  <span class="stat-label">Browser</span>
+                  <span class="stat-label">Browser / Client</span>
                 </div>
 
                 <div class="stat-card">
@@ -171,6 +232,11 @@
                 <div class="stat-card">
                   <strong id="deviceStat" class="stat-value">—</strong>
                   <span class="stat-label">Device Type</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="modelStat" class="stat-value">—</strong>
+                  <span class="stat-label">Device Model</span>
                 </div>
 
                 <div class="stat-card">
@@ -186,6 +252,11 @@
                 <div class="stat-card">
                   <strong id="architectureStat" class="stat-value">—</strong>
                   <span class="stat-label">Architecture</span>
+                </div>
+
+                <div class="stat-card">
+                  <strong id="reductionStat" class="stat-value">—</strong>
+                  <span class="stat-label">UA Detail</span>
                 </div>
               </div>
 
@@ -206,18 +277,32 @@
         <h3>Main Features</h3>
 
         <ul class="about-features">
-          <li>Detect common browsers and versions.</li>
-          <li>Identify operating systems and device types.</li>
-          <li>Detect common crawlers and bots.</li>
-          <li>Identify rendering engine and architecture where available.</li>
+          <li>Detect modern and legacy browsers, webviews and HTTP clients.</li>
+          <li>Identify operating systems, device types and common device models.</li>
+          <li>Detect common search, social, SEO and AI crawlers.</li>
+          <li>Identify rendering engine and architecture where reliably exposed.</li>
+          <li>Recognize Chromium User-Agent Reduction and frozen platform fields.</li>
+          <li>
+            Use User-Agent Client Hints for additional local details when you
+            explicitly analyze your current browser and the API is supported.
+          </li>
           <li>Copy or download the generated analysis report.</li>
         </ul>
+
+        <h3>Important Limitation</h3>
+
+        <p>
+          User-Agent strings can be reduced, frozen or spoofed. The parser reports
+          the information that is actually exposed and avoids inferring hidden
+          details when the string does not support a reliable conclusion.
+        </p>
 
         <h3>Privacy First</h3>
 
         <p class="about-privacy">
-          User-Agent parsing happens locally within your browser. Your input is
-          never uploaded, transmitted, shared or stored on any server.
+          User-Agent parsing and optional Client Hints analysis happen locally
+          within your browser. Your input and detected browser details are never
+          uploaded, transmitted, shared or stored on any server.
         </p>
       </section>
 
