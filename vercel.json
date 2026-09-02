@@ -37,6 +37,11 @@
       "source": "/tools/schema-markup-generator.html",
       "destination": "/tools/markup-generator.html",
       "permanent": true
+    },
+    {
+      "source": "/tools/cron-generator.html",
+      "destination": "/tools/cron-expression-generator.html",
+      "permanent": true
     }
   ]
 }
