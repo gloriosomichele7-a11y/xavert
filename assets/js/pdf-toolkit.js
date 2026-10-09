@@ -20,6 +20,10 @@ async function initPdfToolkit() {
     reorder: document.getElementById("reorderTool"),
     numbers: document.getElementById("numbersTool"),
     sign: document.getElementById("signTool"),
+    ocr: document.getElementById("ocrTool"),
+    compare: document.getElementById("compareTool"),
+    redact: document.getElementById("redactTool"),
+    crop: document.getElementById("cropTool"),
   };
 
   const requiredLibraries = {
@@ -79,6 +83,11 @@ async function initPdfToolkit() {
     numbersFile: { countId: "numbersCount", emptyText: "No file selected", mode: "pdf-pages", operation: "numbers" },
     signPdfFile: { countId: "signPdfCount", emptyText: "No PDF selected", mode: "pdf-pages", operation: "sign" },
     signatureImageFile: { countId: "signatureImageCount", emptyText: "No signature image selected", mode: "image", operation: "sign" },
+    ocrPdfFile: { countId: "ocrPdfCount", emptyText: "No file selected", mode: "pdf-pages", operation: "ocr" },
+    compareFirstFile: { countId: "compareFirstCount", emptyText: "No first PDF selected", mode: "pdf-pages", operation: "compare" },
+    compareSecondFile: { countId: "compareSecondCount", emptyText: "No second PDF selected", mode: "pdf-pages", operation: "compare" },
+    redactFile: { countId: "redactCount", emptyText: "No file selected", mode: "pdf-pages", operation: "redact" },
+    cropFile: { countId: "cropCount", emptyText: "No file selected", mode: "pdf-pages", operation: "crop" },
   };
 
   class OperationCancelledError extends Error {
@@ -135,6 +144,10 @@ async function initPdfToolkit() {
     reorder: "reorderBtn",
     numbers: "numbersBtn",
     sign: "signBtn",
+    ocr: "ocrBtn",
+    compare: "compareBtn",
+    redact: "redactBtn",
+    crop: "cropBtn",
   };
 
   function cancelOperation(key) {
@@ -391,6 +404,58 @@ async function initPdfToolkit() {
     link.click();
     link.remove();
     window.setTimeout(() => URL.revokeObjectURL(url), 1500);
+  }
+
+  function downloadText(text, fileName) {
+    downloadBlob(new Blob([text], { type: "text/plain;charset=utf-8" }), fileName);
+  }
+
+  let tesseractLoadPromise = null;
+
+  function loadTesseract() {
+    if (window.Tesseract?.createWorker) return Promise.resolve(window.Tesseract);
+    if (tesseractLoadPromise) return tesseractLoadPromise;
+
+    tesseractLoadPromise = new Promise((resolve, reject) => {
+      const script = document.createElement("script");
+      script.src = "https://cdn.jsdelivr.net/npm/tesseract.js@7.0.0/dist/tesseract.min.js";
+      script.async = true;
+      script.onload = () => {
+        if (window.Tesseract?.createWorker) resolve(window.Tesseract);
+        else reject(new Error("OCR library loaded without the expected API."));
+      };
+      script.onerror = () => reject(new Error("Unable to load the OCR library."));
+      document.head.append(script);
+    }).catch((error) => {
+      tesseractLoadPromise = null;
+      throw error;
+    });
+
+    return tesseractLoadPromise;
+  }
+
+  async function extractPageText(page) {
+    const content = await page.getTextContent();
+    let text = "";
+
+    content.items.forEach((item) => {
+      const value = typeof item.str === "string" ? item.str : "";
+      if (!value) return;
+      text += value;
+      text += item.hasEOL ? "\n" : " ";
+    });
+
+    return text
+      .replace(/[ \t]+\n/g, "\n")
+      .replace(/[ \t]{2,}/g, " ")
+      .trim();
+  }
+
+  function selectedPageNumbers(value, pageCount) {
+    const parsed = parsePageSelection(value, pageCount, true);
+    return parsed.length
+      ? parsed.map((index) => index + 1)
+      : Array.from({ length: pageCount }, (_, index) => index + 1);
   }
 
   function parsePageSelection(value, pageCount, allowRange = true) {
@@ -1145,6 +1210,431 @@ async function initPdfToolkit() {
     }
   }
 
+  async function extractPdfText() {
+    const key = "ocr";
+    const file = byId("ocrPdfFile").files?.[0];
+    if (!validatePdfFile(file, "ocrMessage")) return;
+    if (!confirmInputSize([file], "This PDF", "ocrMessage")) return;
+
+    const version = startOperation(key);
+    setBusy("ocrBtn", key, true);
+    byId("downloadOcrBtn").disabled = true;
+    byId("ocrOutput").value = "";
+
+    let pdf = null;
+    let worker = null;
+
+    try {
+      setMessage("ocrMessage", "Reading PDF...", "info");
+      pdf = await loadPdfJs(file);
+      ensureActive(key, version);
+      const pages = selectedPageNumbers(byId("ocrPages").value, pdf.numPages);
+      const mode = byId("ocrMode").value;
+
+      if (mode === "ocr" && pages.length > 100) {
+        throw new Error("OCR is limited to 100 pages per run for safe browser processing.");
+      }
+      if (mode === "ocr" && pages.length > 20 && !window.confirm(`OCR will process ${pages.length} pages and may take several minutes. Continue?`)) {
+        throw new OperationCancelledError();
+      }
+
+      if (mode === "ocr") {
+        setMessage("ocrMessage", "Loading OCR engine and language model...", "info");
+        const Tesseract = await loadTesseract();
+        ensureActive(key, version);
+        worker = await Tesseract.createWorker(
+          byId("ocrLanguage").value,
+          Tesseract.OEM?.LSTM_ONLY ?? 1,
+          {
+            logger: (entry) => {
+              if (entry?.status === "recognizing text" && Number.isFinite(entry.progress)) {
+                setMessage("ocrMessage", `Recognizing text: ${Math.round(entry.progress * 100)}%`, "info");
+              }
+            },
+          },
+        );
+      }
+
+      const output = [];
+      for (let index = 0; index < pages.length; index += 1) {
+        ensureActive(key, version);
+        const pageNumber = pages[index];
+        setMessage("ocrMessage", `${mode === "ocr" ? "Recognizing" : "Extracting"} page ${index + 1} of ${pages.length}...`, "info");
+        const page = await pdf.getPage(pageNumber);
+        let pageText = "";
+        let canvas = null;
+
+        try {
+          if (mode === "ocr") {
+            ({ canvas } = await renderPdfPage(page, 2));
+            const result = await worker.recognize(canvas);
+            pageText = String(result?.data?.text || "").trim();
+          } else {
+            pageText = await extractPageText(page);
+          }
+        } finally {
+          try { page.cleanup(); } catch {}
+          releaseCanvas(canvas);
+        }
+
+        output.push(`--- Page ${pageNumber} ---\n${pageText || "[No text detected]"}`);
+      }
+
+      ensureActive(key, version);
+      byId("ocrOutput").value = output.join("\n\n");
+      byId("downloadOcrBtn").disabled = false;
+      notify("ocrMessage", `Text extracted from ${pages.length} page${pages.length === 1 ? "" : "s"}.`, "success");
+    } catch (error) {
+      if (!(error instanceof OperationCancelledError)) {
+        console.error(error);
+        notify("ocrMessage", error instanceof Error ? error.message : "Unable to extract PDF text.", "error");
+      }
+    } finally {
+      if (worker) {
+        try { await worker.terminate(); } catch {}
+      }
+      if (pdf) {
+        try { await pdf.destroy(); } catch {}
+      }
+      if (operationVersions[key] === version) setBusy("ocrBtn", key, false);
+    }
+  }
+
+  async function readPdfTextPages(file, key, version, label) {
+    const pdf = await loadPdfJs(file);
+    const pages = [];
+
+    try {
+      if (!confirmPageCount(pdf.numPages, label, 500, 150)) throw new OperationCancelledError();
+      for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        ensureActive(key, version);
+        setMessage("compareMessage", `${label}: reading page ${pageNumber} of ${pdf.numPages}...`, "info");
+        const page = await pdf.getPage(pageNumber);
+        try {
+          pages.push(await extractPageText(page));
+        } finally {
+          try { page.cleanup(); } catch {}
+        }
+      }
+      return pages;
+    } finally {
+      try { await pdf.destroy(); } catch {}
+    }
+  }
+
+  function normalizedText(value) {
+    return String(value || "").replace(/\s+/g, " ").trim();
+  }
+
+  async function comparePdfs() {
+    const key = "compare";
+    const first = byId("compareFirstFile").files?.[0];
+    const second = byId("compareSecondFile").files?.[0];
+
+    if (!validatePdfFile(first, "compareMessage") || !validatePdfFile(second, "compareMessage")) return;
+    if (!confirmInputSize([first, second], "The selected PDFs", "compareMessage")) return;
+
+    const version = startOperation(key);
+    setBusy("compareBtn", key, true);
+    byId("downloadCompareBtn").disabled = true;
+    byId("compareOutput").value = "";
+
+    try {
+      const firstPages = await readPdfTextPages(first, key, version, "First PDF");
+      const secondPages = await readPdfTextPages(second, key, version, "Second PDF");
+      ensureActive(key, version);
+
+      const report = [
+        "XAVERT PDF COMPARISON REPORT",
+        `First file: ${first.name}`,
+        `Second file: ${second.name}`,
+        `Page count: ${firstPages.length} vs ${secondPages.length}`,
+        "",
+      ];
+      const totalPages = Math.max(firstPages.length, secondPages.length);
+      let changedPages = 0;
+
+      for (let index = 0; index < totalPages; index += 1) {
+        const left = normalizedText(firstPages[index]);
+        const right = normalizedText(secondPages[index]);
+        const pageNumber = index + 1;
+
+        if (left === right) {
+          report.push(`Page ${pageNumber}: identical embedded text.`);
+          continue;
+        }
+
+        changedPages += 1;
+        report.push(`Page ${pageNumber}: different.`);
+        if (!firstPages[index]) report.push("  First PDF has no corresponding page.");
+        if (!secondPages[index]) report.push("  Second PDF has no corresponding page.");
+
+        const leftLines = new Set(String(firstPages[index] || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean));
+        const rightLines = new Set(String(secondPages[index] || "").split(/\r?\n/).map((line) => line.trim()).filter(Boolean));
+        const removed = [...leftLines].filter((line) => !rightLines.has(line)).slice(0, 12);
+        const added = [...rightLines].filter((line) => !leftLines.has(line)).slice(0, 12);
+        removed.forEach((line) => report.push(`  - ${line}`));
+        added.forEach((line) => report.push(`  + ${line}`));
+        if (removed.length === 12 || added.length === 12) report.push("  … additional differences omitted from this summary.");
+      }
+
+      report.splice(4, 0, `Changed pages: ${changedPages} of ${totalPages}`);
+      const text = report.join("\n");
+      byId("compareOutput").value = text;
+      byId("downloadCompareBtn").disabled = false;
+      notify("compareMessage", changedPages ? `${changedPages} changed page${changedPages === 1 ? "" : "s"} detected.` : "No embedded-text differences detected.", "success");
+    } catch (error) {
+      if (!(error instanceof OperationCancelledError)) {
+        console.error(error);
+        notify("compareMessage", error instanceof Error ? error.message : "Unable to compare PDF files.", "error");
+      }
+    } finally {
+      if (operationVersions[key] === version) setBusy("compareBtn", key, false);
+    }
+  }
+
+  const redactCanvas = byId("redactCanvas");
+  const redactContext = redactCanvas?.getContext("2d");
+  let redactBaseCanvas = null;
+  let redactAreas = [];
+  let redactDraft = null;
+  let redactPointerId = null;
+  let redactPreviewPageNumber = 0;
+
+  function redactPointFromEvent(event) {
+    const rect = redactCanvas.getBoundingClientRect();
+    return {
+      x: Math.max(0, Math.min(redactCanvas.width, (event.clientX - rect.left) * (redactCanvas.width / rect.width))),
+      y: Math.max(0, Math.min(redactCanvas.height, (event.clientY - rect.top) * (redactCanvas.height / rect.height))),
+    };
+  }
+
+  function drawRedactPreview() {
+    if (!redactContext || !redactBaseCanvas) return;
+    redactContext.clearRect(0, 0, redactCanvas.width, redactCanvas.height);
+    redactContext.drawImage(redactBaseCanvas, 0, 0);
+    redactContext.fillStyle = "rgba(0, 0, 0, 0.82)";
+    redactAreas.forEach((area) => redactContext.fillRect(area.x * redactCanvas.width, area.y * redactCanvas.height, area.width * redactCanvas.width, area.height * redactCanvas.height));
+
+    if (redactDraft) {
+      const x = Math.min(redactDraft.startX, redactDraft.endX);
+      const y = Math.min(redactDraft.startY, redactDraft.endY);
+      const width = Math.abs(redactDraft.endX - redactDraft.startX);
+      const height = Math.abs(redactDraft.endY - redactDraft.startY);
+      redactContext.fillStyle = "rgba(220, 38, 38, 0.55)";
+      redactContext.fillRect(x, y, width, height);
+      redactContext.strokeStyle = "#dc2626";
+      redactContext.lineWidth = 2;
+      redactContext.strokeRect(x, y, width, height);
+    }
+  }
+
+  function clearRedactAreas() {
+    redactAreas = [];
+    redactDraft = null;
+    drawRedactPreview();
+    setMessage("redactMessage", redactBaseCanvas ? "Redaction areas cleared." : "", "info");
+  }
+
+  function resetRedactPreview() {
+    redactBaseCanvas = null;
+    redactAreas = [];
+    redactDraft = null;
+    redactPreviewPageNumber = 0;
+    byId("redactPreviewWrap").hidden = true;
+    if (redactCanvas) {
+      redactCanvas.width = 1;
+      redactCanvas.height = 1;
+    }
+  }
+
+  async function previewRedactionPage() {
+    const file = byId("redactFile").files?.[0];
+    if (!validatePdfFile(file, "redactMessage")) return;
+    const pageNumber = Number(byId("redactPage").value);
+    if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+      notify("redactMessage", "Please enter a valid page number.", "error");
+      return;
+    }
+
+    let pdf = null;
+    try {
+      setMessage("redactMessage", "Rendering preview...", "info");
+      pdf = await loadPdfJs(file);
+      if (pageNumber > pdf.numPages) throw new Error("Page number is higher than the PDF page count.");
+      const page = await pdf.getPage(pageNumber);
+      try {
+        const rendered = await renderPdfPage(page, 1.5);
+        redactBaseCanvas = rendered.canvas;
+        redactCanvas.width = rendered.canvas.width;
+        redactCanvas.height = rendered.canvas.height;
+        redactAreas = [];
+        redactPreviewPageNumber = pageNumber;
+        byId("redactPreviewWrap").hidden = false;
+        drawRedactPreview();
+        setMessage("redactMessage", "Drag across the preview to mark redaction areas.", "info");
+      } finally {
+        try { page.cleanup(); } catch {}
+      }
+    } catch (error) {
+      console.error(error);
+      notify("redactMessage", error instanceof Error ? error.message : "Unable to preview this PDF page.", "error");
+    } finally {
+      if (pdf) {
+        try { await pdf.destroy(); } catch {}
+      }
+    }
+  }
+
+  function setupRedactionCanvas() {
+    if (!redactCanvas || !redactContext) return;
+
+    redactCanvas.addEventListener("pointerdown", (event) => {
+      if (!redactBaseCanvas) return;
+      event.preventDefault();
+      const point = redactPointFromEvent(event);
+      redactPointerId = event.pointerId;
+      redactCanvas.setPointerCapture(event.pointerId);
+      redactDraft = { startX: point.x, startY: point.y, endX: point.x, endY: point.y };
+      drawRedactPreview();
+    });
+
+    redactCanvas.addEventListener("pointermove", (event) => {
+      if (!redactDraft || event.pointerId !== redactPointerId) return;
+      event.preventDefault();
+      const point = redactPointFromEvent(event);
+      redactDraft.endX = point.x;
+      redactDraft.endY = point.y;
+      drawRedactPreview();
+    });
+
+    const finish = (event) => {
+      if (!redactDraft || event.pointerId !== redactPointerId) return;
+      const x = Math.min(redactDraft.startX, redactDraft.endX);
+      const y = Math.min(redactDraft.startY, redactDraft.endY);
+      const width = Math.abs(redactDraft.endX - redactDraft.startX);
+      const height = Math.abs(redactDraft.endY - redactDraft.startY);
+      if (width >= 5 && height >= 5) {
+        redactAreas.push({ x: x / redactCanvas.width, y: y / redactCanvas.height, width: width / redactCanvas.width, height: height / redactCanvas.height });
+      }
+      redactDraft = null;
+      redactPointerId = null;
+      if (redactCanvas.hasPointerCapture(event.pointerId)) redactCanvas.releasePointerCapture(event.pointerId);
+      drawRedactPreview();
+      setMessage("redactMessage", `${redactAreas.length} redaction area${redactAreas.length === 1 ? "" : "s"} marked.`, "info");
+    };
+
+    redactCanvas.addEventListener("pointerup", finish);
+    redactCanvas.addEventListener("pointercancel", finish);
+  }
+
+  async function redactPdf() {
+    const key = "redact";
+    const file = byId("redactFile").files?.[0];
+    if (!validatePdfFile(file, "redactMessage")) return;
+    if (!redactBaseCanvas || !redactAreas.length) {
+      notify("redactMessage", "Preview a page and mark at least one redaction area.", "error");
+      return;
+    }
+
+    const pageNumber = Number(byId("redactPage").value);
+    if (pageNumber !== redactPreviewPageNumber) {
+      notify("redactMessage", "The page number changed. Preview the page again before redacting.", "error");
+      return;
+    }
+    if (!confirmInputSize([file], "This PDF", "redactMessage")) return;
+
+    const version = startOperation(key);
+    setBusy("redactBtn", key, true);
+    let source = null;
+
+    try {
+      source = await loadPdfJs(file);
+      ensureActive(key, version);
+      if (!confirmPageCount(source.numPages, "This PDF")) throw new OperationCancelledError();
+
+      let result = null;
+      for (let currentPage = 1; currentPage <= source.numPages; currentPage += 1) {
+        ensureActive(key, version);
+        setMessage("redactMessage", `Rebuilding page ${currentPage} of ${source.numPages}...`, "info");
+        const page = await source.getPage(currentPage);
+        let canvas = null;
+
+        try {
+          const rendered = await renderPdfPage(page, 1.6);
+          canvas = rendered.canvas;
+          if (currentPage === pageNumber) {
+            const context = canvas.getContext("2d", { alpha: false });
+            context.fillStyle = "#000000";
+            redactAreas.forEach((area) => context.fillRect(area.x * canvas.width, area.y * canvas.height, area.width * canvas.width, area.height * canvas.height));
+          }
+
+          const jpegBlob = await canvasToBlob(canvas, "image/jpeg", 0.94);
+          const jpegBytes = new Uint8Array(await jpegBlob.arrayBuffer());
+          const pageWidth = rendered.baseViewport.width;
+          const pageHeight = rendered.baseViewport.height;
+          const orientation = pageWidth > pageHeight ? "landscape" : "portrait";
+
+          if (!result) result = new jsPDF({ orientation, unit: "pt", format: [pageWidth, pageHeight], compress: true });
+          else result.addPage([pageWidth, pageHeight], orientation);
+          result.addImage(jpegBytes, "JPEG", 0, 0, pageWidth, pageHeight, undefined, "FAST");
+        } finally {
+          try { page.cleanup(); } catch {}
+          releaseCanvas(canvas);
+        }
+      }
+
+      if (!result) throw new Error("Unable to rebuild PDF.");
+      ensureActive(key, version);
+      downloadBlob(result.output("blob"), "redacted-document.pdf");
+      notify("redactMessage", "Permanent redaction applied. The output was flattened for privacy.", "success");
+    } catch (error) {
+      if (!(error instanceof OperationCancelledError)) {
+        console.error(error);
+        notify("redactMessage", error instanceof Error ? error.message : "Unable to redact PDF.", "error");
+      }
+    } finally {
+      if (source) {
+        try { await source.destroy(); } catch {}
+      }
+      if (operationVersions[key] === version) setBusy("redactBtn", key, false);
+    }
+  }
+
+  async function cropPdf() {
+    const margins = ["cropTop", "cropRight", "cropBottom", "cropLeft"].map((id) => Number(byId(id).value));
+    if (margins.some((value) => !Number.isFinite(value) || value < 0)) {
+      notify("cropMessage", "Crop margins must be valid non-negative numbers.", "error");
+      return;
+    }
+    if (margins.every((value) => value === 0)) {
+      notify("cropMessage", "Enter at least one crop margin greater than zero.", "error");
+      return;
+    }
+
+    const [top, right, bottom, left] = margins;
+    await runPdfLibEdit({
+      key: "crop",
+      file: byId("cropFile").files?.[0],
+      messageId: "cropMessage",
+      buttonId: "cropBtn",
+      busyText: "Cropping PDF...",
+      outputName: "cropped-document.pdf",
+      successText: "PDF cropped successfully.",
+      edit: async (pdf) => {
+        const pageIndexes = selectedPageNumbers(byId("cropPages").value, pdf.getPageCount()).map((page) => page - 1);
+        pageIndexes.forEach((index) => {
+          const page = pdf.getPages()[index];
+          const { width, height } = page.getSize();
+          const croppedWidth = width - left - right;
+          const croppedHeight = height - top - bottom;
+          if (croppedWidth <= 20 || croppedHeight <= 20) throw new Error(`Crop margins are too large for page ${index + 1}.`);
+          page.setCropBox(left, bottom, croppedWidth, croppedHeight);
+        });
+      },
+    });
+  }
+
   function clearMerge() { clearFileInput("mergeFiles"); setMessage("mergeMessage"); }
   function clearSplit() { clearFileInput("splitFile"); byId("splitMode").value = "all"; byId("splitPages").value = ""; setMessage("splitMessage"); }
   function clearImages() { clearFileInput("imageFiles"); setMessage("imageMessage"); }
@@ -1168,11 +1658,50 @@ async function initPdfToolkit() {
     setMessage("signMessage");
   }
 
+  function clearOcr() {
+    clearFileInput("ocrPdfFile");
+    byId("ocrMode").value = "text";
+    byId("ocrLanguage").value = "eng";
+    byId("ocrPages").value = "";
+    byId("ocrOutput").value = "";
+    byId("downloadOcrBtn").disabled = true;
+    setMessage("ocrMessage");
+  }
+
+  function clearCompare() {
+    clearFileInput("compareFirstFile");
+    clearFileInput("compareSecondFile");
+    byId("compareOutput").value = "";
+    byId("downloadCompareBtn").disabled = true;
+    setMessage("compareMessage");
+  }
+
+  function clearRedact() {
+    clearFileInput("redactFile");
+    byId("redactPage").value = "1";
+    resetRedactPreview();
+    setMessage("redactMessage");
+  }
+
+  function clearCrop() {
+    clearFileInput("cropFile");
+    byId("cropPages").value = "";
+    ["cropTop", "cropRight", "cropBottom", "cropLeft"].forEach((id) => { byId(id).value = "0"; });
+    setMessage("cropMessage");
+  }
+
   toolSelector.addEventListener("change", switchTool);
   setupDropZones();
   setupSignatureCanvas();
+  setupRedactionCanvas();
   byId("signMethod").addEventListener("change", updateSignatureMethod);
   byId("clearSignatureBtn").addEventListener("click", clearSignature);
+  byId("previewRedactBtn").addEventListener("click", () => void previewRedactionPage());
+  byId("clearRedactAreasBtn").addEventListener("click", clearRedactAreas);
+  byId("redactFile").addEventListener("change", resetRedactPreview);
+  byId("redactPage").addEventListener("change", resetRedactPreview);
+  byId("downloadOcrBtn").addEventListener("click", () => downloadText(byId("ocrOutput").value, "pdf-text.txt"));
+  byId("downloadCompareBtn").addEventListener("click", () => downloadText(byId("compareOutput").value, "pdf-comparison-report.txt"));
 
   [
     ["mergeBtn", mergePdf],
@@ -1188,6 +1717,10 @@ async function initPdfToolkit() {
     ["reorderBtn", reorderPages],
     ["numbersBtn", addPageNumbers],
     ["signBtn", signPdf],
+    ["ocrBtn", extractPdfText],
+    ["compareBtn", comparePdfs],
+    ["redactBtn", redactPdf],
+    ["cropBtn", cropPdf],
   ].forEach(([id, handler]) => {
     byId(id).addEventListener("click", () => void handler());
   });
@@ -1206,6 +1739,10 @@ async function initPdfToolkit() {
     ["clearReorderBtn", clearReorder],
     ["clearNumbersBtn", clearNumbers],
     ["clearSignBtn", clearSign],
+    ["clearOcrBtn", clearOcr],
+    ["clearCompareBtn", clearCompare],
+    ["clearRedactBtn", clearRedact],
+    ["clearCropBtn", clearCrop],
   ].forEach(([id, handler]) => byId(id).addEventListener("click", handler));
 
   updateSignatureMethod();

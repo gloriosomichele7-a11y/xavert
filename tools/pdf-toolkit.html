@@ -8,64 +8,13 @@
 
     <meta
       name="description"
-      content="Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser."
+      content="Merge, split, OCR, compare, crop, redact, convert, compress and sign PDF files directly in your browser."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
     <meta name="theme-color" content="#dc2626" />
 
     <link rel="canonical" href="https://xavert.com/tools/pdf-toolkit.html" />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:title" content="XAVERT | PDF Toolkit" />
-    <meta
-      property="og:description"
-      content="Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser."
-    />
-    <meta
-      property="og:url"
-      content="https://xavert.com/tools/pdf-toolkit.html"
-    />
-    <meta
-      property="og:image"
-      content="https://xavert.com/assets/images/og-image.png"
-    />
-    <meta property="og:site_name" content="XAVERT" />
-
-    <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="XAVERT | PDF Toolkit" />
-    <meta
-      name="twitter:description"
-      content="Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser."
-    />
-    <meta
-      name="twitter:image"
-      content="https://xavert.com/assets/images/og-image.png"
-    />
-
-    <script type="application/ld+json">
-      {
-        "@context": "https://schema.org",
-        "@type": "WebApplication",
-        "name": "PDF Toolkit",
-        "applicationCategory": "UtilitiesApplication",
-        "operatingSystem": "Any",
-        "browserRequirements": "Requires JavaScript",
-        "url": "https://xavert.com/tools/pdf-toolkit.html",
-        "description": "Merge, split, convert, rotate, extract, delete, watermark, compress, reorder, number and sign PDF files directly in your browser.",
-        "inLanguage": "en",
-        "isAccessibleForFree": true,
-        "offers": {
-          "@type": "Offer",
-          "price": "0",
-          "priceCurrency": "USD"
-        },
-        "publisher": {
-          "@type": "Organization",
-          "name": "XAVERT"
-        }
-      }
-    </script>
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
 
     <link rel="stylesheet" href="../assets/css/global.css" />
@@ -149,6 +98,39 @@
         background: #ffffff;
         touch-action: none;
       }
+
+      .pdf-output {
+        width: 100%;
+        min-height: 220px;
+        margin-top: 14px;
+        padding: 14px;
+        border: 1px solid #d1d5db;
+        border-radius: 12px;
+        background: #ffffff;
+        color: #111827;
+        font: 14px/1.55 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+        resize: vertical;
+      }
+
+      .pdf-preview-wrap {
+        margin-top: 16px;
+        padding: 12px;
+        overflow: auto;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f3f4f6;
+        text-align: center;
+      }
+
+      .pdf-preview-canvas {
+        display: inline-block;
+        max-width: 100%;
+        height: auto;
+        background: #ffffff;
+        box-shadow: 0 4px 16px rgb(15 23 42 / 12%);
+        cursor: crosshair;
+        touch-action: none;
+      }
     </style>
 
     <script
@@ -192,6 +174,42 @@
     <script src="../assets/js/utils.js" defer></script>
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/pdf-toolkit.js" defer></script>
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | PDF Toolkit" />
+    <meta property="og:description" content="Merge, split, OCR, compare, crop, redact, convert, compress and sign PDF files directly in your browser." />
+    <meta property="og:url" content="https://xavert.com/tools/pdf-toolkit.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | PDF Toolkit" />
+    <meta name="twitter:description" content="Merge, split, OCR, compare, crop, redact, convert, compress and sign PDF files directly in your browser." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PDF Toolkit",
+      "url": "https://xavert.com/tools/pdf-toolkit.html",
+      "description": "Merge, split, OCR, compare, crop, redact, convert, compress and sign PDF files directly in your browser.",
+      "applicationCategory": "UtilitiesApplication",
+      "operatingSystem": "Any",
+      "browserRequirements": "Requires JavaScript",
+      "inLanguage": "en",
+      "isAccessibleForFree": true,
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@type": "Organization",
+        "name": "XAVERT"
+      }
+    }
+    </script>
+
   </head>
 
   <body
@@ -236,6 +254,10 @@
                 <option value="reorder">Reorder Pages</option>
                 <option value="numbers">Add Page Numbers</option>
                 <option value="sign">Sign PDF</option>
+                <option value="ocr">PDF OCR &amp; Text Extraction</option>
+                <option value="compare">Compare PDFs</option>
+                <option value="redact">Redact PDF</option>
+                <option value="crop">Crop PDF</option>
               </select>
             </div>
           </div>
@@ -251,7 +273,7 @@
             <input id="mergeFiles" type="file" accept="application/pdf" multiple hidden />
             <div id="mergeCount" class="pdf-file-count">No files selected</div>
             <div class="button-grid pdf-actions">
-              <button id="mergeBtn" class="btn" type="button">Merge PDF</button>
+              <button id="mergeBtn" class="btn" type="button" data-primary-action>Merge PDF</button>
               <button id="clearMergeBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="mergeMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -282,7 +304,7 @@
               </div>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="splitBtn" class="btn" type="button">Split PDF</button>
+              <button id="splitBtn" class="btn" type="button" data-primary-action>Split PDF</button>
               <button id="clearSplitBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="splitMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -299,7 +321,7 @@
             <input id="imageFiles" type="file" accept="image/jpeg,image/png" multiple hidden />
             <div id="imageCount" class="pdf-file-count">No files selected</div>
             <div class="button-grid pdf-actions">
-              <button id="imagesToPdfBtn" class="btn" type="button">Convert to PDF</button>
+              <button id="imagesToPdfBtn" class="btn" type="button" data-primary-action>Convert to PDF</button>
               <button id="clearImagesBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="imageMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -316,7 +338,7 @@
             <input id="pdfJpgFile" type="file" accept="application/pdf" hidden />
             <div id="pdfJpgCount" class="pdf-file-count">No file selected</div>
             <div class="button-grid pdf-actions">
-              <button id="pdfToJpgBtn" class="btn" type="button">Convert to JPG</button>
+              <button id="pdfToJpgBtn" class="btn" type="button" data-primary-action>Convert to JPG</button>
               <button id="clearPdfJpgBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="pdfJpgMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -341,7 +363,7 @@
               </select>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="rotateBtn" class="btn" type="button">Rotate PDF</button>
+              <button id="rotateBtn" class="btn" type="button" data-primary-action>Rotate PDF</button>
               <button id="clearRotateBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="rotateMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -363,7 +385,7 @@
               <p class="pdf-note">Pages are counted from the actual PDF structure.</p>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="extractBtn" class="btn" type="button">Extract Pages</button>
+              <button id="extractBtn" class="btn" type="button" data-primary-action>Extract Pages</button>
               <button id="clearExtractBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="extractMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -385,7 +407,7 @@
               <p class="pdf-note">Pages are counted from the actual PDF structure.</p>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="deleteBtn" class="btn" type="button">Delete Pages</button>
+              <button id="deleteBtn" class="btn" type="button" data-primary-action>Delete Pages</button>
               <button id="clearDeleteBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="deleteMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -402,7 +424,7 @@
             <input id="pngFile" type="file" accept="application/pdf" hidden />
             <div id="pngCount" class="pdf-file-count">No file selected</div>
             <div class="button-grid pdf-actions">
-              <button id="pdfToPngBtn" class="btn" type="button">Convert to PNG</button>
+              <button id="pdfToPngBtn" class="btn" type="button" data-primary-action>Convert to PNG</button>
               <button id="clearPngBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="pngMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -429,7 +451,7 @@
               </div>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="watermarkBtn" class="btn" type="button">Add Watermark</button>
+              <button id="watermarkBtn" class="btn" type="button" data-primary-action>Add Watermark</button>
               <button id="clearWatermarkBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="watermarkMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -458,7 +480,7 @@
               </div>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="compressBtn" class="btn" type="button">Compress PDF</button>
+              <button id="compressBtn" class="btn" type="button" data-primary-action>Compress PDF</button>
               <button id="clearCompressBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="compressMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -479,7 +501,7 @@
               <input id="reorderPages" type="text" placeholder="Example: 3,1,2,4" />
             </div>
             <div class="button-grid pdf-actions">
-              <button id="reorderBtn" class="btn" type="button">Reorder Pages</button>
+              <button id="reorderBtn" class="btn" type="button" data-primary-action>Reorder Pages</button>
               <button id="clearReorderBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="reorderMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -513,7 +535,7 @@
               </div>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="numbersBtn" class="btn" type="button">Add Page Numbers</button>
+              <button id="numbersBtn" class="btn" type="button" data-primary-action>Add Page Numbers</button>
               <button id="clearNumbersBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="numbersMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
@@ -553,9 +575,9 @@
             </div>
             <div id="drawSignatureArea" class="signature-method-area">
               <label for="signatureCanvas">Draw Signature</label>
-              <canvas id="signatureCanvas" class="signature-canvas" width="500" height="180" aria-label="Signature drawing area"></canvas>
+              <canvas id="signatureCanvas" class="signature-canvas" width="500" height="180"></canvas>
               <div class="button-grid pdf-actions">
-                <button id="clearSignatureBtn" class="btn btn-secondary" type="button" data-clear-action>Clear Drawing</button>
+                <button id="clearSignatureBtn" class="btn btn-secondary" type="button">Clear Drawing</button>
               </div>
             </div>
             <div id="uploadSignatureArea" class="signature-method-area" hidden>
@@ -564,10 +586,142 @@
               <div id="signatureImageCount" class="pdf-file-count">No signature image selected</div>
             </div>
             <div class="button-grid pdf-actions">
-              <button id="signBtn" class="btn" type="button">Sign PDF</button>
+              <button id="signBtn" class="btn" type="button" data-primary-action>Sign PDF</button>
               <button id="clearSignBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
             </div>
             <div id="signMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </section>
+
+        <section id="ocrTool" class="tool-card pdf-tool-panel" aria-labelledby="ocr-title" hidden>
+          <header class="tool-card-header">
+            <h2 id="ocr-title" class="tool-card-title">PDF OCR &amp; Text Extraction</h2>
+            <p class="tool-card-description">Extract embedded text or recognize scanned pages with browser-based OCR.</p>
+          </header>
+          <div class="tool-card-body">
+            <label class="pdf-drop-zone" for="ocrPdfFile" data-drop-target="ocrPdfFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="ocrPdfFile" type="file" accept="application/pdf" hidden />
+            <div id="ocrPdfCount" class="pdf-file-count">No file selected</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="ocrMode">Extraction Mode</label>
+                <select id="ocrMode">
+                  <option value="text">Extract Existing Text</option>
+                  <option value="ocr">OCR Scanned Pages</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ocrLanguage">OCR Language</label>
+                <select id="ocrLanguage">
+                  <option value="eng">English</option>
+                  <option value="ita">Italian</option>
+                  <option value="spa">Spanish</option>
+                  <option value="fra">French</option>
+                  <option value="deu">German</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label for="ocrPages">Pages</label>
+                <input id="ocrPages" type="text" placeholder="Leave blank for all, or use 1-3,5" />
+              </div>
+            </div>
+            <p class="pdf-note">OCR downloads its language model when first used and can take several minutes on long documents.</p>
+            <div class="button-grid pdf-actions">
+              <button id="ocrBtn" class="btn" type="button" data-primary-action>Extract Text</button>
+              <button id="downloadOcrBtn" class="btn btn-secondary" type="button" disabled>Download TXT</button>
+              <button id="clearOcrBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
+            </div>
+            <textarea id="ocrOutput" class="pdf-output" aria-label="Extracted PDF text" readonly placeholder="Extracted text will appear here."></textarea>
+            <div id="ocrMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </section>
+
+        <section id="compareTool" class="tool-card pdf-tool-panel" aria-labelledby="compare-title" hidden>
+          <header class="tool-card-header">
+            <h2 id="compare-title" class="tool-card-title">Compare PDFs</h2>
+            <p class="tool-card-description">Compare page counts and extracted text from two PDF documents.</p>
+          </header>
+          <div class="tool-card-body">
+            <div class="form-grid">
+              <div>
+                <label class="pdf-drop-zone" for="compareFirstFile" data-drop-target="compareFirstFile" tabindex="0">Choose the first PDF</label>
+                <input id="compareFirstFile" type="file" accept="application/pdf" hidden />
+                <div id="compareFirstCount" class="pdf-file-count">No first PDF selected</div>
+              </div>
+              <div>
+                <label class="pdf-drop-zone" for="compareSecondFile" data-drop-target="compareSecondFile" tabindex="0">Choose the second PDF</label>
+                <input id="compareSecondFile" type="file" accept="application/pdf" hidden />
+                <div id="compareSecondCount" class="pdf-file-count">No second PDF selected</div>
+              </div>
+            </div>
+            <p class="pdf-note">This comparison checks embedded text. Scanned pages should be processed with OCR first.</p>
+            <div class="button-grid pdf-actions">
+              <button id="compareBtn" class="btn" type="button" data-primary-action>Compare PDFs</button>
+              <button id="downloadCompareBtn" class="btn btn-secondary" type="button" disabled>Download Report</button>
+              <button id="clearCompareBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
+            </div>
+            <textarea id="compareOutput" class="pdf-output" aria-label="PDF comparison report" readonly placeholder="The comparison report will appear here."></textarea>
+            <div id="compareMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </section>
+
+        <section id="redactTool" class="tool-card pdf-tool-panel" aria-labelledby="redact-title" hidden>
+          <header class="tool-card-header">
+            <h2 id="redact-title" class="tool-card-title">Redact PDF</h2>
+            <p class="tool-card-description">Draw one or more permanent black redaction areas on a selected page.</p>
+          </header>
+          <div class="tool-card-body">
+            <label class="pdf-drop-zone" for="redactFile" data-drop-target="redactFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="redactFile" type="file" accept="application/pdf" hidden />
+            <div id="redactCount" class="pdf-file-count">No file selected</div>
+            <div class="form-grid">
+              <div class="form-group">
+                <label for="redactPage">Page Number</label>
+                <input id="redactPage" type="number" value="1" min="1" />
+              </div>
+            </div>
+            <div class="button-grid pdf-actions">
+              <button id="previewRedactBtn" class="btn btn-secondary" type="button">Preview Page</button>
+              <button id="clearRedactAreasBtn" class="btn btn-secondary" type="button">Clear Areas</button>
+            </div>
+            <p class="pdf-note">Drag across the preview to mark every area that must be permanently removed.</p>
+            <div id="redactPreviewWrap" class="pdf-preview-wrap" hidden>
+              <canvas id="redactCanvas" class="pdf-preview-canvas" aria-label="PDF redaction preview"></canvas>
+            </div>
+            <div class="pdf-warning" role="note">For privacy, the downloaded PDF is rebuilt as page images. Selectable text, links, forms and annotations are flattened.</div>
+            <div class="button-grid pdf-actions">
+              <button id="redactBtn" class="btn" type="button" data-primary-action>Apply Permanent Redaction</button>
+              <button id="clearRedactBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
+            </div>
+            <div id="redactMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+          </div>
+        </section>
+
+        <section id="cropTool" class="tool-card pdf-tool-panel" aria-labelledby="crop-title" hidden>
+          <header class="tool-card-header">
+            <h2 id="crop-title" class="tool-card-title">Crop PDF</h2>
+            <p class="tool-card-description">Adjust the visible page area by applying margins in PDF points.</p>
+          </header>
+          <div class="tool-card-body">
+            <label class="pdf-drop-zone" for="cropFile" data-drop-target="cropFile" tabindex="0">Click or drag one PDF file here</label>
+            <input id="cropFile" type="file" accept="application/pdf" hidden />
+            <div id="cropCount" class="pdf-file-count">No file selected</div>
+            <div class="form-group">
+              <label for="cropPages">Pages</label>
+              <input id="cropPages" type="text" placeholder="Leave blank for all, or use 1-3,5" />
+            </div>
+            <div class="form-grid">
+              <div class="form-group"><label for="cropTop">Top Margin</label><input id="cropTop" type="number" value="0" min="0" step="1" /></div>
+              <div class="form-group"><label for="cropRight">Right Margin</label><input id="cropRight" type="number" value="0" min="0" step="1" /></div>
+              <div class="form-group"><label for="cropBottom">Bottom Margin</label><input id="cropBottom" type="number" value="0" min="0" step="1" /></div>
+              <div class="form-group"><label for="cropLeft">Left Margin</label><input id="cropLeft" type="number" value="0" min="0" step="1" /></div>
+            </div>
+            <p class="pdf-note">72 PDF points equal one inch. Cropping changes the visible page box but does not securely erase hidden content.</p>
+            <div class="button-grid pdf-actions">
+              <button id="cropBtn" class="btn" type="button" data-primary-action>Crop PDF</button>
+              <button id="clearCropBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
+            </div>
+            <div id="cropMessage" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
           </div>
         </section>
       </div>
@@ -582,6 +736,8 @@
           <li>Add watermarks and page numbers.</li>
           <li>Compress image-heavy PDFs by rasterizing pages.</li>
           <li>Add drawn or uploaded signatures.</li>
+          <li>Extract embedded text or recognize scanned pages with OCR.</li>
+          <li>Compare PDF text, apply permanent visual redactions and crop pages.</li>
         </ul>
         <h3>Privacy First</h3>
         <p class="about-privacy">PDF processing happens locally within your browser. Your files are never uploaded, transmitted, shared or stored on XAVERT servers.</p>

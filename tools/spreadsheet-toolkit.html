@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>XAVERT | Spreadsheet Toolkit</title>
+    <meta name="description" content="Open, inspect, edit, clean, merge and export XLSX, XLS, ODS and CSV spreadsheet data directly in your browser." />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="XAVERT" />
+    <meta name="theme-color" content="#dc2626" />
+
+    <link rel="canonical" href="https://xavert.com/tools/spreadsheet-toolkit.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="XAVERT | Spreadsheet Toolkit" />
+    <meta property="og:description" content="Open, edit, clean, merge and export spreadsheet data locally in your browser." />
+    <meta property="og:url" content="https://xavert.com/tools/spreadsheet-toolkit.html" />
+    <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <meta property="og:site_name" content="XAVERT" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="XAVERT | Spreadsheet Toolkit" />
+    <meta name="twitter:description" content="Open, edit, clean, merge and export spreadsheet data locally in your browser." />
+    <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Spreadsheet Toolkit",
+        "url": "https://xavert.com/tools/spreadsheet-toolkit.html",
+        "description": "Open, inspect, edit, clean, merge and export XLSX, XLS, ODS and CSV spreadsheet data directly in your browser.",
+        "applicationCategory": "UtilitiesApplication",
+        "operatingSystem": "Any",
+        "browserRequirements": "Requires JavaScript",
+        "inLanguage": "en",
+        "isAccessibleForFree": true,
+        "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+        "publisher": { "@type": "Organization", "name": "XAVERT" },
+        "featureList": [
+          "XLSX, XLS, ODS and CSV viewer",
+          "Spreadsheet cell editor",
+          "Search and sort spreadsheet rows",
+          "Remove duplicate and empty rows",
+          "Trim spreadsheet values",
+          "Merge workbook sheets",
+          "Export XLSX, CSV and JSON",
+          "Browser-side file processing"
+        ]
+      }
+    </script>
+
+    <style>
+      .sheet-drop-zone {
+        display: flex;
+        min-height: 150px;
+        padding: 24px;
+        border: 2px dashed #d1d5db;
+        border-radius: 16px;
+        background: #f9fafb;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        cursor: pointer;
+        transition: border-color 0.2s ease, background-color 0.2s ease, transform 0.2s ease;
+      }
+
+      .sheet-drop-zone:hover,
+      .sheet-drop-zone:focus-visible,
+      .sheet-drop-zone.dragover {
+        border-color: #dc2626;
+        background: #fef2f2;
+        outline: none;
+      }
+
+      .sheet-drop-zone.dragover { transform: translateY(-1px); }
+      .sheet-drop-title { display: block; margin-bottom: 6px; color: #111827; font-size: 17px; font-weight: 800; }
+      .sheet-drop-help, .sheet-file-info, .sheet-note { color: #6b7280; font-size: 13px; line-height: 1.55; }
+      .sheet-file-info { margin-top: 8px; font-weight: 700; overflow-wrap: anywhere; }
+      .sheet-controls { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 190px), 1fr)); gap: 14px; margin-top: 18px; }
+      .sheet-actions { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 155px), 1fr)); gap: 10px; margin-top: 16px; }
+      .sheet-stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-top: 18px; }
+      .sheet-stat { padding: 12px; border: 1px solid #e5e7eb; border-radius: 12px; background: #fff; text-align: center; }
+      .sheet-stat strong { display: block; color: #111827; font-size: 20px; }
+      .sheet-stat span { color: #6b7280; font-size: 12px; }
+      .sheet-table-wrap { margin-top: 20px; max-height: 620px; overflow: auto; border: 1px solid #e5e7eb; border-radius: 14px; background: #fff; }
+      .sheet-table { width: max-content; min-width: 100%; border-collapse: collapse; font-size: 13px; }
+      .sheet-table th, .sheet-table td { min-width: 120px; max-width: 300px; padding: 9px 10px; border-right: 1px solid #e5e7eb; border-bottom: 1px solid #e5e7eb; text-align: left; vertical-align: top; overflow-wrap: anywhere; }
+      .sheet-table th { position: sticky; top: 0; z-index: 2; background: #f3f4f6; color: #111827; font-weight: 800; }
+      .sheet-table th:first-child, .sheet-table td:first-child { min-width: 54px; width: 54px; background: #f9fafb; color: #6b7280; text-align: center; font-weight: 700; }
+      .sheet-table td[contenteditable="true"]:focus { outline: 2px solid #dc2626; outline-offset: -2px; background: #fff7f7; }
+      .sheet-warning { margin-top: 14px; padding: 12px 14px; border: 1px solid #fed7aa; border-radius: 12px; background: #fff7ed; color: #7c2d12; font-size: 13px; line-height: 1.55; }
+      @media (max-width: 640px) { .sheet-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    </style>
+
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/vendor/xlsx.full.min.js" defer></script>
+    <script src="../assets/js/spreadsheet-toolkit.js" defer></script>
+  </head>
+
+  <body data-tool="spreadsheet-toolkit" data-related-tools="data-converter,csv-viewer-editor,word-toolkit,pdf-toolkit,json-toolkit">
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" fetchpriority="high" decoding="async" />
+        <h1 id="tool-title" class="tool-title">Spreadsheet Toolkit</h1>
+      </section>
+
+      <section class="tool-card" aria-labelledby="workspace-title">
+        <header class="tool-card-header">
+          <h2 id="workspace-title" class="tool-card-title">Spreadsheet Workspace</h2>
+          <p class="tool-card-description">Open, edit, search, clean, merge and export spreadsheet data without uploading files.</p>
+        </header>
+        <div class="tool-card-body">
+          <div id="dropZone" class="sheet-drop-zone" role="button" tabindex="0" aria-controls="spreadsheetFile">
+            <div>
+              <span class="sheet-drop-title">Choose or drop a spreadsheet</span>
+              <span class="sheet-drop-help">XLSX, XLS, ODS or CSV files up to 25 MB.</span>
+              <div id="fileInfo" class="sheet-file-info">No spreadsheet selected.</div>
+            </div>
+          </div>
+          <input id="spreadsheetFile" type="file" accept=".xlsx,.xls,.ods,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv" aria-label="Choose spreadsheet file" hidden />
+
+          <div class="sheet-actions">
+            <button id="sampleBtn" class="btn btn-secondary" type="button">Load Sample</button>
+            <button id="clearBtn" class="btn btn-secondary" type="button" data-clear-action>Clear</button>
+          </div>
+
+          <div id="workspace" hidden>
+            <div class="sheet-controls">
+              <div class="form-group">
+                <label for="sheetSelector">Worksheet</label>
+                <select id="sheetSelector"></select>
+              </div>
+              <div class="form-group">
+                <label for="searchInput">Search Rows</label>
+                <input id="searchInput" type="search" placeholder="Search visible values..." autocomplete="off" />
+              </div>
+              <div class="form-group">
+                <label for="sortColumn">Sort Column</label>
+                <select id="sortColumn"></select>
+              </div>
+              <div class="form-group">
+                <label for="sortDirection">Direction</label>
+                <select id="sortDirection"><option value="asc">Ascending</option><option value="desc">Descending</option></select>
+              </div>
+            </div>
+
+            <div class="sheet-actions">
+              <button id="sortBtn" class="btn btn-secondary" type="button">Sort Rows</button>
+              <button id="trimBtn" class="btn btn-secondary" type="button">Trim Cells</button>
+              <button id="duplicatesBtn" class="btn btn-secondary" type="button">Remove Duplicates</button>
+              <button id="emptyRowsBtn" class="btn btn-secondary" type="button">Remove Empty Rows</button>
+              <button id="addRowBtn" class="btn btn-secondary" type="button">Add Row</button>
+              <button id="mergeSheetsBtn" class="btn btn-secondary" type="button">Merge All Sheets</button>
+            </div>
+
+            <div class="sheet-stats" aria-label="Spreadsheet statistics">
+              <div class="sheet-stat"><strong id="sheetCount">0</strong><span>Sheets</span></div>
+              <div class="sheet-stat"><strong id="rowCount">0</strong><span>Rows</span></div>
+              <div class="sheet-stat"><strong id="columnCount">0</strong><span>Columns</span></div>
+              <div class="sheet-stat"><strong id="cellCount">0</strong><span>Cells</span></div>
+            </div>
+
+            <div class="sheet-table-wrap">
+              <table id="sheetTable" class="sheet-table" aria-label="Editable spreadsheet preview"></table>
+            </div>
+            <p id="previewNote" class="sheet-note"></p>
+
+            <div class="sheet-actions">
+              <button id="downloadXlsxBtn" class="btn" type="button" data-primary-action>Download XLSX</button>
+              <button id="downloadCsvBtn" class="btn btn-secondary" type="button">Download CSV</button>
+              <button id="downloadJsonBtn" class="btn btn-secondary" type="button">Download JSON</button>
+            </div>
+
+            <div class="sheet-warning" role="note">Exports preserve table data, not the original workbook design. Complex formatting, macros, charts, comments and formulas may not be retained.</div>
+          </div>
+
+          <div id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
+        </div>
+      </section>
+
+      <section class="info about-card" aria-labelledby="about-title">
+        <h2 id="about-title">About</h2>
+        <p class="about-intro">The XAVERT Spreadsheet Toolkit provides a focused browser workspace for inspecting and cleaning common spreadsheet formats.</p>
+        <h3>Main Features</h3>
+        <ul class="about-features">
+          <li>Open XLSX, XLS, ODS and CSV files and switch between worksheets.</li>
+          <li>Edit visible cells, search rows and sort by any column.</li>
+          <li>Trim values and remove duplicate or empty rows.</li>
+          <li>Merge workbook sheets into one data table with source-sheet labels.</li>
+          <li>Export the active data as XLSX, CSV or JSON.</li>
+        </ul>
+        <h3>Privacy First</h3>
+        <p class="about-privacy">Spreadsheet processing happens locally within your browser. Your files are never uploaded, transmitted, shared or stored on XAVERT servers.</p>
+      </section>
+
+      <section class="info" aria-labelledby="related-tools-title" hidden>
+        <h2 id="related-tools-title">Related Tools</h2>
+        <div id="related-tools"></div>
+      </section>
+    </main>
+
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+    <div id="xavert-toast" class="xavert-toast" role="status" aria-live="polite" aria-atomic="true" hidden></div>
+  </body>
+</html>
