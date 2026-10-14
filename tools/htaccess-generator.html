@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>XAVERT | HTACCESS Generator</title>
+    <title>.htaccess Generator for Apache | XAVERT</title>
 
     <meta
       name="description"
-      content="Generate common Apache .htaccess rules for HTTPS redirects, WWW redirects, 301 redirects and security headers directly in your browser."
+      content="Generate Apache .htaccess rules for HTTPS, www redirects, 301 redirects and security headers. Review and test the output before using it."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
@@ -25,10 +25,10 @@
     <link rel="stylesheet" href="../assets/css/responsive.css" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="XAVERT | HTACCESS Generator" />
+    <meta property="og:title" content=".htaccess Generator for Apache | XAVERT" />
     <meta
       property="og:description"
-      content="Generate common Apache .htaccess rules directly in your browser."
+      content="Generate Apache .htaccess rules for HTTPS, www redirects, 301 redirects and security headers. Review and test the output before using it."
     />
     <meta
       property="og:url"
@@ -41,10 +41,10 @@
     <meta property="og:site_name" content="XAVERT" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="XAVERT | HTACCESS Generator" />
+    <meta name="twitter:title" content=".htaccess Generator for Apache | XAVERT" />
     <meta
       name="twitter:description"
-      content="Generate common Apache .htaccess rules locally in your browser."
+      content="Generate Apache .htaccess rules for HTTPS, www redirects, 301 redirects and security headers. Review and test the output before using it."
     />
     <meta
       name="twitter:image"
@@ -61,7 +61,7 @@
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
         "url": "https://xavert.com/tools/htaccess-generator.html",
-        "description": "Generate common Apache .htaccess rules locally in your browser.",
+        "description": "Generate Apache .htaccess rules for HTTPS, www redirects, 301 redirects and security headers. Review and test the output before using it.",
         "inLanguage": "en",
         "isAccessibleForFree": true,
         "offers": {
@@ -198,7 +198,7 @@
                 type="button"
                 data-sample-loader
               >
-                Load Sample
+                Load Example
               </button>
 
               <button
@@ -207,7 +207,7 @@
                 type="button"
                 data-clear-action
               >
-                Clear
+                Clear All
               </button>
             </div>
 
@@ -228,7 +228,7 @@
               ></textarea>
 
               <div class="button-grid htaccess-result-actions">
-                <button id="copyBtn" class="btn" type="button">Copy</button>
+                <button id="copyBtn" class="btn" type="button">Copy Result</button>
 
                 <button
                   id="downloadBtn"
@@ -252,7 +252,7 @@
       </div>
 
       <section class="info about-card" aria-labelledby="about-title">
-        <h2 id="about-title">About</h2>
+        <h2 id="about-title">About This Tool</h2>
 
         <p class="about-intro">
           The XAVERT HTACCESS Generator creates common Apache configuration
@@ -262,12 +262,12 @@
         <h3>Main Features</h3>
 
         <ul class="about-features">
-          <li>Generate Force HTTPS rewrite rules.</li>
+          <li>Generate Force HTTPS rewrite rules after confirming that HTTPS works on the domain.</li>
           <li>Redirect non-WWW traffic to WWW.</li>
-          <li>Redirect WWW traffic to non-WWW.</li>
+          <li>Redirect WWW traffic to non-WWW; choose only one preferred domain version.</li>
           <li>Create a basic 301 redirect to a target domain.</li>
           <li>Generate common HTTP security header directives.</li>
-          <li>Copy or download the generated .htaccess file.</li>
+          <li>Choose a configuration, review the output, then copy or download the generated .htaccess file.</li>
         </ul>
 
         <h3>Server Compatibility</h3>
@@ -275,7 +275,8 @@
         <p>
           Generated rewrite rules are intended for Apache installations where
           <code>mod_rewrite</code> is available. Security header directives
-          require <code>mod_headers</code>.
+          require <code>mod_headers</code>. Back up the current file and test the
+          generated rules before publishing them. These rules do not apply to Nginx.
         </p>
 
         <h3>Privacy First</h3>

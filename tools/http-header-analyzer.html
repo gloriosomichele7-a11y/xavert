@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>XAVERT | HTTP Header Analyzer</title>
+    <title>HTTP Header Analyzer – Security & Cache | XAVERT</title>
 
     <meta
       name="description"
-      content="Analyze HTTP request and response headers, inspect security headers, caching policies and server information directly in your browser."
+      content="Analyze pasted HTTP request or response headers. Review security headers, caching directives and server details with this browser-based checker."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
@@ -25,10 +25,10 @@
     <link rel="stylesheet" href="../assets/css/responsive.css" />
 
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="XAVERT | HTTP Header Analyzer" />
+    <meta property="og:title" content="HTTP Header Analyzer – Security & Cache | XAVERT" />
     <meta
       property="og:description"
-      content="Analyze HTTP headers, inspect security headers, caching policies and server information directly in your browser."
+      content="Analyze pasted HTTP request or response headers. Review security headers, caching directives and server details with this browser-based checker."
     />
     <meta
       property="og:url"
@@ -41,10 +41,10 @@
     <meta property="og:site_name" content="XAVERT" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="XAVERT | HTTP Header Analyzer" />
+    <meta name="twitter:title" content="HTTP Header Analyzer – Security & Cache | XAVERT" />
     <meta
       name="twitter:description"
-      content="Analyze HTTP headers locally in your browser."
+      content="Analyze pasted HTTP request or response headers. Review security headers, caching directives and server details with this browser-based checker."
     />
     <meta
       name="twitter:image"
@@ -61,7 +61,7 @@
         "operatingSystem": "Any",
         "browserRequirements": "Requires JavaScript",
         "url": "https://xavert.com/tools/http-header-analyzer.html",
-        "description": "Analyze HTTP request and response headers locally in your browser.",
+        "description": "Analyze pasted HTTP request or response headers. Review security headers, caching directives and server details with this browser-based checker.",
         "inLanguage": "en",
         "isAccessibleForFree": true,
         "offers": {
@@ -190,7 +190,7 @@
                 type="button"
                 data-sample-loader
               >
-                Load Sample
+                Load Example
               </button>
 
               <button
@@ -199,7 +199,7 @@
                 type="button"
                 data-clear-action
               >
-                Clear
+                Clear All
               </button>
             </div>
 
@@ -272,7 +272,7 @@
       </div>
 
       <section class="info about-card" aria-labelledby="about-title">
-        <h2 id="about-title">About</h2>
+        <h2 id="about-title">About This Tool</h2>
 
         <p class="about-intro">
           The XAVERT HTTP Header Analyzer inspects pasted request or response
@@ -282,14 +282,14 @@
         <h3>Main Features</h3>
 
         <ul class="about-features">
-          <li>Parse HTTP request and response header blocks.</li>
+          <li>Parse HTTP request and response header blocks copied from browser developer tools.</li>
           <li>Check common browser security headers.</li>
           <li>Inspect caching directives and cache-related headers.</li>
           <li>Detect server and content information.</li>
           <li>Preserve duplicate header values where relevant.</li>
           <li>
-            Identify whether the block is a request, response or header-only
-            block.
+            Identify whether the pasted block is a request, response or
+            header-only block; the tool does not fetch or test a live URL.
           </li>
           <li>Copy or download a plain-text analysis report.</li>
         </ul>
@@ -299,7 +299,7 @@
         <p>
           The score is a heuristic based on the presence of common hardening
           headers. A high score does not guarantee that a website is secure, and
-          some headers are context-dependent.
+          some headers are context-dependent. The result is not a full security audit.
         </p>
 
         <h3>Privacy First</h3>

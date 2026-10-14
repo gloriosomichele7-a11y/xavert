@@ -4,11 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title>XAVERT | SQL Minifier</title>
+    <title>SQL Minifier – Compress SQL Queries | XAVERT</title>
 
     <meta
       name="description"
-      content="Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser."
+      content="Minify SQL queries in your browser by removing extra whitespace and ordinary comments. Choose a SQL dialect and review the output before use."
     />
     <meta name="robots" content="index, follow" />
     <meta name="author" content="XAVERT" />
@@ -49,15 +49,15 @@
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/sql-minifier.js" defer></script>
     <meta property="og:type" content="website" />
-    <meta property="og:title" content="XAVERT | SQL Minifier" />
-    <meta property="og:description" content="Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser." />
+    <meta property="og:title" content="SQL Minifier – Compress SQL Queries | XAVERT" />
+    <meta property="og:description" content="Minify SQL queries in your browser by removing extra whitespace and ordinary comments. Choose a SQL dialect and review the output before use." />
     <meta property="og:url" content="https://xavert.com/tools/sql-minifier.html" />
     <meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
     <meta property="og:site_name" content="XAVERT" />
 
     <meta name="twitter:card" content="summary_large_image" />
-    <meta name="twitter:title" content="XAVERT | SQL Minifier" />
-    <meta name="twitter:description" content="Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser." />
+    <meta name="twitter:title" content="SQL Minifier – Compress SQL Queries | XAVERT" />
+    <meta name="twitter:description" content="Minify SQL queries in your browser by removing extra whitespace and ordinary comments. Choose a SQL dialect and review the output before use." />
     <meta name="twitter:image" content="https://xavert.com/assets/images/og-image.png" />
 
     <script type="application/ld+json">
@@ -66,7 +66,7 @@
       "@type": "WebApplication",
       "name": "SQL Minifier",
       "url": "https://xavert.com/tools/sql-minifier.html",
-      "description": "Minify SQL queries by removing comments, blank lines and unnecessary spaces directly in your browser.",
+      "description": "Minify SQL queries in your browser by removing extra whitespace and ordinary comments. Choose a SQL dialect and review the output before use.",
       "applicationCategory": "UtilitiesApplication",
       "operatingSystem": "Any",
       "browserRequirements": "Requires JavaScript",
@@ -187,7 +187,7 @@
                     class="btn btn-secondary"
                     type="button"
                   >
-                    Load Sample
+                    Load Example
                   </button>
 
                   <button
@@ -196,7 +196,7 @@
                     type="button"
                     data-clear-action
                   >
-                    Clear
+                    Clear All
                   </button>
                 </div>
 
@@ -223,7 +223,7 @@
                 </div>
 
                 <div class="button-grid sql-minifier-actions">
-                  <button id="copyBtn" class="btn" type="button">Copy</button>
+                  <button id="copyBtn" class="btn" type="button">Copy Result</button>
 
                   <button
                     id="downloadBtn"
@@ -267,7 +267,7 @@
       </div>
 
       <section class="info about-card" aria-labelledby="about-title">
-        <h2 id="about-title">About</h2>
+        <h2 id="about-title">About This Tool</h2>
 
         <p class="about-intro">
           The XAVERT SQL Minifier compresses SQL queries locally in your
@@ -281,9 +281,9 @@
           <li>Preserve optimizer hints and executable semantic comments.</li>
           <li>Protect quoted strings, identifiers and PostgreSQL dollar quotes.</li>
           <li>Handle MySQL comments, T-SQL temporary tables and Oracle q-quotes.</li>
-          <li>Choose Safe or Maximum Compression.</li>
-          <li>Track characters saved, compression and removed comments.</li>
-          <li>Copy or download the minified SQL file.</li>
+          <li>Choose the matching SQL dialect and start with Safe Minify before using Maximum Compression.</li>
+          <li>Track characters saved, compression and removed comments; minification does not optimize query execution.</li>
+          <li>Review and test the result against a non-production database, then copy or download the minified SQL file.</li>
         </ul>
 
         <h3>Privacy First</h3>

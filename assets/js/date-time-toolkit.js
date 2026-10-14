@@ -838,7 +838,7 @@
     const targetText = formatZonedDateTime(instant, toTimeZone);
     const details = [
       {
-        label: "Source",
+        label: "Source Time",
         value: sourceText,
       },
       {

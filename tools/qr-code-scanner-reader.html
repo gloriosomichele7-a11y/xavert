@@ -62,12 +62,12 @@
           <div class="qrs-note"><strong>Decoder:</strong> <span id="engineText">Checking browser support…</span></div>
         </aside>
       </div>
-      <div class="qrs-actions"><button id="clearBtn" class="btn btn-secondary" type="reset" data-clear-action>Clear</button></div>
+      <div class="qrs-actions"><button id="clearBtn" class="btn btn-secondary" type="reset" data-clear-action>Clear All</button></div>
       <div id="message" class="message" role="status" aria-live="polite" aria-atomic="true"></div>
       <section id="resultSection" class="qrs-results" hidden>
         <h2>Decoded QR Code</h2>
         <div class="stats-grid qrs-stats">
-          <div class="stat-card"><strong id="typeStat" class="stat-value">—</strong><span class="stat-label">Type</span></div><div class="stat-card"><strong id="lengthStat" class="stat-value">0</strong><span class="stat-label">Characters</span></div><div class="stat-card"><strong id="bytesStat" class="stat-value">0 B</strong><span class="stat-label">Size</span></div><div class="stat-card"><strong id="sourceStat" class="stat-value">—</strong><span class="stat-label">Source</span></div><div class="stat-card"><strong id="decoderStat" class="stat-value">—</strong><span class="stat-label">Decoder</span></div>
+          <div class="stat-card"><strong id="typeStat" class="stat-value">—</strong><span class="stat-label">Type</span></div><div class="stat-card"><strong id="lengthStat" class="stat-value">0</strong><span class="stat-label">Characters</span></div><div class="stat-card"><strong id="bytesStat" class="stat-value">0 B</strong><span class="stat-label">Size</span></div><div class="stat-card"><strong id="sourceStat" class="stat-value">—</strong><span class="stat-label">Input Source</span></div><div class="stat-card"><strong id="decoderStat" class="stat-value">—</strong><span class="stat-label">Decoder</span></div>
         </div>
         <div class="qrs-result-grid">
           <section class="qrs-panel"><h3>Decoded Content</h3><textarea id="decodedText" class="qrs-text" readonly aria-label="Decoded QR content" spellcheck="false"></textarea><div class="qrs-actions"><button id="copyBtn" class="btn" type="button">Copy Result</button><button id="openBtn" class="btn btn-secondary" type="button" hidden>Open URL</button><button id="downloadBtn" class="btn btn-secondary" type="button">Download .txt</button></div></section>
@@ -76,7 +76,7 @@
       </section>
     </form>
   </section>
-  <section class="info about-card" aria-labelledby="about-title"><h2 id="about-title">About</h2><p class="about-intro">The XAVERT QR Code Scanner &amp; Reader decodes QR codes from image files, clipboard images and live camera frames.</p><h3>Main Features</h3><ul class="about-features"><li>Scan QR codes from PNG, JPEG, WebP and GIF images.</li><li>Use click, drag-and-drop or clipboard paste.</li><li>Scan continuously with a device camera.</li><li>Use native BarcodeDetector when available and jsQR as fallback.</li><li>Detect URLs, Wi-Fi, email, phone, SMS, geo, vCard and plain text.</li><li>Copy, open or download decoded content.</li></ul><h3>Privacy First</h3><p class="about-privacy">Images and camera frames are processed locally in your browser and are not uploaded to XAVERT. jsQR is downloaded from a public CDN only when the fallback decoder is needed.</p><p>Camera access requires HTTPS and browser permission. Detected URLs are never opened automatically.</p></section>
+  <section class="info about-card" aria-labelledby="about-title"><h2 id="about-title">About This Tool</h2><p class="about-intro">The XAVERT QR Code Scanner &amp; Reader decodes QR codes from image files, clipboard images and live camera frames.</p><h3>Main Features</h3><ul class="about-features"><li>Scan QR codes from PNG, JPEG, WebP and GIF images.</li><li>Use click, drag-and-drop or clipboard paste.</li><li>Scan continuously with a device camera.</li><li>Use native BarcodeDetector when available and jsQR as fallback.</li><li>Detect URLs, Wi-Fi, email, phone, SMS, geo, vCard and plain text.</li><li>Copy, open or download decoded content.</li></ul><h3>Privacy First</h3><p class="about-privacy">Images and camera frames are processed locally in your browser and are not uploaded to XAVERT. jsQR is downloaded from a public CDN only when the fallback decoder is needed.</p><p>Camera access requires HTTPS and browser permission. Detected URLs are never opened automatically.</p></section>
   <section class="info" aria-labelledby="related-tools-title" hidden><h2 id="related-tools-title">Related Tools</h2><div id="related-tools"></div></section>
 </main>
 <footer class="xavert-footer-note">Powered by XAVERT</footer>

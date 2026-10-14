@@ -56,21 +56,21 @@ document.addEventListener("DOMContentLoaded", () => {
   let savedPalettes = loadSavedPalettes();
 
   const modes = {
-    converter: ["Convert", "Copy HEX", "Copy RGB", "Copy HSL", "Load Sample"],
+    converter: ["Convert", "Copy HEX", "Copy RGB", "Copy HSL", "Load Example"],
     generator: ["Generate", "Similar", "Complementary", "Copy HEX", ""],
     contrast: [
       "Check Contrast",
       "Swap Colors",
       "Copy Ratio",
       "Copy Colors",
-      "Load Sample",
+      "Load Example",
     ],
     palette: [
       "Generate Palette",
       "Save Palette",
       "Download TXT",
       "Copy Palette",
-      "Load Sample",
+      "Load Example",
     ],
   };
 
@@ -676,7 +676,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     swatch.setAttribute("aria-label", `Copy ${color.hex}`);
 
-    label.textContent = "Copy";
+    label.textContent = "Copy Result";
 
     meta.className = "palette-meta";
 

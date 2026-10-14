@@ -313,13 +313,13 @@ function initEnvGenerator() {
     const isHidden = input.type === "password";
 
     input.type = isHidden ? "text" : "password";
-    button.textContent = isHidden ? "Hide" : "Show";
+    button.textContent = isHidden ? "Hide Value" : "Show Value";
     button.setAttribute("aria-pressed", String(isHidden));
   }
 
   function resetSecretVisibility(input, button) {
     input.type = "password";
-    button.textContent = "Show";
+    button.textContent = "Show Value";
     button.setAttribute("aria-pressed", "false");
   }
 
