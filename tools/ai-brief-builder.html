@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | AI Task Brief Builder</title>
+    <meta name="description" content="Turn a goal, context and constraints into a clear, reusable AI task brief directly in your browser." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#dc2626" />
+    <link rel="canonical" href="https://xavert.com/tools/ai-brief-builder.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" /><meta property="og:title" content="XAVERT | AI Task Brief Builder" /><meta property="og:description" content="Build a clear, reviewable instruction before working with an AI." /><meta property="og:url" content="https://xavert.com/tools/ai-brief-builder.html" /><meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .brief-output { min-height: 360px; font-family: Consolas, Monaco, monospace; line-height: 1.65; }
+      .brief-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+      .brief-span { grid-column: 1 / -1; }
+      .privacy-strip { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 20px; padding: 14px 16px; border: 1px solid #bbf7d0; border-radius: 14px; background: #f0fdf4; color: #166534; font-size: 13px; line-height: 1.55; }
+      .privacy-strip strong { white-space: nowrap; }
+      @media (max-width: 768px) { .brief-grid { grid-template-columns: 1fr; } .brief-span { grid-column: auto; } }
+    </style>
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/ai-brief-builder.js" defer></script>
+    <script type="application/ld+json">
+      {"@context":"https://schema.org","@type":"WebApplication","name":"AI Task Brief Builder","url":"https://xavert.com/tools/ai-brief-builder.html","applicationCategory":"ProductivityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true,"offers":{"@type":"Offer","price":"0","priceCurrency":"EUR"}}
+    </script>
+  </head>
+  <body data-tool="ai-brief-builder" data-related-tools="ai-response-reviewer,text-toolkit,word-toolkit,markdown-editor">
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" />
+        <h1 id="tool-title" class="tool-title">AI Task Brief Builder</h1>
+      </section>
+
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="brief-title">
+          <header class="tool-card-header">
+            <h2 id="brief-title" class="tool-card-title">Build a clear instruction before opening an AI</h2>
+            <p class="tool-card-description">Define the goal, facts and limits once. XAVERT turns them into a structured brief you can review, copy or save.</p>
+          </header>
+          <div class="privacy-strip"><strong>Local by design.</strong><span>This page does not send your brief to XAVERT or to an AI provider. You decide where to use it.</span></div>
+          <div class="brief-grid">
+            <div class="form-group brief-span">
+              <label for="briefGoal">What do you need to accomplish?</label>
+              <textarea id="briefGoal" placeholder="Example: Compare three supplier proposals and recommend the best option."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="briefAudience">Who is the result for?</label>
+              <input id="briefAudience" type="text" placeholder="Customer, manager, student, general public..." />
+            </div>
+            <div class="form-group">
+              <label for="briefFormat">Desired result</label>
+              <select id="briefFormat">
+                <option>Structured report</option><option>Email</option><option>Step-by-step plan</option><option>Table</option><option>Summary</option><option>Checklist</option><option>Custom</option>
+              </select>
+            </div>
+            <div class="form-group brief-span">
+              <label for="briefContext">Context the AI must understand</label>
+              <textarea id="briefContext" placeholder="Background, situation, previous decisions and any essential definitions."></textarea>
+            </div>
+            <div class="form-group brief-span">
+              <label for="briefFacts">Facts and source material</label>
+              <textarea id="briefFacts" placeholder="Paste only the information that may be used as fact. Remove personal or confidential data when possible."></textarea>
+            </div>
+            <div class="form-group">
+              <label for="briefTone">Tone</label>
+              <select id="briefTone"><option>Clear and professional</option><option>Simple and accessible</option><option>Concise</option><option>Technical</option><option>Persuasive but factual</option><option>Neutral</option></select>
+            </div>
+            <div class="form-group">
+              <label for="briefLanguage">Output language</label>
+              <select id="briefLanguage"><option>English</option><option>Italian</option><option>Spanish</option><option>French</option><option>German</option><option>Portuguese</option></select>
+            </div>
+            <div class="form-group brief-span">
+              <label for="briefConstraints">Limits, exclusions and requirements</label>
+              <textarea id="briefConstraints" placeholder="Word limit, deadline, points to exclude, required sections, budget or legal boundaries."></textarea>
+            </div>
+            <div class="form-group brief-span">
+              <label for="briefVerification">Verification level</label>
+              <select id="briefVerification"><option value="strict">Strict — flag uncertainty and request sources</option><option value="balanced">Balanced — distinguish facts from assumptions</option><option value="creative">Creative — allow ideas but label invented details</option></select>
+            </div>
+          </div>
+          <div class="button-group">
+            <button class="btn" id="buildBriefBtn" data-primary-action>Build AI brief</button>
+            <button class="btn btn-secondary" id="briefExampleBtn">Load Example</button>
+            <button class="btn btn-neutral" id="briefClearBtn" data-clear-action>Clear All</button>
+          </div>
+          <div id="briefMessage" class="message" role="status" aria-live="polite"></div>
+        </section>
+
+        <section class="tool-card" aria-labelledby="result-title">
+          <header class="tool-card-header"><h2 id="result-title" class="tool-card-title">Reviewable AI brief</h2><p class="tool-card-description">Read it before sharing. A good brief should make assumptions, sources and expected output explicit.</p></header>
+          <textarea id="briefOutput" class="brief-output" readonly placeholder="Your structured brief will appear here."></textarea>
+          <div class="button-group"><button class="btn" id="briefCopyBtn">Copy Result</button><button class="btn btn-secondary" id="briefDownloadBtn">Download TXT</button></div>
+        </section>
+      </div>
+
+      <section class="info about-card"><h2>About the AI Task Brief Builder</h2><p class="about-intro">This tool acts as a preparation layer between a person and an AI system. It does not generate the answer: it helps you formulate a precise, inspectable request.</p><h3>Why it helps</h3><ul class="about-features"><li>Separates verified facts from context and preferences.</li><li>Defines the audience, format, tone and limits before generation.</li><li>Adds verification instructions to reduce confident but unsupported claims.</li><li>Keeps the drafting process local in your browser.</li></ul></section>
+      <section class="info" aria-labelledby="related-tools-title" hidden><h2 id="related-tools-title">Related Tools</h2><div id="related-tools"></div></section>
+    </main>
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+  </body>
+</html>

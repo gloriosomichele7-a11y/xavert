@@ -310,6 +310,18 @@
       description:
         "Scan and decode QR codes from images, clipboard content or a camera.",
     }),
+
+    "ai-brief-builder": Object.freeze({
+      title: "AI Task Brief Builder",
+      description:
+        "Turn a goal, source material and constraints into a reviewable AI instruction.",
+    }),
+
+    "ai-response-reviewer": Object.freeze({
+      title: "AI Response Reviewer",
+      description:
+        "Identify claims, figures and uncertainty that deserve human verification.",
+    }),
   });
   // ---------------------------
   // Existing Tool Fallback Mapping

@@ -18,6 +18,10 @@
         return category.querySelector(".category-button");
       }
 
+      function getCopy(key, fallback) {
+        return window.xavertLocale?.copy?.[key] || fallback;
+      }
+
       function setCategoryExpanded(category, expanded) {
         const cards = getCards(category);
         const button = getCategoryButton(category);
@@ -42,17 +46,24 @@
           card.hidden = !expanded && index >= 4;
         });
 
-        button.textContent = expanded ? "Show Less" : button.dataset.originalText;
+        button.textContent = expanded
+          ? getCopy("showLess", "Show less")
+          : button.dataset.originalText;
       }
 
       categories.forEach((category) => {
-        const button = getCategoryButton(category);
+        let button = getCategoryButton(category);
 
         if (!button) {
-          return;
+          button = document.createElement("button");
+          button.className = "category-button";
+          button.type = "button";
+          button.setAttribute("aria-expanded", "false");
+          category.appendChild(button);
         }
 
-        button.dataset.originalText = button.textContent.trim();
+        button.dataset.originalText = getCopy("showMore", "Show all");
+        button.textContent = button.dataset.originalText;
 
         const cards = getCards(category);
 
@@ -83,11 +94,22 @@
             title,
             description,
             category: categoryTitle,
+            categoryElement: category,
             href,
             searchable: `${title} ${description} ${categoryTitle}`.toLocaleLowerCase(),
           };
         });
       });
+
+      function refreshToolIndex() {
+        tools.forEach((tool) => {
+          const categoryTitle =
+            tool.categoryElement?.querySelector(".category-title")?.textContent.trim() ||
+            tool.category;
+          tool.category = categoryTitle;
+          tool.searchable = `${tool.title} ${tool.description} ${categoryTitle}`.toLocaleLowerCase();
+        });
+      }
 
       let visibleResults = [];
       let activeIndex = -1;
@@ -163,7 +185,7 @@
         if (!visibleResults.length) {
           const empty = document.createElement("div");
           empty.className = "search-empty";
-          empty.textContent = "No matching tools";
+          empty.textContent = getCopy("noResults", "No matching tools");
           searchResults.appendChild(empty);
         } else {
           visibleResults.forEach((tool, index) => {
@@ -247,5 +269,20 @@
         if (event.target !== toolSearch && !searchResults.contains(event.target)) {
           closeResults();
         }
+      });
+
+      window.addEventListener("xavert:languagechange", () => {
+        refreshToolIndex();
+        categories.forEach((category) => {
+          const button = getCategoryButton(category);
+          if (!button || button.hidden) return;
+          button.dataset.originalText = getCopy("showMore", "Show all");
+          const expanded = button.getAttribute("aria-expanded") === "true";
+          button.textContent = expanded
+            ? getCopy("showLess", "Show less")
+            : button.dataset.originalText;
+        });
+
+        if (!searchResults.hidden) renderResults();
       });
     })();

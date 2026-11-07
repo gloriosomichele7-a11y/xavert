@@ -9,6 +9,14 @@
 }
 
 @media (max-width: 992px) {
+  .xavert-site-header {
+    grid-template-columns: 1fr auto;
+  }
+
+  .xavert-shell-nav {
+    display: none;
+  }
+
   .container {
     max-width: 100%;
     padding: 32px 18px 0;
@@ -27,6 +35,51 @@
   .container {
     padding: 24px max(16px, env(safe-area-inset-right)) 0
       max(16px, env(safe-area-inset-left));
+  }
+
+  .xavert-site-header {
+    width: calc(100% - 20px);
+    min-height: 62px;
+    margin-top: 8px;
+    padding: 8px 9px 8px 12px;
+    border-radius: 15px;
+  }
+
+  .xavert-shell-brand {
+    gap: 8px;
+    font-size: 15px;
+  }
+
+  .xavert-shell-brand img {
+    width: 30px;
+    height: 30px;
+  }
+
+  .xavert-shell-home {
+    display: none;
+  }
+
+  .tool-hero {
+    grid-template-columns: 62px 1fr;
+    gap: 15px;
+    min-height: 112px;
+    padding: 20px;
+  }
+
+  .tool-logo {
+    width: 62px;
+  }
+
+  .xavert-footer-note {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 11px;
+    text-align: center;
+  }
+
+  .xavert-footer-support {
+    justify-self: center;
+    white-space: nowrap;
   }
 
   .tool-sections {
@@ -125,7 +178,13 @@
   }
 
   .tool-logo {
-    width: 140px;
+    width: 54px;
+  }
+
+  .tool-hero {
+    grid-template-columns: 54px 1fr;
+    padding: 17px 16px;
+    border-radius: 18px;
   }
 
   .tool-card,

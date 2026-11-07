@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>XAVERT | AI Response Reviewer</title>
+    <meta name="description" content="Review an AI response for unsupported certainty, numbers, sources, dates and personal data before using it." />
+    <meta name="robots" content="index, follow" />
+    <meta name="theme-color" content="#dc2626" />
+    <link rel="canonical" href="https://xavert.com/tools/ai-response-reviewer.html" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <meta property="og:type" content="website" /><meta property="og:title" content="XAVERT | AI Response Reviewer" /><meta property="og:description" content="Create a human verification plan for an AI response." /><meta property="og:url" content="https://xavert.com/tools/ai-response-reviewer.html" /><meta property="og:image" content="https://xavert.com/assets/images/og-image.png" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .review-textarea { min-height: 250px; line-height: 1.65; }
+      .review-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .review-item { padding: 16px; border: 1px solid #e5e7eb; border-radius: 15px; background: #f8fafc; }
+      .review-item strong { display: block; margin-bottom: 5px; color: #111827; }
+      .review-item p { margin: 0; color: #5f6b7a; font-size: 13px; line-height: 1.55; }
+      .review-item[data-level="check"] { border-color: #fde68a; background: #fffbeb; }
+      .review-item[data-level="good"] { border-color: #bbf7d0; background: #f0fdf4; }
+      .review-summary { display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: 16px; }
+      .review-chip { padding: 7px 10px; border-radius: 999px; background: #f1f5f9; color: #334155; font-size: 12px; font-weight: 800; }
+      @media (max-width: 768px) { .review-grid { grid-template-columns: 1fr; } }
+    </style>
+    <script src="../assets/js/global.js" defer></script>
+    <script src="../assets/js/utils.js" defer></script>
+    <script src="../assets/js/related-tools.js" defer></script>
+    <script src="../assets/js/ai-response-reviewer.js" defer></script>
+    <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"AI Response Reviewer","url":"https://xavert.com/tools/ai-response-reviewer.html","applicationCategory":"ProductivityApplication","operatingSystem":"Any","browserRequirements":"Requires JavaScript","isAccessibleForFree":true}</script>
+  </head>
+  <body data-tool="ai-response-reviewer" data-related-tools="ai-brief-builder,text-toolkit,text-diff-checker,word-toolkit">
+    <main class="container">
+      <a href="../index.html" class="back-link">← Back to Home</a>
+      <section class="tool-hero" aria-labelledby="tool-title"><img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" /><h1 id="tool-title" class="tool-title">AI Response Reviewer</h1></section>
+      <div class="tool-sections">
+        <section class="tool-card" aria-labelledby="review-input-title">
+          <header class="tool-card-header"><h2 id="review-input-title" class="tool-card-title">Pause before you trust, publish or send</h2><p class="tool-card-description">Paste the request and the AI response. XAVERT highlights areas that deserve human verification; it does not decide whether the answer is true.</p></header>
+          <div class="form-group"><label for="reviewTask">Original request or intended use</label><textarea id="reviewTask" placeholder="What did you ask, and how will the answer be used?"></textarea></div>
+          <div class="form-group" style="margin-top:18px"><label for="reviewResponse">AI response</label><textarea id="reviewResponse" class="review-textarea" placeholder="Paste the response you want to review."></textarea></div>
+          <div class="button-group"><button class="btn" id="reviewBtn" data-primary-action>Review response</button><button class="btn btn-secondary" id="reviewExampleBtn">Load Example</button><button class="btn btn-neutral" id="reviewClearBtn" data-clear-action>Clear All</button></div>
+          <div id="reviewMessage" class="message" role="status" aria-live="polite"></div>
+        </section>
+        <section class="tool-card" aria-labelledby="review-results-title">
+          <header class="tool-card-header"><h2 id="review-results-title" class="tool-card-title">Human verification plan</h2><p class="tool-card-description">The checks below are based on textual signals, not on an external fact-checking service.</p></header>
+          <div id="reviewSummary" class="review-summary"></div>
+          <div id="reviewResults" class="review-grid"><div class="review-item"><strong>Ready when you are</strong><p>Run the review to generate a practical verification checklist.</p></div></div>
+          <div class="button-group"><button class="btn" id="reviewCopyBtn">Copy Result</button><button class="btn btn-secondary" id="reviewDownloadBtn">Download TXT</button></div>
+        </section>
+      </div>
+      <section class="info about-card"><h2>About the AI Response Reviewer</h2><p class="about-intro">AI can produce useful work quickly, but fluent language is not evidence. This local tool helps identify claims, figures and sensitive content that should receive human attention.</p><h3>What it checks</h3><ul class="about-features"><li>Strong certainty and absolute wording.</li><li>Numbers, prices, percentages and dates.</li><li>Presence or absence of URLs and source-like references.</li><li>Possible email addresses and phone numbers.</li><li>Whether the response appears to include assumptions or uncertainty.</li></ul><p class="about-privacy">It does not prove accuracy and must not replace professional review for medical, legal, financial or safety-critical decisions.</p></section>
+      <section class="info" aria-labelledby="related-tools-title" hidden><h2 id="related-tools-title">Related Tools</h2><div id="related-tools"></div></section>
+    </main>
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+  </body>
+</html>
