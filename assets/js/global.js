@@ -183,12 +183,7 @@
   }
 
   const shellCopy = {
-    en: { tools: "Tools", work: "Work", ai: "AI", home: "Home", back: "Back to Home", skip: "Skip to main content", kicker: "XAVERT / BROWSER TOOL", related: "Related Tools", privacy: "Privacy", terms: "Terms", support: "Support", language: "Language", clear: "Clear All", copy: "Copy Result", example: "Load Example" },
-    it: { tools: "Strumenti", work: "Lavoro", ai: "IA", home: "Home", back: "Torna alla home", skip: "Vai al contenuto principale", kicker: "XAVERT / STRUMENTO NEL BROWSER", related: "Strumenti correlati", privacy: "Privacy", terms: "Condizioni", support: "Assistenza", language: "Lingua", clear: "Cancella tutto", copy: "Copia risultato", example: "Carica esempio" },
-    es: { tools: "Herramientas", work: "Trabajo", ai: "IA", home: "Inicio", back: "Volver al inicio", skip: "Ir al contenido principal", kicker: "XAVERT / HERRAMIENTA WEB", related: "Herramientas relacionadas", privacy: "Privacidad", terms: "Condiciones", support: "Soporte", language: "Idioma", clear: "Borrar todo", copy: "Copiar resultado", example: "Cargar ejemplo" },
-    fr: { tools: "Outils", work: "Travail", ai: "IA", home: "Accueil", back: "Retour à l'accueil", skip: "Aller au contenu principal", kicker: "XAVERT / OUTIL WEB", related: "Outils associés", privacy: "Confidentialité", terms: "Conditions", support: "Assistance", language: "Langue", clear: "Tout effacer", copy: "Copier le résultat", example: "Charger un exemple" },
-    de: { tools: "Tools", work: "Arbeit", ai: "KI", home: "Start", back: "Zur Startseite", skip: "Zum Hauptinhalt springen", kicker: "XAVERT / BROWSER-TOOL", related: "Verwandte Tools", privacy: "Datenschutz", terms: "Bedingungen", support: "Support", language: "Sprache", clear: "Alles löschen", copy: "Ergebnis kopieren", example: "Beispiel laden" },
-    pt: { tools: "Ferramentas", work: "Trabalho", ai: "IA", home: "Início", back: "Voltar ao início", skip: "Ir para o conteúdo principal", kicker: "XAVERT / FERRAMENTA WEB", related: "Ferramentas relacionadas", privacy: "Privacidade", terms: "Termos", support: "Suporte", language: "Idioma", clear: "Limpar tudo", copy: "Copiar resultado", example: "Carregar exemplo" },
+    en: { tools: "Tools", work: "Work", ai: "AI", home: "Home", skip: "Skip to main content", kicker: "XAVERT / BROWSER TOOL", privacy: "Privacy", terms: "Terms", support: "Support" },
   };
 
   function element(tag, className, text) {
@@ -230,18 +225,10 @@
     });
 
     const actions = element("div", "xavert-shell-actions");
-    const language = element("select", "xavert-shell-language");
-    language.id = "xavertShellLanguage";
-    language.setAttribute("aria-label", "Language");
-    [["en", "EN"], ["it", "IT"], ["es", "ES"], ["fr", "FR"], ["de", "DE"], ["pt", "PT"]].forEach(([value, label]) => {
-      const option = element("option", "", label);
-      option.value = value;
-      language.appendChild(option);
-    });
     const home = element("a", "xavert-shell-home", "Home");
     home.href = "../";
     home.dataset.shellKey = "home";
-    actions.append(language, home);
+    actions.append(home);
     header.append(brand, nav, actions);
 
     const main = document.querySelector("main");
@@ -283,43 +270,8 @@
       footer.append(links, support);
     }
 
-    const saved = localStorage.getItem("xavert-language");
-    const detected = navigator.language?.slice(0, 2).toLowerCase();
-    const initial = shellCopy[saved] ? saved : shellCopy[detected] ? detected : "en";
-
-    function applyShellLanguage(code) {
-      const locale = shellCopy[code] || shellCopy.en;
-      document.documentElement.lang = code;
-      language.value = code;
-      document.querySelectorAll("[data-shell-key]").forEach((node) => {
-        const translated = locale[node.dataset.shellKey];
-        if (translated) node.textContent = translated;
-      });
-      language.setAttribute("aria-label", locale.language);
-      const back = document.querySelector(".back-link");
-      if (back) back.textContent = `← ${locale.back}`;
-      const related = document.getElementById("related-tools-title");
-      if (related) related.textContent = locale.related;
-
-      const common = new Map([
-        ["Clear All", locale.clear],
-        ["Copy Result", locale.copy],
-        ["Load Example", locale.example],
-      ]);
-      document.querySelectorAll("button").forEach((button) => {
-        if (!button.dataset.xavertOriginal) {
-          const original = button.textContent.replace(/\s+/g, " ").trim();
-          if (common.has(original)) button.dataset.xavertOriginal = original;
-        }
-        const original = button.dataset.xavertOriginal;
-        if (original && common.has(original)) button.textContent = common.get(original);
-      });
-
-      localStorage.setItem("xavert-language", code);
-    }
-
-    applyShellLanguage(initial);
-    language.addEventListener("change", () => applyShellLanguage(language.value));
+    localStorage.removeItem("xavert-language");
+    document.documentElement.lang = "en";
   }
 
   document.addEventListener(

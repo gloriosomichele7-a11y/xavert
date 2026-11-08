@@ -117,18 +117,6 @@ body {
   gap: 8px;
 }
 
-.language-control select {
-  min-height: 40px;
-  padding: 0 30px 0 11px;
-  border: 1px solid var(--x-line);
-  border-radius: 10px;
-  background: white;
-  color: var(--x-ink);
-  font-size: 12.5px;
-  font-weight: 800;
-  cursor: pointer;
-}
-
 .header-cta {
   display: inline-flex;
   min-height: 42px;
@@ -766,10 +754,6 @@ body {
 
   .header-cta {
     display: none;
-  }
-
-  .language-control select {
-    min-height: 38px;
   }
 
   .intro,
