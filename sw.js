@@ -1,9 +1,11 @@
 "use strict";
 
-const CACHE_NAME = "xavert-shell-20261106-v1";
+const CACHE_NAME = "xavert-shell-20261107-v1";
 const CORE_ASSETS = [
   "/",
   "/index.html",
+  "/work/",
+  "/ai/",
   "/favicon.svg",
   "/logo-hero.svg",
   "/site.webmanifest",
@@ -11,8 +13,11 @@ const CORE_ASSETS = [
   "/assets/css/global.css",
   "/assets/css/components.css",
   "/assets/css/responsive.css",
+  "/assets/css/hub.css",
   "/assets/js/home-i18n.js",
   "/assets/js/index.js",
+  "/assets/js/global.js",
+  "/assets/js/hub-i18n.js",
   "/assets/js/pwa-install.js",
   "/assets/images/pwa-icon-192.png",
   "/assets/images/pwa-icon-512.png"

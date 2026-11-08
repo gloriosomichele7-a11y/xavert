@@ -84,6 +84,27 @@ a {
 
 /* Tool Header */
 
+.xavert-skip-link {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 12px;
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: #111827;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transform: translateY(-160%);
+}
+
+.xavert-skip-link:focus-visible {
+  transform: translateY(0);
+  outline: 3px solid rgba(220, 38, 38, 0.38);
+  outline-offset: 3px;
+}
+
 .hero,
 .tool-hero {
   min-width: 0;
@@ -319,7 +340,16 @@ body {
 .xavert-shell-nav a:focus-visible {
   background: #f3f4f6;
   color: var(--x-ink);
-  outline: none;
+}
+
+.xavert-shell-nav a:focus-visible {
+  outline: 3px solid rgba(220, 38, 38, 0.35);
+  outline-offset: 2px;
+}
+
+.xavert-shell-nav a[aria-current="page"] {
+  background: #fff1f2;
+  color: #b91c1c;
 }
 
 .xavert-shell-actions {

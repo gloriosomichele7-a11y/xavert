@@ -779,16 +779,28 @@
 
             .footer-inner {
               flex-direction: column;
+              align-items: center;
               justify-content: center;
               gap: 14px;
               text-align: center;
             }
 
             .footer-contact {
+              width: 100%;
+              flex-direction: column;
+              align-items: center;
               justify-content: center;
+              gap: 9px;
+              text-align: center;
+            }
+
+            .footer-contact-copy {
+              text-align: center;
             }
 
             .footer-contact-email {
+              display: inline-block;
+              font-size: 12.5px;
               overflow-wrap: normal;
               word-break: normal;
               white-space: nowrap;
@@ -803,7 +815,7 @@
       </head>
 
       <body>
-        <a class="skip-link" href="#main-content">Skip to tools</a>
+        <a class="skip-link" href="#main-content" data-i18n="skipToTools">Skip to tools</a>
 
         <header class="site-header" id="top">
           <a class="brand" href="/" aria-label="XAVERT home">
@@ -811,7 +823,7 @@
             <span>XAVERT</span>
           </a>
 
-          <nav class="main-nav" aria-label="Primary navigation">
+          <nav class="main-nav" aria-label="Primary navigation" data-i18n-aria-label="navPrimary">
             <a href="#services" data-i18n="navTools">Tools</a>
             <a href="#work" data-i18n="navWork">Work</a>
             <a href="#ai" data-i18n="navAi">AI</a>
@@ -820,7 +832,7 @@
           <div class="header-actions">
             <label class="language-control" for="languageSelect">
               <span class="sr-only" data-i18n="languageLabel">Language</span>
-              <select id="languageSelect" aria-label="Language">
+              <select id="languageSelect" aria-label="Language" data-i18n-aria-label="languageLabel">
                 <option value="en">EN</option>
                 <option value="it">IT</option>
                 <option value="es">ES</option>
@@ -857,6 +869,7 @@
                 autocomplete="off"
                 spellcheck="false"
                 aria-label="Search XAVERT tools"
+                data-i18n-aria-label="searchAria"
                 aria-controls="searchResults"
                 aria-autocomplete="list"
                 data-i18n-placeholder="searchPlaceholder"
@@ -866,11 +879,12 @@
                 class="search-results"
                 role="listbox"
                 aria-label="Tool search suggestions"
+                data-i18n-aria-label="searchSuggestions"
                 hidden
               ></div>
             </div>
 
-            <div class="trust-row" aria-label="XAVERT advantages">
+            <div class="trust-row" aria-label="XAVERT advantages" data-i18n-aria-label="advantagesAria">
               <span data-i18n="trustTools">57 focused tools</span>
               <span aria-hidden="true">·</span>
               <span data-i18n="trustPrivacy">Private in your browser</span>
@@ -879,10 +893,10 @@
             </div>
           </div>
 
-          <div class="hero-console" aria-label="XAVERT product areas">
+          <div class="hero-console" aria-label="XAVERT product areas" data-i18n-aria-label="productAreasAria">
             <div class="console-topbar">
               <span class="console-brand">XAVERT / WORKSPACE</span>
-              <span class="status-dot"><span></span> Browser ready</span>
+              <span class="status-dot"><span></span><span data-i18n="browserStatus">Browser ready</span></span>
             </div>
             <a class="console-row is-active" href="#services">
               <span class="console-icon">01</span>
@@ -916,13 +930,13 @@
               <p data-i18n="pathToolsText">Fast utilities for files, code, data, images and everyday tasks.</p>
               <span class="path-link" data-i18n="browseTools">Browse all tools →</span>
             </a>
-            <a class="pathway-card" id="work" href="work/index.html">
+            <a class="pathway-card" id="work" href="work/">
               <span class="path-number">02</span>
               <h3 data-i18n="pathWork">XAVERT Work</h3>
               <p data-i18n="pathWorkText">Connected steps for documents, office work and repeatable processes.</p>
               <span class="path-link" data-i18n="openWorkspace">Open workspace →</span>
             </a>
-            <a class="pathway-card ai-path" id="ai" href="ai/index.html">
+            <a class="pathway-card ai-path" id="ai" href="ai/">
               <span class="path-number">03</span>
               <h3 data-i18n="pathAi">XAVERT AI</h3>
               <p data-i18n="pathAiText">Guided collaboration that turns your goal into a useful, verifiable result.</p>
@@ -942,7 +956,7 @@
             <details class="install-guide">
               <summary data-i18n="installGuide">How to add it</summary>
               <ul>
-                <li data-i18n="installIos"><strong>iPhone or iPad:</strong> Open XAVERT in Safari, tap Share, then “Add to Home Screen”.</li>
+                <li data-i18n="installIos"><strong>iPhone or iPad:</strong> In Safari, tap Share, then “Add to Home Screen”. In Chrome, tap Share beside the address bar, then “Add to Home Screen”.</li>
                 <li data-i18n="installAndroid"><strong>Android:</strong> Open the browser menu and choose “Install app” or “Add to Home screen”.</li>
                 <li data-i18n="installComputer"><strong>Computer:</strong> In Chrome or Edge, use the install icon in the address bar or the browser menu.</li>
               </ul>
@@ -951,7 +965,7 @@
           </div>
         </section>
 
-        <main id="main-content">
+        <main id="main-content" tabindex="-1">
         <section class="services" id="services">
           <div class="tool-category">
             <h2 class="category-title" id="developer-tools">Developer Tools</h2>
@@ -1610,19 +1624,20 @@
               </div>
 
               <div class="footer-contact-copy">
-                <div class="footer-contact-title">Contact</div>
+                <div class="footer-contact-title" data-i18n="contact">Contact</div>
                 <a
                   class="footer-contact-email"
                   href="mailto:support@xavert.com"
                   aria-label="Email XAVERT support"
+                  data-i18n-aria-label="supportEmailAria"
                 >
                   support@xavert.com
                 </a>
               </div>
             </div>
-            <nav class="footer-legal" aria-label="Legal">
-              <a href="privacy-policy.html">Privacy Policy</a>
-              <a href="terms-of-use.html">Terms of Use</a>
+            <nav class="footer-legal" aria-label="Legal" data-i18n-aria-label="legalLabel">
+              <a href="privacy-policy.html" data-i18n="privacyPolicy">Privacy Policy</a>
+              <a href="terms-of-use.html" data-i18n="termsOfUse">Terms of Use</a>
             </nav>
 
             <div class="footer-bottom">© 2026 XAVERT</div>
