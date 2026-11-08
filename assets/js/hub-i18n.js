@@ -322,7 +322,10 @@
     languageSelect.addEventListener("change", () => applyLanguage(languageSelect.value));
   }
 
-  if (document.readyState === "loading") {
+  if (
+    document.readyState === "loading" ||
+    !document.getElementById("xavertShellLanguage")
+  ) {
     document.addEventListener("DOMContentLoaded", init, { once: true });
   } else {
     init();
