@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "xavert-shell-20261107-v1";
+const CACHE_NAME = "xavert-shell-20261108-v2";
 const CORE_ASSETS = [
   "/",
   "/index.html",
@@ -45,6 +45,22 @@ self.addEventListener("fetch", (event) => {
       caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
       return response;
     }).catch(() => caches.match(request).then((cached) => cached || caches.match("/index.html"))));
+    return;
+  }
+
+  const isMutableAsset =
+    url.pathname.endsWith(".css") ||
+    url.pathname.endsWith(".js") ||
+    url.pathname === "/site.webmanifest";
+
+  if (isMutableAsset) {
+    event.respondWith(fetch(request).then((response) => {
+      if (response.ok) {
+        const copy = response.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(request, copy));
+      }
+      return response;
+    }).catch(() => caches.match(request)));
     return;
   }
 
