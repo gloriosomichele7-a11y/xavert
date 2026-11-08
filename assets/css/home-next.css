@@ -497,9 +497,14 @@ body {
   position: relative;
   z-index: 1;
   align-self: flex-start;
-  color: #fca5a5;
+  color: #b91c1c;
   font-size: 12px;
   font-weight: 850;
+}
+
+.pathway-card.tools-path .path-number,
+.pathway-card.tools-path .path-link {
+  color: #fca5a5;
 }
 
 .coming-label {
