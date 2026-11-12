@@ -60,6 +60,36 @@
       ]
     }
   ],
+  "screenshots": [
+    {
+      "src": "/assets/images/store-screenshots/01-xavert-home-1440x1000.png",
+      "sizes": "1440x1000",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "XAVERT home workspace"
+    },
+    {
+      "src": "/assets/images/store-screenshots/02-xavert-tools-1440x1000.png",
+      "sizes": "1440x1000",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "XAVERT tools directory"
+    },
+    {
+      "src": "/assets/images/store-screenshots/03-xavert-work-1440x1000.png",
+      "sizes": "1440x1000",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "XAVERT Work guided workflows"
+    },
+    {
+      "src": "/assets/images/store-screenshots/04-xavert-ai-1440x1000.png",
+      "sizes": "1440x1000",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "XAVERT AI human-guided collaboration"
+    }
+  ],
   "icons": [
     {
       "src": "/assets/images/pwa-icon-192.png?v=20261106",
