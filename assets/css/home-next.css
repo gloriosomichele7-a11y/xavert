@@ -4,8 +4,8 @@
   --x-red-soft: #fff1f2;
   --x-ink: #101827;
   --x-ink-soft: #182235;
-  --x-muted: #5f6b7a;
-  --x-subtle: #7b8797;
+  --x-muted: #4b5563;
+  --x-subtle: #667085;
   --x-line: #e1e6ec;
   --x-line-strong: #d3dae3;
   --x-panel: #ffffff;
@@ -42,7 +42,6 @@ body {
   font-size: 16px;
   line-height: 1.5;
   text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
 }
 
 a {

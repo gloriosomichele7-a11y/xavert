@@ -7,7 +7,7 @@
       description: "Use 57 browser-based tools, guided document workflows and human-centered AI collaboration utilities. Fast, privacy-conscious and no sign-up required.",
       navTools: "Tools", navWork: "Work", navAi: "AI", languageLabel: "Language", exploreTools: "Explore tools",
       eyebrow: "57 focused tools · built for real work",
-      heroTitle: "Get digital work done—without the clutter.",
+      heroTitle: "Get digital work done without the clutter.",
       heroText: "Convert files, clean data, build developer assets and prepare better work for AI in one focused, privacy-conscious workspace.",
       searchPlaceholder: "Search a tool, format or task...",
       trustTools: "57 focused tools", trustPrivacy: "Browser processing where supported", trustSignup: "No sign-up",
