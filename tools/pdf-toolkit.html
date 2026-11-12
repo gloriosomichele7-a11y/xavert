@@ -131,6 +131,12 @@
         cursor: crosshair;
         touch-action: none;
       }
+
+      .pdf-privacy-link {
+        color: #b91c1c;
+        font-weight: 700;
+        text-underline-offset: 3px;
+      }
     </style>
 
     <script
@@ -740,7 +746,15 @@
           <li>Compare PDF text, apply permanent visual redactions and crop pages.</li>
         </ul>
         <h3>Privacy First</h3>
-        <p class="about-privacy">PDF processing happens locally within your browser. Your files are never uploaded, transmitted, shared or stored on XAVERT servers.</p>
+        <p class="about-privacy">
+          Your selected PDF files are processed locally in your browser and are
+          not uploaded to or stored on XAVERT servers. This page downloads PDF
+          libraries from jsDelivr; OCR also downloads its engine and language
+          resources when you run OCR. These requests provide software and
+          resources to your browser and do not include your PDF file. The
+          provider's own terms and policies apply to those CDN requests:
+          <a class="pdf-privacy-link" href="https://www.jsdelivr.com/terms" target="_blank" rel="noopener noreferrer">jsDelivr Terms &amp; Policies</a>.
+        </p>
       </section>
 
       <section class="info" aria-labelledby="related-tools-title" hidden>
