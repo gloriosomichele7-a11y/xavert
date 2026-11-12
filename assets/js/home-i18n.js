@@ -3,12 +3,12 @@
 (() => {
   const translations = {
     en: {
-      title: "XAVERT | Tools, Workflows & AI Collaboration",
-      description: "Fast browser tools, guided workflows and a simpler way to work with artificial intelligence.",
+      title: "XAVERT | Browser Tools, Workflows & AI Collaboration",
+      description: "Use 57 browser-based tools, guided document workflows and human-centered AI collaboration utilities. Fast, privacy-conscious and no sign-up required.",
       navTools: "Tools", navWork: "Work", navAi: "AI", languageLabel: "Language", exploreTools: "Explore tools",
-      eyebrow: "The practical side of digital work",
-      heroTitle: "One clear workspace for tools, documents and AI.",
-      heroText: "Solve everyday digital tasks with fast browser tools, guided workflows and a simpler way to work with artificial intelligence.",
+      eyebrow: "57 focused tools · built for real work",
+      heroTitle: "Get digital work done—without the clutter.",
+      heroText: "Convert files, clean data, build developer assets and prepare better work for AI in one focused, privacy-conscious workspace.",
       searchPlaceholder: "Search a tool, format or task...",
       trustTools: "57 focused tools", trustPrivacy: "Browser processing where supported", trustSignup: "No sign-up",
       consoleTools: "Quick tools", consoleToolsText: "Convert, clean, create and check",
@@ -26,7 +26,7 @@
       installAndroid: "Android: Open the browser menu and choose Install app or Add to Home screen.",
       installComputer: "Computer: In Chrome or Edge, use the install icon in the address bar or the browser menu.",
       installNote: "An internet connection is still required to use the tools.",
-      directoryLabel: "57 tools · one clean directory",
+      directoryLabel: "The complete toolkit",
       developerTitle: "Developer Tools", developerDescription: "Build, format, test and manage code, SEO, structured data and web projects.",
       documentTitle: "Document Tools", documentDescription: "Work with PDF and Word documents directly in your browser.",
       imageTitle: "Image & Design Tools", imageDescription: "Create, inspect and improve images, graphics, QR codes and visual assets.",
@@ -34,7 +34,7 @@
       dataTitle: "Data Conversion Tools", dataDescription: "Transform spreadsheet and structured data into useful formats for analysis and reporting.", aiTitle: "AI Collaboration Tools", aiDescription: "Prepare clearer AI requests and review responses before using them in real work.",
       showMore: "Show all", showLess: "Show less", openTool: "Open tool  →", noResults: "No matching tools",
       contact: "Contact", privacyPolicy: "Privacy Policy", termsOfUse: "Terms of Use", legalLabel: "Legal", supportEmailAria: "Email XAVERT support",
-      skipToTools: "Skip to tools", navPrimary: "Primary navigation", searchAria: "Search XAVERT tools", searchSuggestions: "Tool search suggestions", advantagesAria: "XAVERT advantages", productAreasAria: "XAVERT product areas", browserStatus: "Browser ready"
+      skipToMain: "Skip to main content", navPrimary: "Primary navigation", searchAria: "Search XAVERT tools", searchSuggestions: "Tool search suggestions", advantagesAria: "XAVERT advantages", productAreasAria: "XAVERT product areas", browserStatus: "Browser ready"
     }
   };
 

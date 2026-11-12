@@ -84,738 +84,11 @@
             ]
           }
         </script>
-        <style>
-          * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, Helvetica, sans-serif;
-          }
-
-          html {
-            scroll-behavior: smooth;
-          }
-
-          body {
-            background: #f7f8fb;
-            color: #111827;
-          }
-
-          .intro {
-            text-align: center;
-            padding: 18px 20px 10px;
-          }
-
-          .intro img {
-            width: 150px;
-            max-width: 48%;
-            height: auto;
-            display: block;
-            margin: 0 auto 2px;
-          }
-
-          .intro h1 {
-            max-width: 760px;
-            margin: 0 auto 8px;
-            font-size: 30px;
-            line-height: 1.15;
-            font-weight: 800;
-            letter-spacing: -0.7px;
-            color: #111827;
-          }
-
-          .intro p {
-            max-width: 660px;
-            margin: 0 auto;
-            color: #526174;
-            font-size: 15.5px;
-            line-height: 1.6;
-            font-weight: 500;
-          }
-
-          .trust-row {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 7px;
-            margin: 12px auto 0;
-            color: #526174;
-            font-size: 12.5px;
-            font-weight: 700;
-          }
-
-          .trust-row span {
-            display: inline;
-          }
-
-          .trust-row span[aria-hidden="true"] {
-            color: #dc2626;
-          }
-
-          .card-link:focus-visible {
-            outline: 3px solid rgba(220, 38, 38, 0.2);
-            outline-offset: 3px;
-          }
-
-          .search-box {
-            position: relative;
-            z-index: 20;
-            max-width: 720px;
-            margin: 20px auto 0;
-          }
-
-          .search-box::before {
-            content: "";
-            position: absolute;
-            left: 20px;
-            top: 50%;
-            width: 18px;
-            height: 18px;
-            border: 2px solid #526174;
-            border-radius: 50%;
-            transform: translateY(-58%);
-            pointer-events: none;
-            transition:
-              border-color 0.2s ease,
-              opacity 0.2s ease;
-          }
-
-          .search-box::after {
-            content: "";
-            position: absolute;
-            left: 36px;
-            top: calc(50% + 7px);
-            width: 7px;
-            height: 2px;
-            border-radius: 999px;
-            background: #526174;
-            transform: rotate(45deg);
-            transform-origin: left center;
-            pointer-events: none;
-            transition:
-              background 0.2s ease,
-              opacity 0.2s ease;
-          }
-
-          .search-box:focus-within::before {
-            border-color: #dc2626;
-          }
-
-          .search-box:focus-within::after {
-            background: #dc2626;
-          }
-
-          .search-box input {
-            width: 100%;
-            min-height: 58px;
-            padding: 0 22px 0 54px;
-            border: 1px solid #d7dde5;
-            border-radius: 18px;
-            font: inherit;
-            font-size: 15px;
-            font-weight: 500;
-            color: #111827;
-            background: rgba(255, 255, 255, 0.96);
-            box-shadow:
-              0 1px 2px rgba(15, 23, 42, 0.03),
-              0 10px 30px rgba(15, 23, 42, 0.055);
-            transition:
-              border-color 0.2s ease,
-              box-shadow 0.2s ease,
-              transform 0.2s ease;
-            -webkit-appearance: none;
-            appearance: none;
-          }
-
-          .search-box input::placeholder {
-            color: #6b7788;
-            font-weight: 450;
-          }
-
-          .search-box input:focus {
-            outline: none;
-            border-color: rgba(220, 38, 38, 0.72);
-            box-shadow:
-              0 0 0 4px rgba(220, 38, 38, 0.08),
-              0 14px 36px rgba(15, 23, 42, 0.08);
-          }
-
-          .search-box input::-webkit-search-cancel-button {
-            cursor: pointer;
-          }
-
-          .search-results {
-            position: absolute;
-            top: calc(100% + 8px);
-            left: 0;
-            right: 0;
-            z-index: 30;
-            max-height: 390px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            background: #ffffff;
-            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.12);
-            text-align: left;
-          }
-
-          .search-results[hidden] {
-            display: none;
-          }
-
-          .search-result-item {
-            display: block;
-            padding: 13px 16px;
-            border-bottom: 1px solid #eef1f5;
-            color: inherit;
-            text-decoration: none;
-            transition:
-              background-color 0.16s ease,
-              color 0.16s ease;
-          }
-
-          .search-result-item:last-child {
-            border-bottom: 0;
-          }
-
-          .search-result-item:hover,
-          .search-result-item:focus-visible,
-          .search-result-item.is-active {
-            outline: none;
-            background: #fff7f7;
-          }
-
-          .search-result-title {
-            display: block;
-            color: #111827;
-            font-size: 14px;
-            font-weight: 800;
-            line-height: 1.3;
-          }
-
-          .search-result-meta {
-            display: block;
-            margin-top: 3px;
-            color: #526174;
-            font-size: 12px;
-            font-weight: 600;
-            line-height: 1.35;
-          }
-
-          .search-empty {
-            padding: 14px 16px;
-            color: #526174;
-            font-size: 13px;
-            font-weight: 650;
-          }
-
-          .services {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 18px 4% 48px;
-          }
-
-          .tool-category {
-            margin-top: 34px;
-            padding: 30px 0 4px;
-            border-top: 1px solid #e5e7eb;
-          }
-
-          .tool-category:first-child {
-            margin-top: 0;
-            padding-top: 10px;
-            border-top: 0;
-          }
-
-          .category-title {
-            margin-bottom: 6px;
-            color: #111827;
-            font-size: 26px;
-            font-weight: 800;
-            line-height: 1.2;
-            letter-spacing: -0.55px;
-          }
-
-          .category-description {
-            max-width: 720px;
-            margin-bottom: 16px;
-            color: #526174;
-            font-size: 14px;
-            line-height: 1.55;
-          }
-
-          .category-footer {
-            margin-top: 18px;
-            text-align: center;
-          }
-
-          .category-button {
-            padding: 9px 18px;
-            border: 1px solid #d9dee6;
-            border-radius: 999px;
-            background: #ffffff;
-            color: #475569;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            transition:
-              border-color 0.2s ease,
-              color 0.2s ease,
-              background-color 0.2s ease;
-          }
-
-          .category-button:hover {
-            border-color: #dc2626;
-            background: #fff7f7;
-            color: #dc2626;
-          }
-
-          .grid {
-            display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 14px;
-            align-items: stretch;
-          }
-
-          .card-link {
-            display: block;
-            height: 100%;
-            border-radius: 14px;
-            color: inherit;
-            text-decoration: none;
-          }
-
-          .card {
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            min-height: 154px;
-            height: 100%;
-            padding: 18px 18px 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            background: #ffffff;
-            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-            transition:
-              transform 0.2s ease,
-              box-shadow 0.2s ease,
-              border-color 0.2s ease;
-          }
-
-          .card-link:hover .card,
-          .card:hover {
-            border-color: #f0b4b4;
-            transform: translateY(-3px);
-            box-shadow: 0 10px 26px rgba(15, 23, 42, 0.075);
-          }
-
-          .card h3 {
-            margin: 0 0 8px;
-            color: #111827;
-            font-size: 17px;
-            font-weight: 800;
-            line-height: 1.3;
-            letter-spacing: -0.25px;
-          }
-
-          .card p {
-            display: -webkit-box;
-            margin: 0 0 16px;
-            overflow: hidden;
-            color: #526174;
-            font-size: 13.5px;
-            line-height: 1.55;
-            -webkit-box-orient: vertical;
-            -webkit-line-clamp: 3;
-          }
-
-          .card::after {
-            content: "Open tool  →";
-            margin-top: auto;
-            color: #dc2626;
-            font-size: 12.5px;
-            font-weight: 800;
-            letter-spacing: 0.05px;
-          }
-
-          .footer {
-            width: min(1180px, calc(100% - 32px));
-            margin: 30px auto 18px;
-            padding: 18px 20px;
-            border: 1px solid #e5e7eb;
-            border-radius: 14px;
-            background: #ffffff;
-            box-shadow: 0 3px 12px rgba(15, 23, 42, 0.035);
-          }
-
-          .footer-inner {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 24px;
-            width: min(1180px, 100%);
-            margin: 0 auto;
-          }
-
-          .footer-contact {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            min-width: 0;
-          }
-
-          .footer-contact-icon {
-            display: grid;
-            flex: 0 0 38px;
-            width: 38px;
-            height: 38px;
-            place-items: center;
-            border-radius: 10px;
-            background: #fff1f2;
-            color: #dc2626;
-          }
-
-          .footer-contact-icon svg {
-            width: 19px;
-            height: 19px;
-            fill: none;
-            stroke: currentColor;
-            stroke-width: 2;
-            stroke-linecap: round;
-            stroke-linejoin: round;
-          }
-
-          .footer-contact-copy {
-            min-width: 0;
-          }
-
-          .footer-contact-title {
-            margin: 0 0 2px;
-            color: #111827;
-            font-size: 13px;
-            font-weight: 800;
-            line-height: 1.2;
-          }
-
-          .footer-contact-email {
-            color: #dc2626;
-            font-size: 13px;
-            font-weight: 700;
-            line-height: 1.3;
-            text-decoration: none;
-            overflow-wrap: anywhere;
-          }
-
-          .footer-contact-email:hover,
-          .footer-contact-email:focus-visible {
-            color: #dc2626;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            outline: none;
-          }
-
-          .footer-legal {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            flex-wrap: wrap;
-          }
-
-          .footer-legal a {
-            color: #475569;
-            font-size: 12.5px;
-            font-weight: 700;
-            text-decoration: none;
-          }
-
-          .footer-legal a:hover,
-          .footer-legal a:focus-visible {
-            color: #dc2626;
-            text-decoration: underline;
-            text-underline-offset: 3px;
-            outline: none;
-          }
-
-          .footer-bottom {
-            flex: 0 0 auto;
-            color: #111827;
-            font-size: 13px;
-            font-weight: 800;
-            text-align: right;
-          }
-.install-card {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-  max-width: 720px;
-  margin: 14px auto 0;
-  padding: 16px 18px;
-  border: 1px solid #e5e7eb;
-  border-radius: 16px;
-  background: #fff;
-  text-align: left;
-  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
-}
-
-.install-card strong {
-  display: block;
-  margin-bottom: 4px;
-  color: #111827;
-  font-size: 15px;
-}
-
-.install-card p {
-  margin: 0;
-  color: #526174;
-  font-size: 13px;
-  line-height: 1.5;
-}
-
-.install-actions {
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  gap: 12px;
-}
-
-#installAppButton {
-  padding: 10px 14px;
-  border: 0;
-  border-radius: 10px;
-  background: #dc2626;
-  color: #fff;
-  font: inherit;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-}
-
-#installAppButton:hover {
-  background: #b91c1c;
-}
-
-#installAppButton:focus-visible,
-.install-guide summary:focus-visible {
-  outline: 3px solid rgba(220, 38, 38, 0.25);
-  outline-offset: 3px;
-}
-
-.install-guide {
-  color: #374151;
-  font-size: 13px;
-}
-
-.install-guide summary {
-  cursor: pointer;
-  color: #dc2626;
-  font-weight: 700;
-}
-
-.install-guide ul {
-  margin: 8px 0 0;
-  padding-left: 18px;
-  line-height: 1.6;
-}
-
-.install-note {
-  margin-top: 8px !important;
-  font-size: 12px !important;
-}
-
-@media (max-width: 640px) {
-  .install-card {
-    display: block;
-    margin: 12px 16px 0;
-    padding: 14px;
-  }
-
-  .install-actions {
-    flex-wrap: wrap;
-    margin-top: 12px;
-  }
-}
-          @media (max-width: 1180px) {
-            .grid {
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-            }
-          }
-
-          @media (max-width: 860px) {
-            .grid {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
-            }
-          }
-
-          @media (max-width: 640px) {
-            .intro {
-              padding: 12px 16px 8px;
-            }
-
-            .intro img {
-              width: 104px;
-              max-width: 42%;
-            }
-
-            .intro h1 {
-              max-width: 94%;
-              margin-bottom: 7px;
-              font-size: 23px;
-              line-height: 1.18;
-              letter-spacing: -0.35px;
-            }
-
-            .intro p {
-              max-width: 94%;
-              font-size: 14px;
-              line-height: 1.5;
-            }
-
-            .trust-row {
-              gap: 6px;
-              margin-top: 11px;
-            }
-
-            .trust-row span {
-              font-size: 11.5px;
-            }
-
-            .search-box {
-              margin-top: 16px;
-            }
-
-            .search-box::before {
-              left: 17px;
-              width: 16px;
-              height: 16px;
-            }
-
-            .search-box::after {
-              left: 31px;
-              top: calc(50% + 6px);
-              width: 6px;
-            }
-
-            .search-box input {
-              min-height: 52px;
-              padding: 0 16px 0 47px;
-              border-radius: 15px;
-              font-size: 14px;
-            }
-
-            .services {
-              padding: 8px 16px 34px;
-            }
-
-            .tool-category {
-              margin-top: 26px;
-              padding-top: 24px;
-            }
-
-            .tool-category:first-child {
-              padding-top: 8px;
-            }
-
-            .category-title {
-              font-size: 22px;
-            }
-
-            .category-description {
-              margin-bottom: 13px;
-              font-size: 13.5px;
-            }
-
-            .grid {
-              grid-template-columns: 1fr;
-              gap: 10px;
-            }
-
-            .card {
-              min-height: 132px;
-              padding: 16px;
-            }
-
-            .card h3 {
-              font-size: 16.5px;
-            }
-
-            .card p {
-              margin-bottom: 12px;
-              -webkit-line-clamp: 2;
-            }
-
-            .contact-section {
-              width: calc(100% - 24px);
-              margin-top: 22px;
-            }
-
-            .contact-card {
-              display: flex;
-              width: fit-content;
-              max-width: 100%;
-            }
-
-            .contact-section {
-              width: min(100% - 24px, 1100px);
-              margin-top: 26px;
-            }
-
-            .contact-card {
-              align-items: flex-start;
-              flex-direction: column;
-              gap: 16px;
-              padding: 20px;
-            }
-
-            .contact-main {
-              align-items: flex-start;
-            }
-
-            .contact-email {
-              width: 100%;
-              justify-content: center;
-            }
-
-            .footer-inner {
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 14px;
-              text-align: center;
-            }
-
-            .footer-contact {
-              width: 100%;
-              flex-direction: column;
-              align-items: center;
-              justify-content: center;
-              gap: 9px;
-              text-align: center;
-            }
-
-            .footer-contact-copy {
-              text-align: center;
-            }
-
-            .footer-contact-email {
-              display: inline-block;
-              font-size: 12.5px;
-              overflow-wrap: normal;
-              word-break: normal;
-              white-space: nowrap;
-            }
-
-            .footer-bottom {
-              text-align: center;
-            }
-          }
-        </style>
         <link rel="stylesheet" href="assets/css/home-next.css" />
       </head>
 
       <body>
-        <a class="skip-link" href="#main-content" data-i18n="skipToTools">Skip to tools</a>
+        <a class="skip-link" href="#main-content" data-i18n="skipToMain">Skip to main content</a>
 
         <header class="site-header" id="top">
           <a class="brand" href="/" aria-label="XAVERT home">
@@ -824,9 +97,9 @@
           </a>
 
           <nav class="main-nav" aria-label="Primary navigation" data-i18n-aria-label="navPrimary">
-            <a href="#services" data-i18n="navTools">Tools</a>
-            <a href="#work" data-i18n="navWork">Work</a>
-            <a href="#ai" data-i18n="navAi">AI</a>
+            <a href="#services" aria-current="page" data-i18n="navTools">Tools</a>
+            <a href="work/" data-i18n="navWork">Work</a>
+            <a href="ai/" data-i18n="navAi">AI</a>
           </nav>
 
           <div class="header-actions">
@@ -834,13 +107,14 @@
           </div>
         </header>
 
+        <main id="main-content" tabindex="-1">
         <section class="intro">
           <div class="hero-copy">
-            <span class="eyebrow" data-i18n="eyebrow">The practical side of digital work</span>
-            <h1 data-i18n="heroTitle">One clear workspace for tools, documents and AI.</h1>
+            <span class="eyebrow" data-i18n="eyebrow">57 focused tools · built for real work</span>
+            <h1 data-i18n="heroTitle">Get digital work done—without the clutter.</h1>
             <p data-i18n="heroText">
-              Solve everyday digital tasks with fast browser tools, guided workflows
-              and a simpler way to work with artificial intelligence.
+              Convert files, clean data, build developer assets and prepare better
+              work for AI in one focused, privacy-conscious workspace.
             </p>
 
             <div
@@ -863,6 +137,7 @@
                 aria-autocomplete="list"
                 data-i18n-placeholder="searchPlaceholder"
               />
+              <span class="search-shortcut" aria-hidden="true"><kbd>/</kbd></span>
               <div
                 id="searchResults"
                 class="search-results"
@@ -892,12 +167,12 @@
               <span><strong data-i18n="consoleTools">Quick tools</strong><small data-i18n="consoleToolsText">Convert, clean, create and check</small></span>
               <b aria-hidden="true">→</b>
             </a>
-            <a class="console-row" href="#work">
+            <a class="console-row" href="work/">
               <span class="console-icon">02</span>
               <span><strong data-i18n="consoleWork">Workflows</strong><small data-i18n="consoleWorkText">Documents and repeatable tasks</small></span>
               <b aria-hidden="true">→</b>
             </a>
-            <a class="console-row" href="#ai">
+            <a class="console-row" href="ai/">
               <span class="console-icon">03</span>
               <span><strong data-i18n="consoleAi">AI collaboration</strong><small data-i18n="consoleAiText">From human intent to useful output</small></span>
               <b aria-hidden="true">→</b>
@@ -915,22 +190,43 @@
           <div class="pathway-grid">
             <a class="pathway-card tools-path" href="#services">
               <span class="path-number">01</span>
+              <span class="path-glyph" aria-hidden="true">⌘</span>
               <h3 data-i18n="pathTools">XAVERT Tools</h3>
               <p data-i18n="pathToolsText">Fast utilities for files, code, data, images and everyday tasks.</p>
               <span class="path-link" data-i18n="browseTools">Browse all tools →</span>
             </a>
             <a class="pathway-card" id="work" href="work/">
               <span class="path-number">02</span>
+              <span class="path-glyph" aria-hidden="true">↳</span>
               <h3 data-i18n="pathWork">XAVERT Work</h3>
               <p data-i18n="pathWorkText">Connected steps for documents, office work and repeatable processes.</p>
               <span class="path-link" data-i18n="openWorkspace">Open workspace →</span>
             </a>
             <a class="pathway-card ai-path" id="ai" href="ai/">
               <span class="path-number">03</span>
+              <span class="path-glyph" aria-hidden="true">✦</span>
               <h3 data-i18n="pathAi">XAVERT AI</h3>
               <p data-i18n="pathAiText">Guided collaboration that turns your goal into a useful, verifiable result.</p>
               <span class="path-link" data-i18n="openAi">Open AI workspace →</span>
             </a>
+          </div>
+        </section>
+
+        <section class="quick-start" aria-labelledby="quick-start-title">
+          <div class="quick-start-head">
+            <div>
+              <span class="section-kicker">Start with a common task</span>
+              <h2 id="quick-start-title">Useful from the first click.</h2>
+            </div>
+            <p>Six practical starting points for documents, images, data, development and AI-assisted work.</p>
+          </div>
+          <div class="quick-start-grid">
+            <a href="tools/pdf-toolkit.html" class="quick-link" data-accent="documents"><span>PDF</span><strong>Prepare a PDF</strong><small>Merge, compress, convert or OCR</small><b aria-hidden="true">↗</b></a>
+            <a href="tools/image-toolkit.html" class="quick-link" data-accent="images"><span>IMG</span><strong>Improve an image</strong><small>Resize, crop, compress or convert</small><b aria-hidden="true">↗</b></a>
+            <a href="tools/data-converter.html" class="quick-link" data-accent="data"><span>DATA</span><strong>Convert structured data</strong><small>CSV, XLSX, JSON and XML</small><b aria-hidden="true">↗</b></a>
+            <a href="tools/json-toolkit.html" class="quick-link" data-accent="developer"><span>{ }</span><strong>Work with JSON</strong><small>Format, validate and compare</small><b aria-hidden="true">↗</b></a>
+            <a href="tools/qr-generator.html" class="quick-link" data-accent="utilities"><span>QR</span><strong>Create a QR code</strong><small>Links, Wi-Fi, contacts and more</small><b aria-hidden="true">↗</b></a>
+            <a href="tools/ai-brief-builder.html" class="quick-link" data-accent="ai"><span>AI</span><strong>Prepare an AI brief</strong><small>Clarify goals, facts and constraints</small><b aria-hidden="true">↗</b></a>
           </div>
         </section>
 
@@ -954,10 +250,25 @@
           </div>
         </section>
 
-        <main id="main-content" tabindex="-1">
         <section class="services" id="services">
-          <div class="services-kicker" data-i18n="directoryLabel">57 tools · one clean directory</div>
-          <div class="tool-category">
+          <div class="directory-head">
+            <div>
+              <span class="services-kicker" data-i18n="directoryLabel">The complete toolkit</span>
+              <h2>Everything, clearly organized.</h2>
+              <p>Browse by category or press <kbd>/</kbd> to search by tool, format or task.</p>
+            </div>
+            <div class="directory-stat" aria-label="57 browser tools"><strong>57</strong><span>browser tools</span></div>
+          </div>
+          <div class="category-filters" role="toolbar" aria-label="Filter tools by category">
+            <button type="button" class="filter-chip is-active" data-category-filter="all" aria-pressed="true">All tools</button>
+            <button type="button" class="filter-chip" data-category-filter="developer" aria-pressed="false">Developer</button>
+            <button type="button" class="filter-chip" data-category-filter="documents" aria-pressed="false">Documents</button>
+            <button type="button" class="filter-chip" data-category-filter="images" aria-pressed="false">Images</button>
+            <button type="button" class="filter-chip" data-category-filter="utilities" aria-pressed="false">Utilities</button>
+            <button type="button" class="filter-chip" data-category-filter="data" aria-pressed="false">Data</button>
+            <button type="button" class="filter-chip" data-category-filter="ai" aria-pressed="false">AI</button>
+          </div>
+          <div class="tool-category" data-category="developer">
             <h2 class="category-title" id="developer-tools">Developer Tools</h2>
             <p class="category-description">
               Build, format, test and manage code-related workflows with practical
@@ -1296,7 +607,7 @@
             </div>
           </div>
 
-          <div class="tool-category">
+          <div class="tool-category" data-category="documents">
             <h2 class="category-title" id="document-tools">Document Tools</h2>
             <p class="category-description">
               Organize, convert and prepare documents with PDF utilities designed
@@ -1326,7 +637,7 @@
             </div>
           </div>
 
-          <div class="tool-category">
+          <div class="tool-category" data-category="images">
             <h2 class="category-title" id="image-tools">Image & Design Tools</h2>
             <p class="category-description">
               Create, optimize and analyze visual assets with image, color and
@@ -1427,7 +738,7 @@
             </div>
           </div>
 
-          <div class="tool-category">
+          <div class="tool-category" data-category="utilities">
             <h2 class="category-title" id="utility-tools">Utility Tools</h2>
             <p class="category-description">
               Handle common daily tasks faster with calculators, generators,
@@ -1538,7 +849,7 @@
             </div>
           </div>
 
-          <div class="tool-category">
+          <div class="tool-category" data-category="data">
             <h2 class="category-title" id="data-tools">Data Conversion Tools</h2>
             <p class="category-description">
               Transform CSV, XLSX, JSON and XML files into cleaner, more useful
@@ -1579,7 +890,7 @@
             </div>
           </div>
 
-          <div class="tool-category">
+          <div class="tool-category" data-category="ai">
             <h2 class="category-title" id="ai-tools">AI Collaboration Tools</h2>
             <p class="category-description">
               Prepare clearer requests for AI systems and review their responses
@@ -1605,6 +916,10 @@
 
         <footer class="footer" id="footer">
           <div class="footer-inner">
+            <div class="footer-brand-block">
+              <img src="favicon.svg" alt="" width="34" height="34" />
+              <div><strong>XAVERT</strong><span>Tools, workflows and human-guided AI.</span></div>
+            </div>
             <div class="footer-contact">
               <div class="footer-contact-icon" aria-hidden="true">
                 <svg viewBox="0 0 24 24">

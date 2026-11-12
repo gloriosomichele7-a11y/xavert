@@ -1,6 +1,6 @@
 "use strict";
 
-const CACHE_NAME = "xavert-shell-20261108-v3";
+const CACHE_NAME = "xavert-shell-20261112-v4";
 const CORE_ASSETS = [
   "/",
   "/index.html",
