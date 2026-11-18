@@ -132,6 +132,85 @@
         touch-action: none;
       }
 
+
+      /* Exact signature placement: page and stamp scale together on small screens. */
+      .sign-preview-wrap[hidden],
+      .sign-overlay[hidden] {
+        display: none !important;
+      }
+      .sign-preview-wrap {
+        margin-top: 16px;
+        padding: 12px;
+        border: 1px solid #e5e7eb;
+        border-radius: 14px;
+        background: #f3f4f6;
+        overflow: auto;
+        text-align: center;
+      }
+      .sign-preview-stage {
+        position: relative;
+        display: inline-block;
+        max-width: none;
+        vertical-align: top;
+        line-height: 0;
+        user-select: none;
+      }
+      .sign-preview-stage canvas {
+        display: block;
+        width: 100%;
+        height: auto;
+        background: white;
+        box-shadow: 0 4px 16px rgb(15 23 42 / 12%);
+      }
+      .sign-overlay {
+        position: absolute;
+        box-sizing: border-box;
+        border: 2px dashed #dc2626;
+        background: rgb(220 38 38 / 4%);
+        cursor: move;
+        touch-action: none;
+        line-height: 0;
+        outline-offset: 3px;
+        z-index: 1;
+      }
+      .sign-overlay:focus-visible { outline: 2px solid #dc2626; }
+      .sign-overlay img {
+        display: block;
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        pointer-events: none;
+        user-select: none;
+      }
+      .sign-resize-handle {
+        position: absolute;
+        right: -10px;
+        bottom: -10px;
+        width: 22px;
+        height: 22px;
+        border: 2px solid white;
+        border-radius: 6px;
+        background: #dc2626;
+        box-shadow: 0 1px 5px rgb(0 0 0 / 25%);
+        cursor: nwse-resize;
+        touch-action: none;
+      }
+      .sign-preview-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        align-items: end;
+        gap: 12px;
+        margin-top: 12px;
+      }
+      .sign-preview-toolbar .form-group { min-width: 120px; margin: 0; }
+      .sign-preview-toolbar .btn { margin: 0; }
+      .sign-preview-readout {
+        margin-top: 8px;
+        color: #374151;
+        font-size: 13px;
+        font-variant-numeric: tabular-nums;
+      }
+
       .pdf-privacy-link {
         color: #b91c1c;
         font-weight: 700;
@@ -572,6 +651,7 @@
               <div class="form-group">
                 <label for="signaturePosition">Signature Position</label>
                 <select id="signaturePosition">
+                  <option value="custom">Custom — drag on page</option>
                   <option value="bottom-right">Bottom Right</option>
                   <option value="bottom-left">Bottom Left</option>
                   <option value="top-right">Top Right</option>
@@ -591,6 +671,29 @@
               <input id="signatureImageFile" type="file" accept="image/png,image/jpeg" hidden />
               <div id="signatureImageCount" class="pdf-file-count">No signature image selected</div>
             </div>
+            <div class="sign-preview-toolbar">
+              <button id="previewSignBtn" class="btn btn-secondary" type="button">Preview page &amp; place signature</button>
+              <div class="form-group">
+                <label for="signPreviewZoom">Preview zoom</label>
+                <select id="signPreviewZoom">
+                  <option value="fit">Fit page</option>
+                  <option value="1.5">150%</option>
+                  <option value="2">200%</option>
+                </select>
+              </div>
+            </div>
+            <p class="pdf-note">For precise positioning, choose <strong>Custom</strong>, then drag the signature on the page. Drag the red corner to resize it; use arrow keys for fine movement (Shift + arrows for smaller steps). You can preview before downloading. Nothing is uploaded to a server.</p>
+            <div id="signPreviewWrap" class="sign-preview-wrap" hidden>
+              <div id="signPreviewStage" class="sign-preview-stage">
+                <canvas id="signPreviewCanvas" aria-label="PDF page preview"></canvas>
+                <div id="signOverlay" class="sign-overlay" role="img" aria-label="Signature placement. Drag to move; drag bottom-right corner to resize. Use arrow keys to adjust." tabindex="0" hidden>
+                  <img id="signOverlayImage" alt="Signature" draggable="false" />
+                  <span class="sign-resize-handle" title="Drag to resize signature" aria-hidden="true"></span>
+                </div>
+              </div>
+            </div>
+            <div id="signPreviewReadout" class="sign-preview-readout" role="status" aria-live="polite"></div>
+            <p class="pdf-note">This adds a visible signature image; it is not a certificate-based digital signature.</p>
             <div class="button-grid pdf-actions">
               <button id="signBtn" class="btn" type="button" data-primary-action>Sign PDF</button>
               <button id="clearSignBtn" class="btn btn-secondary" type="button" data-clear-action>Clear All</button>

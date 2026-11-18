@@ -362,8 +362,7 @@ async function initPdfToolkit() {
 
         try {
           setInputFiles(input, event.dataTransfer.files);
-          cancelOperation(inputConfig[inputId]?.operation);
-          void updateFileCount(inputId);
+          input.dispatchEvent(new Event("change", { bubbles: true }));
         } catch (error) {
           console.error(error);
         }
@@ -1086,7 +1085,22 @@ async function initPdfToolkit() {
 
   const signatureCanvas = byId("signatureCanvas");
   const signatureContext = signatureCanvas?.getContext("2d");
+  const signPreviewCanvas = byId("signPreviewCanvas");
+  const signPreviewStage = byId("signPreviewStage");
+  const signOverlay = byId("signOverlay");
+  const signOverlayImage = byId("signOverlayImage");
   let signatureDrawing = false;
+  let signPreviewRequest = 0;
+  let signStampRequest = 0;
+  let signPreviewInfo = null;
+  let signPlacement = null; // normalized against the visible PDF page: top-left origin
+  let signStampAspect = 2.8;
+  let signStampUrl = null;
+  let signDrag = null;
+
+  function clampSignature(value, low, high) {
+    return Math.max(low, Math.min(value, high));
+  }
 
   function clearSignature() {
     if (!signatureCanvas || !signatureContext) return;
@@ -1119,6 +1133,7 @@ async function initPdfToolkit() {
       const position = signaturePositionFromEvent(event);
       signatureContext.lineWidth = 3;
       signatureContext.lineCap = "round";
+      signatureContext.lineJoin = "round";
       signatureContext.strokeStyle = "#111827";
       signatureContext.lineTo(position.x, position.y);
       signatureContext.stroke();
@@ -1130,25 +1145,298 @@ async function initPdfToolkit() {
       if (signatureCanvas.hasPointerCapture(event.pointerId)) {
         signatureCanvas.releasePointerCapture(event.pointerId);
       }
+      void refreshSignatureOverlay();
     };
 
     signatureCanvas.addEventListener("pointerup", stop);
     signatureCanvas.addEventListener("pointercancel", stop);
   }
 
-  function signatureCanvasHasInk() {
-    if (!signatureContext || !signatureCanvas) return false;
-    const pixels = signatureContext.getImageData(0, 0, signatureCanvas.width, signatureCanvas.height).data;
-    for (let index = 3; index < pixels.length; index += 4) {
-      if (pixels[index] !== 0) return true;
+  function trimmedDrawnSignature() {
+    if (!signatureContext || !signatureCanvas) return null;
+    const { width, height } = signatureCanvas;
+    const pixels = signatureContext.getImageData(0, 0, width, height).data;
+    let left = width, right = -1, top = height, bottom = -1;
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        if (pixels[(y * width + x) * 4 + 3] > 12) {
+          left = Math.min(left, x);
+          right = Math.max(right, x);
+          top = Math.min(top, y);
+          bottom = Math.max(bottom, y);
+        }
+      }
     }
-    return false;
+    if (right < left) return null;
+    const margin = 6;
+    left = Math.max(0, left - margin);
+    top = Math.max(0, top - margin);
+    right = Math.min(width - 1, right + margin);
+    bottom = Math.min(height - 1, bottom + margin);
+    const cropped = document.createElement("canvas");
+    cropped.width = right - left + 1;
+    cropped.height = bottom - top + 1;
+    cropped.getContext("2d").drawImage(
+      signatureCanvas, left, top, cropped.width, cropped.height,
+      0, 0, cropped.width, cropped.height,
+    );
+    return cropped;
+  }
+
+  function signatureCanvasHasInk() {
+    return Boolean(trimmedDrawnSignature());
+  }
+
+  function resetSignPreview() {
+    signPreviewRequest += 1;
+    signStampRequest += 1;
+    signPreviewInfo = null;
+    signPlacement = null;
+    signDrag = null;
+    byId("signPreviewWrap").hidden = true;
+    signOverlay.hidden = true;
+    byId("signPreviewReadout").textContent = "";
+    if (signStampUrl) {
+      URL.revokeObjectURL(signStampUrl);
+      signStampUrl = null;
+    }
+    signOverlayImage.removeAttribute("src");
+  }
+
+  function signatureHeightForWidth(width) {
+    const viewport = signPreviewInfo?.viewport;
+    if (!viewport) return 0.1;
+    return (width * viewport.width) / (signStampAspect * viewport.height);
+  }
+
+  function defaultSignaturePlacement() {
+    const viewport = signPreviewInfo.viewport;
+    let width = 0.32;
+    let height = signatureHeightForWidth(width);
+    if (height > 0.38) {
+      height = 0.38;
+      width = (height * signStampAspect * viewport.height) / viewport.width;
+    }
+    const position = byId("signaturePosition").value;
+    const top = position === "top-left" || position === "top-right";
+    const left = position === "top-left" || position === "bottom-left";
+    return {
+      x: left ? 0.05 : Math.max(0, 0.95 - width),
+      y: top ? 0.05 : Math.max(0, 0.95 - height),
+      width,
+      height,
+    };
+  }
+
+  function updateSignOverlayGeometry() {
+    if (!signPreviewInfo || !signPlacement || signOverlay.hidden) return;
+    signOverlay.style.left = `${signPlacement.x * 100}%`;
+    signOverlay.style.top = `${signPlacement.y * 100}%`;
+    signOverlay.style.width = `${signPlacement.width * 100}%`;
+    signOverlay.style.height = `${signPlacement.height * 100}%`;
+    const readout = byId("signPreviewReadout");
+    readout.textContent = `Signature: X ${(signPlacement.x * 100).toFixed(1)}%, Y ${(signPlacement.y * 100).toFixed(1)}%, width ${(signPlacement.width * 100).toFixed(1)}% of page.`;
+  }
+
+  function updateSignPreviewZoom() {
+    if (!signPreviewInfo) return;
+    const wrap = byId("signPreviewWrap");
+    const zoom = byId("signPreviewZoom").value;
+    const fitWidth = Math.min(signPreviewCanvas.width, Math.max(180, wrap.clientWidth - 26));
+    const multiplier = zoom === "fit" ? 1 : Number(zoom);
+    signPreviewStage.style.width = `${Math.round(fitWidth * multiplier)}px`;
+  }
+
+  async function refreshSignatureOverlay(resetPlacement = false) {
+    const request = ++signStampRequest;
+    if (!signPreviewInfo) return;
+    // Do not permit signing with stale dimensions while a new image is loading.
+    signOverlay.hidden = true;
+    const method = byId("signMethod").value;
+    let src = null;
+    let aspect = null;
+    let nextUrl = null;
+    if (method === "draw") {
+      const cropped = trimmedDrawnSignature();
+      if (cropped) {
+        src = cropped.toDataURL("image/png");
+        aspect = cropped.width / cropped.height;
+      }
+    } else {
+      const file = byId("signatureImageFile").files?.[0];
+      if (file && isSupportedImage(file)) {
+        // Keep the blob URL alive as long as it is displayed in the preview.
+        nextUrl = URL.createObjectURL(file);
+        const image = new Image();
+        try {
+          await new Promise((resolve, reject) => {
+            image.onload = resolve;
+            image.onerror = () => reject(new Error("Unable to preview signature image."));
+            image.src = nextUrl;
+          });
+          aspect = image.naturalWidth / image.naturalHeight;
+          src = nextUrl;
+        } catch (error) {
+          URL.revokeObjectURL(nextUrl);
+          if (request === signStampRequest) notify("signMessage", error.message, "error");
+          return;
+        }
+      }
+    }
+    if (request !== signStampRequest) {
+      if (nextUrl) URL.revokeObjectURL(nextUrl);
+      return;
+    }
+    if (signStampUrl) URL.revokeObjectURL(signStampUrl);
+    signStampUrl = nextUrl;
+    if (!src || !Number.isFinite(aspect) || aspect <= 0) {
+      signOverlay.hidden = true;
+      byId("signPreviewReadout").textContent = "Draw a signature or select a signature image to place it.";
+      return;
+    }
+    signOverlayImage.src = src;
+    signStampAspect = aspect;
+    if (resetPlacement || !signPlacement || byId("signaturePosition").value !== "custom") {
+      signPlacement = defaultSignaturePlacement();
+    } else {
+      // Keep the selected top-left corner; update height for changed image proportions.
+      signPlacement.height = signatureHeightForWidth(signPlacement.width);
+      if (signPlacement.height > 0.98) {
+        signPlacement.height = 0.98;
+        signPlacement.width = (signPlacement.height * signStampAspect * signPreviewInfo.viewport.height) / signPreviewInfo.viewport.width;
+      }
+      signPlacement.x = clampSignature(signPlacement.x, 0, Math.max(0, 1 - signPlacement.width));
+      signPlacement.y = clampSignature(signPlacement.y, 0, Math.max(0, 1 - signPlacement.height));
+    }
+    signOverlay.hidden = false;
+    updateSignOverlayGeometry();
+  }
+
+  async function previewSignaturePage() {
+    const file = byId("signPdfFile").files?.[0];
+    const pageNumber = Number(byId("signaturePage").value);
+    const request = ++signPreviewRequest;
+    signPreviewInfo = null;
+    signPlacement = null;
+    signOverlay.hidden = true;
+    byId("signPreviewWrap").hidden = true;
+    byId("signPreviewReadout").textContent = "";
+    if (!file) return false;
+    if (!validatePdfFile(file, "signMessage")) return false;
+    if (!Number.isInteger(pageNumber) || pageNumber < 1) {
+      notify("signMessage", "Please enter a valid page number.", "error");
+      return false;
+    }
+    if (file.size > hardInputLimit) {
+      notify("signMessage", "This PDF is too large to preview safely on this device.", "error");
+      return false;
+    }
+    let pdf = null;
+    try {
+      setMessage("signMessage", "Rendering the selected PDF page...", "info");
+      pdf = await loadPdfJs(file);
+      if (request !== signPreviewRequest) return false;
+      if (pageNumber > pdf.numPages) throw new Error("Page number is higher than the PDF page count.");
+      byId("signaturePage").max = String(pdf.numPages);
+      const page = await pdf.getPage(pageNumber);
+      try {
+        const viewport = page.getViewport({ scale: 1 });
+        const { canvas } = await renderPdfPage(page, 1.5);
+        try {
+          if (request !== signPreviewRequest) return false;
+          signPreviewCanvas.width = canvas.width;
+          signPreviewCanvas.height = canvas.height;
+          signPreviewCanvas.getContext("2d").drawImage(canvas, 0, 0);
+          signPreviewInfo = { file, pageNumber, viewport };
+          byId("signPreviewWrap").hidden = false;
+          updateSignPreviewZoom();
+          await refreshSignatureOverlay(true);
+          if (request !== signPreviewRequest) return false;
+          setMessage("signMessage", "Preview ready. Drag and resize the signature to place it exactly.", "info");
+          return true;
+        } finally {
+          releaseCanvas(canvas);
+        }
+      } finally {
+        try { page.cleanup(); } catch {}
+      }
+    } catch (error) {
+      if (request === signPreviewRequest) {
+        console.error(error);
+        notify("signMessage", error instanceof Error ? error.message : "Unable to preview PDF page.", "error");
+      }
+      return false;
+    } finally {
+      if (pdf) { try { await pdf.destroy(); } catch {} }
+    }
   }
 
   function updateSignatureMethod() {
     const upload = byId("signMethod").value === "upload";
     byId("drawSignatureArea").hidden = upload;
     byId("uploadSignatureArea").hidden = !upload;
+    if (signPreviewInfo) void refreshSignatureOverlay(true);
+  }
+
+  function setupSignaturePlacement() {
+    signOverlay.addEventListener("pointerdown", (event) => {
+      if (!signPlacement || !signPreviewInfo) return;
+      event.preventDefault();
+      byId("signaturePosition").value = "custom";
+      signDrag = {
+        pointerId: event.pointerId,
+        kind: event.target.closest(".sign-resize-handle") ? "resize" : "move",
+        startX: event.clientX,
+        startY: event.clientY,
+        original: { ...signPlacement },
+        stageWidth: signPreviewStage.getBoundingClientRect().width,
+        stageHeight: signPreviewStage.getBoundingClientRect().height,
+      };
+      signOverlay.setPointerCapture(event.pointerId);
+    });
+    signOverlay.addEventListener("pointermove", (event) => {
+      if (!signDrag || signDrag.pointerId !== event.pointerId) return;
+      event.preventDefault();
+      const dx = (event.clientX - signDrag.startX) / signDrag.stageWidth;
+      const dy = (event.clientY - signDrag.startY) / signDrag.stageHeight;
+      if (signDrag.kind === "move") {
+        signPlacement.x = clampSignature(signDrag.original.x + dx, 0, 1 - signPlacement.width);
+        signPlacement.y = clampSignature(signDrag.original.y + dy, 0, 1 - signPlacement.height);
+      } else {
+        // Preserve the source image aspect ratio when resizing via the corner handle.
+        const widthFromY = (dy * signStampAspect * signPreviewInfo.viewport.height) / signPreviewInfo.viewport.width;
+        const proposed = signDrag.original.width + (Math.abs(dx) > Math.abs(widthFromY) ? dx : widthFromY);
+        const maxWidthForHeight = (1 - signPlacement.y) * signStampAspect * signPreviewInfo.viewport.height / signPreviewInfo.viewport.width;
+        signPlacement.width = clampSignature(proposed, 0.025, Math.max(0.025, Math.min(1 - signPlacement.x, maxWidthForHeight)));
+        signPlacement.height = signatureHeightForWidth(signPlacement.width);
+      }
+      updateSignOverlayGeometry();
+    });
+    const stop = (event) => {
+      if (!signDrag || signDrag.pointerId !== event.pointerId) return;
+      signDrag = null;
+      if (signOverlay.hasPointerCapture(event.pointerId)) signOverlay.releasePointerCapture(event.pointerId);
+    };
+    signOverlay.addEventListener("pointerup", stop);
+    signOverlay.addEventListener("pointercancel", stop);
+    signOverlay.addEventListener("keydown", (event) => {
+      if (!signPlacement || !event.key.startsWith("Arrow")) return;
+      event.preventDefault();
+      byId("signaturePosition").value = "custom";
+      // Shift is the finer adjustment. Alt+arrows changes width.
+      const step = event.shiftKey ? 0.001 : 0.005;
+      if (event.altKey) {
+        const direction = ["ArrowRight", "ArrowDown"].includes(event.key) ? 1 : -1;
+        const proposed = signPlacement.width + direction * step;
+        const maxWidthForHeight = (1 - signPlacement.y) * signStampAspect * signPreviewInfo.viewport.height / signPreviewInfo.viewport.width;
+        signPlacement.width = clampSignature(proposed, 0.025, Math.max(0.025, Math.min(1 - signPlacement.x, maxWidthForHeight)));
+        signPlacement.height = signatureHeightForWidth(signPlacement.width);
+      } else if (event.key === "ArrowLeft") signPlacement.x = clampSignature(signPlacement.x - step, 0, 1 - signPlacement.width);
+      else if (event.key === "ArrowRight") signPlacement.x = clampSignature(signPlacement.x + step, 0, 1 - signPlacement.width);
+      else if (event.key === "ArrowUp") signPlacement.y = clampSignature(signPlacement.y - step, 0, 1 - signPlacement.height);
+      else if (event.key === "ArrowDown") signPlacement.y = clampSignature(signPlacement.y + step, 0, 1 - signPlacement.height);
+      updateSignOverlayGeometry();
+    });
   }
 
   async function signPdf() {
@@ -1156,50 +1444,81 @@ async function initPdfToolkit() {
     const file = byId("signPdfFile").files?.[0];
     if (!validatePdfFile(file, "signMessage")) return;
     if (!confirmInputSize([file], "This PDF", "signMessage")) return;
-
     const pageNumber = Number(byId("signaturePage").value);
     if (!Number.isInteger(pageNumber) || pageNumber < 1) {
       notify("signMessage", "Please enter a valid page number.", "error");
       return;
     }
+    if (byId("signMethod").value === "draw" && !signatureCanvasHasInk()) {
+      notify("signMessage", "Please draw a signature first.", "error");
+      return;
+    }
+    if (byId("signMethod").value === "upload" && !isSupportedImage(byId("signatureImageFile").files?.[0])) {
+      notify("signMessage", "Please select a JPG or PNG signature image.", "error");
+      return;
+    }
 
     const version = startOperation(key);
     setBusy("signBtn", key, true);
-
     try {
-      setMessage("signMessage", "Signing PDF...", "info");
+      if (!signPreviewInfo || signPreviewInfo.file !== file || signPreviewInfo.pageNumber !== pageNumber) {
+        if (!await previewSignaturePage()) throw new Error("Preview the PDF page before placing the signature.");
+      }
+      ensureActive(key, version);
+      // Make sure a signature image is visible in the current preview.
+      if (signOverlay.hidden || !signPlacement) {
+        await refreshSignatureOverlay(true);
+      }
+      ensureActive(key, version);
+      if (signOverlay.hidden || !signPlacement) throw new Error("Add a signature and place it on the preview first.");
+      setMessage("signMessage", "Applying the signature to the selected page...", "info");
       const pdf = await PDFDocument.load(await file.arrayBuffer());
       ensureActive(key, version);
       if (pageNumber > pdf.getPageCount()) throw new Error("Page number is higher than the PDF page count.");
 
       let signatureImage;
       if (byId("signMethod").value === "draw") {
-        if (!signatureCanvasHasInk()) throw new Error("Please draw a signature first.");
-        const blob = await canvasToBlob(signatureCanvas, "image/png");
+        const cropped = trimmedDrawnSignature();
+        if (!cropped) throw new Error("Please draw a signature first.");
+        const blob = await canvasToBlob(cropped, "image/png");
         signatureImage = await pdf.embedPng(await blob.arrayBuffer());
+        releaseCanvas(cropped);
       } else {
         const imageFile = byId("signatureImageFile").files?.[0];
-        if (!imageFile || !isSupportedImage(imageFile)) throw new Error("Please select a JPG or PNG signature image.");
+        if (!isSupportedImage(imageFile)) throw new Error("Please select a JPG or PNG signature image.");
         const bytes = await imageFile.arrayBuffer();
         signatureImage = imageFile.type === "image/png" ? await pdf.embedPng(bytes) : await pdf.embedJpg(bytes);
       }
-
       ensureActive(key, version);
+      const viewport = signPreviewInfo.viewport;
+      const placement = { ...signPlacement };
+      // Convert visible-page coordinates into the PDF's original coordinate space.
+      // Three transformed corners also account for CropBox and 90/180/270° page rotation.
+      const left = placement.x * viewport.width;
+      const top = placement.y * viewport.height;
+      const right = (placement.x + placement.width) * viewport.width;
+      const bottom = (placement.y + placement.height) * viewport.height;
+      const [ax, ay] = viewport.convertToPdfPoint(left, top);      // upper-left
+      const [bx, by] = viewport.convertToPdfPoint(right, top);     // upper-right
+      const [cx, cy] = viewport.convertToPdfPoint(left, bottom);   // lower-left
+      const drawWidth = Math.hypot(bx - ax, by - ay);
+      const drawHeight = Math.hypot(ax - cx, ay - cy);
+      const drawAngle = Math.atan2(by - ay, bx - ax) * 180 / Math.PI;
+      if (![cx, cy, drawWidth, drawHeight, drawAngle].every(Number.isFinite) || drawWidth < 2 || drawHeight < 2) {
+        throw new Error("The selected signature size or position is invalid.");
+      }
       const page = pdf.getPages()[pageNumber - 1];
-      const { width, height } = page.getSize();
-      const signatureWidth = Math.min(180, Math.max(60, width * 0.32));
-      const signatureHeight = signatureWidth * (70 / 180);
-      const positions = {
-        "bottom-right": [Math.max(20, width - signatureWidth - 30), 30],
-        "bottom-left": [30, 30],
-        "top-right": [Math.max(20, width - signatureWidth - 30), Math.max(20, height - signatureHeight - 30)],
-        "top-left": [30, Math.max(20, height - signatureHeight - 30)],
-      };
-      const [x, y] = positions[byId("signaturePosition").value];
-      page.drawImage(signatureImage, { x, y, width: signatureWidth, height: signatureHeight });
+      page.drawImage(signatureImage, {
+        x: cx, y: cy,
+        width: drawWidth,
+        height: drawHeight,
+        rotate: degrees(drawAngle),
+      });
       ensureActive(key, version);
-      downloadBlob(new Blob([await pdf.save()], { type: "application/pdf" }), "signed-document.pdf");
-      notify("signMessage", "PDF signed successfully.", "success");
+      const bytes = await pdf.save();
+      ensureActive(key, version);
+      downloadBlob(new Blob([bytes], { type: "application/pdf" }), "signed-document.pdf");
+      notify("signMessage", "Signature placed successfully. Check the downloaded PDF before using it.", "success");
     } catch (error) {
       if (!(error instanceof OperationCancelledError)) {
         console.error(error);
@@ -1651,8 +1970,10 @@ async function initPdfToolkit() {
     clearFileInput("signPdfFile");
     clearFileInput("signatureImageFile");
     byId("signaturePage").value = "1";
-    byId("signaturePosition").value = "bottom-right";
+    byId("signaturePosition").value = "custom";
+    byId("signPreviewZoom").value = "fit";
     byId("signMethod").value = "draw";
+    resetSignPreview();
     clearSignature();
     updateSignatureMethod();
     setMessage("signMessage");
@@ -1693,9 +2014,22 @@ async function initPdfToolkit() {
   toolSelector.addEventListener("change", switchTool);
   setupDropZones();
   setupSignatureCanvas();
+  setupSignaturePlacement();
   setupRedactionCanvas();
   byId("signMethod").addEventListener("change", updateSignatureMethod);
-  byId("clearSignatureBtn").addEventListener("click", clearSignature);
+  byId("clearSignatureBtn").addEventListener("click", () => { clearSignature(); void refreshSignatureOverlay(); });
+  byId("previewSignBtn").addEventListener("click", () => void previewSignaturePage());
+  byId("signPdfFile").addEventListener("change", () => { resetSignPreview(); void previewSignaturePage(); });
+  byId("signaturePage").addEventListener("change", () => { resetSignPreview(); void previewSignaturePage(); });
+  byId("signatureImageFile").addEventListener("change", () => void refreshSignatureOverlay(true));
+  byId("signaturePosition").addEventListener("change", () => {
+    if (signPreviewInfo && !signOverlay.hidden && byId("signaturePosition").value !== "custom") {
+      signPlacement = defaultSignaturePlacement();
+      updateSignOverlayGeometry();
+    }
+  });
+  byId("signPreviewZoom").addEventListener("change", updateSignPreviewZoom);
+  window.addEventListener("resize", updateSignPreviewZoom);
   byId("previewRedactBtn").addEventListener("click", () => void previewRedactionPage());
   byId("clearRedactAreasBtn").addEventListener("click", clearRedactAreas);
   byId("redactFile").addEventListener("change", resetRedactPreview);
