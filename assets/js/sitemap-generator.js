@@ -93,6 +93,10 @@ function initSitemapGenerator() {
       return null;
     }
 
+    if (url.username || url.password) {
+      return null;
+    }
+
     url.hash = "";
 
     return url.href;
@@ -147,9 +151,13 @@ function initSitemapGenerator() {
 
     const normalized = inputUrls.map(normalizeUrl);
 
-    const invalid = normalized.filter((value) => !value).length;
-
-    const validUrls = [...new Set(normalized.filter(Boolean))];
+    const candidates = [...new Set(normalized.filter(Boolean))];
+    const primaryHost = candidates.length ? new URL(candidates[0]).host : "";
+    const validUrls = candidates.filter(
+      (url) => new URL(url).host === primaryHost,
+    );
+    const invalid = normalized.filter((value) => !value).length +
+      candidates.length - validUrls.length;
 
     if (!validUrls.length) {
       resetOutput();
@@ -162,8 +170,6 @@ function initSitemapGenerator() {
       return false;
     }
 
-    const today = new Date().toISOString().slice(0, 10);
-
     const lines = [
       '<?xml version="1.0" encoding="UTF-8"?>',
       '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">',
@@ -175,7 +181,6 @@ function initSitemapGenerator() {
       lines.push(
         "  <url>",
         `    <loc>${escapeXml(url)}</loc>`,
-        `    <lastmod>${today}</lastmod>`,
         `    <changefreq>${changefreq.value}</changefreq>`,
         `    <priority>${pagePriority}</priority>`,
         "  </url>",

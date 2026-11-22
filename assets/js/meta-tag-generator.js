@@ -111,6 +111,11 @@ function initMetaTagGenerator() {
       throw new Error(`${label} must use HTTP or HTTPS.`);
     }
 
+    if (url.username || url.password) {
+      throw new Error(`${label} cannot include a username or password.`);
+    }
+
+    url.hash = "";
     return url.href;
   }
 
@@ -233,12 +238,6 @@ function initMetaTagGenerator() {
     if (canonical) {
       lines.push(
         `<meta property="og:url" content="${escapeAttribute(canonical)}">`,
-      );
-    }
-
-    if (author) {
-      lines.push(
-        `<meta property="og:site_name" content="${escapeAttribute(author)}">`,
       );
     }
 
