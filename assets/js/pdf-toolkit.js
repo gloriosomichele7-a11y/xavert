@@ -1217,12 +1217,10 @@ async function initPdfToolkit() {
       height = 0.38;
       width = (height * signStampAspect * viewport.height) / viewport.width;
     }
-    const position = byId("signaturePosition").value;
-    const top = position === "top-left" || position === "top-right";
-    const left = position === "top-left" || position === "bottom-left";
+    // Show the signature on the page straight away; its only placement mode is free drag.
     return {
-      x: left ? 0.05 : Math.max(0, 0.95 - width),
-      y: top ? 0.05 : Math.max(0, 0.95 - height),
+      x: Math.max(0, (1 - width) / 2),
+      y: Math.max(0, (1 - height) / 2),
       width,
       height,
     };
@@ -1296,7 +1294,7 @@ async function initPdfToolkit() {
     }
     signOverlayImage.src = src;
     signStampAspect = aspect;
-    if (resetPlacement || !signPlacement || byId("signaturePosition").value !== "custom") {
+    if (resetPlacement || !signPlacement) {
       signPlacement = defaultSignaturePlacement();
     } else {
       // Keep the selected top-left corner; update height for changed image proportions.
@@ -1382,7 +1380,6 @@ async function initPdfToolkit() {
     signOverlay.addEventListener("pointerdown", (event) => {
       if (!signPlacement || !signPreviewInfo) return;
       event.preventDefault();
-      byId("signaturePosition").value = "custom";
       signDrag = {
         pointerId: event.pointerId,
         kind: event.target.closest(".sign-resize-handle") ? "resize" : "move",
@@ -1422,7 +1419,6 @@ async function initPdfToolkit() {
     signOverlay.addEventListener("keydown", (event) => {
       if (!signPlacement || !event.key.startsWith("Arrow")) return;
       event.preventDefault();
-      byId("signaturePosition").value = "custom";
       // Shift is the finer adjustment. Alt+arrows changes width.
       const step = event.shiftKey ? 0.001 : 0.005;
       if (event.altKey) {
@@ -1970,7 +1966,6 @@ async function initPdfToolkit() {
     clearFileInput("signPdfFile");
     clearFileInput("signatureImageFile");
     byId("signaturePage").value = "1";
-    byId("signaturePosition").value = "custom";
     byId("signPreviewZoom").value = "fit";
     byId("signMethod").value = "draw";
     resetSignPreview();
@@ -2018,16 +2013,9 @@ async function initPdfToolkit() {
   setupRedactionCanvas();
   byId("signMethod").addEventListener("change", updateSignatureMethod);
   byId("clearSignatureBtn").addEventListener("click", () => { clearSignature(); void refreshSignatureOverlay(); });
-  byId("previewSignBtn").addEventListener("click", () => void previewSignaturePage());
   byId("signPdfFile").addEventListener("change", () => { resetSignPreview(); void previewSignaturePage(); });
   byId("signaturePage").addEventListener("change", () => { resetSignPreview(); void previewSignaturePage(); });
   byId("signatureImageFile").addEventListener("change", () => void refreshSignatureOverlay(true));
-  byId("signaturePosition").addEventListener("change", () => {
-    if (signPreviewInfo && !signOverlay.hidden && byId("signaturePosition").value !== "custom") {
-      signPlacement = defaultSignaturePlacement();
-      updateSignOverlayGeometry();
-    }
-  });
   byId("signPreviewZoom").addEventListener("change", updateSignPreviewZoom);
   window.addEventListener("resize", updateSignPreviewZoom);
   byId("previewRedactBtn").addEventListener("click", () => void previewRedactionPage());
@@ -2078,6 +2066,13 @@ async function initPdfToolkit() {
     ["clearRedactBtn", clearRedact],
     ["clearCropBtn", clearCrop],
   ].forEach(([id, handler]) => byId(id).addEventListener("click", handler));
+
+  // Deep links open a specific PDF action without forcing the user to
+  // search through the whole toolkit (for example: ?tool=sign).
+  const requestedTool = new URLSearchParams(window.location.search).get("tool");
+  if (requestedTool && Object.prototype.hasOwnProperty.call(panels, requestedTool)) {
+    toolSelector.value = requestedTool;
+  }
 
   updateSignatureMethod();
   switchTool();
