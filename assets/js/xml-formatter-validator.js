@@ -180,6 +180,24 @@ function initXmlFormatterValidator() {
       meaningfulChildren.length === 1 &&
       meaningfulChildren[0].nodeType === Node.TEXT_NODE;
 
+    const containsMixedText = meaningfulChildren.some((child) =>
+      child.nodeType === Node.TEXT_NODE || child.nodeType === Node.CDATA_SECTION_NODE,
+    );
+    const hasInlineWhitespace = children.some((child) =>
+      child.nodeType === Node.TEXT_NODE &&
+      !(child.nodeValue ?? "").trim() &&
+      !/[\r\n]/.test(child.nodeValue ?? ""),
+    );
+    const preserveSpace = node.getAttribute("xml:space") === "preserve";
+
+    if (preserveSpace || (containsMixedText && !inlineTextOnly) || hasInlineWhitespace) {
+      return (
+        `${indent}<${node.tagName}${attributes}>` +
+        children.map((child) => serializer.serializeToString(child)).join("") +
+        `</${node.tagName}>`
+      );
+    }
+
     if (inlineTextOnly) {
       const text = meaningfulChildren[0].nodeValue ?? "";
 
@@ -211,7 +229,24 @@ function initXmlFormatterValidator() {
     let current = walker.nextNode();
 
     while (current) {
-      if (!(current.nodeValue ?? "").trim()) {
+      const text = current.nodeValue ?? "";
+      let parent = current.parentNode;
+      let preservesSpace = false;
+      while (parent && parent.nodeType === Node.ELEMENT_NODE) {
+        if (parent.getAttribute("xml:space") === "preserve") {
+          preservesSpace = true;
+          break;
+        }
+        parent = parent.parentNode;
+      }
+      const siblings = Array.from(current.parentNode?.childNodes || []);
+      const hasOtherText = siblings.some((node) =>
+        node !== current && node.nodeType === Node.TEXT_NODE &&
+        (node.nodeValue ?? "").trim(),
+      );
+      // Only remove line-based indentation between purely structural elements.
+      if (!text.trim() && /[\r\n]/.test(text) &&
+          !preservesSpace && !hasOtherText) {
         remove.push(current);
       }
 
@@ -259,8 +294,10 @@ function initXmlFormatterValidator() {
 
     updateStats(text, isValid);
 
+    // Diagnostics (including validation messages) must not be saved as .xml.
+    const canExportXml = Boolean(text) && isValid && text.trimStart().startsWith("<");
     copyBtn.disabled = !text;
-    downloadBtn.disabled = !text;
+    downloadBtn.disabled = !canExportXml;
   }
 
   function getParsedInput() {
@@ -391,8 +428,8 @@ function initXmlFormatterValidator() {
   }
 
   function downloadResult() {
-    if (!result.value.trim()) {
-      notify("Nothing to download.", "error");
+    if (!result.value.trim() || downloadBtn.disabled) {
+      notify("There is no XML document to download.", "error");
       return;
     }
 

@@ -141,6 +141,10 @@ function initYamlJsonConverter() {
   }
 
   function getYamlErrorMessage(error) {
+    if (error?.xavertConversionError) {
+      return error.message;
+    }
+
     if (error?.mark && Number.isInteger(error.mark.line)) {
       return `YAML syntax error at line ${error.mark.line + 1}.`;
     }
@@ -148,14 +152,48 @@ function initYamlJsonConverter() {
     return "Invalid YAML.";
   }
 
+  // Preserve JSON-compatible values instead of silently changing unsafe YAML types.
+  function conversionFailure(message) {
+    const error = new Error(message);
+    error.xavertConversionError = true;
+    throw error;
+  }
+
+  function assertJsonCompatible(value, ancestors = new WeakSet()) {
+    if (value === undefined || typeof value === "bigint" || typeof value === "function") {
+      conversionFailure("This document contains values that JSON cannot represent.");
+    }
+
+    if (typeof value === "number" &&
+        (!Number.isFinite(value) ||
+         (Number.isInteger(value) && !Number.isSafeInteger(value)))) {
+      conversionFailure("Conversion blocked: a number is outside JavaScript's safe numeric range. No values were changed.");
+    }
+
+    if (value && typeof value === "object") {
+      if (!Array.isArray(value) && Object.prototype.toString.call(value) !== "[object Object]") {
+        conversionFailure("Conversion blocked: YAML contains a special value (such as a timestamp or binary data) that has no equivalent JSON type.");
+      }
+      if (ancestors.has(value)) {
+        conversionFailure("Conversion blocked: circular YAML aliases cannot be represented in JSON.");
+      }
+      ancestors.add(value);
+      const children = Array.isArray(value) ? value : Object.values(value);
+      children.forEach((child) => assertJsonCompatible(child, ancestors));
+      ancestors.delete(value);
+    }
+  }
+
   function convertYamlToJson(input) {
     const parsed = window.jsyaml.load(input);
+    assertJsonCompatible(parsed);
 
     return JSON.stringify(parsed, null, 2);
   }
 
   function convertJsonToYaml(input) {
     const parsed = JSON.parse(input);
+    assertJsonCompatible(parsed);
 
     return window.jsyaml.dump(parsed, {
       indent: 2,
@@ -199,7 +237,7 @@ function initYamlJsonConverter() {
       if (conversionMode.value === "yaml-json") {
         notify(getYamlErrorMessage(error), "error");
       } else {
-        notify("Invalid JSON.", "error");
+        notify(error?.xavertConversionError ? error.message : "Invalid JSON.", "error");
       }
 
       return false;
@@ -215,13 +253,27 @@ function initYamlJsonConverter() {
 
     try {
       if (conversionMode.value === "yaml-json") {
-        window.jsyaml.load(input);
-        outputText.value = "Valid YAML.";
+        const parsed = window.jsyaml.load(input);
+        let warning = "";
+        try {
+          assertJsonCompatible(parsed);
+        } catch (error) {
+          if (!error?.xavertConversionError) throw error;
+          warning = " Valid YAML, but conversion to JSON would lose data.";
+        }
+        outputText.value = warning ? warning.trim() : "Valid YAML.";
         outputType = "txt";
         setStatus("Valid YAML", "success");
       } else {
-        JSON.parse(input);
-        outputText.value = "Valid JSON.";
+        const parsed = JSON.parse(input);
+        let warning = "";
+        try {
+          assertJsonCompatible(parsed);
+        } catch (error) {
+          if (!error?.xavertConversionError) throw error;
+          warning = " Valid JSON, but conversion to YAML would lose data.";
+        }
+        outputText.value = warning ? warning.trim() : "Valid JSON.";
         outputType = "txt";
         setStatus("Valid JSON", "success");
       }
