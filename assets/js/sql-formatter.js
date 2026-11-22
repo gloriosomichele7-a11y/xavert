@@ -362,18 +362,21 @@ function initSqlFormatter() {
   function fallbackFormatSql(sql) {
     const tokens = tokenizeSql(sql);
 
+    // Normalize only unquoted SQL text. Running these replacements on the
+    // joined output would silently change line breaks and whitespace inside
+    // quoted strings, bracketed identifiers, or PostgreSQL dollar strings.
     return tokens
       .map((token) => {
-        if (token.type === "text") {
-          return formatFallbackTextSegment(token.value);
+        if (token.type !== "text") {
+          return token.value;
         }
 
-        return token.value;
+        return formatFallbackTextSegment(token.value)
+          .replace(/[ \t]+\n/g, "\n")
+          .replace(/\n[ \t]+/g, "\n")
+          .replace(/\n{3,}/g, "\n\n");
       })
       .join("")
-      .replace(/[ \t]+\n/g, "\n")
-      .replace(/\n[ \t]+/g, "\n")
-      .replace(/\n{3,}/g, "\n\n")
       .trim();
   }
 
