@@ -406,6 +406,33 @@ function initXmlJsonConverter() {
     }
   }
 
+  function decimalSignature(token) {
+    const match = /^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/.exec(token);
+    if (!match) return null;
+    const fraction = match[3] || "";
+    let digits = (match[2] + fraction).replace(/^0+/, "");
+    if (!digits) return "0";
+    let exponent = Number(match[4] || 0) - fraction.length;
+    const trailing = digits.match(/0+$/);
+    if (trailing) {
+      digits = digits.slice(0, -trailing[0].length);
+      exponent += trailing[0].length;
+    }
+    return `${match[1]}${digits}e${exponent}`;
+  }
+
+  function containsUnsafeJsonNumber(text) {
+    const tokens = /"(?:\\.|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+    for (const match of text.matchAll(tokens)) {
+      const original = match[0];
+      if (original.startsWith('"')) continue;
+      const value = Number(original);
+      if (!Number.isFinite(value)) return true;
+      if (decimalSignature(original) !== decimalSignature(JSON.stringify(value))) return true;
+    }
+    return false;
+  }
+
   function jsonToXml() {
     const input = inputData.value.trim();
 
@@ -418,6 +445,9 @@ function initXmlJsonConverter() {
 
     try {
       const json = JSON.parse(input);
+      if (containsUnsafeJsonNumber(input)) {
+        throw new Error("This JSON contains numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.");
+      }
       const keys = Object.keys(json);
 
       if (
@@ -429,7 +459,14 @@ function initXmlJsonConverter() {
         throw new Error("JSON must contain exactly one root property.");
       }
 
-      outputData.value = objectToXml(keys[0], json[keys[0]]);
+      // A document must contain one root element, not an array of siblings.
+      if (Array.isArray(json[keys[0]])) {
+        throw new Error("The XML root must be a single element, not an array.");
+      }
+
+      const xml = objectToXml(keys[0], json[keys[0]]);
+      parseXml(xml); // Validate the generated document, including namespaces.
+      outputData.value = xml;
       outputType = "xml";
       statusText.textContent = "JSON → XML";
 

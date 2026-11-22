@@ -95,19 +95,66 @@ function initCsvViewerEditor() {
   }
 
   function detectDelimiter(text) {
-    const firstLine = text.split(/\r\n|\r|\n/)[0] || "";
+    // Count separators only outside quoted CSV fields, over several records.
+    // A comma in "Company, Inc" must not override a semicolon separator.
     const delimiters = [",", ";", "\t", "|"];
-    let bestDelimiter = ",";
-    let bestCount = 0;
+    const samples = new Map(delimiters.map((delimiter) => [delimiter, []]));
+    let current = new Map(delimiters.map((delimiter) => [delimiter, 0]));
+    let inQuotes = false;
+    let atFieldStart = true;
+    let rowHasContent = false;
+    let records = 0;
 
+    function endRecord() {
+      if (rowHasContent) {
+        delimiters.forEach((delimiter) => {
+          samples.get(delimiter).push(current.get(delimiter));
+        });
+        records += 1;
+      }
+      current = new Map(delimiters.map((delimiter) => [delimiter, 0]));
+      atFieldStart = true;
+      rowHasContent = false;
+    }
+
+    for (let i = 0; i < text.length && records < 8; i += 1) {
+      const char = text[i];
+      const next = text[i + 1];
+      if (char === '"') {
+        if (inQuotes && next === '"') {
+          i += 1;
+        } else if (inQuotes) {
+          inQuotes = false;
+        } else if (atFieldStart) {
+          inQuotes = true;
+        }
+        rowHasContent = true;
+      } else if ((char === "\n" || char === "\r") && !inQuotes) {
+        if (char === "\r" && next === "\n") i += 1;
+        endRecord();
+      } else if (!inQuotes && delimiters.includes(char)) {
+        current.set(char, current.get(char) + 1);
+        atFieldStart = true;
+        rowHasContent = true;
+      } else {
+        atFieldStart = false;
+        rowHasContent = true;
+      }
+    }
+    if (rowHasContent && records < 8) endRecord();
+
+    let bestDelimiter = ",";
+    let bestScore = 0;
     delimiters.forEach((delimiter) => {
-      const count = firstLine.split(delimiter).length - 1;
-      if (count > bestCount) {
-        bestCount = count;
+      const counts = samples.get(delimiter);
+      const total = counts.reduce((sum, count) => sum + count, 0);
+      const consistent = counts.length > 1 && counts.every((count) => count === counts[0]);
+      const score = total + (consistent && total > 0 ? counts.length : 0);
+      if (score > bestScore) {
+        bestScore = score;
         bestDelimiter = delimiter;
       }
     });
-
     return bestDelimiter;
   }
 
@@ -172,6 +219,7 @@ function initCsvViewerEditor() {
     let row = [];
     let cell = "";
     let insideQuotes = false;
+    let justClosedQuote = false;
     let parsedCells = 0;
 
     function appendRow() {
@@ -204,31 +252,42 @@ function initCsvViewerEditor() {
       const char = text[i];
       const next = text[i + 1];
 
-      if (char === '"' && insideQuotes && next === '"') {
-        cell += '"';
-        i += 1;
-      } else if (char === '"') {
-        insideQuotes = !insideQuotes;
+      if (char === '"') {
+        if (insideQuotes && next === '"') {
+          cell += '"';
+          i += 1;
+        } else if (insideQuotes) {
+          insideQuotes = false;
+          justClosedQuote = true;
+        } else if (cell === "" && !justClosedQuote) {
+          insideQuotes = true;
+        } else {
+          throw new Error("CSV contains a quote in an invalid position.");
+        }
       } else if (char === delimiter && !insideQuotes) {
         row.push(cell);
-
         if (row.length > MAX_CSV_COLUMNS) {
           throw new Error(
             `This CSV has more than ${MAX_CSV_COLUMNS.toLocaleString()} columns and cannot be edited safely in the browser.`,
           );
         }
-
         cell = "";
+        justClosedQuote = false;
       } else if ((char === "\n" || char === "\r") && !insideQuotes) {
-        if (char === "\r" && next === "\n") {
-          i += 1;
-        }
+        if (char === "\r" && next === "\n") i += 1;
         row.push(cell);
         appendRow();
         cell = "";
+        justClosedQuote = false;
       } else {
-        cell += char;
+        if (justClosedQuote && !/^[ \t]$/.test(char)) {
+          throw new Error("CSV contains extra text after a closing quote.");
+        }
+        if (!justClosedQuote) cell += char;
       }
+    }
+    if (insideQuotes) {
+      throw new Error("CSV contains an unterminated quoted field.");
     }
 
     if (cell !== "" || row.length) {

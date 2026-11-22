@@ -571,41 +571,41 @@ document.addEventListener("DOMContentLoaded", () => {
     let row = [];
     let cell = "";
     let insideQuotes = false;
+    let justClosedQuote = false;
 
     for (let i = 0; i < text.length; i += 1) {
       const char = text[i];
       const next = text[i + 1];
 
-      if (char === '"' && insideQuotes && next === '"') {
-        cell += '"';
-        i += 1;
-        continue;
-      }
-
       if (char === '"') {
-        insideQuotes = !insideQuotes;
-        continue;
-      }
-
-      if (char === separator && !insideQuotes) {
+        if (insideQuotes && next === '"') {
+          cell += '"';
+          i += 1;
+        } else if (insideQuotes) {
+          insideQuotes = false;
+          justClosedQuote = true;
+        } else if (cell === "" && !justClosedQuote) {
+          insideQuotes = true;
+        } else {
+          throw new Error("CSV contains a quote in an invalid position.");
+        }
+      } else if (char === separator && !insideQuotes) {
         row.push(cell);
         cell = "";
-        continue;
-      }
-
-      if ((char === "\n" || char === "\r") && !insideQuotes) {
-        if (char === "\r" && next === "\n") {
-          i += 1;
-        }
-
+        justClosedQuote = false;
+      } else if ((char === "\n" || char === "\r") && !insideQuotes) {
+        if (char === "\r" && next === "\n") i += 1;
         row.push(cell);
         rows.push(row);
         row = [];
         cell = "";
-        continue;
+        justClosedQuote = false;
+      } else {
+        if (justClosedQuote && !/^[ \t]$/.test(char)) {
+          throw new Error("CSV contains extra text after a closing quote.");
+        }
+        if (!justClosedQuote) cell += char;
       }
-
-      cell += char;
     }
 
     if (insideQuotes) {
@@ -1230,6 +1230,12 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Do not silently round or truncate numeric values during conversion.
+    if (containsUnsafeJsonNumber(text)) {
+      setMessage("jsonXlsxMessage", "This JSON includes numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.", "error");
+      return;
+    }
+
     try {
       setMessage("jsonXlsxMessage", "Converting JSON to XLSX...", "info");
       const json = JSON.parse(text);
@@ -1283,6 +1289,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!text) {
       setMessage("jsonCsvMessage", "Please enter JSON data.", "error");
+      return;
+    }
+
+    // Do not silently round or truncate numeric values during conversion.
+    if (containsUnsafeJsonNumber(text)) {
+      setMessage("jsonCsvMessage", "This JSON includes numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.", "error");
       return;
     }
 
@@ -1405,11 +1417,44 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  function decimalSignature(token) {
+    const match = /^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/.exec(token);
+    if (!match) return null;
+    const fraction = match[3] || "";
+    let digits = (match[2] + fraction).replace(/^0+/, "");
+    if (!digits) return "0";
+    let exponent = Number(match[4] || 0) - fraction.length;
+    const trailing = digits.match(/0+$/);
+    if (trailing) {
+      digits = digits.slice(0, -trailing[0].length);
+      exponent += trailing[0].length;
+    }
+    return `${match[1]}${digits}e${exponent}`;
+  }
+
+  function containsUnsafeJsonNumber(text) {
+    const tokens = /"(?:\\.|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+    for (const match of text.matchAll(tokens)) {
+      const original = match[0];
+      if (original.startsWith('"')) continue;
+      const value = Number(original);
+      if (!Number.isFinite(value)) return true;
+      if (decimalSignature(original) !== decimalSignature(JSON.stringify(value))) return true;
+    }
+    return false;
+  }
+
   function formatJson({ announce = true } = {}) {
     const input = document.getElementById("jsonFormatInput")?.value.trim();
 
     if (!input) {
       setMessage("jsonFormatMessage", "Please enter JSON data.", "error");
+      return;
+    }
+
+    // Do not silently round or truncate numeric values during conversion.
+    if (containsUnsafeJsonNumber(input)) {
+      setMessage("jsonFormatMessage", "This JSON includes numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.", "error");
       return;
     }
 
@@ -1436,6 +1481,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!input) {
       setMessage("jsonMinifyMessage", "Please enter JSON data.", "error");
+      return;
+    }
+
+    // Do not silently round or truncate numeric values during conversion.
+    if (containsUnsafeJsonNumber(input)) {
+      setMessage("jsonMinifyMessage", "This JSON includes numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.", "error");
       return;
     }
 
@@ -1574,9 +1625,19 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let attributes = "";
 
-    if (value["@attributes"]) {
-      Object.keys(value["@attributes"]).forEach((attributeName) => {
-        attributes += ` ${attributeName}="${escapeXml(value["@attributes"][attributeName])}"`;
+    if (Object.prototype.hasOwnProperty.call(value, "@attributes")) {
+      const attributeMap = value["@attributes"];
+      if (!attributeMap || typeof attributeMap !== "object" || Array.isArray(attributeMap)) {
+        throw new Error("XML attributes must be a JSON object.");
+      }
+      Object.entries(attributeMap).forEach(([attributeName, attributeValue]) => {
+        if (!isValidXmlName(attributeName)) {
+          throw new Error(`Invalid XML attribute name: ${attributeName}`);
+        }
+        if (attributeValue !== null && typeof attributeValue === "object") {
+          throw new Error(`Invalid XML attribute value: ${attributeName}`);
+        }
+        attributes += ` ${attributeName}="${escapeXml(attributeValue ?? "")}"`;
       });
     }
 
@@ -1620,36 +1681,41 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    // Do not silently round or truncate numeric values during conversion.
+    if (containsUnsafeJsonNumber(input)) {
+      setMessage("jsonXmlMessage", "This JSON includes numbers that JavaScript cannot preserve exactly. Conversion is blocked to prevent data loss.", "error");
+      return;
+    }
+
     try {
       const json = JSON.parse(input);
 
       if (
+        !json ||
         typeof json !== "object" ||
-        json === null ||
         Array.isArray(json) ||
-        Object.keys(json).length === 0
+        Object.keys(json).length !== 1
       ) {
-        setMessage(
-          "jsonXmlMessage",
-          "JSON must be a non-empty object with XML-safe root keys.",
-          "error",
-        );
-        return;
+        throw new Error("JSON must have exactly one XML root property.");
       }
 
-      let xml = "";
+      const rootName = Object.keys(json)[0];
+      if (Array.isArray(json[rootName])) {
+        throw new Error("The XML root must be one element, not an array.");
+      }
 
-      Object.keys(json).forEach((key) => {
-        xml += `${jsonToXmlNode(key, json[key], 0)}\n`;
-      });
-
-      xml = xml.trim();
+      const xml = jsonToXmlNode(rootName, json[rootName], 0).trim();
+      const xmlDocument = new DOMParser().parseFromString(xml, "application/xml");
+      if (xmlDocument.getElementsByTagName("parsererror").length) {
+        throw new Error("Generated XML is invalid. Check element names and values.");
+      }
 
       document.getElementById("jsonXmlOutput").value = xml;
       showPrimarySuccess("jsonXmlMessage");
     } catch (error) {
       console.error(error);
-      setMessage("jsonXmlMessage", "Invalid JSON.", "error");
+      document.getElementById("jsonXmlOutput").value = "";
+      setMessage("jsonXmlMessage", error instanceof Error ? error.message : "Invalid JSON or XML.", "error");
     }
   }
 
