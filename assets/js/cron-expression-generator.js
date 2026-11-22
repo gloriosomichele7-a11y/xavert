@@ -811,21 +811,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function getNextExecution(parsedFields, startDate = new Date()) {
     const minutes = sortedValues(parsedFields.minute.values);
-
     const hours = sortedValues(parsedFields.hour.values);
-
     const searchStart = new Date(startDate);
-
-    searchStart.setSeconds(0, 0);
-
-    searchStart.setMinutes(searchStart.getMinutes() + 1);
+    // Advance by an absolute minute, not a local clock minute: setMinutes()
+    // can jump back into the first repeated hour at a DST fall-back.
+    searchStart.setTime(Math.floor(searchStart.getTime() / 60000) * 60000 + 60000);
 
     const finalDate = new Date(searchStart);
-
     finalDate.setFullYear(finalDate.getFullYear() + 12);
 
     const currentDay = new Date(searchStart);
-
     currentDay.setHours(0, 0, 0, 0);
 
     while (currentDay <= finalDate) {
@@ -835,16 +830,49 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       if (monthMatches && dayMatches(currentDay, parsedFields)) {
+        // A DST fall-back can contain the same local time twice; a spring
+        // change can omit a local time entirely. Verify the actual wall time.
+        const nextDay = new Date(currentDay);
+        nextDay.setDate(nextDay.getDate() + 1);
+        const fallBackMinutes = Math.max(
+          0,
+          nextDay.getTimezoneOffset() - currentDay.getTimezoneOffset(),
+        );
+        let nextForDay = null;
+
         for (const hour of hours) {
           for (const minute of minutes) {
             const candidate = new Date(currentDay);
-
             candidate.setHours(hour, minute, 0, 0);
 
-            if (candidate >= searchStart && candidate <= finalDate) {
-              return candidate;
+            const possibilities = [candidate];
+            if (fallBackMinutes > 0) {
+              possibilities.push(
+                new Date(candidate.getTime() + fallBackMinutes * 60000),
+              );
+            }
+
+            for (const possible of possibilities) {
+              const sameLocalTime =
+                possible.getFullYear() === currentDay.getFullYear() &&
+                possible.getMonth() === currentDay.getMonth() &&
+                possible.getDate() === currentDay.getDate() &&
+                possible.getHours() === hour &&
+                possible.getMinutes() === minute;
+
+              if (
+                sameLocalTime && possible >= searchStart &&
+                possible <= finalDate &&
+                (!nextForDay || possible < nextForDay)
+              ) {
+                nextForDay = possible;
+              }
             }
           }
+        }
+
+        if (nextForDay) {
+          return nextForDay;
         }
       }
 

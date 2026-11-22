@@ -151,7 +151,7 @@ function initUnixTimestampConverter() {
 
   function renderResult(date) {
     const milliseconds = date.getTime();
-    const seconds = Math.trunc(milliseconds / 1000);
+    const seconds = Math.floor(milliseconds / 1000);
     const iso = date.toISOString();
     const timeZone = getLocalTimeZone();
 
@@ -211,38 +211,51 @@ function initUnixTimestampConverter() {
 
   function parseDateValue() {
     const raw = dateInput.value;
+    const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/.exec(raw);
 
-    if (!raw) {
-      throw new Error("Choose a date and time first.");
-    }
-
-    let date;
-
-    if (dateInterpretation.value === "utc") {
-      const match = raw.match(
-        /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(?::(\d{2}))?$/,
-      );
-
-      if (!match) {
-        throw new Error("Enter a valid date and time.");
-      }
-
-      date = new Date(
-        Date.UTC(
-          Number(match[1]),
-          Number(match[2]) - 1,
-          Number(match[3]),
-          Number(match[4]),
-          Number(match[5]),
-          Number(match[6] || 0),
-        ),
-      );
-    } else {
-      date = new Date(raw);
-    }
-
-    if (Number.isNaN(date.getTime())) {
+    if (!match) {
       throw new Error("Enter a valid date and time.");
+    }
+
+    const [, rawYear, rawMonth, rawDay, rawHour, rawMinute, rawSecond] = match;
+    const year = Number(rawYear);
+    const month = Number(rawMonth);
+    const day = Number(rawDay);
+    const hour = Number(rawHour);
+    const minute = Number(rawMinute);
+    const second = Number(rawSecond || 0);
+
+    if (
+      month < 1 || month > 12 || day < 1 || day > 31 ||
+      hour > 23 || minute > 59 || second > 59
+    ) {
+      throw new Error("Enter a valid date and time.");
+    }
+
+    // Date.UTC() and new Date(year, ...) remap years 0–99 to 1900–1999.
+    // setFullYear()/setUTCFullYear() preserve the actual year instead.
+    const date = new Date(0);
+    const useUtc = dateInterpretation.value === "utc";
+
+    if (useUtc) {
+      date.setUTCFullYear(year, month - 1, day);
+      date.setUTCHours(hour, minute, second, 0);
+    } else {
+      date.setFullYear(year, month - 1, day);
+      date.setHours(hour, minute, second, 0);
+    }
+
+    const actual = useUtc
+      ? [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(),
+          date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()]
+      : [date.getFullYear(), date.getMonth() + 1, date.getDate(),
+          date.getHours(), date.getMinutes(), date.getSeconds()];
+    const requested = [year, month, day, hour, minute, second];
+
+    // Reject rollover dates (e.g. February 31) and nonexistent local DST times.
+    if (Number.isNaN(date.getTime()) ||
+        actual.some((value, index) => value !== requested[index])) {
+      throw new Error("Invalid or nonexistent date and time.");
     }
 
     return date;

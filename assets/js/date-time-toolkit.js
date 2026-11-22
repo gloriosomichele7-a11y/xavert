@@ -522,13 +522,18 @@
   }
 
   function daysInMonth(year, monthIndex) {
-    return new Date(year, monthIndex + 1, 0).getDate();
+    // The Date(year, ...) constructor shifts years 0–99 into 1900–1999.
+    const date = new Date(0);
+    date.setUTCFullYear(year, monthIndex + 1, 0);
+    return date.getUTCDate();
   }
 
   function createLocalDate(year, monthIndex, day) {
     const safeDay = Math.min(day, daysInMonth(year, monthIndex));
-
-    return new Date(year, monthIndex, safeDay, 12, 0, 0, 0);
+    const date = new Date(0);
+    date.setFullYear(year, monthIndex, safeDay);
+    date.setHours(12, 0, 0, 0);
+    return date;
   }
 
   function parseLocalDate(value) {
@@ -550,9 +555,12 @@
   }
 
   function calendarDayNumber(date) {
-    return Math.floor(
-      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / DAY_MS,
-    );
+    // Avoid Date.UTC(year, ...) shifting years 0–99 by 1900 years.
+    return Math.floor(createUtcTimestamp({
+      year: date.getFullYear(),
+      month: date.getMonth() + 1,
+      day: date.getDate(),
+    }) / DAY_MS);
   }
 
   function totalCalendarDays(start, end) {
@@ -597,19 +605,22 @@
       cursor = addYearsClamped(start, years);
     }
 
+    // Anchor every month to the same anniversary date. Iteratively adding
+    // months drifts after February (Jan 31 → Feb 28 → Mar 28).
+    const yearAnchor = cursor;
     let months = 0;
 
     while (months < 11) {
-      const next = addMonthsClamped(cursor, 1);
+      const next = addMonthsClamped(yearAnchor, months + 1);
 
       if (next > end) {
         break;
       }
 
-      cursor = next;
       months += 1;
     }
 
+    cursor = addMonthsClamped(yearAnchor, months);
     const days = totalCalendarDays(cursor, end);
 
     return {
@@ -1023,6 +1034,13 @@
     }
 
     const resultDate = addCalendarDays(date, daysValue);
+
+    if (Number.isNaN(resultDate.getTime())) {
+      setMessage(elements.dateaddMessage, "Resulting date is out of range.", "error");
+      showToast("Resulting date is out of range.", "error");
+      return;
+    }
+
     const result = new Intl.DateTimeFormat(undefined, {
       weekday: "long",
       year: "numeric",
