@@ -270,7 +270,12 @@
       footer.append(links, support);
     }
 
-    localStorage.removeItem("xavert-language");
+    // A browser can disable storage without disabling the tool itself.
+    try {
+      localStorage.removeItem("xavert-language");
+    } catch {
+      // Removing the old language preference is optional.
+    }
     document.documentElement.lang = "en";
   }
 
