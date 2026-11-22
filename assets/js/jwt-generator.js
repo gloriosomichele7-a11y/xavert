@@ -62,6 +62,7 @@ function initJwtGenerator() {
   let headerResult = "";
   let payloadResult = "";
   let signatureResult = "";
+  let generationVersion = 0;
 
   function setMessage(text = "", type = "info") {
     message.textContent = text;
@@ -133,7 +134,50 @@ function initJwtGenerator() {
     copySignatureBtn.disabled = true;
   }
 
+  // Refuse JSON numbers that JavaScript would silently round or turn into Infinity.
+  function assertSafeJsonNumbers(text, label) {
+    let insideString = false;
+    let escaped = false;
+    const numberPattern = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;
+
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+      if (insideString) {
+        if (escaped) {
+          escaped = false;
+        } else if (character === "\\") {
+          escaped = true;
+        } else if (character === '"') {
+          insideString = false;
+        }
+        continue;
+      }
+      if (character === '"') {
+        insideString = true;
+        continue;
+      }
+      if (character !== "-" && !/[0-9]/.test(character)) {
+        continue;
+      }
+      numberPattern.lastIndex = index;
+      const match = numberPattern.exec(text);
+      if (!match) {
+        continue;
+      }
+      const value = Number(match[0]);
+      if (
+        !Number.isFinite(value) ||
+        (Number.isInteger(value) && !Number.isSafeInteger(value)) ||
+        (value === 0 && /[1-9]/.test(match[0].replace(/[eE][+-]?\d+$/, "")))
+      ) {
+        throw new Error(`${label} contains a number that cannot be safely represented. Quote large identifiers or use a smaller number.`);
+      }
+      index = numberPattern.lastIndex - 1;
+    }
+  }
+
   function parseObject(text, label) {
+    assertSafeJsonNumbers(text, label);
     let value;
 
     try {
@@ -213,12 +257,13 @@ function initJwtGenerator() {
 
       if (
         typeof header.alg !== "string" ||
-        header.alg.toUpperCase() !== "HS256"
+        header.alg !== "HS256"
       ) {
         throw new Error('JWT header must contain "alg": "HS256".');
       }
 
       generateBtn.disabled = true;
+      const currentVersion = generationVersion;
 
       headerResult = encodeSegment(header);
       payloadResult = encodeSegment(payload);
@@ -226,6 +271,9 @@ function initJwtGenerator() {
       const unsignedToken = `${headerResult}.${payloadResult}`;
 
       signatureResult = await signHs256(unsignedToken, jwtSecret.value);
+      if (currentVersion !== generationVersion) {
+        return;
+      }
 
       tokenResult = `${unsignedToken}.${signatureResult}`;
 
@@ -321,6 +369,7 @@ function initJwtGenerator() {
   }
 
   function clearTool() {
+    generationVersion += 1;
     jwtHeader.value = "";
     jwtPayload.value = "";
     jwtSecret.value = "";
@@ -362,6 +411,7 @@ function initJwtGenerator() {
   });
 
   jwtHeader.addEventListener("input", () => {
+    generationVersion += 1;
     resetResult();
     updateCounters();
     validateField(jwtHeader);
@@ -369,6 +419,7 @@ function initJwtGenerator() {
   });
 
   jwtPayload.addEventListener("input", () => {
+    generationVersion += 1;
     resetResult();
     updateCounters();
     validateField(jwtPayload);
@@ -376,6 +427,7 @@ function initJwtGenerator() {
   });
 
   jwtSecret.addEventListener("input", () => {
+    generationVersion += 1;
     resetResult();
     setMessage("");
   });

@@ -120,9 +120,52 @@ document.addEventListener("DOMContentLoaded", () => {
     return bytes;
   }
 
+  // Do not silently alter JWT claims containing numbers outside safe JS range.
+  function assertSafeJwtNumbers(text, label) {
+    let insideString = false;
+    let escaped = false;
+    const numberPattern = /-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/y;
+
+    for (let index = 0; index < text.length; index += 1) {
+      const character = text[index];
+      if (insideString) {
+        if (escaped) {
+          escaped = false;
+        } else if (character === "\\") {
+          escaped = true;
+        } else if (character === '"') {
+          insideString = false;
+        }
+        continue;
+      }
+      if (character === '"') {
+        insideString = true;
+        continue;
+      }
+      if (character !== "-" && !/[0-9]/.test(character)) {
+        continue;
+      }
+      numberPattern.lastIndex = index;
+      const match = numberPattern.exec(text);
+      if (!match) {
+        continue;
+      }
+      const value = Number(match[0]);
+      if (
+        !Number.isFinite(value) ||
+        (Number.isInteger(value) && !Number.isSafeInteger(value)) ||
+        (value === 0 && /[1-9]/.test(match[0].replace(/[eE][+-]?\d+$/, "")))
+      ) {
+        throw new Error(`${label} contains a number that cannot be safely represented; quote large identifiers.`);
+      }
+      index = numberPattern.lastIndex - 1;
+    }
+  }
+
   function decodeJsonSegment(segment, label) {
     try {
       const text = textDecoder.decode(base64UrlToBytes(segment));
+      assertSafeJwtNumbers(text, label);
 
       const value = JSON.parse(text);
 
@@ -132,6 +175,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
       return value;
     } catch (error) {
+      if (error instanceof Error && error.message.includes("cannot be safely represented")) {
+        throw error;
+      }
       throw new Error(`Invalid JWT ${label.toLowerCase()}.`);
     }
   }
