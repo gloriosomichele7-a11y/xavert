@@ -150,9 +150,15 @@ function initUuidGenerator() {
   }
 
   function generateUuids(forceSingle = false) {
-    const amount = forceSingle ? 1 : Number.parseInt(quantity.value, 10);
+    const requestedQuantity = quantity.value.trim();
+    const amount = forceSingle ? 1 : Number(requestedQuantity);
 
-    if (!Number.isInteger(amount) || amount < 1 || amount > 10000) {
+    if (
+      (!forceSingle && !/^[0-9]+$/.test(requestedQuantity)) ||
+      !Number.isSafeInteger(amount) ||
+      amount < 1 ||
+      amount > 10000
+    ) {
       resetResult();
 
       notify("Please enter a value between 1 and 10000.", "error");
@@ -170,7 +176,19 @@ function initUuidGenerator() {
 
     const generator = version === "v7" ? generateUuidV7 : generateUuidV4;
 
-    const generated = Array.from({ length: amount }, generator);
+    let generated;
+
+    try {
+      generated = Array.from({ length: amount }, generator);
+    } catch (error) {
+      console.error("UUID generation failed:", error);
+      resetResult();
+      notify(
+        "Secure random generation is unavailable. Open XAVERT using HTTPS in a modern browser.",
+        "error",
+      );
+      return false;
+    }
 
     uuidOutput.value = generated.join("\n");
     uuidCount.textContent = `UUIDs: ${generated.length}`;
