@@ -40,6 +40,35 @@ async function initPdfToolkit() {
 
   if (Object.values(requiredLibraries).some((library) => !library)) {
     console.error("PDF Toolkit: one or more PDF libraries failed to load.");
+
+    // Keep the toolkit navigable and explain the failure to visitors instead
+    // of leaving a silently inactive selector and processing buttons.
+    const notice = document.createElement("p");
+    notice.className = "pdf-warning";
+    notice.setAttribute("role", "alert");
+    notice.textContent =
+      "PDF processing libraries could not be loaded. Check your connection, " +
+      "allow access to jsDelivr, then reload this page.";
+    (toolSelector.closest(".tool-card-body") || toolSelector.parentElement).append(notice);
+
+    const requestedTool = new URLSearchParams(window.location.search).get("tool");
+    if (requestedTool && Object.prototype.hasOwnProperty.call(panels, requestedTool)) {
+      toolSelector.value = requestedTool;
+    }
+
+    const showSelectedPanel = () => {
+      Object.entries(panels).forEach(([key, panel]) => {
+        panel.hidden = key !== toolSelector.value;
+      });
+    };
+    toolSelector.addEventListener("change", showSelectedPanel);
+    showSelectedPanel();
+
+    Object.values(panels).forEach((panel) => {
+      panel.querySelectorAll("[data-primary-action]").forEach((button) => {
+        button.disabled = true;
+      });
+    });
     return;
   }
 
