@@ -109,9 +109,10 @@ function initCaseConverter() {
   function getWords(text) {
     return (
       text
-        .replace(/([a-z0-9])([A-Z])/g, "$1 $2")
-        .replace(/([A-Z]+)([A-Z][a-z])/g, "$1 $2")
-        .match(/[\p{L}\p{N}]+/gu) || []
+        .normalize("NFC")
+        .replace(/([\p{Ll}\p{N}])([\p{Lu}])/gu, "$1 $2")
+        .replace(/([\p{Lu}]+)([\p{Lu}][\p{Ll}])/gu, "$1 $2")
+        .match(/[\p{L}\p{M}\p{N}]+/gu) || []
     );
   }
 
@@ -147,40 +148,30 @@ function initCaseConverter() {
   }
 
   function toTitleCase(text, headline = false) {
-    const words = text.split(/(\s+)/);
-    const lexicalIndexes = words
-      .map((part, index) => (/\S/.test(part) ? index : -1))
-      .filter((index) => index >= 0);
+    // Match words without losing punctuation, apostrophes, or whitespace.
+    const source = text.normalize("NFC");
+    const wordPattern = /[\p{L}\p{M}\p{N}]+(?:['’][\p{L}\p{M}\p{N}]+|[-/][\p{L}\p{M}\p{N}]+)*/gu;
+    const wordCount = Array.from(source.matchAll(wordPattern)).length;
+    let wordIndex = 0;
 
-    const firstIndex = lexicalIndexes[0];
-    const lastIndex = lexicalIndexes[lexicalIndexes.length - 1];
+    return source.replace(wordPattern, (part) => {
+      const isSmallMiddleWord =
+        headline &&
+        wordIndex > 0 &&
+        wordIndex < wordCount - 1 &&
+        smallTitleWords.has(part.toLocaleLowerCase());
+      wordIndex += 1;
 
-    return words
-      .map((part, index) => {
-        if (!/\S/.test(part)) {
-          return part;
-        }
+      if (isSmallMiddleWord) {
+        return part.toLocaleLowerCase();
+      }
 
-        const normalized = part
-          .toLocaleLowerCase()
-          .replace(
-            /(^|[-/])([\p{L}\p{N}])/gu,
-            (match, separator, character) =>
-              `${separator}${character.toLocaleUpperCase()}`,
-          );
-
-        if (
-          headline &&
-          index !== firstIndex &&
-          index !== lastIndex &&
-          smallTitleWords.has(part.toLocaleLowerCase())
-        ) {
-          return part.toLocaleLowerCase();
-        }
-
-        return normalized;
-      })
-      .join("");
+      return part
+        .toLocaleLowerCase()
+        .replace(/(^|[-/])([\p{L}\p{N}])/gu, (_, separator, letter) =>
+          `${separator}${letter.toLocaleUpperCase()}`,
+        );
+    });
   }
 
   function convertIdentifier(text, separator, mode) {
@@ -252,7 +243,7 @@ function initCaseConverter() {
         return toTitleCase(text, titleStyle.value === "headline");
 
       case "capitalized":
-        return text.replace(/[\p{L}\p{N}]+/gu, (word) => capitalize(word));
+        return text.normalize("NFC").replace(/[\p{L}\p{M}\p{N}]+/gu, (word) => capitalize(word));
 
       case "camel":
         return convertIdentifier(text, "", "camel");

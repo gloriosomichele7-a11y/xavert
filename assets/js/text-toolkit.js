@@ -106,7 +106,9 @@ function initTextToolkit() {
     const noSpaces = Array.from(text.replace(/\s/g, "")).length;
     const lines = text.split(/\r?\n/).length;
     const paragraphs = text.trim().split(/\n\s*\n/).length;
-    const sentences = (text.match(/[.!?]+(?=\s|$)/g) || []).length;
+    const sentences = (
+      text.trim().match(/[^.!?…]+(?:[.!?…]+|$)/g) || []
+    ).filter((part) => part.trim()).length;
     const readingTime = Math.max(1, Math.ceil(words / 200));
 
     byId("counterWords").textContent = String(words);
@@ -140,8 +142,12 @@ function initTextToolkit() {
       output = text.toLowerCase();
     } else if (mode === "title") {
       output = text
-        .toLowerCase()
-        .replace(/\b[\p{L}\p{N}]/gu, (char) => char.toUpperCase());
+        .normalize("NFC")
+        .toLocaleLowerCase()
+        .replace(
+          /(^|[^\p{L}\p{M}\p{N}])([\p{L}\p{N}])/gu,
+          (_, separator, letter) => `${separator}${letter.toLocaleUpperCase()}`,
+        );
     } else if (mode === "sentence") {
       output = text
         .toLowerCase()
@@ -182,6 +188,7 @@ function initTextToolkit() {
     byId("spacesOutput").value = text
       .replace(/[ \t]+/g, " ")
       .replace(/[ \t]+\n/g, "\n")
+      .replace(/^[ \t]+/gm, "")
       .replace(/\n{3,}/g, "\n\n")
       .trim();
 
@@ -266,12 +273,20 @@ function initTextToolkit() {
       return;
     }
 
-    byId("slugOutput").value = text
+    // Strip Latin accent marks, but retain letters from other writing systems.
+    const slug = text
       .normalize("NFKD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/([A-Za-z])[\u0300-\u036f]+/g, "$1")
+      .normalize("NFC")
+      .toLocaleLowerCase()
+      .replace(/[^\p{L}\p{M}\p{N}]+/gu, "-")
       .replace(/^-+|-+$/g, "");
+
+    byId("slugOutput").value = slug;
+    if (!slug) {
+      notify("Cannot create a slug from the supplied characters.", "error");
+      return;
+    }
 
     notify("Slug generated successfully.", "success");
   }
