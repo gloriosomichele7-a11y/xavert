@@ -1275,6 +1275,12 @@
 
     initializeTimeZones();
     registerEvents();
+    // Search deep link: select only a mode that actually exists in this toolkit.
+    const requestedTool = new URLSearchParams(window.location.search).get("tool");
+    if (requestedTool && Array.from(elements.toolSelector.options).some(option => option.value === requestedTool && !option.disabled)) {
+      elements.toolSelector.value = requestedTool;
+    }
+
     switchTool();
   }
 

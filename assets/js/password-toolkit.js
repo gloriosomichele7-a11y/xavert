@@ -1068,6 +1068,12 @@ function initPasswordToolkit() {
   copyPassphraseBtn.disabled = true;
   copyHashBtn.disabled = true;
 
+  // Search deep link: select only a mode that actually exists in this toolkit.
+  const requestedTool = new URLSearchParams(window.location.search).get("tool");
+  if (requestedTool && Array.from(toolSelector.options).some(option => option.value === requestedTool && !option.disabled)) {
+    toolSelector.value = requestedTool;
+  }
+
   switchTool();
 }
 

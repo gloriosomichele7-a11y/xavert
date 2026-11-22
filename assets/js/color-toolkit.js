@@ -1110,5 +1110,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
   el.sampleBtn.addEventListener("click", loadSample);
 
+  // Search deep link: select only a mode that actually exists in this toolkit.
+  const requestedTool = new URLSearchParams(window.location.search).get("tool");
+  if (requestedTool && Array.from(el.toolSelector.options).some(option => option.value === requestedTool && !option.disabled)) {
+    el.toolSelector.value = requestedTool;
+  }
+
   updateMode();
 });
