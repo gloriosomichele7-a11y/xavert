@@ -160,10 +160,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const normalized = normalizeBase64(value);
 
-    if (normalized.length < 4) {
-      return false;
-    }
-
     if (normalized.length % 4 === 1) {
       return false;
     }

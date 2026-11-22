@@ -110,6 +110,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
+  // JavaScript Number can silently round large or highly precise JSON values.
+  // Only allow numeric rewriting when the original decimal and the output
+  // represent exactly the same decimal number.
+  function decimalSignature(token) {
+    const match = /^(-?)(\d+)(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/.exec(token);
+    if (!match) return null;
+    const fraction = match[3] || "";
+    let digits = (match[2] + fraction).replace(/^0+/, "");
+    if (!digits) return "0";
+    let exponent = Number(match[4] || 0) - fraction.length;
+    const trailing = digits.match(/0+$/);
+    if (trailing) {
+      digits = digits.slice(0, -trailing[0].length);
+      exponent += trailing[0].length;
+    }
+    return `${match[1]}${digits}e${exponent}`;
+  }
+
+  function containsUnsafeJsonNumber(text) {
+    const tokens = /"(?:\\.|[^"\\])*"|-?(?:0|[1-9]\d*)(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+    for (const match of text.matchAll(tokens)) {
+      const original = match[0];
+      if (original.startsWith('"')) continue;
+      const value = Number(original);
+      if (!Number.isFinite(value)) return true;
+      if (decimalSignature(original) !== decimalSignature(JSON.stringify(value))) return true;
+    }
+    return false;
+  }
+
   function parseJson(text) {
     try {
       return { ok: true, value: JSON.parse(text) };
@@ -211,6 +241,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const parsed = getParsedMainInput();
     if (!parsed) return;
 
+    if (containsUnsafeJsonNumber(jsonInput.value)) {
+      resetMainResult();
+      notify(mainMessage, "JSON contains numbers that would lose precision. Formatting/minifying is blocked to avoid changing their values.", "error");
+      return;
+    }
+
     renderMainResult(
       JSON.stringify(parsed.value, null, 2),
       parsed.value,
@@ -229,6 +265,12 @@ document.addEventListener("DOMContentLoaded", () => {
   function minifyJson() {
     const parsed = getParsedMainInput();
     if (!parsed) return;
+
+    if (containsUnsafeJsonNumber(jsonInput.value)) {
+      resetMainResult();
+      notify(mainMessage, "JSON contains numbers that would lose precision. Formatting/minifying is blocked to avoid changing their values.", "error");
+      return;
+    }
 
     renderMainResult(
       JSON.stringify(parsed.value),
@@ -257,7 +299,11 @@ document.addEventListener("DOMContentLoaded", () => {
     copyMainBtn.disabled = false;
     downloadMainBtn.disabled = false;
 
-    notify(mainMessage, "JSON is valid.", "success");
+    notify(mainMessage,
+      containsUnsafeJsonNumber(jsonInput.value)
+        ? "JSON is valid, but some numeric values may lose precision if rewritten."
+        : "JSON is valid.",
+      containsUnsafeJsonNumber(jsonInput.value) ? "info" : "success");
   }
 
   function invalidateMainResult() {
@@ -529,6 +575,13 @@ document.addEventListener("DOMContentLoaded", () => {
       compareResult.hidden = true;
       compareResult.replaceChildren();
       notify(compareMessage, "Invalid JSON in one or both inputs.", "error");
+      return;
+    }
+
+    if (containsUnsafeJsonNumber(aText) || containsUnsafeJsonNumber(bText)) {
+      compareResult.hidden = true;
+      compareResult.replaceChildren();
+      notify(compareMessage, "Comparison blocked: one or more numbers would lose precision in JavaScript.", "error");
       return;
     }
 
