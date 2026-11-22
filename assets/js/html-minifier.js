@@ -99,22 +99,29 @@ function initHtmlMinifierBeautifier() {
 
   function protectBlocks(html) {
     const protectedBlocks = [];
+    // Choose a marker absent from the actual input. Fixed markers can collide
+    // with user text and accidentally replace that text with a script/block.
+    let marker = "___XAVERT_BLOCK_";
+    while (html.includes(marker)) {
+      marker += "_";
+    }
 
     const placeholder = html.replace(
-      /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<(pre|textarea|script|style|xmp)\b(?:[^>"']|"[^"]*"|'[^']*')*>[\s\S]*?<\/\1\s*>/gi,
+      /<!--[\s\S]*?-->|<!\[CDATA\[[\s\S]*?\]\]>|<(pre|textarea|script|style|xmp|code|svg|math|title)\b(?:[^>"']|"[^"]*"|'[^']*')*>[\s\S]*?<\/\1\s*>/gi,
       (match) => {
-        const token = `___XAVERT_BLOCK_${protectedBlocks.length}___`;
+        const token = `${marker}${protectedBlocks.length}___`;
         protectedBlocks.push(match);
         return token;
       },
     );
 
-    return { placeholder, protectedBlocks };
+    return { placeholder, protectedBlocks, marker };
   }
 
-  function restoreBlocks(html, protectedBlocks) {
+  function restoreBlocks(html, protectedBlocks, marker) {
+    const tokenPattern = new RegExp(`${marker}(\\d+)___`, "g");
     return html.replace(
-      /___XAVERT_BLOCK_(\d+)___/g,
+      tokenPattern,
       (match, index) => protectedBlocks[Number(index)] ?? match,
     );
   }
@@ -171,137 +178,107 @@ function initHtmlMinifierBeautifier() {
     return segments;
   }
 
+  // Only change whitespace at block-tag boundaries. Text-node whitespace can
+  // be meaningful with CSS white-space rules, inline elements, or user content.
+  const blockTags = new Set([
+    "html", "head", "body", "main", "div", "section", "article",
+    "header", "footer", "nav", "aside", "form", "fieldset",
+    "ul", "ol", "li", "dl", "dt", "dd", "table", "thead",
+    "tbody", "tfoot", "tr", "td", "th", "p", "h1", "h2",
+    "h3", "h4", "h5", "h6", "blockquote", "figure", "figcaption",
+    "details", "summary",
+  ]);
+  const voidTags = new Set([
+    "area", "base", "br", "col", "embed", "hr", "img", "input",
+    "link", "meta", "param", "source", "track", "wbr",
+  ]);
+
+  function getBlockTag(segment) {
+    if (!segment || segment.type !== "markup") {
+      return null;
+    }
+    const match = segment.value.match(/^<\/?([A-Za-z][\w:-]*)\b/);
+    if (!match || !blockTags.has(match[1].toLowerCase())) {
+      return null;
+    }
+    return {
+      name: match[1].toLowerCase(),
+      closing: /^<\//.test(segment.value),
+      selfClosing: /\/\s*>$/.test(segment.value),
+    };
+  }
+
   function minifyHtmlText(html) {
-    const { placeholder, protectedBlocks } = protectBlocks(html);
+    const { placeholder, protectedBlocks, marker } = protectBlocks(html);
+    const segments = splitMarkupAndText(placeholder);
 
-    const minified = splitMarkupAndText(placeholder)
-      .map((segment) => {
-        if (segment.type === "markup") {
-          return segment.value;
-        }
+    const minified = segments.map((segment, index) => {
+      if (
+        segment.type === "text" &&
+        !segment.value.trim() &&
+        getBlockTag(segments[index - 1]) &&
+        getBlockTag(segments[index + 1])
+      ) {
+        return "";
+      }
+      return segment.value;
+    }).join("").trim();
 
-        return segment.value.replace(/\s+/g, " ");
-      })
-      .join("")
-      .trim();
-
-    return restoreBlocks(minified, protectedBlocks);
+    return restoreBlocks(minified, protectedBlocks, marker);
   }
 
   function beautifyHtmlText(html) {
-    const source = html.trim();
-
-    if (!source) {
+    if (!html.trim()) {
       return "";
     }
 
-    const tokens =
-      source.match(
-        /<!DOCTYPE[\s\S]*?>|<!--[\s\S]*?-->|<\?[\s\S]*?\?>|<!\[CDATA\[[\s\S]*?\]\]>|<script\b[\s\S]*?<\/script\s*>|<style\b[\s\S]*?<\/style\s*>|<pre\b[\s\S]*?<\/pre\s*>|<textarea\b[\s\S]*?<\/textarea\s*>|<\/?[a-zA-Z][^>]*>|[^<]+/gi,
-      ) || [];
+    // Do not split or indent text-bearing inline markup: this would add text
+    // nodes (and can change the visible contents of <p>, <span>, <textarea>). 
+    const { placeholder, protectedBlocks, marker } = protectBlocks(html);
+    const segments = splitMarkupAndText(placeholder);
+    let result = "";
+    let depth = 0;
+    let pendingBlockWhitespace = false;
+    let previousBlock = false;
 
-    const voidTags = new Set([
-      "area",
-      "base",
-      "br",
-      "col",
-      "embed",
-      "hr",
-      "img",
-      "input",
-      "link",
-      "meta",
-      "param",
-      "source",
-      "track",
-      "wbr",
-    ]);
+    segments.forEach((segment, index) => {
+      if (segment.type === "text") {
+        const betweenBlocks =
+          !segment.value.trim() &&
+          getBlockTag(segments[index - 1]) &&
+          getBlockTag(segments[index + 1]);
 
-    const rawTextTags = new Set(["script", "style", "pre", "textarea"]);
-
-    const lines = [];
-    let indent = 0;
-
-    function pushLine(value, level = indent) {
-      const text = String(value).trim();
-
-      if (!text) {
-        return;
-      }
-
-      lines.push(`${"  ".repeat(Math.max(level, 0))}${text}`);
-    }
-
-    tokens.forEach((token) => {
-      const trimmed = token.trim();
-
-      if (!trimmed) {
-        return;
-      }
-
-      if (
-        /^<!DOCTYPE/i.test(trimmed) ||
-        /^<!--/.test(trimmed) ||
-        /^<\?/.test(trimmed) ||
-        /^<!\[CDATA\[/.test(trimmed)
-      ) {
-        pushLine(trimmed);
-        return;
-      }
-
-      const rawMatch = trimmed.match(
-        /^<(script|style|pre|textarea)\b([^>]*)>([\s\S]*?)<\/\1\s*>$/i,
-      );
-
-      if (rawMatch) {
-        const tagName = rawMatch[1].toLowerCase();
-        const attributes = rawMatch[2] || "";
-        const content = rawMatch[3];
-
-        pushLine(`<${tagName}${attributes}>`);
-
-        if (content.trim()) {
-          content
-            .replace(/^\n+|\n+$/g, "")
-            .split(/\r\n|\r|\n/)
-            .forEach((line) => {
-              if (rawTextTags.has(tagName)) {
-                lines.push(`${"  ".repeat(indent + 1)}${line}`);
-              }
-            });
+        if (betweenBlocks) {
+          pendingBlockWhitespace = true;
+        } else {
+          result += segment.value;
+          previousBlock = false;
+          pendingBlockWhitespace = false;
         }
-
-        pushLine(`</${tagName}>`);
         return;
       }
 
-      const closingMatch = trimmed.match(/^<\/([a-zA-Z][\w:-]*)\s*>$/);
-
-      if (closingMatch) {
-        indent = Math.max(indent - 1, 0);
-        pushLine(trimmed);
-        return;
+      const info = getBlockTag(segment);
+      if (info?.closing) {
+        depth = Math.max(0, depth - 1);
       }
 
-      const openingMatch = trimmed.match(/^<([a-zA-Z][\w:-]*)(?:\s[^>]*)?>$/);
-
-      if (openingMatch) {
-        const tagName = openingMatch[1].toLowerCase();
-        const selfClosing = /\/>$/.test(trimmed);
-
-        pushLine(trimmed);
-
-        if (!selfClosing && !voidTags.has(tagName)) {
-          indent += 1;
-        }
-
-        return;
+      if (info && previousBlock && result) {
+        result += `\n${"  ".repeat(depth)}`;
+      } else if (pendingBlockWhitespace) {
+        result += " ";
       }
 
-      pushLine(trimmed);
+      result += segment.value;
+      pendingBlockWhitespace = false;
+      previousBlock = Boolean(info);
+
+      if (info && !info.closing && !info.selfClosing && !voidTags.has(info.name)) {
+        depth += 1;
+      }
     });
 
-    return lines.join("\n");
+    return restoreBlocks(result.trim(), protectedBlocks, marker);
   }
 
   function processHtml(mode, { announce = true } = {}) {
