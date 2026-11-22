@@ -46,7 +46,55 @@ document.addEventListener("DOMContentLoaded", () => {
     sheets: new Map(),
     currentSheet: "",
     sourceName: "spreadsheet",
+    dataModified: false,
   };
+
+  // Formula metadata remains attached to each row rather than being flattened
+  // into a cached numeric/string result. Original formulas are not evaluated here.
+  const rowFormulas = new WeakMap();
+
+  function formulaFor(row, column) {
+    return rowFormulas.get(row)?.get(column) || null;
+  }
+
+  function cellText(row, column) {
+    const formula = formulaFor(row, column);
+    if (formula?.f) return `=${formula.f}`;
+    const value = row?.[column];
+    if (value instanceof Date) return Number.isNaN(value.getTime()) ? "" : value.toISOString();
+    return value == null ? "" : String(value);
+  }
+
+  function rowHasData(row) {
+    return row.some((_value, column) => cellText(row, column).trim() !== "");
+  }
+
+  function workbookHasFormulas() {
+    return Array.from(state.sheets.values()).some((rows) =>
+      rows.some((row) => (rowFormulas.get(row)?.size || 0) > 0),
+    );
+  }
+
+  function preventUnsafeRowMovement() {
+    if (!workbookHasFormulas()) return false;
+    notify(
+      "Sorting or deleting rows is disabled for workbooks with formulas: references cannot be safely updated here. Cell editing and XLSX export remain available.",
+      "error",
+    );
+    return true;
+  }
+
+  function parseEditedValue(text) {
+    const trimmed = text.trim();
+    // Strict canonical number detection. Strings like 0012 stay as text.
+    if (/^-?(?:0|[1-9][0-9]*)(?:[.][0-9]+)?(?:[eE][+-]?[0-9]+)?$/.test(trimmed)) {
+      const number = Number(trimmed);
+      if (Number.isFinite(number)) return number;
+    }
+    if (trimmed === "TRUE") return true;
+    if (trimmed === "FALSE") return false;
+    return text;
+  }
 
   function notify(text = "", type = "info", toast = true) {
     const safeType = ["success", "error", "info"].includes(type) ? type : "info";
@@ -86,7 +134,8 @@ document.addEventListener("DOMContentLoaded", () => {
       const values = Array.isArray(row) ? row : [row];
       return values.map((value) => {
         if (value === null || typeof value === "undefined") return "";
-        if (value instanceof Date) return value.toISOString();
+        if (value instanceof Date) return new Date(value.getTime());
+        if (["number", "boolean", "string"].includes(typeof value)) return value;
         return String(value);
       });
     });
@@ -123,7 +172,7 @@ document.addEventListener("DOMContentLoaded", () => {
     for (let index = 0; index < width; index += 1) {
       const option = document.createElement("option");
       option.value = String(index);
-      option.textContent = displayHeader(rows[0]?.[index], index);
+      option.textContent = displayHeader(cellText(rows[0], index), index);
       option.selected = index === Math.min(previousColumn, width - 1);
       elements.sortColumn.append(option);
     }
@@ -142,7 +191,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const query = elements.searchInput.value.trim().toLocaleLowerCase();
     const indexes = [];
     for (let index = 1; index < rows.length; index += 1) {
-      if (!query || rows[index].some((value) => String(value).toLocaleLowerCase().includes(query))) {
+      if (!query || rows[index].some((_value, column) => cellText(rows[index], column).toLocaleLowerCase().includes(query))) {
         indexes.push(index);
       }
     }
@@ -167,8 +216,8 @@ document.addEventListener("DOMContentLoaded", () => {
       th.contentEditable = "true";
       th.dataset.row = "0";
       th.dataset.column = String(columnIndex);
-      th.textContent = rows[0]?.[columnIndex] ?? "";
-      th.setAttribute("aria-label", `Edit ${displayHeader(rows[0]?.[columnIndex], columnIndex)} header`);
+      th.textContent = cellText(rows[0], columnIndex);
+      th.setAttribute("aria-label", `Edit ${displayHeader(cellText(rows[0], columnIndex), columnIndex)} header`);
       headerRow.append(th);
     }
     thead.append(headerRow);
@@ -184,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         td.contentEditable = "true";
         td.dataset.row = String(sourceRowIndex);
         td.dataset.column = String(columnIndex);
-        td.textContent = rows[sourceRowIndex]?.[columnIndex] ?? "";
+        td.textContent = cellText(rows[sourceRowIndex], columnIndex);
         tr.append(td);
       }
       tbody.append(tr);
@@ -212,17 +261,36 @@ document.addEventListener("DOMContentLoaded", () => {
     const nextSheets = new Map();
     workbook.SheetNames.forEach((name) => {
       const worksheet = workbook.Sheets[name];
-      const rows = XLSX.utils.sheet_to_json(worksheet, {
+      const values = XLSX.utils.sheet_to_json(worksheet, {
         header: 1,
         defval: "",
-        raw: false,
+        raw: true,
         blankrows: true,
+        range: 0,
       });
-      nextSheets.set(String(name), normalizeRows(rows));
+      const rows = normalizeRows(values);
+      // SheetJS data arrays contain cached results, but not formula expressions.
+      Object.entries(worksheet).forEach(([reference, cell]) => {
+        if (reference.startsWith("!") || !cell || typeof cell.f !== "string") return;
+        const { r, c } = XLSX.utils.decode_cell(reference);
+        if (r < 0 || c < 0 || r > 100000 || c > 16383) {
+          throw new Error("The spreadsheet contains a formula outside the supported preview range.");
+        }
+        while (rows.length <= r) rows.push([""]);
+        while (rows[r].length <= c) rows[r].push("");
+        let formulas = rowFormulas.get(rows[r]);
+        if (!formulas) {
+          formulas = new Map();
+          rowFormulas.set(rows[r], formulas);
+        }
+        formulas.set(c, { ...cell, t: cell.t || (typeof cell.v === "string" ? "s" : "n") });
+      });
+      nextSheets.set(String(name), rows);
     });
 
     if (!nextSheets.size) throw new Error("The workbook does not contain readable worksheets.");
     state.sheets = nextSheets;
+    state.dataModified = false;
     state.currentSheet = nextSheets.keys().next().value;
     state.sourceName = cleanFileStem(sourceName);
     elements.searchInput.value = "";
@@ -255,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
     notify("Opening spreadsheet…", "info", false);
     try {
       const buffer = await file.arrayBuffer();
-      const workbook = XLSX.read(buffer, { type: "array", cellDates: true });
+      const workbook = XLSX.read(buffer, { type: "array", cellDates: true, cellNF: true, cellFormula: true });
       loadWorkbook(workbook, file.name, file.size);
       notify("Spreadsheet opened locally in your browser.", "success");
     } catch (error) {
@@ -268,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.sheets.clear();
     state.currentSheet = "";
     state.sourceName = "spreadsheet";
+    state.dataModified = false;
     elements.fileInput.value = "";
     elements.searchInput.value = "";
     elements.fileInfo.textContent = "No spreadsheet selected.";
@@ -303,6 +372,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function sortRows() {
+    if (preventUnsafeRowMovement()) return;
     const rows = currentRows();
     if (rows.length < 3) {
       notify("There are not enough rows to sort.", "info");
@@ -322,6 +392,7 @@ document.addEventListener("DOMContentLoaded", () => {
       return String(a).localeCompare(String(b), undefined, { numeric: true, sensitivity: "base" }) * direction;
     });
     state.sheets.set(state.currentSheet, [header, ...data]);
+    state.dataModified = true;
     renderTable();
     notify("Rows sorted.", "success");
   }
@@ -330,21 +401,26 @@ document.addEventListener("DOMContentLoaded", () => {
     const rows = currentRows();
     let changed = 0;
     rows.forEach((row) => row.forEach((value, index) => {
-      const trimmed = String(value ?? "").trim();
-      if (trimmed !== value) changed += 1;
-      row[index] = trimmed;
+      if (formulaFor(row, index) || typeof value !== "string") return;
+      const trimmed = value.trim();
+      if (trimmed !== value) {
+        changed += 1;
+        row[index] = trimmed;
+      }
     }));
+    if (changed) state.dataModified = true;
     renderTable();
     notify(`${changed} cell${changed === 1 ? "" : "s"} trimmed.`, "success");
   }
 
   function removeDuplicates() {
+    if (preventUnsafeRowMovement()) return;
     const rows = currentRows();
     const seen = new Set();
     const data = [];
     let removed = 0;
     rows.slice(1).forEach((row) => {
-      const key = JSON.stringify(row.map((value) => String(value ?? "").trim()));
+      const key = JSON.stringify(row.map((_value, index) => cellText(row, index).trim()));
       if (seen.has(key)) removed += 1;
       else {
         seen.add(key);
@@ -352,15 +428,18 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
     state.sheets.set(state.currentSheet, [rows[0], ...data]);
+    if (removed) state.dataModified = true;
     renderTable();
     notify(`${removed} duplicate row${removed === 1 ? "" : "s"} removed.`, "success");
   }
 
   function removeEmptyRows() {
+    if (preventUnsafeRowMovement()) return;
     const rows = currentRows();
-    const data = rows.slice(1).filter((row) => row.some((value) => String(value ?? "").trim() !== ""));
+    const data = rows.slice(1).filter(rowHasData);
     const removed = rows.length - 1 - data.length;
     state.sheets.set(state.currentSheet, [rows[0], ...data]);
+    if (removed) state.dataModified = true;
     renderTable();
     notify(`${removed} empty row${removed === 1 ? "" : "s"} removed.`, "success");
   }
@@ -369,6 +448,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const rows = currentRows();
     const width = Math.max(1, ...rows.map((row) => row.length));
     rows.push(Array(width).fill(""));
+    state.dataModified = true;
     elements.searchInput.value = "";
     renderTable();
     elements.sheetTable.querySelector("tbody tr:last-child td:nth-child(2)")?.focus();
@@ -385,7 +465,7 @@ document.addEventListener("DOMContentLoaded", () => {
     state.sheets.forEach((rows) => {
       const width = Math.max(1, ...rows.map((row) => row.length));
       for (let index = 0; index < width; index += 1) {
-        const header = displayHeader(rows[0]?.[index], index);
+        const header = displayHeader(cellText(rows[0], index), index);
         if (!headerKeys.has(header)) {
           headerKeys.add(header);
           headers.push(header);
@@ -398,9 +478,9 @@ document.addEventListener("DOMContentLoaded", () => {
     const merged = [[sourceHeader, ...headers]];
 
     state.sheets.forEach((rows, sheetName) => {
-      const localHeaders = rows[0].map((value, index) => displayHeader(value, index));
+      const localHeaders = rows[0].map((_value, index) => displayHeader(cellText(rows[0], index), index));
       rows.slice(1).forEach((row) => {
-        if (!row.some((value) => String(value ?? "").trim() !== "")) return;
+        if (!rowHasData(row)) return;
         const lookup = new Map(localHeaders.map((header, index) => [header, row[index] ?? ""]));
         merged.push([sheetName, ...headers.map((header) => lookup.get(header) ?? "")]);
       });
@@ -408,10 +488,15 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const name = uniqueSheetName("Merged");
     state.sheets.set(name, normalizeRows(merged));
+    state.dataModified = true;
     state.currentSheet = name;
     elements.searchInput.value = "";
     refreshWorkspace();
-    notify(`Created ${name} with ${Math.max(0, merged.length - 1)} rows.`, "success");
+    notify(
+      `Created ${name} with ${Math.max(0, merged.length - 1)} rows.` +
+        (workbookHasFormulas() ? " Formula cells use saved results in the merged sheet; original formulas remain on their source sheets." : ""),
+      "success",
+    );
   }
 
   function rowsToRecords(rows) {
@@ -419,7 +504,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const used = new Set();
     const width = Math.max(1, ...rows.map((row) => row.length));
     for (let index = 0; index < width; index += 1) {
-      const base = displayHeader(rows[0]?.[index], index);
+      const base = displayHeader(cellText(rows[0], index), index);
       let header = base;
       let suffix = 2;
       while (used.has(header)) {
@@ -446,8 +531,32 @@ document.addEventListener("DOMContentLoaded", () => {
   function buildWorkbook() {
     const workbook = XLSX.utils.book_new();
     state.sheets.forEach((rows, name) => {
-      XLSX.utils.book_append_sheet(workbook, XLSX.utils.aoa_to_sheet(rows), name.slice(0, 31));
+      const worksheet = XLSX.utils.aoa_to_sheet(rows, { cellDates: true });
+      rows.forEach((row, r) => {
+        const formulas = rowFormulas.get(row);
+        if (!formulas) return;
+        formulas.forEach((original, c) => {
+          const reference = XLSX.utils.encode_cell({ r, c });
+          const cell = { ...original };
+          if (state.dataModified) {
+            // Clear old cached results when the spreadsheet may have changed.
+            delete cell.v;
+            delete cell.w;
+          }
+          worksheet[reference] = cell;
+          const range = XLSX.utils.decode_range(worksheet["!ref"] || reference);
+          range.s.r = Math.min(range.s.r, r);
+          range.s.c = Math.min(range.s.c, c);
+          range.e.r = Math.max(range.e.r, r);
+          range.e.c = Math.max(range.e.c, c);
+          worksheet["!ref"] = XLSX.utils.encode_range(range);
+        });
+      });
+      XLSX.utils.book_append_sheet(workbook, worksheet, name.slice(0, 31));
     });
+    if (workbookHasFormulas()) {
+      workbook.Workbook = { CalcPr: { calcMode: "auto", fullCalcOnLoad: true, forceFullCalc: true } };
+    }
     return workbook;
   }
 
@@ -456,7 +565,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       const bytes = XLSX.write(buildWorkbook(), { bookType: "xlsx", type: "array" });
       downloadBlob(new Blob([bytes], { type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" }), `${state.sourceName}-edited.xlsx`);
-      notify("XLSX workbook downloaded.", "success");
+      notify(
+        state.dataModified && workbookHasFormulas()
+          ? "XLSX downloaded with formulas preserved. Recalculate formulas when opening the file in Excel or Calc."
+          : "XLSX workbook downloaded.",
+        "success",
+      );
     } catch (error) {
       console.error(error);
       notify("The XLSX workbook could not be created.", "error");
@@ -468,14 +582,24 @@ document.addEventListener("DOMContentLoaded", () => {
     const worksheet = XLSX.utils.aoa_to_sheet(currentRows());
     const csv = XLSX.utils.sheet_to_csv(worksheet);
     downloadBlob(new Blob(["\ufeff", csv], { type: "text/csv;charset=utf-8" }), `${state.sourceName}-${cleanFileStem(state.currentSheet)}.csv`);
-    notify("CSV file downloaded.", "success");
+    notify(
+      workbookHasFormulas()
+        ? "CSV downloaded. Formula results use the last saved values and are not recalculated."
+        : "CSV file downloaded.",
+      "success",
+    );
   }
 
   function downloadJson() {
     if (!state.sheets.size) return;
     const json = JSON.stringify(rowsToRecords(currentRows()), null, 2);
     downloadBlob(new Blob([json], { type: "application/json;charset=utf-8" }), `${state.sourceName}-${cleanFileStem(state.currentSheet)}.json`);
-    notify("JSON file downloaded.", "success");
+    notify(
+      workbookHasFormulas()
+        ? "JSON downloaded. Formula results use the last saved values and are not recalculated."
+        : "JSON file downloaded.",
+      "success",
+    );
   }
 
   elements.dropZone.addEventListener("click", () => elements.fileInput.click());
@@ -512,7 +636,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const rows = currentRows();
     if (!rows[rowIndex]) return;
     while (rows[rowIndex].length <= columnIndex) rows[rowIndex].push("");
-    rows[rowIndex][columnIndex] = cell.textContent ?? "";
+    const entered = cell.textContent ?? "";
+    let formulas = rowFormulas.get(rows[rowIndex]);
+    if (entered.trim().startsWith("=") && entered.trim().length > 1) {
+      if (!formulas) {
+        formulas = new Map();
+        rowFormulas.set(rows[rowIndex], formulas);
+      }
+      formulas.set(columnIndex, { t: "n", f: entered.trim().slice(1) });
+      rows[rowIndex][columnIndex] = "";
+    } else {
+      formulas?.delete(columnIndex);
+      rows[rowIndex][columnIndex] = parseEditedValue(entered);
+    }
+    state.dataModified = true;
     updateStats();
   });
   elements.sheetTable.addEventListener("paste", (event) => {
