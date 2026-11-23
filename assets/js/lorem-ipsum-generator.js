@@ -108,10 +108,11 @@ function initLoremIpsumGenerator() {
   }
 
   function getQuantity() {
-    const value = Number(quantity.value);
+    const raw = quantity.value.trim();
+    const value = Number(raw);
 
-    if (!Number.isInteger(value) || value < 1 || value > 100) {
-      throw new Error("Quantity must be between 1 and 100.");
+    if (!/^\d+$/.test(raw) || !Number.isInteger(value) || value < 1 || value > 100) {
+      throw new Error("Quantity must be a whole number between 1 and 100.");
     }
 
     return value;
@@ -135,25 +136,27 @@ function initLoremIpsumGenerator() {
     let result = "";
 
     if (type.value === "words") {
-      result = Array.from({ length: amount }, randomWord).join(" ");
+      const openingWords = startLorem.checked
+        ? loremOpening.replace(/[.,]/g, "").split(" ").slice(0, amount)
+        : [];
+      const remaining = amount - openingWords.length;
+      result = [
+        ...openingWords,
+        ...Array.from({ length: remaining }, randomWord),
+      ].join(" ");
     } else if (type.value === "sentences") {
-      result = Array.from({ length: amount }, createSentence).join(" ");
+      const openingSentences = startLorem.checked ? [loremOpening] : [];
+      result = [
+        ...openingSentences,
+        ...Array.from({ length: amount - openingSentences.length }, createSentence),
+      ].join(" ");
     } else {
       result = Array.from({ length: amount }, createParagraph).join("\n\n");
-    }
 
-    if (startLorem.checked) {
-      if (type.value === "paragraphs") {
-        const paragraphs = result ? result.split(/\n\s*\n/) : [];
-
-        if (paragraphs.length) {
-          paragraphs[0] = `${loremOpening} ${paragraphs[0]}`;
-          result = paragraphs.join("\n\n");
-        } else {
-          result = loremOpening;
-        }
-      } else {
-        result = result ? `${loremOpening} ${result}` : loremOpening;
+      if (startLorem.checked) {
+        const paragraphs = result.split(/\n\s*\n/);
+        paragraphs[0] = `${loremOpening} ${paragraphs[0]}`;
+        result = paragraphs.join("\n\n");
       }
     }
 
