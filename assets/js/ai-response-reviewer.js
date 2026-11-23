@@ -7,10 +7,18 @@
   function setMessage(text, type = "success") { const box = $("reviewMessage"); box.textContent = text; box.className = `message message-${type}`; }
   function count(pattern, text) { return (text.match(pattern) || []).length; }
 
+  function invalidateReview() {
+    if (!reportText) return;
+    reportText = "";
+    $("reviewSummary").replaceChildren();
+    $("reviewResults").replaceChildren();
+    setMessage("Inputs changed. Run the review again.", "info");
+  }
+
   function analyze() {
     const task = $("reviewTask").value.trim();
     const response = $("reviewResponse").value.trim();
-    if (!response) { setMessage("Paste an AI response before reviewing it.", "error"); $("reviewResponse").focus(); return; }
+    if (!response) { invalidateReview(); setMessage("Paste an AI response before reviewing it.", "error"); $("reviewResponse").focus(); return; }
 
     const words = response.split(/\s+/).filter(Boolean).length;
     const numbers = count(/\b\d+(?:[.,]\d+)?%?|[$€£]\s?\d+(?:[.,]\d+)?/g, response);
@@ -35,9 +43,13 @@
     setMessage("Review completed. Verify every highlighted point before relying on the response.");
   }
 
+  ["reviewTask", "reviewResponse"].forEach(id => {
+    $(id).addEventListener("input", invalidateReview);
+    $(id).addEventListener("change", invalidateReview);
+  });
   $("reviewBtn").addEventListener("click", analyze);
-  $("reviewExampleBtn").addEventListener("click", () => { $("reviewTask").value = "Explain whether this investment is guaranteed to grow next year."; $("reviewResponse").value = "This investment will definitely grow by 12% in 2027. It is proven to be safe and there is no possibility of loss. Contact adviser@example.com for details."; setMessage("Example loaded."); });
+  $("reviewExampleBtn").addEventListener("click", () => { invalidateReview(); $("reviewTask").value = "Explain whether this investment is guaranteed to grow next year."; $("reviewResponse").value = "This investment will definitely grow by 12% in 2027. It is proven to be safe and there is no possibility of loss. Contact adviser@example.com for details."; setMessage("Example loaded."); });
   $("reviewClearBtn").addEventListener("click", () => { $("reviewTask").value = ""; $("reviewResponse").value = ""; $("reviewSummary").textContent = ""; $("reviewResults").innerHTML = "<div class=\"review-item\"><strong>Ready when you are</strong><p>Run the review to generate a practical verification checklist.</p></div>"; reportText = ""; });
-  $("reviewCopyBtn").addEventListener("click", async () => { if (!reportText) return setMessage("Review a response first.", "error"); await navigator.clipboard.writeText(reportText); setMessage("Review copied."); });
-  $("reviewDownloadBtn").addEventListener("click", () => { if (!reportText) return setMessage("Review a response first.", "error"); const url = URL.createObjectURL(new Blob([reportText], {type:"text/plain;charset=utf-8"})); const a = document.createElement("a"); a.href = url; a.download = "xavert-ai-response-review.txt"; a.click(); URL.revokeObjectURL(url); setMessage("Review downloaded."); });
+  $("reviewCopyBtn").addEventListener("click", async () => { if (!reportText) return setMessage("Review a response first.", "error"); try { if (typeof window.xavertCopyText === "function") await window.xavertCopyText(reportText); else await navigator.clipboard.writeText(reportText); setMessage("Review copied."); } catch (error) { console.error("Review copy failed:", error); setMessage("Unable to copy. Check clipboard permissions.", "error"); } });
+  $("reviewDownloadBtn").addEventListener("click", () => { if (!reportText) return setMessage("Review a response first.", "error"); const url = URL.createObjectURL(new Blob([reportText], {type:"text/plain;charset=utf-8"})); const a = document.createElement("a"); a.href = url; a.download = "xavert-ai-response-review.txt"; document.body.appendChild(a); a.click(); a.remove(); window.setTimeout(() => URL.revokeObjectURL(url), 1000); setMessage("Review downloaded."); });
 })();

@@ -14,6 +14,13 @@
     return $(id).value.trim() || fallback;
   }
 
+  function invalidateBrief() {
+    if ($("briefOutput").value) {
+      $("briefOutput").value = "";
+      message("Inputs changed. Build the brief again.", "info");
+    }
+  }
+
   function build() {
     if (!value("briefGoal", "")) {
       message("Describe the result you need before building the brief.", "error");
@@ -40,8 +47,14 @@
     message("Brief created. Review it before using it with an AI.");
   }
 
+  fields.forEach((id) => {
+    $(id).addEventListener("input", invalidateBrief);
+    $(id).addEventListener("change", invalidateBrief);
+  });
+
   $("buildBriefBtn").addEventListener("click", build);
   $("briefExampleBtn").addEventListener("click", () => {
+    invalidateBrief();
     $("briefGoal").value = "Compare three internet plans and recommend the best option for a family that works from home.";
     $("briefAudience").value = "A non-technical household";
     $("briefFormat").value = "Table";
@@ -56,16 +69,28 @@
   $("briefClearBtn").addEventListener("click", () => {
     fields.forEach((id) => { const el = $(id); if (el.tagName === "SELECT") el.selectedIndex = 0; else el.value = ""; });
     $("briefOutput").value = "";
+    message("Fields cleared.", "info");
   });
   $("briefCopyBtn").addEventListener("click", async () => {
     if (!$("briefOutput").value) return message("Build a brief first.", "error");
-    await navigator.clipboard.writeText($("briefOutput").value);
-    message("Brief copied.");
+    try {
+      if (typeof window.xavertCopyText === "function") {
+        await window.xavertCopyText($("briefOutput").value);
+      } else {
+        await navigator.clipboard.writeText($("briefOutput").value);
+      }
+      message("Brief copied.");
+    } catch (error) {
+      console.error("Brief copy failed:", error);
+      message("Unable to copy. Check clipboard permissions.", "error");
+    }
   });
   $("briefDownloadBtn").addEventListener("click", () => {
     if (!$("briefOutput").value) return message("Build a brief first.", "error");
     const url = URL.createObjectURL(new Blob([$("briefOutput").value], { type: "text/plain;charset=utf-8" }));
-    const link = document.createElement("a"); link.href = url; link.download = "xavert-ai-brief.txt"; link.click(); URL.revokeObjectURL(url);
+    const link = document.createElement("a"); link.href = url; link.download = "xavert-ai-brief.txt";
+    document.body.appendChild(link); link.click(); link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(url), 1000);
     message("Brief downloaded.");
   });
 })();
