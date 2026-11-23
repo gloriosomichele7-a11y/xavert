@@ -1016,8 +1016,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       }
 
+      // An OCR operation may have been cancelled while the preview image decoded.
+      if (token !== state.operationToken || !state.processing) {
+        return;
+      }
+
       renderResult(settings);
       await renderPreview(true);
+
+      // The preview itself is asynchronous; do not revive a cancelled result.
+      if (token !== state.operationToken || !state.processing) {
+        return;
+      }
 
       setProcessing(false);
       hideProgress();
@@ -1238,6 +1248,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     state.operationToken += 1;
+    invalidateResult();
     setProcessing(false);
     hideProgress();
     await terminateWorker();

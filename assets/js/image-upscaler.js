@@ -835,9 +835,12 @@ document.addEventListener("DOMContentLoaded", () => {
       showProgress("Preparing final image…", 100);
 
       const aiImage = await imageFromDataUrl(dataUrl);
+      if (token !== state.operationToken || !state.processing) return;
+
       const finalCanvas = createFinalCanvas(aiImage);
       const finalDataUrl = canvasToDataUrl(finalCanvas);
       const finalImage = await imageFromDataUrl(finalDataUrl);
+      if (token !== state.operationToken || !state.processing) return;
 
       state.outputDataUrl = finalDataUrl;
       state.outputImage = finalImage;

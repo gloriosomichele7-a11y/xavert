@@ -271,7 +271,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function selectFile(file) {
-    if (!file) {
+    if (!file || state.isProcessing) {
       return;
     }
 
@@ -293,16 +293,20 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    const token = ++state.operationToken;
     let dimensions;
 
     try {
       dimensions = await readImageDimensions(file);
     } catch (error) {
+      if (token !== state.operationToken) return;
       console.error("Background Remover image decode failed:", error);
       notify("This image could not be decoded by your browser.", "error");
       elements.imageInput.value = "";
       return;
     }
+
+    if (token !== state.operationToken) return;
 
     const pixels = dimensions.width * dimensions.height;
     const pixelLimit = getPixelLimit();
@@ -322,7 +326,6 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
-    state.operationToken += 1;
     state.file = file;
     state.sourceWidth = dimensions.width;
     state.sourceHeight = dimensions.height;
