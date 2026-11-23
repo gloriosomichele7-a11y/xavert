@@ -145,13 +145,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function payload(text) {
     const t = String(text || "").trim();
-    if (/^https?:\/\//i.test(t)) { try { const u = new URL(t); return { type: "URL", url: u.href, details: { Protocol: u.protocol.replace(":", "").toUpperCase(), Host: u.host, Path: `${u.pathname}${u.search}${u.hash}` } }; } catch {} }
+    if (/^https?:\/\//i.test(t)) { try { const u = new URL(t); if (u.username || u.password) return { type: "Text", url: "", details: {} }; return { type: "URL", url: u.href, details: { Protocol: u.protocol.replace(":", "").toUpperCase(), Host: u.host, Path: `${u.pathname}${u.search}${u.hash}` } }; } catch {} }
     if (/^WIFI:/i.test(t)) { const f = escapedFields(t.replace(/^WIFI:/i, "").replace(/;;$/, "")); return { type: "Wi-Fi", url: "", details: { SSID: f.S || "", Security: f.T || "Open / unspecified", Password: f.P || "", Hidden: /^true$/i.test(f.H || "") ? "Yes" : "No" } }; }
     if (/^mailto:/i.test(t)) { try { const u = new URL(t); return { type: "Email", url: "", details: { To: decodeURIComponent(u.pathname || ""), Subject: u.searchParams.get("subject") || "", CC: u.searchParams.get("cc") || "", Body: u.searchParams.get("body") || "" } }; } catch {} }
     if (/^tel:/i.test(t)) return { type: "Phone", url: "", details: { Number: t.replace(/^tel:/i, "") } };
-    if (/^(sms:|smsto:)/i.test(t)) { const v = t.replace(/^(sms:|smsto:)/i, ""), [n, ...m] = v.split(":"); return { type: "SMS", url: "", details: { Number: n || "", Message: m.join(":") } }; }
+    if (/^(sms:|smsto:)/i.test(t)) {
+      const value = t.replace(/^(sms:|smsto:)/i, "");
+      const queryIndex = value.indexOf("?");
+      const address = queryIndex < 0 ? value : value.slice(0, queryIndex);
+      const [number, ...legacyMessage] = address.split(":");
+      const parameters = queryIndex < 0 ? null : new URLSearchParams(value.slice(queryIndex + 1));
+      return { type: "SMS", url: "", details: {
+        Number: number || "",
+        Message: parameters?.get("body") ?? legacyMessage.join(":"),
+      } };
+    }
     if (/^geo:/i.test(t)) { const c = t.replace(/^geo:/i, "").split("?")[0].split(","); return { type: "Geo", url: "", details: { Latitude: c[0] || "", Longitude: c[1] || "", Altitude: c[2] || "" } }; }
-    if (/^BEGIN:VCARD/i.test(t)) { const d = {}; for (const line of t.split(/\r?\n/)) { const i = line.indexOf(":"); if (i <= 0) continue; const k = line.slice(0, i).toUpperCase(), v = line.slice(i + 1).trim(); if (k === "FN") d.Name = v; else if (k.startsWith("TEL")) d.Phone = v; else if (k.startsWith("EMAIL")) d.Email = v; else if (k.startsWith("ORG")) d.Organization = v; else if (k === "URL") d.URL = v; } return { type: "vCard", url: "", details: d }; }
+    if (/^BEGIN:VCARD/i.test(t)) {
+      const details = {};
+      const unescapeField = (value) => value.replace(/\\([nN,;\\])/g, (_, char) => /n/i.test(char) ? "\n" : char);
+      for (const line of t.split(/\r?\n/)) {
+        const index = line.indexOf(":");
+        if (index <= 0) continue;
+        const key = line.slice(0, index).toUpperCase();
+        const value = unescapeField(line.slice(index + 1).trim());
+        if (key === "FN") details.Name = value;
+        else if (key.startsWith("TEL")) details.Phone = value;
+        else if (key.startsWith("EMAIL")) details.Email = value;
+        else if (key.startsWith("ORG")) details.Organization = value;
+        else if (key === "URL") details.URL = value;
+      }
+      return { type: "vCard", url: "", details };
+    }
     return { type: "Text", url: "", details: {} };
   }
 
