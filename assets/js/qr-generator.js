@@ -202,7 +202,7 @@ function initQrGenerator() {
       return "";
     }
 
-    return value.replace(/[-:]/g, "").replace("T", "") + "00";
+    return value.replace(/[-:]/g, "") + "00";
   }
 
   function detectType(value) {
@@ -383,11 +383,19 @@ function initQrGenerator() {
         return null;
       }
 
+      const eventId = window.crypto?.randomUUID?.() ||
+        `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+      const timestamp = new Date().toISOString()
+        .replace(/[-:]/g, "")
+        .replace(/\.\d{3}Z$/, "Z");
+
       return [
         "BEGIN:VCALENDAR",
         "VERSION:2.0",
         "PRODID:-//XAVERT//QR Event//EN",
         "BEGIN:VEVENT",
+        `UID:${eventId}`,
+        `DTSTAMP:${timestamp}`,
         `SUMMARY:${escapeIcal(title.value.trim())}`,
         `DTSTART:${formatDateForCalendar(start.value)}`,
         `DTEND:${formatDateForCalendar(end.value)}`,
@@ -396,7 +404,7 @@ function initQrGenerator() {
         "END:VCALENDAR",
       ]
         .filter(Boolean)
-        .join("\n");
+        .join("\r\n");
     }
 
     return null;

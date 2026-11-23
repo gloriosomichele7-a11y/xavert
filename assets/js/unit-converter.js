@@ -401,8 +401,13 @@ function initUnitConverter() {
         return;
       }
 
-      const base = value * fromDefinition.factor;
-      result = base / toDefinition.factor;
+      result = value * (fromDefinition.factor / toDefinition.factor);
+    }
+
+    if (!Number.isFinite(result)) {
+      invalidateResult();
+      notify("The result is outside the supported numeric range.", "error");
+      return;
     }
 
     const sourceText = `${formatNumber(value)} ${getUnitLabel(category.value, from)}`;
