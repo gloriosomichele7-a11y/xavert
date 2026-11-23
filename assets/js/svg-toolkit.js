@@ -382,7 +382,7 @@ document.addEventListener("DOMContentLoaded", () => {
       root.setAttribute("xmlns:xlink", XLINK_NS);
     }
 
-    Array.from(root.querySelectorAll("*")).forEach((node) => {
+    [root, ...Array.from(root.querySelectorAll("*"))].forEach((node) => {
       const tag = node.localName.toLowerCase();
 
       if (prohibitedTags.has(tag)) {
@@ -418,7 +418,7 @@ document.addEventListener("DOMContentLoaded", () => {
           return;
         }
 
-        if (name === "style") {
+        if (name === "style" || /url\s*\(/i.test(value)) {
           const cleaned = sanitizeCssValue(value, report);
 
           if (cleaned.trim()) {
@@ -969,7 +969,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.previewImage.removeAttribute("src");
   }
 
-  async function renderPreview(svgText) {
+  async function renderPreview(svgText, token = state.operationToken) {
     revokePreview();
 
     const blob = new Blob([svgText], {
@@ -983,6 +983,10 @@ document.addEventListener("DOMContentLoaded", () => {
         reject(new Error("The processed SVG could not be rendered."));
       elements.previewImage.src = state.previewUrl;
     });
+
+    if (token !== state.operationToken) {
+      return;
+    }
 
     elements.previewImage.hidden = false;
     elements.previewEmpty.hidden = true;
@@ -1116,7 +1120,10 @@ document.addEventListener("DOMContentLoaded", () => {
       renderColors(colors);
       updatePngDimensionsFromStats();
       applyPreviewBackground();
-      await renderPreview(finalSvg);
+      await renderPreview(finalSvg, token);
+      if (token !== state.operationToken) {
+        return;
+      }
 
       elements.resultSection.hidden = false;
       elements.processBtn.disabled = false;
@@ -1151,6 +1158,9 @@ document.addEventListener("DOMContentLoaded", () => {
       return;
     }
 
+    invalidateResult();
+    const token = state.operationToken;
+
     const validType =
       file.type === "image/svg+xml" || /\.svg$/i.test(file.name || "");
 
@@ -1172,6 +1182,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const text = await file.text();
+      if (token !== state.operationToken) {
+        return;
+      }
       parseSvgDocument(text);
 
       state.fileName = file.name || "graphic.svg";
@@ -1182,6 +1195,9 @@ document.addEventListener("DOMContentLoaded", () => {
       updateSourceCount();
       setInlineMessage("SVG loaded. Review settings and process it.", "info");
     } catch (error) {
+      if (token !== state.operationToken) {
+        return;
+      }
       console.error("SVG file read failed:", error);
       notify(
         error instanceof Error ? error.message : "The SVG file could not be read.",
@@ -1191,6 +1207,9 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   async function pasteSvg() {
+    invalidateResult();
+    const token = state.operationToken;
+
     if (!navigator.clipboard?.readText) {
       notify(
         "Clipboard reading is unavailable. Paste SVG markup directly into the source editor.",
@@ -1201,6 +1220,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     try {
       const text = await navigator.clipboard.readText();
+      if (token !== state.operationToken) {
+        return;
+      }
 
       if (!text.trim()) {
         notify("The clipboard does not contain text.", "error");
@@ -1215,6 +1237,9 @@ document.addEventListener("DOMContentLoaded", () => {
       updateSourceCount();
       showActionSuccess("SVG pasted from clipboard.");
     } catch (error) {
+      if (token !== state.operationToken) {
+        return;
+      }
       console.warn("SVG clipboard read failed:", error);
       notify(
         "Clipboard SVG could not be read. Paste it directly into the source editor.",
@@ -1256,6 +1281,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function invalidateResult() {
     state.operationToken += 1;
+    elements.processBtn.disabled = false;
     state.processedSvg = "";
     state.sanitizedSvg = "";
     state.stats = null;
@@ -1568,11 +1594,7 @@ document.addEventListener("DOMContentLoaded", () => {
     elements.removeMetadataCheck,
     elements.removeCommentsCheck,
   ].forEach((control) => {
-    control.addEventListener("change", () => {
-      if (state.processedSvg) {
-        invalidateResult();
-      }
-    });
+    control.addEventListener("change", invalidateResult);
   });
 
   elements.previewBackground.addEventListener(

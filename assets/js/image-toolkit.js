@@ -513,6 +513,11 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
           }
 
+          if (mimeType && blob.type !== mimeType) {
+            reject(new Error("The browser does not support the requested image export format."));
+            return;
+          }
+
           if (!blob.type.startsWith("image/")) {
             reject(
               new Error(
@@ -532,6 +537,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   async function setSelectedFile(file) {
     generationToken += 1;
+    processBtn.disabled = true;
+    processBtn.removeAttribute("aria-busy");
 
     const error = validateFile(file);
 
@@ -579,6 +586,7 @@ document.addEventListener("DOMContentLoaded", () => {
       selectedWidth = decoded.width;
       selectedHeight = decoded.height;
       selectedInputFormat = formatLabel;
+      processBtn.disabled = false;
 
       const frameNote =
         ["GIF", "HEIC", "HEIF"].includes(formatLabel)
@@ -592,6 +600,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
       setInlineMessage("");
     } catch (loadError) {
+      if (token !== generationToken) {
+        return;
+      }
+
       console.error("Image decode failed:", loadError);
 
       selectedFile = null;
@@ -1118,6 +1130,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.showMessage("Action completed successfully.", "success");
       }
     } catch (error) {
+      if (token !== generationToken) {
+        return;
+      }
+
       console.error("Image processing failed:", error);
 
       resetResult();
@@ -1254,6 +1270,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function clearTool() {
     generationToken += 1;
+    processBtn.disabled = true;
+    processBtn.removeAttribute("aria-busy");
 
     selectedFile = null;
     releaseSelectedImage();
