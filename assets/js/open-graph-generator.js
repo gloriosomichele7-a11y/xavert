@@ -108,6 +108,14 @@ function initOpenGraphGenerator() {
       throw new Error(`${label} must use HTTP or HTTPS.`);
     }
 
+    if (url.username || url.password) {
+      throw new Error(`${label} must not contain a username or password.`);
+    }
+
+    if (label === "Page URL") {
+      url.hash = "";
+    }
+
     return url.href;
   }
 

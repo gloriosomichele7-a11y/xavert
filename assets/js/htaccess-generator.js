@@ -63,14 +63,15 @@ function initHtaccessGenerator() {
     setInlineMessage("");
   }
 
-  function normalizeDomain(value) {
-    return value
+  function normalizeDomain(value, preserveWww = false) {
+    const host = value
       .trim()
       .replace(/^https?:\/\//i, "")
-      .replace(/^www\./i, "")
       .replace(/\/.*$/, "")
       .replace(/:\d+$/, "")
       .trim();
+
+    return preserveWww ? host : host.replace(/^www\./i, "");
   }
 
   function isValidDomain(value) {
@@ -101,7 +102,7 @@ function initHtaccessGenerator() {
       case "www":
         return [
           "RewriteEngine On",
-          `RewriteCond %{HTTP_HOST} !^www\\.${escapedDomain}$ [NC]`,
+          `RewriteCond %{HTTP_HOST} ^${escapedDomain}$ [NC]`,
           `RewriteRule ^ https://www.${domainValue}%{REQUEST_URI} [L,R=301]`,
         ].join("\n");
 
@@ -171,7 +172,7 @@ function initHtaccessGenerator() {
 
   function generateHtaccess({ announce = true } = {}) {
     const type = configType.value;
-    const normalizedDomain = normalizeDomain(domain.value);
+    const normalizedDomain = normalizeDomain(domain.value, type === "redirect301");
 
     if (requiresDomain(type) && !isValidDomain(normalizedDomain)) {
       resetResult();
