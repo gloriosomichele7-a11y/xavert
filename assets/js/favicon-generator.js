@@ -279,7 +279,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     root.setAttribute("xmlns", SVG_NS);
 
-    Array.from(root.querySelectorAll("*")).forEach((node) => {
+    [root, ...Array.from(root.querySelectorAll("*"))].forEach((node) => {
       const tag = node.localName.toLowerCase();
 
       if (prohibitedSvgTags.has(tag)) {

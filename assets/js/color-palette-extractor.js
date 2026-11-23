@@ -348,9 +348,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function getReadableTextColor(red, green, blue) {
-    return getRelativeLuminance(red, green, blue) > 0.45
-      ? "#111827"
-      : "#FFFFFF";
+    const luminance = getRelativeLuminance(red, green, blue);
+    const darkLuminance = getRelativeLuminance(17, 24, 39);
+    const darkContrast = (Math.max(luminance, darkLuminance) + 0.05) /
+      (Math.min(luminance, darkLuminance) + 0.05);
+    const lightContrast = 1.05 / (luminance + 0.05);
+    return darkContrast >= lightContrast ? "#111827" : "#FFFFFF";
   }
 
   function getColorDistance(firstColor, secondColor) {
@@ -560,11 +563,9 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     return clusters
-      .filter(function (cluster) {
-        return cluster.count > 0;
-      })
-      .map(function (cluster, index) {
-        const centroid = centroids[index];
+      .map((cluster, index) => ({ cluster, centroid: centroids[index] }))
+      .filter(({ cluster }) => cluster.count > 0)
+      .map(function ({ cluster, centroid }) {
         const red = clampChannel(centroid.red);
         const green = clampChannel(centroid.green);
         const blue = clampChannel(centroid.blue);

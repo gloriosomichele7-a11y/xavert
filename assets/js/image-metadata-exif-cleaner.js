@@ -1254,10 +1254,21 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       elements.cleanStatus.hidden = false;
-      elements.downloadCleanBtn.disabled = false;
       elements.cleanBtn.disabled = false;
 
-      showActionSuccess("Clean image copy created and verified.");
+      if (verification.sensitive > 0) {
+        state.cleanedBlob = null;
+        elements.downloadCleanBtn.disabled = true;
+        notify("Sensitive metadata is still present. This copy cannot be downloaded as cleaned.", "error");
+        return;
+      }
+
+      elements.downloadCleanBtn.disabled = false;
+      if (verification.sensitive === null) {
+        notify("Clean copy created, but metadata verification was unavailable. Inspect it before sharing.", "info");
+      } else {
+        showActionSuccess("Clean image copy created and verified.");
+      }
     } catch (error) {
       console.error("Metadata cleaning failed:", error);
       elements.cleanBtn.disabled = false;
