@@ -146,7 +146,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       if (
-        index === 0 &&
+        !startLine && headers.size === 0 && invalidLines.length === 0 &&
         (/^HTTP\/\d(?:\.\d)?\s+\d{3}\b/i.test(line) ||
           /^[A-Z]+\s+\S+\s+HTTP\/\d(?:\.\d)?$/i.test(line))
       ) {
@@ -263,9 +263,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const combined = `${cacheControl} ${pragma}`.toLowerCase();
 
-    if (combined.includes("no-store") || combined.includes("no-cache")) {
+    if (combined.includes("no-store")) {
       return {
-        status: "Disabled",
+        status: "No storage",
+        detail: cacheControl || pragma,
+      };
+    }
+
+    if (combined.includes("no-cache")) {
+      return {
+        status: "Revalidation required",
         detail: cacheControl || pragma,
       };
     }
@@ -308,6 +315,8 @@ document.addEventListener("DOMContentLoaded", () => {
       warnings.push(
         "Strict-Transport-Security is present without a valid max-age directive.",
       );
+    } else if (hsts && /(?:^|;)\s*max-age\s*=\s*0(?:\s*;|\s*$)/i.test(hsts)) {
+      warnings.push("Strict-Transport-Security sets max-age=0, disabling HSTS protection.");
     }
 
     const frameOptions = getFirstHeader(
@@ -356,6 +365,7 @@ document.addEventListener("DOMContentLoaded", () => {
       `Headers: ${parsed.headers.size}`,
       `Security Score: ${security.percentage}%`,
       `Security Rating: ${security.rating}`,
+      "Note: The score measures header presence only, not configuration strength or overall site security.",
       `Missing Security Headers: ${security.missing.length}`,
       `Cache: ${cache.status}`,
       "",

@@ -261,6 +261,7 @@ function initPasswordToolkit() {
   let passwordHistory = [];
   let currentPassphrase = "";
   let currentHash = "";
+  let hashGenerationVersion = 0;
 
   function setMessage(element, text = "", type = "info") {
     const safeType = ["success", "error", "info"].includes(type)
@@ -914,15 +915,17 @@ function initPasswordToolkit() {
       return;
     }
 
+    const algorithm = hashAlgorithm.value;
+    const requestVersion = ++hashGenerationVersion;
     generateHashBtn.disabled = true;
 
     try {
       const buffer = encoder.encode(text);
+      const hashBuffer = await cryptoApi.subtle.digest(algorithm, buffer);
 
-      const hashBuffer = await cryptoApi.subtle.digest(
-        hashAlgorithm.value,
-        buffer,
-      );
+      if (requestVersion !== hashGenerationVersion) {
+        return;
+      }
 
       currentHash = Array.from(new Uint8Array(hashBuffer))
         .map((byte) => byte.toString(16).padStart(2, "0"))
@@ -932,8 +935,12 @@ function initPasswordToolkit() {
       hashResult.hidden = false;
       copyHashBtn.disabled = false;
 
-      notify(hashMessage, `${hashAlgorithm.value} hash generated.`, "success");
+      notify(hashMessage, `${algorithm} hash generated.`, "success");
     } catch (error) {
+      if (requestVersion !== hashGenerationVersion) {
+        return;
+      }
+
       currentHash = "";
       hashResult.textContent = "";
       hashResult.hidden = true;
@@ -945,11 +952,15 @@ function initPasswordToolkit() {
         "error",
       );
     } finally {
-      generateHashBtn.disabled = false;
+      if (requestVersion === hashGenerationVersion) {
+        generateHashBtn.disabled = false;
+      }
     }
   }
 
   function clearHash() {
+    hashGenerationVersion += 1;
+    generateHashBtn.disabled = false;
     hashInput.value = "";
     hashAlgorithm.value = "SHA-256";
     currentHash = "";
@@ -993,6 +1004,8 @@ function initPasswordToolkit() {
   }
 
   function invalidateHash() {
+    hashGenerationVersion += 1;
+    generateHashBtn.disabled = false;
     currentHash = "";
     hashResult.textContent = "";
     hashResult.hidden = true;

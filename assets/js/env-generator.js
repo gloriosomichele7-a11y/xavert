@@ -352,6 +352,11 @@ function initEnvGenerator() {
       return true;
     }
 
+    // Database ports must be decimal integers, not scientific or hex notation.
+    if (!/^\d+$/.test(value)) {
+      return false;
+    }
+
     const port = Number(value);
     return Number.isInteger(port) && port >= 1 && port <= 65535;
   }
