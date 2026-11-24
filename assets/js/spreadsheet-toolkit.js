@@ -539,9 +539,13 @@ document.addEventListener("DOMContentLoaded", () => {
           const reference = XLSX.utils.encode_cell({ r, c });
           const cell = { ...original };
           if (state.dataModified) {
-            // Clear old cached results when the spreadsheet may have changed.
+            // Drop stale cached results and their value type together.
+            // SheetJS otherwise serializes numeric formula cells with no
+            // cached value as t="e" (an error cell), even when the formula
+            // itself is valid. Excel/Calc will recalculate on opening.
             delete cell.v;
             delete cell.w;
+            delete cell.t;
           }
           worksheet[reference] = cell;
           const range = XLSX.utils.decode_range(worksheet["!ref"] || reference);
