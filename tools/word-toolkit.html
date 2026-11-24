@@ -439,7 +439,7 @@
     <script src="../assets/js/related-tools.js" defer></script>
     <script src="../assets/js/vendor/jszip.min.js" defer></script>
     <script
-      src="https://cdn.jsdelivr.net/npm/mammoth@1.12.1/mammoth.browser.min.js"
+      src="../assets/js/vendor/mammoth.browser.min.js"
       defer
     ></script>
     <script src="../assets/js/word-toolkit.js" defer></script>
@@ -744,9 +744,10 @@
                 Download Metadata-Cleaned DOCX
               </button>
               <p class="word-warning-summary">
-                The cleaned copy removes common package metadata and custom property
-                values. It does not delete document content, comments or tracked
-                revisions, because doing so would change the document itself.
+                The cleaned copy removes common package metadata, custom property
+                values and the document thumbnail preview. It does not remove
+                document content, comments, tracked revisions or metadata embedded
+                in images and other attachments.
               </p>
             </div>
           </div>
@@ -803,8 +804,7 @@
         <h3>Privacy First</h3>
         <p class="about-privacy">
           Your DOCX file is processed locally in your browser and is not uploaded to
-          XAVERT. The Mammoth conversion library is loaded from a third-party CDN when
-          this page is opened.
+          XAVERT. The Word conversion library is served directly by XAVERT.
         </p>
       </section>
 

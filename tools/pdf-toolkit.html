@@ -218,32 +218,25 @@
       }
     </style>
 
-    <script
-      src="https://cdn.jsdelivr.net/npm/pdf-lib@1.17.1/dist/pdf-lib.min.js"
-      defer
-    ></script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"
-      defer
-    ></script>
+    <script src="../assets/js/vendor/pdf-lib.min.js" defer></script>
+    <script src="../assets/js/vendor/jspdf-pdf-toolkit-2.5.1.min.js" defer></script>
     <script
       src="../assets/js/vendor/jszip.min.js"
       defer
     ></script>
     <script>
-      const PDFJS_VERSION = "6.2.108";
-      const PDFJS_CDN_BASE = `https://cdn.jsdelivr.net/npm/pdfjs-dist@${PDFJS_VERSION}/`;
-
+      // Self-host the exact PDF.js version previously loaded from jsDelivr.
+      const PDFJS_LOCAL_BASE = "../assets/js/vendor/pdfjs-dist/";
       window.__xavertPdfJsConfig = Object.freeze({
-        workerSrc: `${PDFJS_CDN_BASE}legacy/build/pdf.worker.min.mjs`,
-        cMapUrl: `${PDFJS_CDN_BASE}cmaps/`,
-        iccUrl: `${PDFJS_CDN_BASE}iccs/`,
-        standardFontDataUrl: `${PDFJS_CDN_BASE}standard_fonts/`,
-        wasmUrl: `${PDFJS_CDN_BASE}wasm/`,
+        workerSrc: `${PDFJS_LOCAL_BASE}legacy/build/pdf.worker.min.mjs`,
+        cMapUrl: `${PDFJS_LOCAL_BASE}cmaps/`,
+        iccUrl: `${PDFJS_LOCAL_BASE}iccs/`,
+        standardFontDataUrl: `${PDFJS_LOCAL_BASE}standard_fonts/`,
+        wasmUrl: `${PDFJS_LOCAL_BASE}wasm/`,
       });
 
       window.__xavertPdfJsReady = import(
-        `${PDFJS_CDN_BASE}legacy/build/pdf.min.mjs`
+        `${PDFJS_LOCAL_BASE}legacy/build/pdf.min.mjs`
       )
         .then((pdfjsLib) => {
           window.pdfjsLib = pdfjsLib;
@@ -840,12 +833,10 @@
         <h3>Privacy First</h3>
         <p class="about-privacy">
           Your selected PDF files are processed locally in your browser and are
-          not uploaded to or stored on XAVERT servers. This page downloads PDF
-          libraries from jsDelivr; OCR also downloads its engine and language
-          resources when you run OCR. These requests provide software and
-          resources to your browser and do not include your PDF file. The
-          provider's own terms and policies apply to those CDN requests:
-          <a class="pdf-privacy-link" href="https://www.jsdelivr.com/terms" target="_blank" rel="noopener noreferrer">jsDelivr Terms &amp; Policies</a>.
+          not uploaded to or stored on XAVERT servers. Core PDF libraries are
+          served directly by XAVERT. The optional OCR feature may download its
+          engine and language resources from external providers when you run
+          OCR; those requests do not include your selected PDF file.
         </p>
       </section>
 

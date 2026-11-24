@@ -1246,7 +1246,42 @@ document.addEventListener("DOMContentLoaded", () => {
         );
       }
 
+      Object.keys(cleanZip.files)
+        .filter((name) => /^docProps\/thumbnail\.[^/]+$/i.test(name))
+        .forEach((name) => cleanZip.remove(name));
+
+      for (const path of ["_rels/.rels", "[Content_Types].xml"]) {
+        const entry = cleanZip.file(path);
+        if (!entry) continue;
+        const xml = parseXml(await entry.async("text"));
+        Array.from(xml.getElementsByTagName("*"))
+          .filter((element) => path === "_rels/.rels"
+            ? (element.getAttribute("Type") || "").endsWith("/metadata/thumbnail")
+            : /^\/docProps\/thumbnail\.[^/]+$/i.test(element.getAttribute("PartName") || ""))
+          .forEach((element) => element.remove());
+        cleanZip.file(path, new XMLSerializer().serializeToString(xml));
+      }
+
       showProgress("Compressing cleaned DOCX…", 70);
+      const thumbnailPaths = Object.keys(cleanZip.files).filter((name) =>
+        /^docProps\/thumbnail\.[^/]+$/i.test(name),
+      );
+      thumbnailPaths.forEach((name) => cleanZip.remove(name));
+
+      for (const part of ["_rels/.rels", "[Content_Types].xml"]) {
+        const entry = cleanZip.file(part);
+        if (!entry) continue;
+        const xml = parseXml(await entry.async("text"));
+        Array.from(xml.getElementsByTagName("*"))
+          .filter((element) =>
+            part === "_rels/.rels"
+              ? (element.getAttribute("Type") || "").endsWith("/metadata/thumbnail")
+              : /^\/docProps\/thumbnail\.[^/]+$/i.test(element.getAttribute("PartName") || ""),
+          )
+          .forEach((element) => element.remove());
+        cleanZip.file(part, new XMLSerializer().serializeToString(xml));
+      }
+
       const blob = await cleanZip.generateAsync({
         type: "blob",
         mimeType:
