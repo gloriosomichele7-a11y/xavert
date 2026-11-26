@@ -85,6 +85,7 @@
           }
         </script>
         <link rel="stylesheet" href="assets/css/home-next.css" />
+        <link rel="stylesheet" href="assets/css/xavert-smart.css" />
       </head>
 
       <body>
@@ -209,6 +210,49 @@
               <p data-i18n="pathAiText">Guided collaboration that turns your goal into a useful, verifiable result.</p>
               <span class="path-link" data-i18n="openAi">Open AI workspace →</span>
             </a>
+          </div>
+        </section>
+
+        <section class="xsmart-section" id="xavert-smart-start" aria-labelledby="xsmart-title">
+          <div class="xsmart-top">
+            <span class="section-kicker">SMART START</span>
+            <h2 id="xsmart-title">Start with your file or text.</h2>
+            <p>Find a suitable XAVERT tool without guessing which one to open.</p>
+          </div>
+          <div class="xsmart-layout">
+            <div>
+              <input id="xsmart-file" type="file" hidden aria-label="Choose a file for tool suggestions" />
+              <button type="button" class="xsmart-drop" id="xsmart-drop" aria-describedby="xsmart-file-note">
+                <span class="xsmart-drop-icon" aria-hidden="true">&#8593;</span>
+                <strong>Drop a file or choose one</strong>
+                <span id="xsmart-file-note">PDF, DOCX, XLSX, CSV, images, code and more</span>
+              </button>
+            </div>
+            <div class="xsmart-paste">
+              <label for="xsmart-text">Or paste text to identify it</label>
+              <textarea id="xsmart-text" rows="3" maxlength="20000" placeholder="Paste JSON, XML, SQL, code or plain text..."></textarea>
+              <button type="button" id="xsmart-analyze" class="xsmart-analyze">Find matching tools</button>
+            </div>
+          </div>
+          <p id="xsmart-status" class="xsmart-status" role="status" aria-live="polite">File types and pasted text are examined locally. Nothing is uploaded.</p>
+          <div id="xsmart-result" class="xsmart-results" hidden></div>
+        </section>
+
+        <section class="xsmart-saved-section" id="xavert-my-tools" aria-labelledby="xsmart-saved-title" hidden>
+          <div class="xsmart-saved-header">
+            <span class="section-kicker">MY XAVERT</span>
+            <h2 id="xsmart-saved-title">Your quick access.</h2>
+            <p class="xsmart-muted">Favorites and recently opened tools are stored only in this browser.</p>
+          </div>
+          <div class="xsmart-saved-columns">
+            <div id="xsmart-fav-area" class="xsmart-area" hidden>
+              <h3>Favorites</h3>
+              <div id="xsmart-favorites" class="xsmart-saved-list"></div>
+            </div>
+            <div id="xsmart-recent-area" class="xsmart-area" hidden>
+              <h3>Recently used <button type="button" id="xsmart-clear-recent" class="xsmart-clear">Clear history</button></h3>
+              <div id="xsmart-recents" class="xsmart-saved-list"></div>
+            </div>
           </div>
         </section>
 
@@ -950,6 +994,7 @@
         </footer>
         <script src="assets/js/home-i18n.js" defer></script>
         <script src="assets/js/index.js" defer></script>
+        <script src="assets/js/xavert-smart.js" defer></script>
         <script src="assets/js/pwa-install.js" defer></script>
       </body>
     </html>

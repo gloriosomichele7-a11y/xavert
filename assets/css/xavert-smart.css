@@ -1,0 +1,105 @@
+/* XAVERT Smart Start and saved tools */
+.xsmart-section,
+.xsmart-saved-section {
+  width: min(1190px, calc(100% - 40px));
+  margin: 0 auto 34px;
+  padding: clamp(22px, 3.4vw, 36px);
+  border: 1px solid var(--x-line, #e1e6ec);
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 12px 36px rgba(15, 23, 42, .055);
+}
+.xsmart-section[hidden],
+.xsmart-saved-section[hidden],
+.xsmart-results[hidden],
+.xsmart-area[hidden] { display: none !important; }
+.xsmart-top h2,
+.xsmart-saved-section h2 {
+  margin: 5px 0 7px;
+  color: #101827;
+  font-size: clamp(23px, 3vw, 33px);
+  letter-spacing: -.035em;
+  line-height: 1.15;
+}
+.xsmart-top p, .xsmart-muted { margin: 0; color: #5b6677; font-size: 14px; }
+.xsmart-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 21px; }
+.xsmart-drop {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 178px;
+  padding: 22px 18px;
+  gap: 7px;
+  border: 2px dashed #d1d9e3;
+  border-radius: 17px;
+  background: #f9fafc;
+  color: #101827;
+  text-align: center;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+}
+.xsmart-drop:hover, .xsmart-drop.xsmart-dragging {
+  background: #fff5f5;
+  border-color: #dc2626;
+}
+.xsmart-drop:focus-visible, .xsmart-analyze:focus-visible,
+.xsmart-suggestion:focus-visible, .xsmart-saved-link:focus-visible,
+.xsmart-remove:focus-visible, .xavert-save-tool:focus-visible {
+  outline: 3px solid rgba(220,38,38,.3);
+  outline-offset: 3px;
+}
+.xsmart-drop-icon { font-size: 26px; color: #dc2626; line-height: 1; }
+.xsmart-drop strong { font-size: 15px; }
+.xsmart-drop span:last-child { color: #657187; font-size: 12px; }
+.xsmart-paste { display: flex; flex-direction: column; min-width: 0; gap: 9px; }
+.xsmart-paste label { font-size: 14px; font-weight: 800; }
+.xsmart-paste textarea {
+  width: 100%; min-width: 0; flex: 1; min-height: 101px; padding: 13px;
+  border: 1px solid #d1d9e3; border-radius: 13px;
+  color: #101827; background: #fff; font: inherit; font-size: 14px;
+  resize: vertical;
+}
+.xsmart-analyze {
+  min-height: 42px; padding: 9px 16px; border: 0;
+  border-radius: 11px; background: #dc2626; color: #fff;
+  font-size: 13px; font-weight: 800;
+}
+.xsmart-analyze:hover { background: #b91c1c; }
+.xsmart-status { min-height: 1.3em; margin: 14px 0 0; color: #546071; font-size: 13px; }
+.xsmart-results { margin-top: 8px; padding: 16px; border: 1px solid #f0d7d7; border-radius: 14px; background: #fffafa; }
+.xsmart-results > strong { display: block; font-size: 15px; }
+.xsmart-results > p { margin: 7px 0 12px; color: #566274; font-size: 13px; }
+.xsmart-suggestion-list { display: flex; flex-wrap: wrap; gap: 9px; }
+.xsmart-suggestion, .xsmart-saved-link {
+  display: inline-flex; align-items: center; min-height: 40px;
+  padding: 9px 13px; border: 1px solid #e1e6ec; border-radius: 10px;
+  background: #fff; color: #17233a; font-size: 13px; font-weight: 750;
+  text-decoration: none;
+}
+.xsmart-suggestion:hover, .xsmart-saved-link:hover { border-color: #dc2626; color: #b91c1c; }
+.xsmart-saved-header { margin-bottom: 15px; }
+.xsmart-saved-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+.xsmart-area h3 { margin: 0 0 10px; font-size: 15px; }
+.xsmart-saved-list { display: flex; flex-wrap: wrap; gap: 9px; }
+.xsmart-saved-item { display: inline-flex; gap: 0; }
+.xsmart-saved-item .xsmart-saved-link { border-radius: 10px 0 0 10px; }
+.xsmart-remove { padding: 7px 10px; border: 1px solid #e1e6ec; border-left: 0; border-radius: 0 10px 10px 0; background: #fafafa; color: #64748b; font-size: 12px; font-weight: 700; }
+.xsmart-remove:hover { background: #fff1f2; color: #b91c1c; }
+.xsmart-clear { margin-left: 10px; padding: 4px; background: transparent; border: 0; color: #b91c1c; font-size: 12px; text-decoration: underline; }
+.xavert-save-tool {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: 38px; margin-left: 8px; padding: 7px 11px;
+  border: 1px solid #d5dce5; border-radius: 10px;
+  background: #fff; color: #344255; font: inherit; font-size: 12px; font-weight: 800;
+  cursor: pointer;
+}
+.xavert-save-tool:hover, .xavert-save-tool[aria-pressed="true"] { background: #fff1f2; border-color: #dc2626; color: #b91c1c; }
+@media (max-width: 720px) {
+  .xsmart-section, .xsmart-saved-section { width: calc(100% - 26px); padding: 20px; border-radius: 18px; }
+  .xsmart-layout, .xsmart-saved-columns { grid-template-columns: 1fr; }
+  .xsmart-drop { min-height: 140px; }
+  .xavert-save-tool { margin-left: 4px; }
+}
+@media (prefers-reduced-motion: reduce) { .xsmart-drop { transition: none; } }

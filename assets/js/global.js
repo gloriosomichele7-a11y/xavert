@@ -396,6 +396,56 @@
     true,
   );
 
+  // Shared local tool history and bookmarking. No document or file data is stored.
+  function initSavedTool() {
+    const found = /^\/tools\/([a-z0-9-]+\.html)$/i.exec(window.location.pathname);
+    if (!found) return;
+    const href = `tools/${found[1].toLowerCase()}`;
+    const keyFavs = "xavert-favs-v1";
+    const keyRecents = "xavert-recent-v1";
+    const valid = (value) => typeof value === "string" && /^tools\/[a-z0-9-]+\.html$/.test(value);
+    function read(key) {
+      try {
+        const value = JSON.parse(localStorage.getItem(key) || "[]");
+        return Array.isArray(value) ? [...new Set(value.filter(valid))].slice(0, 20) : [];
+      } catch { return []; }
+    }
+    function write(key, items) {
+      try { localStorage.setItem(key, JSON.stringify(items)); return true; }
+      catch { return false; }
+    }
+    try {
+      const testKey = "xavert-storage-probe";
+      localStorage.setItem(testKey, "1");
+      localStorage.removeItem(testKey);
+    } catch { return; }
+    write(keyRecents, [href, ...read(keyRecents).filter((entry) => entry !== href)].slice(0, 12));
+    const actions = document.querySelector(".xavert-shell-actions");
+    if (!actions || actions.querySelector(".xavert-save-tool")) return;
+    const stylesheet = document.createElement("link");
+    stylesheet.rel = "stylesheet";
+    stylesheet.href = "../assets/css/xavert-smart.css";
+    document.head.appendChild(stylesheet);
+    const save = document.createElement("button");
+    save.className = "xavert-save-tool";
+    save.type = "button";
+    function refresh() {
+      const active = read(keyFavs).includes(href);
+      save.setAttribute("aria-pressed", String(active));
+      save.textContent = active ? "\u2605 Saved" : "\u2606 Save tool";
+      save.title = active ? "Remove from favorites" : "Add to favorites";
+    }
+    save.addEventListener("click", () => {
+      const favorites = read(keyFavs);
+      const updated = favorites.includes(href)
+        ? favorites.filter((entry) => entry !== href)
+        : [href, ...favorites].slice(0, 20);
+      if (write(keyFavs, updated)) refresh();
+    });
+    actions.appendChild(save);
+    refresh();
+  }
+
   document.addEventListener("input", clearPersistentSuccess, true);
   document.addEventListener("change", clearPersistentSuccess, true);
 
@@ -403,6 +453,7 @@
     "DOMContentLoaded",
     () => {
       buildSiteChrome();
+      initSavedTool();
       document.body.classList.add("xavert-ready");
     },
     { once: true },
