@@ -44,11 +44,66 @@
     }
   }
 
+  // Preflight protects complex PDFs that pdf-lib cannot safely round-trip.
+  // In particular, copying pages can drop interactive form fields, and saving
+  // a cryptographically signed PDF invalidates its existing signature.
+  function rejectUnsupportedFeatures(pdf) {
+    const { PDFName, PDFDict, PDFArray } = window.PDFLib || {};
+    if (!PDFName || !PDFDict || !PDFArray || !pdf.catalog || !pdf.context) return;
+
+    const name = (value) => PDFName.of(value);
+    const catalog = pdf.catalog;
+    const context = pdf.context;
+    const hasCatalogEntry = (key) => Boolean(catalog.get(name(key)));
+
+    if (hasCatalogEntry("Perms")) {
+      throw new Error("This PDF contains document-level permissions or a digital certification. It cannot be safely edited here. Keep the original file.");
+    }
+
+    // Signatures may exist outside AcroForm, or live in an indirect dictionary.
+    for (const [, object] of context.enumerateIndirectObjects()) {
+      if (!(object instanceof PDFDict)) continue;
+      if (object.has(name("ByteRange")) || String(object.get(name("FT")) || "") === "/Sig") {
+        throw new Error("This PDF contains a digital signature. Editing would invalidate it. Use a PDF editor with signature-aware support.");
+      }
+    }
+
+    const acroRef = catalog.get(name("AcroForm"));
+    if (acroRef) {
+      const acro = context.lookup(acroRef, PDFDict);
+      if (acro) {
+        const fieldsRef = acro.get(name("Fields"));
+        const fields = fieldsRef ? context.lookup(fieldsRef, PDFArray) : null;
+        if (acro.has(name("XFA")) || (fields && fields.size() > 0)) {
+          throw new Error("This PDF has fillable form fields or XFA content. Editing could remove form data, so it is blocked in this Beta workspace.");
+        }
+      }
+    }
+
+    if (hasCatalogEntry("Outlines") || hasCatalogEntry("StructTreeRoot") ||
+        hasCatalogEntry("OCProperties") || hasCatalogEntry("PageLabels")) {
+      throw new Error("This PDF includes bookmarks, accessibility structure, layers or custom page labels. These features may be lost by this Beta workspace, so editing is blocked.");
+    }
+
+    const namesRef = catalog.get(name("Names"));
+    if (namesRef) {
+      const names = context.lookup(namesRef, PDFDict);
+      if (names && (names.has(name("EmbeddedFiles")) || names.has(name("JavaScript")))) {
+        throw new Error("This PDF contains embedded files or document scripts. Editing is not supported in this Beta workspace.");
+      }
+    }
+  }
+
   async function loadPdf(bytes) {
     if (!pdfReady()) throw new Error("The PDF engine did not load. Check your connection and refresh.");
     try {
-      return await window.PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+      const document = await window.PDFLib.PDFDocument.load(bytes, { updateMetadata: false });
+      rejectUnsupportedFeatures(document);
+      return document;
     } catch (error) {
+      if (error?.message && (/^This PDF (contains|has|includes)/.test(error.message))) {
+        throw error;
+      }
       throw new Error("This PDF could not be opened. It may be damaged, encrypted, or use unsupported features.");
     }
   }
