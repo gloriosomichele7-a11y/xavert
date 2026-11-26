@@ -1,0 +1,172 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PDF Workspace Beta | XAVERT</title>
+    <meta name="description" content="Edit the same PDF through multiple steps in your browser. Rotate, remove, reorder, append and number pages or apply watermarks." />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="theme-color" content="#dc2626" />
+    <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
+    <link rel="stylesheet" href="../assets/css/global.css" />
+    <link rel="stylesheet" href="../assets/css/components.css" />
+    <link rel="stylesheet" href="../assets/css/responsive.css" />
+    <style>
+      .xw-intro {max-width:780px;margin:0 auto 24px;text-align:center;color:#4b5563;line-height:1.6}
+      .xw-shell {max-width:1080px;margin:0 auto 36px;display:grid;gap:20px}
+      .xw-card {border:1px solid #e1e6ec;border-radius:20px;background:#fff;box-shadow:0 12px 30px rgba(15,23,42,.045);padding:clamp(18px,3vw,26px)}
+      .xw-eyebrow {color:#b91c1c;font-size:12px;font-weight:850;letter-spacing:.08em;text-transform:uppercase}
+      .xw-heading {margin:8px 0 6px;font-size:clamp(21px,3vw,27px);line-height:1.25;color:#101827}
+      .xw-help {color:#596477;margin:4px 0 18px;font-size:14px;line-height:1.55}
+      .xw-drop {display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:180px;padding:24px;text-align:center;gap:10px;border:2px dashed #cbd5e1;border-radius:16px;background:#f8fafc;transition:background .15s,border-color .15s;cursor:pointer}
+      .xw-drop:hover,.xw-drop:focus-within,.xw-drop.is-dragover {border-color:#dc2626;background:#fff1f2}
+      .xw-upload-button {display:inline-flex;align-items:center;justify-content:center;padding:11px 20px;border-radius:11px;background:#dc2626;color:#fff;font-weight:800}
+      .xw-drop small {color:#64748b;font-size:13px}
+      .xw-file-input {position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}
+      .xw-drop:focus-within .xw-upload-button {outline:3px solid #fca5a5;outline-offset:3px}
+      .xw-toolbar {display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap}
+      .xw-file-title {font-weight:850;overflow-wrap:anywhere;color:#101827}
+      .xw-meta {display:flex;gap:10px;flex-wrap:wrap;color:#64748b;font-size:13px;margin-top:3px}
+      .xw-actions {display:flex;gap:10px;flex-wrap:wrap}
+      .xw-btn {border:1px solid #d5dce7;border-radius:11px;background:#fff;color:#233048;padding:10px 15px;min-height:43px;line-height:1.2;font-size:14px;font-weight:800;cursor:pointer;text-decoration:none}
+      .xw-btn:hover:not(:disabled) {border-color:#aab8ca;background:#f8fafc}
+      .xw-btn:focus-visible {outline:3px solid #fda4af;outline-offset:2px}
+      .xw-btn:disabled {opacity:.55;cursor:not-allowed}
+      .xw-btn-main {background:#dc2626;border-color:#dc2626;color:#fff}
+      .xw-btn-main:hover:not(:disabled) {background:#b91c1c;border-color:#b91c1c}
+      .xw-grid {display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:20px;align-items:start}
+      .xw-label {display:block;margin:14px 0 7px;font-size:14px;font-weight:780;color:#253044}
+      .xw-field {width:100%;min-height:44px;padding:10px 12px;border:1px solid #cbd5e1;border-radius:10px;background:#fff;color:#111827;font:inherit}
+      .xw-field:focus {border-color:#dc2626;outline:3px solid #fee2e2}
+      .xw-field[type="file"] {font-size:13px;max-width:100%}
+      .xw-option {padding:2px 0 10px}
+      .xw-option[hidden],.xw-shell [hidden] {display:none!important}
+      .xw-actions-bottom {display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+      .xw-preview {height:475px;width:100%;border:1px solid #dce3eb;border-radius:12px;background:#f1f5f9}
+      .xw-preview-note {min-height:170px;display:grid;place-items:center;padding:18px;text-align:center;background:#f8fafc;color:#64748b;border-radius:12px}
+      .xw-history {margin:12px 0 0;padding-left:22px;color:#374151;font-size:14px;line-height:1.75}
+      .xw-status {border-radius:11px;padding:12px 15px;background:#f1f5f9;color:#334155;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+      .xw-status[data-type="success"] {background:#ecfdf5;color:#065f46}
+      .xw-status[data-type="error"] {background:#fff1f2;color:#991b1b}
+      .xw-warning {font-size:13px;line-height:1.6;color:#64748b}
+      @media(max-width:780px){.xw-grid{grid-template-columns:1fr}.xw-preview{height:350px}.xw-actions{width:100%}.xw-actions>.xw-btn{flex:1}.xw-toolbar{align-items:flex-start}}
+      @media(max-width:480px){.xw-preview{height:280px}.xw-btn{width:100%}.xw-actions-bottom .xw-btn{flex:1 1 100%}}
+    </style>
+    <script src="../assets/js/vendor/pdf-lib.min.js" defer></script>
+    <script src="../assets/js/pdf-workspace.js" defer></script>
+  </head>
+  <body data-tool="pdf-workspace">
+    <a class="xavert-skip-link" href="#xavert-main-content">Skip to main content</a>
+    <header class="xavert-site-header">
+      <a class="xavert-shell-brand" href="../" aria-label="XAVERT home">
+        <img src="../favicon.svg" alt="" width="34" height="34" /><span>XAVERT</span>
+      </a>
+      <nav class="xavert-shell-nav" aria-label="Main navigation">
+        <a href="../#services">Tools</a><a href="../work/">Work</a><a href="../ai/">AI</a>
+      </nav>
+      <div class="xavert-shell-actions"><a class="xavert-shell-home" href="../">Home</a></div>
+    </header>
+    <main class="container" id="xavert-main-content" tabindex="-1">
+      <a href="pdf-toolkit.html" class="back-link">← Back to PDF Toolkit</a>
+      <section class="tool-hero" aria-labelledby="tool-title">
+        <img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" decoding="async" />
+        <h1 id="tool-title" class="tool-title">PDF Workspace <span style="font-size:.42em;vertical-align:middle;color:#b91c1c">BETA</span></h1>
+      </section>
+      <p class="xw-intro">Edit one PDF across multiple steps. Upload it once, make changes, undo if needed, and download the final document. No account or file upload to a server.</p>
+      <div class="xw-shell">
+        <section class="xw-card" aria-labelledby="upload-heading">
+          <span class="xw-eyebrow">Step 1 · Your document</span>
+          <h2 class="xw-heading" id="upload-heading">Choose a PDF</h2>
+          <p class="xw-help">Your file stays in this browser session. Maximum supported size: 50 MB. Password-protected PDFs are not supported.</p>
+          <label class="xw-drop" id="xw-drop">
+            <span class="xw-upload-button">Select PDF file</span>
+            <strong>or drag and drop a PDF here</strong>
+            <small>Processing takes place locally on your device</small>
+            <input id="xw-file" class="xw-file-input" type="file" accept=".pdf,application/pdf" />
+          </label>
+        </section>
+        <section id="xw-workspace" hidden aria-label="PDF editing workspace">
+          <div class="xw-card xw-toolbar" style="margin-bottom:20px">
+            <div>
+              <div id="xw-name" class="xw-file-title">document.pdf</div>
+              <div class="xw-meta"><span id="xw-count">0 pages</span><span id="xw-size">0 MB</span></div>
+            </div>
+            <div class="xw-actions">
+              <button type="button" class="xw-btn" id="xw-undo" disabled>Undo last step</button>
+              <button type="button" class="xw-btn xw-btn-main" id="xw-download" disabled>Download final PDF</button>
+            </div>
+          </div>
+          <div class="xw-grid">
+            <section class="xw-card" aria-labelledby="edit-heading">
+              <span class="xw-eyebrow">Step 2 · Make changes</span>
+              <h2 class="xw-heading" id="edit-heading">Edit the document</h2>
+              <p class="xw-help">Each action updates the same PDF. You can apply several actions before downloading.</p>
+              <label class="xw-label" for="xw-operation">Choose an operation</label>
+              <select id="xw-operation" class="xw-field">
+                <option value="rotate">Rotate all pages</option>
+                <option value="delete">Delete pages</option>
+                <option value="keep">Keep selected pages</option>
+                <option value="reorder">Reorder pages</option>
+                <option value="append">Append another PDF</option>
+                <option value="numbers">Add page numbers</option>
+                <option value="watermark">Add a text watermark</option>
+              </select>
+              <div id="xw-operation-options">
+                <div class="xw-option" data-operation="rotate">
+                  <label class="xw-label" for="xw-rotation">Rotation</label>
+                  <select id="xw-rotation" class="xw-field"><option value="90">90° clockwise</option><option value="180">180°</option><option value="270">270° clockwise</option></select>
+                </div>
+                <div class="xw-option" data-operation="delete" hidden>
+                  <label class="xw-label" for="xw-page-list">Pages to delete</label>
+                  <input id="xw-page-list" class="xw-field" placeholder="Example: 2,4-6" autocomplete="off" />
+                  <p class="xw-warning">Use current page numbers. At least one page must remain.</p>
+                </div>
+                <div class="xw-option" data-operation="keep" hidden>
+                  <label class="xw-label" for="xw-page-list-keep">Pages to keep</label>
+                  <input id="xw-page-list-keep" class="xw-field" placeholder="Example: 1,3-5" autocomplete="off" />
+                </div>
+                <div class="xw-option" data-operation="reorder" hidden>
+                  <label class="xw-label" for="xw-page-order">New page order</label>
+                  <input id="xw-page-order" class="xw-field" placeholder="Example: 3,1,2" autocomplete="off" />
+                  <p class="xw-warning">List every current page exactly once. Example for three pages: 3,1,2.</p>
+                </div>
+                <div class="xw-option" data-operation="append" hidden>
+                  <label class="xw-label" for="xw-append-file">Second PDF to add at the end</label>
+                  <input id="xw-append-file" class="xw-field" type="file" accept=".pdf,application/pdf" />
+                </div>
+                <div class="xw-option" data-operation="numbers" hidden>
+                  <label class="xw-label" for="xw-start-number">First page number</label>
+                  <input id="xw-start-number" class="xw-field" type="number" min="1" max="100000" value="1" />
+                  <label class="xw-label" for="xw-number-position">Position</label>
+                  <select id="xw-number-position" class="xw-field"><option value="center">Bottom center</option><option value="left">Bottom left</option><option value="right">Bottom right</option></select>
+                </div>
+                <div class="xw-option" data-operation="watermark" hidden>
+                  <label class="xw-label" for="xw-watermark-text">Watermark text (basic Latin characters)</label>
+                  <input id="xw-watermark-text" class="xw-field" maxlength="70" placeholder="DRAFT" autocomplete="off" />
+                  <label class="xw-label" for="xw-opacity">Opacity percentage</label>
+                  <input id="xw-opacity" class="xw-field" type="number" min="10" max="70" step="5" value="25" />
+                </div>
+              </div>
+              <div class="xw-actions-bottom">
+                <button id="xw-apply" type="button" class="xw-btn xw-btn-main">Apply operation</button>
+                <button id="xw-reset" type="button" class="xw-btn">Clear workspace</button>
+              </div>
+              <h3 style="font-size:16px;margin:24px 0 8px">Applied operations</h3>
+              <ol class="xw-history" id="xw-history" aria-label="Operations completed"></ol>
+            </section>
+            <section class="xw-card" aria-labelledby="preview-heading">
+              <span class="xw-eyebrow">Step 3 · Review</span>
+              <h2 id="preview-heading" class="xw-heading">Current PDF preview</h2>
+              <p class="xw-help">Preview availability depends on your browser. Download the file to verify it in your preferred PDF reader.</p>
+              <p id="xw-preview-note" class="xw-preview-note">A preview will appear after you choose a PDF.</p>
+              <iframe id="xw-preview" class="xw-preview" title="Current PDF preview" referrerpolicy="no-referrer" hidden></iframe>
+            </section>
+          </div>
+        </section>
+        <p id="xw-status" class="xw-status" role="status" aria-live="polite">Ready.</p>
+        <p class="xw-warning">Beta limitations: this is not a certified digital-signature tool. Editing and re-saving PDFs may invalidate existing cryptographic signatures or affect advanced document features. Keep the original file and check the downloaded result. Your file is not sent to XAVERT servers.</p>
+      </div>
+    </main>
+    <footer class="xavert-footer-note">Powered by XAVERT</footer>
+  </body>
+</html>
