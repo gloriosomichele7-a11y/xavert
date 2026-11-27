@@ -22,6 +22,7 @@
   let previewUrl = null;
   let undoStack = [];
   let log = [];
+  let downloadCounter = 0;
 
   const fmtSize = (bytes) => `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
   const pdfReady = () => Boolean(window.PDFLib?.PDFDocument);
@@ -245,14 +246,32 @@
       undoStack = [];
       log = [];
       restoreHistory();
+      resetOperationInputs();
       displayPreview();
-      setStatus("PDF loaded. Choose an operation below.", "success");
+      setStatus(`Loaded ${currentName} (${count} ${count === 1 ? "page" : "pages"}). Choose an operation below.`, "success");
     } catch (error) {
-      setStatus(error.message || "Unable to read the selected file.", "error");
+      const previousFileNote = workingBytes
+        ? ` Your previous document (${currentName}) is still loaded; the download button will save that document.`
+        : "";
+      setStatus((error.message || "Unable to read the selected file.") + previousFileNote, "error");
     } finally {
       setBusy(false);
       elements.file.value = "";
     }
+  }
+
+  function resetOperationInputs() {
+    elements.operation.value = "rotate";
+    $("xw-rotation").value = "90";
+    $("xw-page-list").value = "";
+    $("xw-page-list-keep").value = "";
+    $("xw-page-order").value = "";
+    $("xw-start-number").value = "1";
+    $("xw-number-position").value = "center";
+    $("xw-watermark-text").value = "";
+    $("xw-opacity").value = "25";
+    elements.append.value = "";
+    applyAvailableOptions();
   }
 
   function applyAvailableOptions() {
@@ -466,30 +485,51 @@
 
   function download() {
     if (!workingBytes || busy) return;
-    const base = currentName.replace(/\.pdf$/i, "");
-    const blob = new Blob([workingBytes], { type: "application/pdf" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `${base}-xavert-edited.pdf`;
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.setTimeout(() => URL.revokeObjectURL(url), 30000);
-    setStatus("Download started. The edited PDF stays in this browser session.", "success");
+    // Distinguish each saved version (and a copy without edits) so a user
+    // doesn't accidentally upload a previous browser download named (1), (2)...
+    const base = currentName.replace(/\.pdf$/i, "")
+      .replace(/[<>:"/\\|?*\x00-\x1f]/g, "_").replace(/[.\s]+$/g, "").slice(0, 100) || "document";
+    const now = new Date();
+    const two = (n) => String(n).padStart(2, "0");
+    const stamp = `${now.getFullYear()}${two(now.getMonth() + 1)}${two(now.getDate())}`
+      + `-${two(now.getHours())}${two(now.getMinutes())}${two(now.getSeconds())}`;
+    downloadCounter += 1;
+    const version = log.length ? "edited" : "copy";
+    const fileName = `${base}-xavert-${version}-${pageCount}p-${stamp}-${two(downloadCounter)}.pdf`;
+    try {
+      const blob = new Blob([workingBytes], { type: "application/pdf" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      // Allow the browser time to consume the Blob before releasing it.
+      window.setTimeout(() => URL.revokeObjectURL(url), 60000);
+      const note = log.length ? "" : " No edits have been applied: this is a copy of the input PDF.";
+      setStatus(`Download requested: ${fileName}. Check your browser's Downloads list or selected save folder.${note}`, "success");
+    } catch (error) {
+      setStatus(`Could not start the download: ${error.message || "browser error"}. Try again or check browser download permissions.`, "error");
+    }
   }
 
   function reset() {
     if (busy) return;
     workingBytes = null;
+    currentName = "document.pdf";
     pageCount = 0;
     undoStack = [];
     log = [];
+    // Clear BOTH file inputs. Browsers may remember the last highlighted file
+    // in the system chooser, but no file remains selected in XAVERT.
+    elements.file.value = "";
     elements.append.value = "";
+    resetOperationInputs();
     restoreHistory();
     displayPreview();
     refreshUi();
-    setStatus("Workspace cleared. Files were not uploaded or saved to XAVERT servers.");
+    setStatus("Workspace cleared. No PDF is selected or loaded. Choose a new file to continue.");
   }
 
   elements.file.addEventListener("change", () => openFile(elements.file.files?.[0]));
