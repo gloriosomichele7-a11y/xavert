@@ -59,6 +59,11 @@
     if (hasCatalogEntry("Perms")) {
       throw new Error("This PDF contains document-level permissions or a digital certification. It cannot be safely edited here. Keep the original file.");
     }
+    if (hasCatalogEntry("OpenAction") || hasCatalogEntry("AA") ||
+        hasCatalogEntry("Collection") || hasCatalogEntry("AF") ||
+        hasCatalogEntry("Dests")) {
+      throw new Error("This PDF contains automatic actions, portfolios, associated files or internal destinations. These advanced features cannot be safely preserved in this Beta workspace.");
+    }
 
     // Signatures may exist outside AcroForm, or live in an indirect dictionary.
     for (const [, object] of context.enumerateIndirectObjects()) {
@@ -88,8 +93,43 @@
     const namesRef = catalog.get(name("Names"));
     if (namesRef) {
       const names = context.lookup(namesRef, PDFDict);
-      if (names && (names.has(name("EmbeddedFiles")) || names.has(name("JavaScript")))) {
-        throw new Error("This PDF contains embedded files or document scripts. Editing is not supported in this Beta workspace.");
+      if (names && (names.has(name("EmbeddedFiles")) || names.has(name("JavaScript")) ||
+          names.has(name("Dests")))) {
+        throw new Error("This PDF contains embedded files, document scripts or named destinations. Editing is not supported in this Beta workspace.");
+      }
+    }
+
+    // Annotation attachments, widgets, multimedia, and embedded actions are
+    // not equivalent to ordinary PDF comments. Page copying can sever their
+    // references even when the file still opens without a visible error.
+    const unsupportedAnnotations = new Set([
+      "/FileAttachment", "/RichMedia", "/3D", "/Movie", "/Sound",
+      "/Screen", "/Widget",
+    ]);
+    const unsafeActions = new Set([
+      "/JavaScript", "/Launch", "/Rendition", "/GoTo", "/GoToR", "/GoToE",
+    ]);
+    for (const page of pdf.getPages()) {
+      if (page.node.has(name("AA")) || page.node.has(name("AF"))) {
+        throw new Error("This PDF contains page-level actions or attachments that cannot be safely preserved in this Beta workspace.");
+      }
+      const annotationsRef = page.node.get(name("Annots"));
+      if (!annotationsRef) continue;
+      const annotations = context.lookup(annotationsRef, PDFArray);
+      if (!annotations) continue;
+      for (let index = 0; index < annotations.size(); index += 1) {
+        const annotation = context.lookup(annotations.get(index), PDFDict);
+        if (!annotation) continue;
+        const subtype = String(annotation.get(name("Subtype")) || "");
+        if (unsupportedAnnotations.has(subtype) || annotation.has(name("AA")) ||
+            annotation.has(name("FS")) || annotation.has(name("Dest"))) {
+          throw new Error("This PDF contains advanced annotations, file attachments or internal links that cannot be safely edited here.");
+        }
+        const actionRef = annotation.get(name("A"));
+        const action = actionRef ? context.lookup(actionRef, PDFDict) : null;
+        if (action && unsafeActions.has(String(action.get(name("S")) || ""))) {
+          throw new Error("This PDF contains advanced annotation actions or internal links that cannot be safely edited here.");
+        }
       }
     }
   }
@@ -229,8 +269,29 @@
     const next = await window.PDFLib.PDFDocument.create();
     const copied = await next.copyPages(source, indices);
     for (const page of copied) next.addPage(page);
-    if (source.getTitle()) next.setTitle(source.getTitle());
-    if (source.getAuthor()) next.setAuthor(source.getAuthor());
+    // Keep standard document metadata instead of silently dropping Subject,
+    // Keywords, Creator or CreationDate when pages are copied into a new PDF.
+    // Copy primitive values only: cross-document indirect references are unsafe.
+    const { PDFName, PDFDict, PDFString, PDFHexString } = window.PDFLib;
+    const sourceInfo = source.context.trailerInfo.Info;
+    const destinationInfo = next.context.trailerInfo.Info;
+    if (sourceInfo && destinationInfo) {
+      const from = source.context.lookup(sourceInfo, PDFDict);
+      const to = next.context.lookup(destinationInfo, PDFDict);
+      if (from && to) {
+        for (const key of [
+          "Title", "Author", "Subject", "Creator", "Producer",
+          "Keywords", "CreationDate", "Trapped",
+        ]) {
+          const pdfName = PDFName.of(key);
+          const value = from.get(pdfName);
+          if (value && (value instanceof PDFString || value instanceof PDFHexString ||
+                        value instanceof PDFName)) {
+            to.set(pdfName, value);
+          }
+        }
+      }
+    }
     return next;
   }
 
