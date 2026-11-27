@@ -303,6 +303,28 @@
     return value;
   }
 
+  // Convert coordinates in the visually rotated CropBox back to PDF page
+  // coordinates. The stamp text is rotated with the page to remain upright
+  // in standard PDF viewers, including 90/180/270-degree pages.
+  function visualStampLayout(page) {
+    const crop = page.getCropBox();
+    const rotation = ((page.getRotation().angle % 360) + 360) % 360;
+    if (![0, 90, 180, 270].includes(rotation)) {
+      throw new Error("This page has an unsupported rotation.");
+    }
+    const visualWidth = rotation % 180 ? crop.height : crop.width;
+    const visualHeight = rotation % 180 ? crop.width : crop.height;
+    function toPdf(x, y) {
+      switch (rotation) {
+        case 90: return { x: crop.x + crop.width - y, y: crop.y + x };
+        case 180: return { x: crop.x + crop.width - x, y: crop.y + crop.height - y };
+        case 270: return { x: crop.x + y, y: crop.y + crop.height - x };
+        default: return { x: crop.x + x, y: crop.y + y };
+      }
+    }
+    return { visualWidth, visualHeight, rotation, toPdf };
+  }
+
   async function performOperation(document, selected) {
     const { PDFDocument, degrees, StandardFonts, rgb } = window.PDFLib;
     const count = document.getPageCount();
@@ -350,10 +372,17 @@
           const text = String(i + start);
           const size = 10;
           const width = font.widthOfTextAtSize(text, size);
-          const { width: pageWidth } = page.getSize();
-          const x = position === "right" ? Math.max(12, pageWidth - width - 18)
-            : position === "left" ? 18 : (pageWidth - width) / 2;
-          page.drawText(text, { x, y: 16, size, font, color: rgb(0.25, 0.3, 0.38) });
+          const layout = visualStampLayout(page);
+          if (width > layout.visualWidth - 24 || layout.visualHeight < 28) {
+            throw new Error("This page is too small to place page numbers safely.");
+          }
+          const x = position === "right" ? layout.visualWidth - width - 18
+            : position === "left" ? 18 : (layout.visualWidth - width) / 2;
+          const point = layout.toPdf(x, 16);
+          page.drawText(text, {
+            x: point.x, y: point.y, size, font,
+            rotate: degrees(layout.rotation), color: rgb(0.25, 0.3, 0.38),
+          });
         }
         return { document, label: "Add page numbers" };
       }
@@ -363,13 +392,24 @@
         const opacity = selectedNumber("xw-opacity", 10, 70) / 100;
         const font = await document.embedFont(StandardFonts.HelveticaBold);
         for (const page of document.getPages()) {
-          const { width, height } = page.getSize();
-          const fontSize = Math.min(42, Math.max(14, width / 13));
+          const layout = visualStampLayout(page);
+          const availableWidth = layout.visualWidth - 24;
+          if (availableWidth <= 0) throw new Error("This page is too narrow for a watermark.");
+          let fontSize = Math.min(42, Math.max(14, layout.visualWidth / 13));
           // WinAnsi is intentionally used for the built-in font; unsupported glyphs show a clear error.
-          const textWidth = font.widthOfTextAtSize(text, fontSize);
+          let textWidth = font.widthOfTextAtSize(text, fontSize);
+          if (textWidth > availableWidth) {
+            fontSize *= availableWidth / textWidth;
+            if (fontSize < 8) {
+              throw new Error("Watermark text is too long for this page. Use a shorter label.");
+            }
+            textWidth = font.widthOfTextAtSize(text, fontSize);
+          }
+          const point = layout.toPdf((layout.visualWidth - textWidth) / 2, layout.visualHeight / 2);
           page.drawText(text, {
-            x: Math.max(10, (width - textWidth) / 2), y: height / 2,
-            size: fontSize, font, color: rgb(0.72, 0.14, 0.19), opacity,
+            x: point.x, y: point.y, size: fontSize, font,
+            rotate: degrees(layout.rotation),
+            color: rgb(0.72, 0.14, 0.19), opacity,
           });
         }
         return { document, label: "Apply text watermark" };
