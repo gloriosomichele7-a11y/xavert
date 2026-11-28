@@ -63,7 +63,7 @@
     if (hasCatalogEntry("OpenAction") || hasCatalogEntry("AA") ||
         hasCatalogEntry("Collection") || hasCatalogEntry("AF") ||
         hasCatalogEntry("Dests")) {
-      throw new Error("This PDF contains automatic actions, portfolios, associated files or internal destinations. These advanced features cannot be safely preserved in this Beta workspace.");
+      throw new Error("This PDF contains automatic actions, portfolios, associated files or internal destinations. These advanced features cannot be safely preserved in this workspace.");
     }
 
     // Signatures may exist outside AcroForm, or live in an indirect dictionary.
@@ -81,14 +81,14 @@
         const fieldsRef = acro.get(name("Fields"));
         const fields = fieldsRef ? context.lookup(fieldsRef, PDFArray) : null;
         if (acro.has(name("XFA")) || (fields && fields.size() > 0)) {
-          throw new Error("This PDF has fillable form fields or XFA content. Editing could remove form data, so it is blocked in this Beta workspace.");
+          throw new Error("This PDF has fillable form fields or XFA content. Editing could remove form data, so it is blocked in this workspace.");
         }
       }
     }
 
     if (hasCatalogEntry("Outlines") || hasCatalogEntry("StructTreeRoot") ||
         hasCatalogEntry("OCProperties") || hasCatalogEntry("PageLabels")) {
-      throw new Error("This PDF includes bookmarks, accessibility structure, layers or custom page labels. These features may be lost by this Beta workspace, so editing is blocked.");
+      throw new Error("This PDF includes bookmarks, accessibility structure, layers or custom page labels. These features may be lost by this workspace, so editing is blocked.");
     }
 
     const namesRef = catalog.get(name("Names"));
@@ -96,7 +96,7 @@
       const names = context.lookup(namesRef, PDFDict);
       if (names && (names.has(name("EmbeddedFiles")) || names.has(name("JavaScript")) ||
           names.has(name("Dests")))) {
-        throw new Error("This PDF contains embedded files, document scripts or named destinations. Editing is not supported in this Beta workspace.");
+        throw new Error("This PDF contains embedded files, document scripts or named destinations. Editing is not supported in this workspace.");
       }
     }
 
@@ -112,7 +112,7 @@
     ]);
     for (const page of pdf.getPages()) {
       if (page.node.has(name("AA")) || page.node.has(name("AF"))) {
-        throw new Error("This PDF contains page-level actions or attachments that cannot be safely preserved in this Beta workspace.");
+        throw new Error("This PDF contains page-level actions or attachments that cannot be safely preserved in this workspace.");
       }
       const annotationsRef = page.node.get(name("Annots"));
       if (!annotationsRef) continue;

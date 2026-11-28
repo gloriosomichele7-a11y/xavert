@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>PDF Workspace Beta | XAVERT</title>
-    <meta name="description" content="Edit the same PDF through multiple steps in your browser. Rotate, remove, reorder, append and number pages or apply watermarks." />
+    <title>PDF Workspace | XAVERT</title>
+    <meta name="description" content="Edit PDFs locally in your browser: rotate, delete, keep, reorder and append pages, add page numbers or watermarks, and download the result." />
     <meta name="robots" content="noindex, follow" />
     <meta name="theme-color" content="#dc2626" />
     <link rel="icon" href="../favicon.svg" type="image/svg+xml" />
@@ -70,14 +70,14 @@
       <a href="pdf-toolkit.html" class="back-link">← Back to PDF Toolkit</a>
       <section class="tool-hero" aria-labelledby="tool-title">
         <img src="../logo-hero.svg" alt="XAVERT" class="tool-logo" width="210" height="210" decoding="async" />
-        <h1 id="tool-title" class="tool-title">PDF Workspace <span style="font-size:.42em;vertical-align:middle;color:#b91c1c">BETA</span></h1>
+        <h1 id="tool-title" class="tool-title">PDF Workspace</h1>
       </section>
       <p class="xw-intro">Edit one PDF across multiple steps. Upload it once, make changes, undo if needed, and download the final document. No account or file upload to a server.</p>
       <div class="xw-shell">
         <section class="xw-card" aria-labelledby="upload-heading">
           <span class="xw-eyebrow">Step 1 · Your document</span>
           <h2 class="xw-heading" id="upload-heading">Choose a PDF</h2>
-          <p class="xw-help">Your file stays in this browser session. Maximum supported size: 50 MB. Password-protected, signed and fillable-form PDFs are not supported in Beta.</p>
+          <p class="xw-help">Your file stays on your device in this browser session. Maximum supported size: 50 MB. Password-protected PDFs, digitally signed PDFs and interactive forms cannot be edited in this workspace.</p>
           <label class="xw-drop" id="xw-drop">
             <span class="xw-upload-button">Select PDF file</span>
             <strong>or drag and drop a PDF here</strong>
@@ -164,7 +164,7 @@
           </div>
         </section>
         <p id="xw-status" class="xw-status" role="status" aria-live="polite">Ready.</p>
-        <p class="xw-warning">Beta safety: signed PDFs, fillable forms, bookmarks, layers, embedded files and certain advanced structures are blocked to prevent silent data loss. Some unsupported features may still go undetected. Always keep the original and inspect the downloaded result before sharing it. This workspace is not a digital-signature tool. Your files are processed locally and are not uploaded to XAVERT servers.</p>
+        <p class="xw-warning">Document safety: signed PDFs, fillable forms, bookmarks, layers, embedded files and many other advanced PDF structures are not supported. Detection cannot guarantee that every unsupported feature will be recognized. Always keep your original PDF and inspect the downloaded result before sharing it. This is not a signature-preserving or digital-signature tool. PDF editing is performed locally; your documents are not uploaded to XAVERT servers.</p>
       </div>
     </main>
     <footer class="xavert-footer-note">Powered by XAVERT</footer>
